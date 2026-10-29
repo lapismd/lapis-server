@@ -20,7 +20,7 @@ async fn metadata_facade_preserves_current_turso_schema_and_change_records() {
     let id = Uuid::new_v4();
     let (engine, connection) = raw(profile.path(), id).await;
     // Read the actual serving schema, rather than a second test-only copy.
-    let source = include_str!("../../../packages/api/src/lib/storage/turso-app-database.ts");
+    let source = include_str!("fixtures/storage/turso-app-database.ts");
     let schema = source
         .split("export const TURSO_APP_DATABASE_SCHEMA = `")
         .nth(1)
@@ -35,8 +35,8 @@ async fn metadata_facade_preserves_current_turso_schema_and_change_records() {
     let db = Database::open(profile.path(), id).await.unwrap();
     assert_eq!(db.revision().await.unwrap(), 8);
     let expected = serde_json::from_str("{\"z\":1,\"a\":2}").unwrap();
-    assert!(
-        db.transact_meta(MetaTransaction {
+    assert!(db
+        .transact_meta(MetaTransaction {
             checks: vec![lapis_app_core::database::MetaCheck {
                 key: "existing".into(),
                 exists: Some(true),
@@ -49,8 +49,7 @@ async fn metadata_facade_preserves_current_turso_schema_and_change_records() {
             }],
         })
         .await
-        .unwrap()
-    );
+        .unwrap());
     assert!(
         !db.transact_meta(MetaTransaction {
             checks: vec![lapis_app_core::database::MetaCheck {

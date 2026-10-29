@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "numberBoolean": { "type": "number", "indexed": true },
+    "numberString": { "type": "number", "indexed": true },
+    "numberInvalid": { "type": "number", "indexed": true },
+    "numberUnicode": { "type": "number", "indexed": true },
+    "boolean": { "type": "boolean", "indexed": true, "cardinality": "many" },
+    "text": { "type": "string", "sortable": true, "cardinality": "many" },
+    "date": { "type": "date", "indexed": true },
+    "datetime": { "type": "datetime", "indexed": true },
+    "missing": { "type": "path", "indexed": true },
+    "empty": { "type": "json", "indexed": true, "cardinality": "many" },
+    "unindexed": { "type": "string" }
+  },
+  "data": {
+    "numberBoolean": true,
+    "numberString": "0x10",
+    "numberInvalid": "true",
+    "numberUnicode": "\u00851\u0085",
+    "boolean": [false, true, 0, 1, "", "false", [], {}, null],
+    "text": [
+      [1, null, ["a", true]],
+      { "nested": true },
+      [],
+      true,
+      1.0,
+      1e-7,
+      1e21
+    ],
+    "date": "2026-10-24",
+    "datetime": "  12.5  ",
+    "empty": [],
+    "unindexed": "omit"
+  },
+  "expected": [
+    ["numberBoolean", 0, "number", null, 1, null, null, null],
+    ["numberString", 0, "number", null, 16, null, null, null],
+    ["numberInvalid", 0, "number", null, null, null, null, null],
+    ["numberUnicode", 0, "number", null, null, null, null, null],
+    ["boolean", 0, "boolean", null, null, false, null, null],
+    ["boolean", 1, "boolean", null, null, true, null, null],
+    ["boolean", 2, "boolean", null, null, false, null, null],
+    ["boolean", 3, "boolean", null, null, true, null, null],
+    ["boolean", 4, "boolean", null, null, false, null, null],
+    ["boolean", 5, "boolean", null, null, true, null, null],
+    ["boolean", 6, "boolean", null, null, false, null, null],
+    ["boolean", 7, "boolean", null, null, true, null, null],
+    ["boolean", 8, "boolean", null, null, null, null, null],
+    ["text", 0, "string", "1,,a,true", null, null, null, null],
+    ["text", 1, "string", "[object Object]", null, null, null, null],
+    ["text", 2, "string", "", null, null, null, null],
+    ["text", 3, "string", "true", null, null, null, null],
+    ["text", 4, "string", "1", null, null, null, null],
+    ["text", 5, "string", "1e-7", null, null, null, null],
+    ["text", 6, "string", "1e+21", null, null, null, null],
+    ["date", 0, "date", null, null, null, "2026-10-24", null],
+    ["datetime", 0, "datetime", null, null, null, null, 12.5],
+    ["missing", 0, "path", null, null, null, null, null]
+  ]
+}

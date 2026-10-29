@@ -2,7 +2,7 @@ use lapis_app_core::{database::Database, embedding::host::NativeEmbeddingHost};
 use lapis_app_protocol::database::search::{
     embedding::SearchEmbeddingRuntimePhase as Phase, records::SearchDocumentRecord,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use std::{
     future::Future,
@@ -13,10 +13,7 @@ use std::{
 use uuid::Uuid;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/search-semantic-model.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/search-semantic-model.json")).unwrap()
 }
 fn document(fixture: &Value) -> SearchDocumentRecord {
     let text = fixture["queries"][0]["text"].as_str().unwrap();

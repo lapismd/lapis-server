@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 
 pub fn definition(id: &str) -> Value {

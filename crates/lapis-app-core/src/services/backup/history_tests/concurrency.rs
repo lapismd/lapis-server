@@ -1,5 +1,5 @@
 use super::*;
-use lapis_app_protocol::{VaultPhase, history_index::*};
+use lapis_app_protocol::{history_index::*, VaultPhase};
 use std::{fs::OpenOptions, sync::mpsc};
 
 struct PausedBatch(Option<mpsc::SyncSender<()>>);

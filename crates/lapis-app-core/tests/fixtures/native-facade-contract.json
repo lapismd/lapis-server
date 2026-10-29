@@ -1,0 +1,3224 @@
+{
+  "cases": [
+    {
+      "name": "migrate",
+      "request": {
+        "method": "migrate",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "beginSearchIndexingBatch",
+      "request": {
+        "method": "beginSearchIndexingBatch",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "endSearchIndexingBatch",
+      "request": {
+        "method": "endSearchIndexingBatch",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "configureSearchEmbeddingProvider",
+      "request": {
+        "method": "configureSearchEmbeddingProvider",
+        "args": [
+          {
+            "kind": "value",
+            "value": null
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getSearchEmbeddingProvider",
+      "request": {
+        "method": "getSearchEmbeddingProvider",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": null
+      }
+    },
+    {
+      "name": "getSearchEmbeddingRuntimeStatus",
+      "request": {
+        "method": "getSearchEmbeddingRuntimeStatus",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": null
+      }
+    },
+    {
+      "name": "getSearchIndexStats",
+      "request": {
+        "method": "getSearchIndexStats",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "documentCount": 0,
+          "chunkCount": 0,
+          "readyChunkCount": 0,
+          "pendingChunkCount": 0,
+          "errorChunkCount": 0,
+          "lastError": null
+        }
+      }
+    },
+    {
+      "name": "getMeta",
+      "request": {
+        "method": "getMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls:missing"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "setMeta",
+      "request": {
+        "method": "setMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls:json"
+          },
+          {
+            "kind": "value",
+            "value": null
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getMeta explicit null",
+      "request": {
+        "method": "getMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls:json"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": null
+      }
+    },
+    {
+      "name": "setMeta undefined deletes",
+      "request": {
+        "method": "setMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls:json"
+          },
+          {
+            "kind": "undefined"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "scanMeta",
+      "request": {
+        "method": "scanMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "prefix": "calls:"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "entries": []
+        }
+      }
+    },
+    {
+      "name": "transactMeta",
+      "request": {
+        "method": "transactMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "mutations": [
+                {
+                  "key": "calls:json",
+                  "value": {
+                    "note": "日本語 🪨"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "applied": true
+        }
+      }
+    },
+    {
+      "name": "transactMeta rejected check",
+      "request": {
+        "method": "transactMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "checks": [
+                {
+                  "key": "calls:missing",
+                  "exists": true
+                }
+              ],
+              "mutations": [
+                {
+                  "key": "calls:must-not-write",
+                  "value": true
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "applied": false
+        }
+      }
+    },
+    {
+      "name": "getMeta after rejected transaction",
+      "request": {
+        "method": "getMeta",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls:must-not-write"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getNotebookState",
+      "request": {
+        "method": "getNotebookState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notebook.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "setNotebookState",
+      "request": {
+        "method": "setNotebookState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notebook.md"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "sourcePath": "Notebook.md",
+              "mtime": 1,
+              "updatedAt": 2,
+              "cells": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getNotebookState saved",
+      "request": {
+        "method": "getNotebookState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notebook.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "sourcePath": "Notebook.md",
+          "mtime": 1,
+          "updatedAt": 2,
+          "cells": {}
+        }
+      }
+    },
+    {
+      "name": "deleteNotebookState",
+      "request": {
+        "method": "deleteNotebookState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notebook.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "loadMetadataSnapshot",
+      "request": {
+        "method": "loadMetadataSnapshot",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": null
+      }
+    },
+    {
+      "name": "saveMetadataSnapshot",
+      "request": {
+        "method": "saveMetadataSnapshot",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "fileCache": {},
+              "metadataCache": {},
+              "resolvedLinks": {},
+              "unresolvedLinks": {}
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getFileHistory",
+      "request": {
+        "method": "getFileHistory",
+        "args": [
+          {
+            "kind": "value",
+            "value": "History.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": null
+      }
+    },
+    {
+      "name": "storeFileHistoryRevision",
+      "request": {
+        "method": "storeFileHistoryRevision",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "path": "History.md",
+              "eventType": "create",
+              "createdAt": 100,
+              "content": "# Native call history"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "fileId": "<generated-file>",
+          "stored": true,
+          "deduplicated": false,
+          "revision": {
+            "revisionId": "<generated-revision>",
+            "fileId": "<generated-file>",
+            "currentPath": "History.md",
+            "capturedPath": "History.md",
+            "eventType": "create",
+            "createdAt": 100,
+            "contentHash": "11b7515b",
+            "content": "# Native call history"
+          }
+        }
+      }
+    },
+    {
+      "name": "upsertNotification",
+      "request": {
+        "method": "upsertNotification",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "id": "n",
+              "message": "Native call notice",
+              "severity": "info",
+              "createdAt": 10,
+              "updatedAt": 20,
+              "read": false,
+              "cleared": false
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "listNotifications",
+      "request": {
+        "method": "listNotifications",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "id": "n",
+            "message": "Native call notice",
+            "severity": "info",
+            "createdAt": 10,
+            "updatedAt": 20,
+            "read": false,
+            "cleared": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "markNotificationRead",
+      "request": {
+        "method": "markNotificationRead",
+        "args": [
+          {
+            "kind": "value",
+            "value": "n"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "clearNotification",
+      "request": {
+        "method": "clearNotification",
+        "args": [
+          {
+            "kind": "value",
+            "value": "n"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "clearAllNotifications",
+      "request": {
+        "method": "clearAllNotifications",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getMemorySourceState",
+      "request": {
+        "method": "getMemorySourceState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "conversation-1"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "upsertMemorySourceState",
+      "request": {
+        "method": "upsertMemorySourceState",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "sourceKey": "conversation-1",
+              "sourcePath": ".lapis/agents/sessions/conversation-1/transcript.jsonl",
+              "sourceHash": "sha256:source",
+              "lastEntryId": "entry-1",
+              "lastEntryHash": "sha256:entry",
+              "status": "ready",
+              "indexedAt": 100
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "listMemorySourceStates",
+      "request": {
+        "method": "listMemorySourceStates",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "sourceKey": "conversation-1",
+            "sourcePath": ".lapis/agents/sessions/conversation-1/transcript.jsonl",
+            "sourceHash": "sha256:source",
+            "lastEntryId": "entry-1",
+            "lastEntryHash": "sha256:entry",
+            "status": "ready",
+            "indexedAt": 100
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleteMemorySourceState",
+      "request": {
+        "method": "deleteMemorySourceState",
+        "args": [
+          {
+            "kind": "value",
+            "value": "conversation-1"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "upsertMemoryCandidate",
+      "request": {
+        "method": "upsertMemoryCandidate",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "candidate": {
+                "id": "a",
+                "scopeKind": "project",
+                "scopePath": "Projects/Alpha",
+                "kind": "preference",
+                "normalizedClaim": "Use compact headings",
+                "claimHash": "sha256:claim",
+                "supersessionKey": "writing.headings",
+                "originClass": "owner",
+                "importance": 4,
+                "triggers": ["writing", "headings"],
+                "state": "staged",
+                "firstSeenAt": 100,
+                "lastSeenAt": 200,
+                "recurrenceCount": 2,
+                "conversationCount": 2
+              },
+              "origins": [
+                {
+                  "candidateId": "a",
+                  "conversationId": "conversation-1",
+                  "entryId": "entry-1",
+                  "entryHash": "sha256:entry",
+                  "observedAt": 100
+                },
+                {
+                  "candidateId": "a",
+                  "conversationId": "conversation-2",
+                  "entryId": "entry-2",
+                  "entryHash": "sha256:entry",
+                  "observedAt": 200
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "queryMemoryCandidates",
+      "request": {
+        "method": "queryMemoryCandidates",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "candidate": {
+              "id": "a",
+              "scopeKind": "project",
+              "scopePath": "Projects/Alpha",
+              "kind": "preference",
+              "normalizedClaim": "Use compact headings",
+              "claimHash": "sha256:claim",
+              "supersessionKey": "writing.headings",
+              "originClass": "owner",
+              "importance": 4,
+              "triggers": ["writing", "headings"],
+              "state": "staged",
+              "firstSeenAt": 100,
+              "lastSeenAt": 200,
+              "recurrenceCount": 2,
+              "conversationCount": 2
+            },
+            "origins": [
+              {
+                "candidateId": "a",
+                "conversationId": "conversation-1",
+                "entryId": "entry-1",
+                "entryHash": "sha256:entry",
+                "observedAt": 100
+              },
+              {
+                "candidateId": "a",
+                "conversationId": "conversation-2",
+                "entryId": "entry-2",
+                "entryHash": "sha256:entry",
+                "observedAt": 200
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleteMemoryCandidatesByConversation",
+      "request": {
+        "method": "deleteMemoryCandidatesByConversation",
+        "args": [
+          {
+            "kind": "value",
+            "value": "conversation-1"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "recordMemoryRecallSignal",
+      "request": {
+        "method": "recordMemoryRecallSignal",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "targetRef": "Memory/Rule.md",
+              "queryFingerprint": "salted:fingerprint",
+              "day": "2026-10-24",
+              "bestScore": 0.8,
+              "hitCount": 1
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "listMemoryRecallSignals",
+      "request": {
+        "method": "listMemoryRecallSignals",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "targetRef": "Memory/Rule.md",
+            "queryFingerprint": "salted:fingerprint",
+            "day": "2026-10-24",
+            "bestScore": 0.8,
+            "hitCount": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "claimMemoryJob",
+      "request": {
+        "method": "claimMemoryJob",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "job": {
+                "id": "ingest:conversation-1",
+                "kind": "ingest",
+                "scopeKey": "project:Projects/Alpha",
+                "status": "queued",
+                "attempts": 0,
+                "maxAttempts": 2,
+                "createdAt": 100,
+                "cursor": "entry-0"
+              },
+              "ownerId": "calls",
+              "now": 200,
+              "leaseMs": 100
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "id": "ingest:conversation-1",
+          "kind": "ingest",
+          "scopeKey": "project:Projects/Alpha",
+          "status": "running",
+          "attempts": 1,
+          "maxAttempts": 2,
+          "createdAt": 100,
+          "cursor": "entry-0",
+          "ownerId": "calls",
+          "leaseUntil": 300,
+          "startedAt": 200
+        }
+      }
+    },
+    {
+      "name": "updateMemoryJob",
+      "request": {
+        "method": "updateMemoryJob",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "jobId": "ingest:conversation-1",
+              "ownerId": "calls",
+              "now": 250,
+              "patch": {
+                "status": "completed",
+                "finishedAt": 250
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "id": "ingest:conversation-1",
+          "kind": "ingest",
+          "scopeKey": "project:Projects/Alpha",
+          "status": "completed",
+          "attempts": 1,
+          "maxAttempts": 2,
+          "createdAt": 100,
+          "cursor": "entry-0",
+          "startedAt": 200,
+          "finishedAt": 250
+        }
+      }
+    },
+    {
+      "name": "listMemoryJobs",
+      "request": {
+        "method": "listMemoryJobs",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "id": "ingest:conversation-1",
+            "kind": "ingest",
+            "scopeKey": "project:Projects/Alpha",
+            "status": "completed",
+            "attempts": 1,
+            "maxAttempts": 2,
+            "createdAt": 100,
+            "cursor": "entry-0",
+            "startedAt": 200,
+            "finishedAt": 250
+          }
+        ]
+      }
+    },
+    {
+      "name": "clearMemoryDerivedState",
+      "request": {
+        "method": "clearMemoryDerivedState",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getChangeRevision",
+      "request": {
+        "method": "getChangeRevision",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": 19
+      }
+    },
+    {
+      "name": "upsertIndexedFile",
+      "request": {
+        "method": "upsertIndexedFile",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "file": {
+                "path": "Notes/Öld.md",
+                "normalizedPath": "Notes/Öld.md",
+                "extension": ".MD",
+                "mtime": 1,
+                "size": 12,
+                "hash": "changed",
+                "indexed": true
+              },
+              "metadata": {
+                "path": "Notes/Öld.md",
+                "hash": "changed",
+                "parserVersion": "fixture",
+                "metadata": {
+                  "title": "Fixture 🪨"
+                }
+              },
+              "links": [
+                {
+                  "sourcePath": "Notes/Öld.md",
+                  "targetText": "Old",
+                  "resolvedTargetPath": "Links.md",
+                  "type": "link",
+                  "count": 1,
+                  "kind": "reference"
+                }
+              ],
+              "tags": [
+                {
+                  "path": "Notes/Öld.md",
+                  "tag": "#Work/Notes",
+                  "parts": ["Work", "Notes"],
+                  "hierarchy": ["Work", "Work/Notes"]
+                }
+              ],
+              "properties": [
+                {
+                  "path": "Notes/Öld.md",
+                  "name": "Score",
+                  "inferredType": "number",
+                  "value": 2
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getIndexedFile",
+      "request": {
+        "method": "getIndexedFile",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notes/Öld.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "file": {
+            "path": "Notes/Öld.md",
+            "normalizedPath": "Notes/Öld.md",
+            "extension": "md",
+            "mtime": 1,
+            "size": 12,
+            "hash": "changed",
+            "indexed": true,
+            "deleted": false
+          },
+          "metadata": {
+            "path": "Notes/Öld.md",
+            "hash": "changed",
+            "parserVersion": "fixture",
+            "metadata": {
+              "title": "Fixture 🪨"
+            }
+          },
+          "properties": [
+            {
+              "path": "Notes/Öld.md",
+              "name": "Score",
+              "inferredType": "number",
+              "value": 2
+            }
+          ],
+          "tags": [
+            {
+              "path": "Notes/Öld.md",
+              "tag": "#Work/Notes",
+              "parts": ["Work", "Notes"],
+              "hierarchy": ["Work", "Work/Notes"]
+            }
+          ],
+          "links": [
+            {
+              "sourcePath": "Notes/Öld.md",
+              "targetText": "Old",
+              "resolvedTargetPath": "Links.md",
+              "type": "link",
+              "count": 1,
+              "kind": "reference",
+              "ordinal": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "listIndexedFileManifest",
+      "request": {
+        "method": "listIndexedFileManifest",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "rows": [
+            {
+              "path": "Notes/Öld.md",
+              "normalizedPath": "Notes/Öld.md",
+              "extension": "md",
+              "mtime": 1,
+              "size": 12,
+              "hash": "changed",
+              "parserVersion": "fixture",
+              "indexed": true,
+              "deleted": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "queryIndexedMetadata",
+      "request": {
+        "method": "queryIndexedMetadata",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "file": {
+              "path": "Notes/Öld.md",
+              "normalizedPath": "Notes/Öld.md",
+              "extension": "md",
+              "mtime": 1,
+              "size": 12,
+              "hash": "changed",
+              "parserVersion": "fixture",
+              "indexed": true,
+              "deleted": false
+            },
+            "metadata": {
+              "path": "Notes/Öld.md",
+              "hash": "changed",
+              "parserVersion": "fixture",
+              "metadata": {
+                "title": "Fixture 🪨"
+              }
+            },
+            "properties": [
+              {
+                "path": "Notes/Öld.md",
+                "name": "Score",
+                "inferredType": "number",
+                "value": 2
+              }
+            ],
+            "tags": [
+              {
+                "path": "Notes/Öld.md",
+                "tag": "#Work/Notes",
+                "parts": ["Work", "Notes"],
+                "hierarchy": ["Work", "Work/Notes"]
+              }
+            ],
+            "links": [
+              {
+                "sourcePath": "Notes/Öld.md",
+                "targetText": "Old",
+                "resolvedTargetPath": "Links.md",
+                "type": "link",
+                "count": 1,
+                "kind": "reference",
+                "ordinal": 0
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "queryIndexedMetadataPage",
+      "request": {
+        "method": "queryIndexedMetadataPage",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "rows": [
+            {
+              "file": {
+                "path": "Notes/Öld.md",
+                "normalizedPath": "Notes/Öld.md",
+                "extension": "md",
+                "mtime": 1,
+                "size": 12,
+                "hash": "changed",
+                "parserVersion": "fixture",
+                "indexed": true,
+                "deleted": false
+              },
+              "metadata": {
+                "path": "Notes/Öld.md",
+                "hash": "changed",
+                "parserVersion": "fixture",
+                "metadata": {
+                  "title": "Fixture 🪨"
+                }
+              },
+              "properties": [
+                {
+                  "path": "Notes/Öld.md",
+                  "name": "Score",
+                  "inferredType": "number",
+                  "value": 2
+                }
+              ],
+              "tags": [
+                {
+                  "path": "Notes/Öld.md",
+                  "tag": "#Work/Notes",
+                  "parts": ["Work", "Notes"],
+                  "hierarchy": ["Work", "Work/Notes"]
+                }
+              ],
+              "links": [
+                {
+                  "sourcePath": "Notes/Öld.md",
+                  "targetText": "Old",
+                  "resolvedTargetPath": "Links.md",
+                  "type": "link",
+                  "count": 1,
+                  "kind": "reference",
+                  "ordinal": 0
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "queryMetadataFacets",
+      "request": {
+        "method": "queryMetadataFacets",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "kind": "tag"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "value": "work",
+            "valueType": "string",
+            "count": 1
+          },
+          {
+            "value": "work/notes",
+            "valueType": "string",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "queryMetadataLinks",
+      "request": {
+        "method": "queryMetadataLinks",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "direction": "outgoing",
+              "path": "Notes/Öld.md"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "sourcePath": "Notes/Öld.md",
+            "targetText": "Old",
+            "resolvedTargetPath": "Links.md",
+            "type": "link",
+            "count": 1,
+            "kind": "reference",
+            "ordinal": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleteIndexedFile",
+      "request": {
+        "method": "deleteIndexedFile",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Absent.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "renameIndexedFile",
+      "request": {
+        "method": "renameIndexedFile",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Notes/Öld.md"
+          },
+          {
+            "kind": "value",
+            "value": "Archive/Renamed.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getIndexedFile after rename",
+      "request": {
+        "method": "getIndexedFile",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Archive/Renamed.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "file": {
+            "path": "Archive/Renamed.md",
+            "normalizedPath": "Archive/Renamed.md",
+            "extension": "md",
+            "mtime": 1,
+            "size": 12,
+            "hash": "changed",
+            "indexed": true,
+            "deleted": false
+          },
+          "metadata": {
+            "path": "Archive/Renamed.md",
+            "hash": "changed",
+            "parserVersion": "fixture",
+            "metadata": {
+              "title": "Fixture 🪨"
+            }
+          },
+          "properties": [
+            {
+              "path": "Archive/Renamed.md",
+              "name": "Score",
+              "inferredType": "number",
+              "value": 2
+            }
+          ],
+          "tags": [
+            {
+              "path": "Archive/Renamed.md",
+              "tag": "#Work/Notes",
+              "parts": ["Work", "Notes"],
+              "hierarchy": ["Work", "Work/Notes"]
+            }
+          ],
+          "links": [
+            {
+              "sourcePath": "Archive/Renamed.md",
+              "targetText": "Old",
+              "resolvedTargetPath": "Links.md",
+              "type": "link",
+              "count": 1,
+              "kind": "reference",
+              "ordinal": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "upsertSearchDocument",
+      "request": {
+        "method": "upsertSearchDocument",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "getSearchDocument",
+      "request": {
+        "method": "getSearchDocument",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Search.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "path": "Search.md",
+          "name": "Search",
+          "extension": "md",
+          "checksum": "native-call",
+          "content": "alpha note",
+          "tags": [],
+          "tagParts": [],
+          "tagHierarchy": [],
+          "chunks": [
+            {
+              "id": "Search.md#0",
+              "text": "alpha note",
+              "startOffset": 0,
+              "endOffset": 10
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "listSearchDocumentManifest",
+      "request": {
+        "method": "listSearchDocumentManifest",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "rows": [
+            {
+              "path": "Search.md",
+              "checksum": "native-call"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "listSearchDocuments",
+      "request": {
+        "method": "listSearchDocuments",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "path": "Search.md",
+            "name": "Search",
+            "extension": "md",
+            "checksum": "native-call",
+            "content": "alpha note",
+            "tags": [],
+            "tagParts": [],
+            "tagHierarchy": [],
+            "chunks": [
+              {
+                "id": "Search.md#0",
+                "text": "alpha note",
+                "startOffset": 0,
+                "endOffset": 10
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "rebuildSearchIndex",
+      "request": {
+        "method": "rebuildSearchIndex",
+        "args": []
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "searchDocuments",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "searchDocumentPaths",
+      "request": {
+        "method": "searchDocumentPaths",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": ["Search.md"]
+      }
+    },
+    {
+      "name": "query enhancement tauri-desktop",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement node-server",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "node-server",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "node-server",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement web-pwa",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "web-pwa",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "web-pwa",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement deno-desktop",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-desktop",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "provider-unavailable",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement deno-server",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-server",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-server",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement test",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "test",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "test",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 10,
+                  "topVectorScore": 0,
+                  "topFusedScore": 10,
+                  "resultCount": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement disabled",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": false,
+                "rerankResults": false
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 1,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 1,
+              "modelReady": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement without diagnostics",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": false,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement second record",
+      "request": {
+        "method": "upsertSearchDocument",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "path": "alpha.md",
+              "name": "alpha",
+              "extension": "md",
+              "checksum": "enhance",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "alpha.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "query enhancement strong signal",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "alpha.md",
+              "name": "alpha",
+              "extension": "md",
+              "checksum": "enhance",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "alpha.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 25,
+            "snippets": [
+              {
+                "field": "name",
+                "text": "alpha",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0
+              },
+              {
+                "field": "path",
+                "text": "alpha.md",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0
+              },
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "alpha.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 25,
+              "fused": 25,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 25
+              }
+            },
+            "matchedChunkIds": ["alpha.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 2,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 2,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-desktop",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "strong-signal",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 25,
+                  "topVectorScore": 0,
+                  "topFusedScore": 25,
+                  "resultCount": 2
+                }
+              }
+            }
+          },
+          {
+            "document": {
+              "path": "Search.md",
+              "name": "Search",
+              "extension": "md",
+              "checksum": "native-call",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "Search.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 10,
+            "snippets": [
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "Search.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 10,
+              "fused": 10,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 2,
+                "lexicalContribution": 10
+              }
+            },
+            "matchedChunkIds": ["Search.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 2,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 2,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "deno-desktop",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "strong-signal",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 25,
+                  "topVectorScore": 0,
+                  "topFusedScore": 25,
+                  "resultCount": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "query enhancement signal before final limit",
+      "request": {
+        "method": "searchDocuments",
+        "args": [
+          {
+            "kind": "value",
+            "value": "alpha"
+          },
+          {
+            "kind": "value",
+            "value": {
+              "includeDiagnostics": true,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "provider": {
+                  "kind": "local-model",
+                  "queryExpansionModelId": "test/expand",
+                  "rerankerModelId": "test/rerank",
+                  "maxExpandedQueries": 3,
+                  "maxRerankCandidates": 20
+                },
+                "expandQuery": true,
+                "rerankResults": true
+              },
+              "limit": 1,
+              "caseSensitive": true
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "document": {
+              "path": "alpha.md",
+              "name": "alpha",
+              "extension": "md",
+              "checksum": "enhance",
+              "content": "alpha note",
+              "tags": [],
+              "tagParts": [],
+              "tagHierarchy": [],
+              "chunks": [
+                {
+                  "id": "alpha.md#0",
+                  "text": "alpha note",
+                  "startOffset": 0,
+                  "endOffset": 10
+                }
+              ]
+            },
+            "score": 77,
+            "snippets": [
+              {
+                "field": "name",
+                "text": "alpha",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0
+              },
+              {
+                "field": "path",
+                "text": "alpha.md",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0
+              },
+              {
+                "field": "content",
+                "text": "alpha note",
+                "ranges": [
+                  {
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "offset": 0,
+                "chunkId": "alpha.md#0"
+              }
+            ],
+            "retrievalMode": "lexical",
+            "scoreBreakdown": {
+              "lexical": 77,
+              "fused": 77,
+              "fusion": {
+                "algorithm": "lexical-score",
+                "lexicalRank": 1,
+                "lexicalContribution": 77
+              }
+            },
+            "matchedChunkIds": ["alpha.md#0"],
+            "diagnostics": {
+              "requestedMode": "auto",
+              "appliedMode": "lexical",
+              "backendKind": "turso-native",
+              "lexicalCandidateCount": 2,
+              "vectorCandidateCount": 0,
+              "totalCandidateCount": 2,
+              "modelReady": false,
+              "queryEnhancement": {
+                "runtimeTarget": "tauri-desktop",
+                "providerKind": "local-model",
+                "expandQuery": true,
+                "rerankResults": true,
+                "applied": false,
+                "skipReason": "unsupported-runtime",
+                "signal": {
+                  "requestedMode": "auto",
+                  "topLexicalScore": 77,
+                  "topVectorScore": 0,
+                  "topFusedScore": 77,
+                  "resultCount": 2
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleteSearchDocument",
+      "request": {
+        "method": "deleteSearchDocument",
+        "args": [
+          {
+            "kind": "value",
+            "value": "Search.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "upsertTaskProjection",
+      "request": {
+        "method": "upsertTaskProjection",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "documentPath": "tasks/full.md",
+              "documentId": "full",
+              "kind": "task",
+              "title": "Full task",
+              "status": "open",
+              "inbox": false,
+              "startKind": "anytime",
+              "checklistTotal": 4,
+              "checklistCompleted": 1,
+              "commentCount": 2,
+              "projectionVersion": 4,
+              "priority": "high",
+              "startDate": null,
+              "planDate": "2026-10-24",
+              "planKind": "time",
+              "planTime": "09:30",
+              "durationMinutes": 45,
+              "deadline": "2026-10-30",
+              "completedAt": null,
+              "repeat": {
+                "start": "2026-10-01",
+                "rrule": "FREQ=WEEKLY;BYDAY=MO,FR",
+                "anchor": "schedule",
+                "missed": "carry",
+                "rdate": ["2026-11-01"],
+                "exdate": ["2026-11-02"],
+                "resetChecklist": true,
+                "paused": false,
+                "pausedSince": "2026-10-02",
+                "pauseRanges": [
+                  {
+                    "start": "2026-10-02",
+                    "end": "2026-10-03"
+                  }
+                ],
+                "lastCompletedAt": "2026-10-20T12:00:00Z",
+                "completionCount": 3
+              },
+              "tracking": {
+                "type": "count",
+                "unit": "pages",
+                "target": 20
+              },
+              "effectiveOccurrenceDate": "2026-10-24",
+              "effectiveOccurrenceState": "current",
+              "effectiveForDate": "2026-10-24",
+              "repeatStrategy": null,
+              "repeatFrequency": "weekly",
+              "repeatInterval": 2,
+              "repeatAnchor": "schedule",
+              "structure": {
+                "version": 1,
+                "sourceHash": "hash",
+                "entries": [
+                  {
+                    "sourceDocumentId": "full",
+                    "sourceDocumentPath": "tasks/full.md",
+                    "targetDocumentId": "child",
+                    "targetDocumentPath": "tasks/child.md",
+                    "kind": "task-entry",
+                    "headingPath": ["Tasks"],
+                    "headingLevel": 2,
+                    "headingText": "Tasks",
+                    "runId": "run",
+                    "positionInRun": 0,
+                    "sourceStart": 10,
+                    "sourceEnd": 30,
+                    "authoredLabel": "Child",
+                    "authoredHref": "child.md"
+                  }
+                ],
+                "runs": [
+                  {
+                    "id": "run",
+                    "documentId": "full",
+                    "documentPath": "tasks/full.md",
+                    "headingPath": ["Tasks"],
+                    "headingLevel": null,
+                    "headingText": null,
+                    "listDepth": 0,
+                    "startOffset": 10,
+                    "endOffset": 30,
+                    "entryCount": 1
+                  }
+                ],
+                "diagnostics": [
+                  {
+                    "code": "sample",
+                    "message": "retained",
+                    "sourceStart": 10,
+                    "sourceEnd": 30,
+                    "target": "child"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "queryTasks",
+      "request": {
+        "method": "queryTasks",
+        "args": []
+      },
+      "expected": {
+        "kind": "value",
+        "value": [
+          {
+            "documentPath": "tasks/full.md",
+            "documentId": "full",
+            "kind": "task",
+            "title": "Full task",
+            "status": "open",
+            "inbox": false,
+            "startKind": "anytime",
+            "checklistTotal": 4,
+            "checklistCompleted": 1,
+            "commentCount": 2,
+            "projectionVersion": 4,
+            "priority": "high",
+            "startDate": null,
+            "planDate": "2026-10-24",
+            "planKind": "time",
+            "planTime": "09:30",
+            "durationMinutes": 45,
+            "deadline": "2026-10-30",
+            "completedAt": null,
+            "repeat": {
+              "start": "2026-10-01",
+              "rrule": "FREQ=WEEKLY;BYDAY=MO,FR",
+              "anchor": "schedule",
+              "missed": "carry",
+              "rdate": ["2026-11-01"],
+              "exdate": ["2026-11-02"],
+              "resetChecklist": true,
+              "paused": false,
+              "pausedSince": "2026-10-02",
+              "pauseRanges": [
+                {
+                  "start": "2026-10-02",
+                  "end": "2026-10-03"
+                }
+              ],
+              "lastCompletedAt": "2026-10-20T12:00:00Z",
+              "completionCount": 3
+            },
+            "tracking": {
+              "type": "count",
+              "unit": "pages",
+              "target": 20
+            },
+            "effectiveOccurrenceDate": "2026-10-24",
+            "effectiveOccurrenceState": "current",
+            "effectiveForDate": "2026-10-24",
+            "repeatStrategy": null,
+            "repeatFrequency": "weekly",
+            "repeatInterval": 2,
+            "repeatAnchor": "schedule",
+            "structure": {
+              "version": 1,
+              "sourceHash": "hash",
+              "entries": [
+                {
+                  "sourceDocumentId": "full",
+                  "sourceDocumentPath": "tasks/full.md",
+                  "targetDocumentId": "child",
+                  "targetDocumentPath": "tasks/child.md",
+                  "kind": "task-entry",
+                  "headingPath": ["Tasks"],
+                  "headingLevel": 2,
+                  "headingText": "Tasks",
+                  "runId": "run",
+                  "positionInRun": 0,
+                  "sourceStart": 10,
+                  "sourceEnd": 30,
+                  "authoredLabel": "Child",
+                  "authoredHref": "child.md"
+                }
+              ],
+              "runs": [
+                {
+                  "id": "run",
+                  "documentId": "full",
+                  "documentPath": "tasks/full.md",
+                  "headingPath": ["Tasks"],
+                  "headingLevel": null,
+                  "headingText": null,
+                  "listDepth": 0,
+                  "startOffset": 10,
+                  "endOffset": 30,
+                  "entryCount": 1
+                }
+              ],
+              "diagnostics": [
+                {
+                  "code": "sample",
+                  "message": "retained",
+                  "sourceStart": 10,
+                  "sourceEnd": 30,
+                  "target": "child"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "getTaskRow",
+      "request": {
+        "method": "getTaskRow",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "id": "full"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "documentPath": "tasks/full.md",
+          "documentId": "full",
+          "kind": "task",
+          "title": "Full task",
+          "status": "open",
+          "inbox": false,
+          "startKind": "anytime",
+          "checklistTotal": 4,
+          "checklistCompleted": 1,
+          "commentCount": 2,
+          "projectionVersion": 4,
+          "priority": "high",
+          "startDate": null,
+          "planDate": "2026-10-24",
+          "planKind": "time",
+          "planTime": "09:30",
+          "durationMinutes": 45,
+          "deadline": "2026-10-30",
+          "completedAt": null,
+          "repeat": {
+            "start": "2026-10-01",
+            "rrule": "FREQ=WEEKLY;BYDAY=MO,FR",
+            "anchor": "schedule",
+            "missed": "carry",
+            "rdate": ["2026-11-01"],
+            "exdate": ["2026-11-02"],
+            "resetChecklist": true,
+            "paused": false,
+            "pausedSince": "2026-10-02",
+            "pauseRanges": [
+              {
+                "start": "2026-10-02",
+                "end": "2026-10-03"
+              }
+            ],
+            "lastCompletedAt": "2026-10-20T12:00:00Z",
+            "completionCount": 3
+          },
+          "tracking": {
+            "type": "count",
+            "unit": "pages",
+            "target": 20
+          },
+          "effectiveOccurrenceDate": "2026-10-24",
+          "effectiveOccurrenceState": "current",
+          "effectiveForDate": "2026-10-24",
+          "repeatStrategy": null,
+          "repeatFrequency": "weekly",
+          "repeatInterval": 2,
+          "repeatAnchor": "schedule",
+          "structure": {
+            "version": 1,
+            "sourceHash": "hash",
+            "entries": [
+              {
+                "sourceDocumentId": "full",
+                "sourceDocumentPath": "tasks/full.md",
+                "targetDocumentId": "child",
+                "targetDocumentPath": "tasks/child.md",
+                "kind": "task-entry",
+                "headingPath": ["Tasks"],
+                "headingLevel": 2,
+                "headingText": "Tasks",
+                "runId": "run",
+                "positionInRun": 0,
+                "sourceStart": 10,
+                "sourceEnd": 30,
+                "authoredLabel": "Child",
+                "authoredHref": "child.md"
+              }
+            ],
+            "runs": [
+              {
+                "id": "run",
+                "documentId": "full",
+                "documentPath": "tasks/full.md",
+                "headingPath": ["Tasks"],
+                "headingLevel": null,
+                "headingText": null,
+                "listDepth": 0,
+                "startOffset": 10,
+                "endOffset": 30,
+                "entryCount": 1
+              }
+            ],
+            "diagnostics": [
+              {
+                "code": "sample",
+                "message": "retained",
+                "sourceStart": 10,
+                "sourceEnd": 30,
+                "target": "child"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "listChildLinks",
+      "request": {
+        "method": "listChildLinks",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "sourcePath": "tasks/full.md"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": []
+      }
+    },
+    {
+      "name": "listTaskDescendants",
+      "request": {
+        "method": "listTaskDescendants",
+        "args": [
+          {
+            "kind": "value",
+            "value": "tasks/full.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": []
+      }
+    },
+    {
+      "name": "deleteTaskProjection",
+      "request": {
+        "method": "deleteTaskProjection",
+        "args": [
+          {
+            "kind": "value",
+            "value": "tasks/full.md"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "registerProjectionDefinition",
+      "request": {
+        "method": "registerProjectionDefinition",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "projectionId": "calls/items",
+              "ownerPluginId": "calls",
+              "schemaVersion": 1,
+              "configHash": "calls-v1",
+              "visibility": "private",
+              "fields": {
+                "title": {
+                  "type": "string",
+                  "indexed": true
+                }
+              },
+              "active": true,
+              "updatedAt": 100
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "replaceProjectionSource",
+      "request": {
+        "method": "replaceProjectionSource",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "projectionId": "calls/items",
+              "sourcePath": "Projection.md",
+              "sourceHash": "hash",
+              "writerPluginId": "calls",
+              "rows": [
+                {
+                  "id": "row",
+                  "kind": "note",
+                  "data": {
+                    "title": "日本語 🪨"
+                  }
+                }
+              ],
+              "edges": []
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "queryProjection",
+      "request": {
+        "method": "queryProjection",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls/items"
+          },
+          {
+            "kind": "undefined"
+          },
+          {
+            "kind": "value",
+            "value": "calls"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "rows": [
+            {
+              "title": "日本語 🪨"
+            }
+          ],
+          "revision": 32,
+          "complete": true,
+          "indexStatus": "ready"
+        }
+      }
+    },
+    {
+      "name": "getProjectionRow",
+      "request": {
+        "method": "getProjectionRow",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls/items"
+          },
+          {
+            "kind": "value",
+            "value": "row"
+          },
+          {
+            "kind": "value",
+            "value": "calls"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "title": "日本語 🪨"
+        }
+      }
+    },
+    {
+      "name": "queryRelated",
+      "request": {
+        "method": "queryRelated",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "projectionId": "calls/items",
+              "rowId": "row",
+              "relation": "reference"
+            }
+          },
+          {
+            "kind": "value",
+            "value": "calls"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "rows": [],
+          "revision": 32,
+          "complete": true,
+          "indexStatus": "ready"
+        }
+      }
+    },
+    {
+      "name": "markProjectionSourceError",
+      "request": {
+        "method": "markProjectionSourceError",
+        "args": [
+          {
+            "kind": "value",
+            "value": {
+              "projectionId": "calls/items",
+              "sourcePath": "Projection.md",
+              "sourceHash": "hash",
+              "writerPluginId": "calls",
+              "error": "processor failed"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "deleteProjectionSource",
+      "request": {
+        "method": "deleteProjectionSource",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls/items"
+          },
+          {
+            "kind": "value",
+            "value": "Projection.md"
+          },
+          {
+            "kind": "value",
+            "value": "calls"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    },
+    {
+      "name": "unregisterProjectionDefinition",
+      "request": {
+        "method": "unregisterProjectionDefinition",
+        "args": [
+          {
+            "kind": "value",
+            "value": "calls/items"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "undefined"
+      }
+    }
+  ]
+}

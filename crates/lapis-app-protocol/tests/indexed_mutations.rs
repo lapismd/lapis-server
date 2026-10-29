@@ -1,10 +1,7 @@
 use lapis_app_protocol::database::indexed::mutations::IndexedFile;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/indexed-mutations.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/indexed-mutations.json")).unwrap()
 }
 fn normalized(value: Value) -> Value {
     match value {

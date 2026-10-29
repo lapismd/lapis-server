@@ -1,12 +1,10 @@
-use lapis_app_protocol::database::tasks::{TaskLookup, TaskQuery, record::TaskRecord};
-use serde_json::{Value, json};
+use lapis_app_protocol::database::tasks::{record::TaskRecord, TaskLookup, TaskQuery};
+use serde_json::{json, Value};
 
 #[test]
 fn task_contract_retains_complete_v4_json_and_distinguishes_optional_missing_and_null() {
-    let fixture: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap();
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap();
     for record in fixture["records"].as_array().unwrap() {
         let typed: TaskRecord = serde_json::from_value(record.clone()).unwrap();
         assert_eq!(serde_json::to_value(typed).unwrap(), *record);
@@ -38,10 +36,8 @@ fn task_contract_retains_complete_v4_json_and_distinguishes_optional_missing_and
 
 #[test]
 fn task_tracking_variants_and_occurrence_states_retain_the_source_catalogue() {
-    let fixture: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap();
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap();
     for tracking in [
         json!({"type":"boolean"}),
         json!({"type":"count","unit":"pages","target":20.0}),

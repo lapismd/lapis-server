@@ -1,4 +1,4 @@
-use lapis_server::control::{Control, LoginError, SESSION_ABSOLUTE_MS, SESSION_IDLE_MS, passwords};
+use lapis_server::control::{passwords, Control, LoginError, SESSION_ABSOLUTE_MS, SESSION_IDLE_MS};
 
 mod credentials;
 use credentials::{HASH, NOW, PASSWORD};
@@ -40,30 +40,24 @@ async fn session_tokens_are_hashed_persistent_revocable_and_expire_without_long_
     control.revoke(id, NOW + 3).await.unwrap();
     assert!(control.resolve(&token, NOW + 4).await.unwrap().is_none());
     let issued = control.issue(NOW + 5).await.unwrap();
-    assert!(
-        control
-            .resolve(&issued.token, NOW + 5 + SESSION_IDLE_MS)
-            .await
-            .unwrap()
-            .is_none()
-    );
+    assert!(control
+        .resolve(&issued.token, NOW + 5 + SESSION_IDLE_MS)
+        .await
+        .unwrap()
+        .is_none());
     let issued = control.issue(NOW).await.unwrap();
     for days in [6, 12, 18, 24, 29] {
-        assert!(
-            control
-                .resolve(&issued.token, NOW + days * 86_400_000)
-                .await
-                .unwrap()
-                .is_some()
-        );
-    }
-    assert!(
-        control
-            .resolve(&issued.token, NOW + SESSION_ABSOLUTE_MS)
+        assert!(control
+            .resolve(&issued.token, NOW + days * 86_400_000)
             .await
             .unwrap()
-            .is_none()
-    );
+            .is_some());
+    }
+    assert!(control
+        .resolve(&issued.token, NOW + SESSION_ABSOLUTE_MS)
+        .await
+        .unwrap()
+        .is_none());
     control.close().await.unwrap();
     drop(control);
     let database =
@@ -108,7 +102,7 @@ async fn bootstrap_is_idempotent_and_never_places_credentials_inside_an_admitted
         std::slice::from_ref(&vault),
         Some(Bootstrap {
             username: "Owner".into(),
-            password_file: password.clone(),
+            password_file: Some(password.clone()),
         }),
     )
     .await
@@ -123,13 +117,11 @@ async fn bootstrap_is_idempotent_and_never_places_credentials_inside_an_admitted
     let control = bootstrap::open(&profile, std::slice::from_ref(&vault), None)
         .await
         .unwrap();
-    assert!(
-        control
-            .resolve(&issued.token, NOW + 1)
-            .await
-            .unwrap()
-            .is_some()
-    );
+    assert!(control
+        .resolve(&issued.token, NOW + 1)
+        .await
+        .unwrap()
+        .is_some());
     control.close().await.unwrap();
     assert!(
         bootstrap::open(&vault.join("profile"), std::slice::from_ref(&vault), None)
@@ -138,18 +130,16 @@ async fn bootstrap_is_idempotent_and_never_places_credentials_inside_an_admitted
     );
     let exposed = vault.join("password");
     std::fs::write(&exposed, PASSWORD).unwrap();
-    assert!(
-        bootstrap::open(
-            &root.path().join("other-profile"),
-            &[vault],
-            Some(Bootstrap {
-                username: "Owner".into(),
-                password_file: exposed
-            })
-        )
-        .await
-        .is_err()
-    );
+    assert!(bootstrap::open(
+        &root.path().join("other-profile"),
+        &[vault],
+        Some(Bootstrap {
+            username: "Owner".into(),
+            password_file: Some(exposed),
+        })
+    )
+    .await
+    .is_err());
 }
 
 #[tokio::test]
@@ -182,12 +172,10 @@ async fn failed_login_throttle_and_successful_owner_login_keep_existing_policy()
         .login("OWNER", PASSWORD, "127.0.0.1", NOW + 15 * 60_000 + 10)
         .await
         .unwrap();
-    assert!(
-        control
-            .resolve(&issued.token, NOW + 15 * 60_000 + 11)
-            .await
-            .unwrap()
-            .is_some()
-    );
+    assert!(control
+        .resolve(&issued.token, NOW + 15 * 60_000 + 11)
+        .await
+        .unwrap()
+        .is_some());
     control.close().await.unwrap();
 }

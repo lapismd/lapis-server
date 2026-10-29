@@ -1,15 +1,12 @@
 mod search_support;
 use lapis_app_core::database::Database;
-use lapis_app_protocol::{ErrorCode, database::search::records::SearchDocumentRecord};
+use lapis_app_protocol::{database::search::records::SearchDocumentRecord, ErrorCode};
 use search_support::assert_json;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/search-preparation.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/search-preparation.json")).unwrap()
 }
 #[tokio::test]
 async fn native_preparation_retains_all_source_golden_records_and_utf16_offsets() {

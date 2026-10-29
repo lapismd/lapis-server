@@ -1,11 +1,8 @@
 use lapis_app_protocol::database::memory::{jobs::*, records::*};
-use serde::{Serialize, de::DeserializeOwned};
-use serde_json::{Value, json};
+use serde::{de::DeserializeOwned, Serialize};
+use serde_json::{json, Value};
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/memory-storage.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/memory-storage.json")).unwrap()
 }
 fn roundtrip<T: DeserializeOwned + Serialize>(value: Value) {
     let typed: T = serde_json::from_value(value.clone()).unwrap();
@@ -79,16 +76,12 @@ fn memory_dtos_reject_raw_queries_unknown_patch_authority_and_invalid_enum_value
         assert!(serde_json::from_value::<MemoryCandidateQuery>(bad).is_err());
     }
     assert!(serde_json::from_value::<MemoryRecallSignal>(json!({"targetRef":"x","queryFingerprint":"salted","day":"today","bestScore":0.5,"hitCount":1,"query":"raw sensitive query"})).is_err());
-    assert!(
-        serde_json::from_value::<MemoryJobUpdate>(
-            json!({"jobId":"x","ownerId":"a","now":1,"patch":{"status":"completed","ownerId":"b"}})
-        )
-        .is_err()
-    );
-    assert!(
-        serde_json::from_value::<MemoryJobUpdate>(
-            json!({"jobId":"x","ownerId":"a","now":1,"patch":{"status":"cancelled"}})
-        )
-        .is_err()
-    );
+    assert!(serde_json::from_value::<MemoryJobUpdate>(
+        json!({"jobId":"x","ownerId":"a","now":1,"patch":{"status":"completed","ownerId":"b"}})
+    )
+    .is_err());
+    assert!(serde_json::from_value::<MemoryJobUpdate>(
+        json!({"jobId":"x","ownerId":"a","now":1,"patch":{"status":"cancelled"}})
+    )
+    .is_err());
 }

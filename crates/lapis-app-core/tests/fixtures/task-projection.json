@@ -1,0 +1,428 @@
+{
+  "records": [
+    {
+      "documentPath": "tasks/full.md",
+      "documentId": "full",
+      "kind": "task",
+      "title": "Full task",
+      "status": "open",
+      "inbox": false,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "priority": "high",
+      "startDate": null,
+      "planDate": "2026-10-24",
+      "planKind": "time",
+      "planTime": "09:30",
+      "durationMinutes": 45.0,
+      "deadline": "2026-10-30",
+      "completedAt": null,
+      "repeat": {
+        "start": "2026-10-01",
+        "rrule": "FREQ=WEEKLY;BYDAY=MO,FR",
+        "anchor": "schedule",
+        "missed": "carry",
+        "rdate": ["2026-11-01"],
+        "exdate": ["2026-11-02"],
+        "resetChecklist": true,
+        "paused": false,
+        "pausedSince": "2026-10-02",
+        "pauseRanges": [
+          {
+            "start": "2026-10-02",
+            "end": "2026-10-03"
+          }
+        ],
+        "lastCompletedAt": "2026-10-20T12:00:00Z",
+        "completionCount": 3.0
+      },
+      "tracking": {
+        "type": "count",
+        "unit": "pages",
+        "target": 20.0
+      },
+      "effectiveOccurrenceDate": "2026-10-24",
+      "effectiveOccurrenceState": "current",
+      "effectiveForDate": "2026-10-24",
+      "repeatStrategy": null,
+      "repeatFrequency": "weekly",
+      "repeatInterval": 2.0,
+      "repeatAnchor": "schedule",
+      "structure": {
+        "version": 1.0,
+        "sourceHash": "hash",
+        "entries": [
+          {
+            "sourceDocumentId": "full",
+            "sourceDocumentPath": "tasks/full.md",
+            "targetDocumentId": "child",
+            "targetDocumentPath": "tasks/child.md",
+            "kind": "task-entry",
+            "headingPath": ["Tasks"],
+            "headingLevel": 2.0,
+            "headingText": "Tasks",
+            "runId": "run",
+            "positionInRun": 0.0,
+            "sourceStart": 10.0,
+            "sourceEnd": 30.0,
+            "authoredLabel": "Child",
+            "authoredHref": "child.md"
+          }
+        ],
+        "runs": [
+          {
+            "id": "run",
+            "documentId": "full",
+            "documentPath": "tasks/full.md",
+            "headingPath": ["Tasks"],
+            "headingLevel": null,
+            "headingText": null,
+            "listDepth": 0.0,
+            "startOffset": 10.0,
+            "endOffset": 30.0,
+            "entryCount": 1.0
+          }
+        ],
+        "diagnostics": [
+          {
+            "code": "sample",
+            "message": "retained",
+            "sourceStart": 10.0,
+            "sourceEnd": 30.0,
+            "target": "child"
+          }
+        ]
+      }
+    },
+    {
+      "documentPath": "tasks/inbox.md",
+      "documentId": "inbox",
+      "kind": "task",
+      "title": "inbox",
+      "status": "open",
+      "inbox": true,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0
+    },
+    {
+      "documentPath": "tasks/overdue.md",
+      "documentId": "overdue",
+      "kind": "task",
+      "title": "overdue",
+      "status": "open",
+      "inbox": false,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "planDate": "2026-10-01",
+      "effectiveOccurrenceState": "overdue",
+      "effectiveOccurrenceDate": "2026-10-23",
+      "effectiveForDate": "2026-10-24"
+    },
+    {
+      "documentPath": "tasks/future.md",
+      "documentId": "future",
+      "kind": "task",
+      "title": "future",
+      "status": "open",
+      "inbox": false,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "planDate": "2026-10-01",
+      "effectiveOccurrenceState": "future",
+      "effectiveOccurrenceDate": "2026-10-26",
+      "effectiveForDate": "2026-10-24"
+    },
+    {
+      "documentPath": "tasks/carried.md",
+      "documentId": "carried",
+      "kind": "task",
+      "title": "carried",
+      "status": "open",
+      "inbox": false,
+      "startKind": "date",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "planDate": "2026-10-20",
+      "startDate": "2026-10-01"
+    },
+    {
+      "documentPath": "tasks/someday.md",
+      "documentId": "someday",
+      "kind": "task",
+      "title": "someday",
+      "status": "open",
+      "inbox": false,
+      "startKind": "someday",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0
+    },
+    {
+      "documentPath": "tasks/completed.md",
+      "documentId": "completed",
+      "kind": "task",
+      "title": "completed",
+      "status": "completed",
+      "inbox": false,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "completedAt": "2026-10-22"
+    },
+    {
+      "documentPath": "tasks/list.md",
+      "documentId": "list",
+      "kind": "task-list",
+      "title": "list",
+      "status": "active",
+      "inbox": false,
+      "startKind": "anytime",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0
+    },
+    {
+      "documentPath": "tasks/deadline.md",
+      "documentId": "deadline",
+      "kind": "task",
+      "title": "deadline",
+      "status": "open",
+      "inbox": false,
+      "startKind": "date",
+      "checklistTotal": 4.0,
+      "checklistCompleted": 1.0,
+      "commentCount": 2.0,
+      "projectionVersion": 4.0,
+      "deadline": "2026-10-23",
+      "startDate": "2026-10-30"
+    }
+  ],
+  "cases": [
+    {
+      "query": {
+        "view": "inbox",
+        "today": "2026-10-24"
+      },
+      "ids": ["inbox"]
+    },
+    {
+      "query": {
+        "view": "today",
+        "today": "2026-10-24"
+      },
+      "ids": ["carried", "deadline", "full"]
+    },
+    {
+      "query": {
+        "view": "anytime",
+        "today": "2026-10-24"
+      },
+      "ids": ["inbox"]
+    },
+    {
+      "query": {
+        "view": "upcoming",
+        "today": "2026-10-24"
+      },
+      "ids": ["deadline", "full", "future"]
+    },
+    {
+      "query": {
+        "view": "someday",
+        "today": "2026-10-24"
+      },
+      "ids": ["someday"]
+    },
+    {
+      "query": {
+        "view": "completed",
+        "today": "2026-10-24"
+      },
+      "ids": ["completed"]
+    },
+    {
+      "query": {
+        "view": "review",
+        "today": "2026-10-24"
+      },
+      "ids": ["carried", "overdue"]
+    },
+    {
+      "query": {
+        "documentId": "full"
+      },
+      "ids": ["full"]
+    },
+    {
+      "query": {
+        "documentPath": "tasks/full.md",
+        "kind": "task"
+      },
+      "ids": ["full"]
+    },
+    {
+      "query": {
+        "kind": "task-list"
+      },
+      "ids": ["list"]
+    },
+    {
+      "query": {
+        "view": "today",
+        "today": "2026-10-24",
+        "limit": 1
+      },
+      "ids": ["carried"]
+    }
+  ],
+  "fields": {
+    "documentPath": {
+      "type": "path",
+      "indexed": true,
+      "sortable": true
+    },
+    "documentId": {
+      "type": "string",
+      "indexed": true,
+      "unique": true
+    },
+    "kind": {
+      "type": "string",
+      "indexed": true
+    },
+    "title": {
+      "type": "string",
+      "indexed": true,
+      "sortable": true
+    },
+    "status": {
+      "type": "string",
+      "indexed": true,
+      "sortable": true
+    },
+    "priority": {
+      "type": "string",
+      "indexed": true,
+      "sortable": true
+    },
+    "inbox": {
+      "type": "boolean",
+      "indexed": true
+    },
+    "startKind": {
+      "type": "string",
+      "indexed": true
+    },
+    "startDate": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "planDate": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "planKind": {
+      "type": "string",
+      "indexed": true
+    },
+    "planTime": {
+      "type": "string",
+      "indexed": true,
+      "sortable": true
+    },
+    "durationMinutes": {
+      "type": "number",
+      "indexed": true,
+      "sortable": true
+    },
+    "deadline": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "completedAt": {
+      "type": "string",
+      "indexed": true
+    },
+    "repeat": {
+      "type": "json"
+    },
+    "repeatStart": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "repeatRRule": {
+      "type": "string",
+      "indexed": true
+    },
+    "repeatAnchor": {
+      "type": "string",
+      "indexed": true
+    },
+    "repeatMissed": {
+      "type": "string",
+      "indexed": true
+    },
+    "repeatPaused": {
+      "type": "boolean",
+      "indexed": true
+    },
+    "repeatPausedSince": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "tracking": {
+      "type": "json"
+    },
+    "effectiveOccurrenceDate": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "effectiveOccurrenceState": {
+      "type": "string",
+      "indexed": true,
+      "sortable": true
+    },
+    "effectiveForDate": {
+      "type": "date",
+      "indexed": true,
+      "sortable": true
+    },
+    "checklistTotal": {
+      "type": "number"
+    },
+    "checklistCompleted": {
+      "type": "number"
+    },
+    "commentCount": {
+      "type": "number",
+      "indexed": true
+    },
+    "structure": {
+      "type": "json"
+    }
+  }
+}

@@ -1,12 +1,9 @@
 use lapis_app_core::database::Database;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::{future::Future, task::Poll};
 use uuid::Uuid;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap()
 }
 
 #[tokio::test]
@@ -67,12 +64,11 @@ async fn native_task_records_and_views_match_the_retained_reference_fixture() {
         2
     );
     db.delete_task_projection("tasks/full.md").await.unwrap();
-    assert!(
-        db.get_task_row(serde_json::from_value(json!({"path":"tasks/full.md"})).unwrap())
-            .await
-            .unwrap()
-            .is_none()
-    );
+    assert!(db
+        .get_task_row(serde_json::from_value(json!({"path":"tasks/full.md"})).unwrap())
+        .await
+        .unwrap()
+        .is_none());
     let event = db.subscribe_to_changes();
     drop(event);
     db.close().await.unwrap();

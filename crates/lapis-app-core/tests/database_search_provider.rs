@@ -1,6 +1,6 @@
 use lapis_app_core::database::Database;
-use lapis_app_protocol::{ErrorCode, database::search::embedding::SearchEmbeddingProviderConfig};
-use serde_json::{Value, json};
+use lapis_app_protocol::{database::search::embedding::SearchEmbeddingProviderConfig, ErrorCode};
+use serde_json::{json, Value};
 use uuid::Uuid;
 
 fn config(dimensions: usize) -> SearchEmbeddingProviderConfig {
@@ -33,7 +33,8 @@ async fn configuration_is_lazy_persisted_and_idempotent_without_admitted_assets(
     );
     let db = Database::open(directory.path(), vault).await.unwrap();
     assert_eq!(
-        serde_json::to_value(db.get_search_embedding_provider().await.unwrap()).unwrap()["dimensions"],
+        serde_json::to_value(db.get_search_embedding_provider().await.unwrap()).unwrap()
+            ["dimensions"],
         384
     );
     assert_eq!(
@@ -58,12 +59,10 @@ async fn unavailable_model_publishes_error_without_a_replacement_vector() {
     assert_eq!(embedding["modelId"], "Xenova/all-MiniLM-L6-v2");
     assert_eq!(embedding["dirty"], true);
     assert!(embedding.get("vector").is_none());
-    assert!(
-        !embedding["error"]
-            .as_str()
-            .unwrap()
-            .contains(directory.path().to_str().unwrap())
-    );
+    assert!(!embedding["error"]
+        .as_str()
+        .unwrap()
+        .contains(directory.path().to_str().unwrap()));
     assert_eq!(
         db.get_search_index_stats().await.unwrap().error_chunk_count,
         1
@@ -189,10 +188,8 @@ async fn invalid_configuration_is_rejected_before_mutation() {
 
 #[tokio::test]
 async fn explicit_token_hash_matches_the_retained_unicode_reference_without_model_fallback() {
-    let fixture: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/search-semantic-model.json"
-    ))
-    .unwrap();
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/search-semantic-model.json")).unwrap();
     let directory = tempfile::tempdir().unwrap();
     let db = Database::open(directory.path(), Uuid::new_v4())
         .await

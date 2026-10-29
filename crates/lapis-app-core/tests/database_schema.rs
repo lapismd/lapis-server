@@ -96,7 +96,7 @@ async fn current_retained_schema_keeps_all_durable_json_bytes_and_revisions() {
     let id = Uuid::new_v4();
     let (engine, connection) = raw(profile.path(), id).await;
     // Use the serving provider's actual schema, not a duplicate test schema.
-    let source = include_str!("../../../packages/api/src/lib/storage/turso-app-database.ts");
+    let source = include_str!("fixtures/storage/turso-app-database.ts");
     assert!(source.contains("export const TURSO_APP_DATABASE_SCHEMA_VERSION = 5;"));
     let schema = source
         .split_once("export const TURSO_APP_DATABASE_SCHEMA = `")

@@ -1,0 +1,195 @@
+{
+  "projectionId": "books/book",
+  "rows": [
+    {
+      "id": "a",
+      "title": "Zeta",
+      "rank": 2,
+      "optional": null,
+      "literal.key": "flat",
+      "literal": {
+        "key": "nested"
+      }
+    },
+    {
+      "id": "b",
+      "title": "alpha",
+      "rank": 1
+    },
+    {
+      "id": "c",
+      "title": "Écho",
+      "rank": 3,
+      "optional": "value"
+    },
+    {
+      "id": "d",
+      "title": "beta",
+      "rank": null,
+      "optional": "other"
+    },
+    {
+      "id": "e",
+      "title": "Beta",
+      "rank": 4,
+      "optional": "bound"
+    }
+  ],
+  "cases": [
+    {
+      "name": "null membership includes null and missing fields",
+      "query": {
+        "where": {
+          "op": "in",
+          "field": "optional",
+          "values": [null]
+        }
+      },
+      "ids": ["a", "b"]
+    },
+    {
+      "name": "fields are direct own properties",
+      "query": {
+        "where": {
+          "op": "compare",
+          "field": "literal.key",
+          "comparison": "eq",
+          "value": "flat"
+        }
+      },
+      "ids": ["a"]
+    },
+    {
+      "name": "nested logical operations retain missing-field semantics",
+      "query": {
+        "where": {
+          "op": "and",
+          "operands": [
+            {
+              "op": "not",
+              "operand": {
+                "op": "exists",
+                "field": "optional"
+              }
+            },
+            {
+              "op": "or",
+              "operands": [
+                {
+                  "op": "compare",
+                  "field": "rank",
+                  "comparison": "gte",
+                  "value": 2
+                },
+                {
+                  "op": "compare",
+                  "field": "id",
+                  "comparison": "eq",
+                  "value": "b"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ids": ["a", "b"]
+    },
+    {
+      "name": "Unicode text uses the retained locale comparison",
+      "query": {
+        "orderBy": [
+          {
+            "field": "title",
+            "direction": "asc"
+          }
+        ]
+      },
+      "ids": ["b", "d", "e", "c", "a"]
+    },
+    {
+      "name": "numeric ordering keeps nulls last",
+      "query": {
+        "orderBy": [
+          {
+            "field": "rank",
+            "direction": "asc",
+            "nulls": "last"
+          }
+        ]
+      },
+      "ids": ["b", "a", "c", "e", "d"]
+    },
+    {
+      "name": "text ordering precedes the page cut",
+      "query": {
+        "orderBy": [
+          {
+            "field": "title",
+            "direction": "asc"
+          }
+        ],
+        "limit": 2
+      },
+      "ids": ["b", "d"]
+    },
+    {
+      "name": "mixed scalar comparisons retain evaluator semantics",
+      "query": {
+        "where": {
+          "op": "compare",
+          "field": "rank",
+          "comparison": "eq",
+          "value": "1"
+        }
+      },
+      "ids": ["b"]
+    },
+    {
+      "name": "negation preserves missing values",
+      "query": {
+        "where": {
+          "op": "not",
+          "operand": {
+            "op": "compare",
+            "field": "optional",
+            "comparison": "eq",
+            "value": "value"
+          }
+        }
+      },
+      "ids": ["a", "b", "d", "e"]
+    },
+    {
+      "name": "empty conjunction is true",
+      "query": {
+        "where": {
+          "op": "and",
+          "operands": []
+        }
+      },
+      "ids": ["a", "b", "c", "d", "e"]
+    },
+    {
+      "name": "empty disjunction is false",
+      "query": {
+        "where": {
+          "op": "or",
+          "operands": []
+        }
+      },
+      "ids": []
+    },
+    {
+      "name": "descending default retains null ordering",
+      "query": {
+        "orderBy": [
+          {
+            "field": "rank",
+            "direction": "desc"
+          }
+        ]
+      },
+      "ids": ["d", "e", "c", "a", "b"]
+    }
+  ]
+}

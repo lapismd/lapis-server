@@ -1,19 +1,16 @@
 use lapis_app_core::database::Database;
-use lapis_app_protocol::{ErrorCode, database::tasks::record::TaskRecord};
-use serde_json::{Value, json};
+use lapis_app_protocol::{database::tasks::record::TaskRecord, ErrorCode};
+use serde_json::{json, Value};
 use uuid::Uuid;
 mod indexed_support;
 mod projection_support;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap()
 }
 
 #[tokio::test]
-async fn failed_projection_stage_retains_prior_task_and_metadata_commits_and_only_publishes_committed_revisions()
- {
+async fn failed_projection_stage_retains_prior_task_and_metadata_commits_and_only_publishes_committed_revisions(
+) {
     let profile = tempfile::tempdir().unwrap();
     let db = Database::open(profile.path(), Uuid::new_v4())
         .await
@@ -107,18 +104,16 @@ async fn task_schema_and_atomic_deletion_keep_the_retained_fields_and_domain_cha
         json!(["task", "projection"])
     );
     assert!(events.try_recv().is_err());
-    assert!(
-        db.get_task_row(serde_json::from_value(json!({"id":"full"})).unwrap())
-            .await
-            .unwrap()
-            .is_none()
-    );
-    assert!(
-        db.get_task_row(serde_json::from_value(json!({"path":"tasks/full.md"})).unwrap())
-            .await
-            .unwrap()
-            .is_none()
-    );
+    assert!(db
+        .get_task_row(serde_json::from_value(json!({"id":"full"})).unwrap())
+        .await
+        .unwrap()
+        .is_none());
+    assert!(db
+        .get_task_row(serde_json::from_value(json!({"path":"tasks/full.md"})).unwrap())
+        .await
+        .unwrap()
+        .is_none());
     db.close().await.unwrap();
 }
 

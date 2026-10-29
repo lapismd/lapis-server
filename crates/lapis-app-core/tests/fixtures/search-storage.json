@@ -1,0 +1,409 @@
+{
+  "records": [
+    {
+      "input": {
+        "path": "A.md",
+        "sourceProviderId": "markdown",
+        "name": "A",
+        "extension": "md",
+        "checksum": "hash-a",
+        "content": "alpha🪨 beta\noops\nagain",
+        "tags": ["#Legacy"],
+        "tagParts": ["Legacy"],
+        "tagHierarchy": ["Legacy"],
+        "metadataText": "legacy metadata",
+        "chunks": [
+          {
+            "id": "A.md#ready",
+            "text": "alpha🪨",
+            "startOffset": 0,
+            "endOffset": 7,
+            "heading": "Alpha",
+            "kind": "paragraph",
+            "embedding": {
+              "status": "ready",
+              "modelId": "fixture/vector",
+              "modelVersion": "1",
+              "dimensions": 3,
+              "vector": [1, 0, 0],
+              "fingerprint": "ready-fingerprint",
+              "dirty": false,
+              "updatedAt": 11.25
+            }
+          },
+          {
+            "id": "A.md#pending",
+            "text": "beta",
+            "startOffset": 8,
+            "endOffset": 12,
+            "kind": "list",
+            "embedding": {
+              "status": "pending",
+              "modelId": "fixture/vector",
+              "dimensions": 3,
+              "dirty": true
+            }
+          },
+          {
+            "id": "A.md#error",
+            "text": "oops",
+            "startOffset": 13,
+            "endOffset": 17,
+            "kind": "code",
+            "embedding": {
+              "status": "error",
+              "modelId": "fixture/vector",
+              "error": ""
+            }
+          },
+          {
+            "id": "A.md#error-2",
+            "text": "again",
+            "startOffset": 18,
+            "endOffset": 23,
+            "kind": "fallback",
+            "embedding": {
+              "status": "error",
+              "modelId": "fixture/vector",
+              "error": "model-missing"
+            }
+          }
+        ]
+      },
+      "stored": {
+        "path": "A.md",
+        "sourceProviderId": "markdown",
+        "name": "A",
+        "extension": "md",
+        "checksum": "hash-a",
+        "content": "alpha🪨 beta\noops\nagain",
+        "tags": ["#Legacy"],
+        "tagParts": ["Legacy"],
+        "tagHierarchy": ["Legacy"],
+        "metadataText": "legacy metadata",
+        "chunks": [
+          {
+            "id": "A.md#ready",
+            "text": "alpha🪨",
+            "startOffset": 0,
+            "endOffset": 7,
+            "heading": "Alpha",
+            "kind": "paragraph",
+            "embedding": {
+              "status": "ready",
+              "modelId": "fixture/vector",
+              "modelVersion": "1",
+              "dimensions": 3,
+              "vector": [1, 0, 0],
+              "fingerprint": "ready-fingerprint",
+              "dirty": false,
+              "updatedAt": 11.25
+            }
+          },
+          {
+            "id": "A.md#pending",
+            "text": "beta",
+            "startOffset": 8,
+            "endOffset": 12,
+            "kind": "list",
+            "embedding": {
+              "status": "pending",
+              "modelId": "fixture/vector",
+              "dimensions": 3,
+              "dirty": true
+            }
+          },
+          {
+            "id": "A.md#error",
+            "text": "oops",
+            "startOffset": 13,
+            "endOffset": 17,
+            "kind": "code",
+            "embedding": {
+              "status": "error",
+              "modelId": "fixture/vector",
+              "error": ""
+            }
+          },
+          {
+            "id": "A.md#error-2",
+            "text": "again",
+            "startOffset": 18,
+            "endOffset": 23,
+            "kind": "fallback",
+            "embedding": {
+              "status": "error",
+              "modelId": "fixture/vector",
+              "error": "model-missing"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "B.md",
+        "sourceProviderId": "markdown",
+        "name": "B",
+        "extension": "md",
+        "checksum": "hash-b",
+        "content": "---\ntitle: B\n---\n# B\nhello",
+        "tags": ["stale"],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "metadataText": "old",
+        "sourceMetadata": {
+          "metadataHash": "hash-b-meta",
+          "providerVersion": "markdown-1",
+          "projectionSignature": "chunks-1",
+          "sourceMtime": 12.5,
+          "sourceSize": 26,
+          "rawTags": ["#Work/Notes", "#Team", "#Work/Notes", ""],
+          "frontmatter": {
+            "title": "B",
+            "2": "two",
+            "1": "one"
+          },
+          "frontmatterEndOffset": 17,
+          "headings": [
+            {
+              "heading": "B",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 17
+                },
+                "end": {
+                  "offset": 20
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 17
+                },
+                "end": {
+                  "offset": 20
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 21
+                },
+                "end": {
+                  "offset": 26
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 1000,
+            "breakpointWindowChars": 100,
+            "breakpointDecay": 0.5
+          }
+        }
+      },
+      "stored": {
+        "path": "B.md",
+        "sourceProviderId": "markdown",
+        "name": "B",
+        "extension": "md",
+        "checksum": "hash-b",
+        "content": "---\ntitle: B\n---\n# B\nhello",
+        "tags": ["Work/Notes", "Team"],
+        "tagParts": ["Work", "Notes", "Team"],
+        "tagHierarchy": ["Work", "Work/Notes", "Team"],
+        "metadataText": "{\"1\":\"one\",\"2\":\"two\",\"title\":\"B\"}",
+        "sourceMetadata": {
+          "metadataHash": "hash-b-meta",
+          "providerVersion": "markdown-1",
+          "projectionSignature": "chunks-1",
+          "sourceMtime": 12.5,
+          "sourceSize": 26,
+          "rawTags": ["#Work/Notes", "#Team", "#Work/Notes", ""],
+          "frontmatter": {
+            "title": "B",
+            "2": "two",
+            "1": "one"
+          },
+          "frontmatterEndOffset": 17,
+          "headings": [
+            {
+              "heading": "B",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 17
+                },
+                "end": {
+                  "offset": 20
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 17
+                },
+                "end": {
+                  "offset": 20
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 21
+                },
+                "end": {
+                  "offset": 26
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 1000,
+            "breakpointWindowChars": 100,
+            "breakpointDecay": 0.5
+          }
+        },
+        "chunks": [
+          {
+            "id": "B.md#chunk-17-26",
+            "text": "# B\nhello",
+            "startOffset": 17,
+            "endOffset": 26,
+            "heading": "B",
+            "kind": "heading"
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "path": "C.md",
+        "sourceProviderId": "memory-curated",
+        "name": "C",
+        "extension": "md",
+        "checksum": "hash-c",
+        "content": " \n\t",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": ["#Empty"],
+          "frontmatter": null,
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 100,
+            "breakpointWindowChars": 10,
+            "breakpointDecay": 0.5
+          }
+        }
+      },
+      "stored": {
+        "path": "C.md",
+        "sourceProviderId": "memory-curated",
+        "name": "C",
+        "extension": "md",
+        "checksum": "hash-c",
+        "content": " \n\t",
+        "tags": ["Empty"],
+        "tagParts": ["Empty"],
+        "tagHierarchy": ["Empty"],
+        "sourceMetadata": {
+          "rawTags": ["#Empty"],
+          "frontmatter": null,
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 100,
+            "breakpointWindowChars": 10,
+            "breakpointDecay": 0.5
+          }
+        },
+        "metadataText": "{}",
+        "chunks": []
+      }
+    },
+    {
+      "input": {
+        "path": "D.md",
+        "name": "D",
+        "extension": "md",
+        "checksum": "hash-d",
+        "content": "no authored chunks",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": []
+      },
+      "stored": {
+        "path": "D.md",
+        "name": "D",
+        "extension": "md",
+        "checksum": "hash-d",
+        "content": "no authored chunks",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": []
+      }
+    }
+  ],
+  "manifest": [
+    {
+      "path": "A.md",
+      "checksum": "hash-a",
+      "sourceProviderId": "markdown"
+    },
+    {
+      "path": "B.md",
+      "checksum": "hash-b",
+      "sourceProviderId": "markdown",
+      "metadataHash": "hash-b-meta",
+      "providerVersion": "markdown-1",
+      "projectionSignature": "chunks-1",
+      "sourceMtime": 12.5,
+      "sourceSize": 26
+    },
+    {
+      "path": "C.md",
+      "checksum": "hash-c",
+      "sourceProviderId": "memory-curated"
+    },
+    {
+      "path": "D.md",
+      "checksum": "hash-d"
+    }
+  ],
+  "stats": {
+    "documentCount": 4,
+    "chunkCount": 5,
+    "readyChunkCount": 1,
+    "pendingChunkCount": 2,
+    "errorChunkCount": 2,
+    "lastError": ""
+  },
+  "replacement": {
+    "path": "B.md",
+    "name": "B replaced",
+    "extension": "md",
+    "checksum": "replaced",
+    "content": "replacement",
+    "tags": [],
+    "tagParts": [],
+    "tagHierarchy": [],
+    "chunks": []
+  }
+}
