@@ -22,6 +22,19 @@
   let username = $state("");
   let password = $state("");
 
+  function placeInShell(node: HTMLElement) {
+    const move = () => {
+      const main = node.ownerDocument.querySelector(
+        "[data-ui-component='lapis-workspace-shell'] [data-ui-component='app-shell-main']",
+      );
+      if (main && node.parentElement !== main) main.append(node);
+      return Boolean(main);
+    };
+    if (move()) return;
+    const frame = requestAnimationFrame(move);
+    return () => cancelAnimationFrame(frame);
+  }
+
   onMount(() => {
     void (async () => {
       await app.vault.load();
@@ -40,42 +53,43 @@
         displayMode="desktop"
         workspaceLabel="Hosted Notes"
       />
+      <form
+        class="credential-form"
+        data-testid="server-credential-form"
+        {@attach placeInShell}
+        onsubmit={(event) => event.preventDefault()}
+      >
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Sign in</Card.Title>
+            <Card.Description>
+              Open your managed Lapis vaults from this server.
+            </Card.Description>
+          </Card.Header>
+          <Card.Content>
+            <label>
+              Username
+              <Input.Root
+                name="username"
+                autocomplete="username"
+                bind:value={username}
+              />
+            </label>
+            <label>
+              Password
+              <Input.Root
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                bind:value={password}
+              />
+            </label>
+            <Button.Root type="submit">Sign in</Button.Root>
+          </Card.Content>
+        </Card.Root>
+      </form>
     </div>
   {/if}
-  <form
-    class="credential-form"
-    data-testid="server-credential-form"
-    onsubmit={(event) => event.preventDefault()}
-  >
-    <Card.Root>
-      <Card.Header>
-        <Card.Title>Sign in</Card.Title>
-        <Card.Description>
-          Open your managed Lapis vaults from this server.
-        </Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <label>
-          Username
-          <Input.Root
-            name="username"
-            autocomplete="username"
-            bind:value={username}
-          />
-        </label>
-        <label>
-          Password
-          <Input.Root
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            bind:value={password}
-          />
-        </label>
-        <Button.Root type="submit">Sign in</Button.Root>
-      </Card.Content>
-    </Card.Root>
-  </form>
 </section>
 
 <style>
@@ -92,11 +106,18 @@
     min-height: 100vh;
   }
 
+  :global(
+    [data-ui-component="lapis-workspace-shell"]
+      [data-ui-component="app-shell-main"]
+  ) {
+    position: relative;
+  }
+
   .credential-form {
-    position: absolute;
-    inset: 0;
     display: grid;
     place-items: center;
+    width: 100%;
+    height: 100%;
     margin: 0;
     padding: 0;
   }

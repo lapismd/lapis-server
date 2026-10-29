@@ -36,5 +36,5 @@ MUST NOT publish an npm package.
 
 - The Storybook preview imports those published stylesheets and defaults `data-ui-theme` to lapis.
 - The hosted Notes story requires grid layout, a loaded `--background` token, zero root padding, and full viewport height.
-- The credential story renders the sign-in card over the workspace shell with the same full-viewport contract.
+- The credential story renders the sign-in card inside the workspace shell with the same full-viewport contract.
 - Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents follows those headings.

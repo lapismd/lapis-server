@@ -28,9 +28,15 @@ export const SignIn: Story = {
       ) as HTMLElement | null;
       expect(input).toBeTruthy();
       expect(getComputedStyle(input!).borderRadius).not.toBe("0px");
-      expect(
-        canvasElement.querySelector('[data-ui-component="card"]'),
-      ).toBeTruthy();
+      const shell = canvasElement.querySelector(
+        '[data-ui-component="lapis-workspace-shell"]',
+      );
+      const card = canvasElement.querySelector(
+        '[data-ui-component="card"]',
+      ) as HTMLElement | null;
+      expect(shell?.contains(card)).toBe(true);
+      expect(card!.getBoundingClientRect().width).toBeGreaterThan(100);
+      expect(card!.getBoundingClientRect().height).toBeGreaterThan(40);
       expectShellFillsViewport(canvasElement);
     });
   },
