@@ -35,13 +35,18 @@ During drain the same path returns `unavailable` with HTTP 503.
 curl --fail --silent http://127.0.0.1:8787/readyz
 ```
 
+## Credentials
+
+Compose reads the bootstrap password from `LAPIS_SERVER_PASSWORD_FILE`. Point
+that variable at a file outside this checkout. The compose secret mounts the
+file at `/run/secrets/lapis_bootstrap_password`. Do not commit the password
+file, and do not pass the password on the command line. The bootstrap username
+is `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
+
 ## Build context
 
-`crates/lapis-server/Dockerfile` builds from a `lapismd/lapis-notes` checkout.
-The repository root is the Docker context and is copied to `/work/lapis-notes`.
-`pnpm build:server:container` still qualifies the local image
-`lapis-server:rust-local` by staging path-pinned sibling crates into that
-checkout before the build. Those path dependencies stay in jj-store,
-lapis-plugin-docs, lapis-plugin-tasks, and lapis-plugins because those
-repositories have no crate tags. `lapis-ai-service` is fetched from lapis-ai
-tag `v0.2.0` during the image build.
+`crates/lapis-server/Dockerfile` builds from this `lapismd/lapis-server`
+checkout. The repository root is the Docker context. jj-store crates come from
+git revision `7a98bd89d2bc77fb6ec41f91186992abb19ba161`. `lapis-ai-service` is
+fetched from lapis-ai tag `v0.2.0`. Publishing the image is a separate
+authorization and is not part of this pull request.

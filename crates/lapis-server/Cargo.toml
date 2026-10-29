@@ -30,6 +30,6 @@ reqwest = { version = "=0.12.28", default-features = false, features = ["rustls-
 
 [dev-dependencies]
 zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
-jj-store-jj = { path = "../../../jj-store/crates/jj-store-jj", version = "0.1.0", default-features = false, features = ["vault-backup"] }
+jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0", default-features = false, features = ["vault-backup"] }
 reqwest = { version = "=0.12.28", default-features = false, features = ["json", "stream"] }
 tokio = { version = "1", features = ["process", "io-util", "time"] }

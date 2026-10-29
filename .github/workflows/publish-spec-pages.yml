@@ -1,0 +1,84 @@
+name: Publish specification to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build specification and Storybook
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@v6
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install mdbook
+        uses: taiki-e/install-action@v2
+        with:
+          tool: mdbook@0.5.4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
+
+      - name: Build the specification and Storybook
+        env:
+          MDBOOK_OUTPUT__HTML__SITE_URL: /lapis-server/
+        run: |
+          pnpm spec:build
+          pnpm build-storybook
+          mkdir -p spec/book/storybook
+          cp -R storybook-static/. spec/book/storybook/
+          test -f spec/book/index.html
+          test -f spec/book/storybook/index.html
+          test -f spec/book/storybook/iframe.html
+          test -f spec/book/storybook/index.json
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: spec/book
+
+  deploy:
+    name: Deploy specification and Storybook
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 10
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -20,10 +20,18 @@
     "spec:validate": "spec-validator validate",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "configure": "node scripts/configure.mjs"
   },
   "devDependencies": {
     "@lapismd/spec-validator": "^0.2.0",
-    "prettier": "3.6.2"
+    "@storybook/svelte-vite": "^10.6.5",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "prettier": "3.6.2",
+    "storybook": "^10.6.5",
+    "svelte": "^5.57.3",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.5"
   }
 }
