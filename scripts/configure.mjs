@@ -2,6 +2,8 @@ import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const forbidden = "35356e655765143b29a6c9b1518ef3b91d04837d";
+const revision = "7a98bd89d2bc77fb6ec41f91186992abb19ba161";
+const git = 'git = "https://github.com/stevejuma/jj-store"';
 const server = await readFile("crates/lapis-server/Cargo.toml", "utf8");
 const core = await readFile("crates/lapis-app-core/Cargo.toml", "utf8");
 if (!server.includes('name = "lapis-server"'))
@@ -15,13 +17,18 @@ if (
 for (const manifest of [server, core]) {
   if (manifest.includes(forbidden))
     throw new Error("jj-store pull request 22 is not a server dependency");
-  if (manifest.includes("github.com/stevejuma/jj-store"))
-    throw new Error(
-      "jj-store stays a path dependency until pull request 22 merges",
-    );
+  const pinned = manifest
+    .split("\n")
+    .filter((line) => /jj-(?:store|history|vault)/u.test(line));
+  if (pinned.length === 0) throw new Error("jj-store dependency is missing");
+  for (const line of pinned) {
+    if (line.includes('path = "../../../jj-store/'))
+      throw new Error("jj-store path dependencies are retired");
+    if (!line.includes(git) || !line.includes(`rev = "${revision}"`))
+      throw new Error("jj-store must use the merged revision");
+    if (/tag\s*=/u.test(line)) throw new Error("jj-store has no crate tag");
+  }
 }
-if (!core.includes('path = "../../../jj-store/'))
-  throw new Error("jj-store path dependency is missing");
 console.log("Server package manifest configures.");
 if (process.argv.includes("--metadata")) {
   const child = spawnSync(

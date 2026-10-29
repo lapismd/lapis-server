@@ -14,8 +14,8 @@ lapis-plugin-services = { path = "../../../lapis-plugins/crates/lapis-plugin-ser
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
 async-trait = "0.1"
-jj-history-service = { path = "../../../jj-store/crates/jj-history-service", version = "0.1.0" }
-jj-store-model = { path = "../../../jj-store/crates/jj-store-model", version = "0.1.0" }
+jj-history-service = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
+jj-store-model = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
 cap-std = "=4.0.3"
 cap-tempfile = "=4.0.3"
 libc = "0.2"
@@ -36,8 +36,8 @@ regress = { version = "=0.12.0", features = ["utf16", "prohibit-unsafe"] }
 ort = { version = "=2.0.0-rc.15", default-features = false, features = ["std", "load-dynamic", "api-30"] }
 tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
 reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "rustls-tls"] }
-jj-vault = { path = "../../../jj-store/crates/jj-vault", version = "0.1.0" }
-jj-store-jj = { path = "../../../jj-store/crates/jj-store-jj", version = "0.1.0", default-features = false, features = ["vault-backup"] }
+jj-vault = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
+jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0", default-features = false, features = ["vault-backup"] }
 notify = "=8.2.0"
 zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 
