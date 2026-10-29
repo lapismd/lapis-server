@@ -1,4 +1,4 @@
 # Current specification
 
-The hosted server image and its jj-store boundary live here. Notes publishes
-the API and does not run this acceptance gate.
+The hosted server image, credentials, crates, and hosted contract live here.
+Notes publishes the shared API and does not keep a duplicate of this book.

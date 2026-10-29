@@ -56,6 +56,7 @@ impl Fixture {
             .env_remove("LAPIS_SERVER_AGENTS_CONFIG")
             .env_remove("LAPIS_SERVER_BOOTSTRAP_USERNAME")
             .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE")
+            .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD")
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
             .kill_on_drop(true);

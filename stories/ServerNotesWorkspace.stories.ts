@@ -19,11 +19,16 @@ export const HostedNotes: Story = {
         "data-shell-export",
         "function",
       );
+      const shell = canvasElement.querySelector(
+        '[data-ui-component="lapis-workspace-shell"]',
+      );
+      expect(shell).toBeTruthy();
+      expect(getComputedStyle(shell as HTMLElement).display).toBe("grid");
       expect(
-        canvasElement.querySelector(
-          '[data-ui-component="lapis-workspace-shell"]',
-        ),
-      ).toBeTruthy();
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--background")
+          .trim(),
+      ).not.toBe("");
     });
   },
 };

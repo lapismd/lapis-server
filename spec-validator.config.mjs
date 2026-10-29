@@ -27,7 +27,8 @@ export default defineConfig(headingRequirements(), {
     qmd: { collection: "lapis-server", configPath: ".qmd/index.yml" },
     specFirst: {
       mode: "mapped",
-      canonicalPattern: "^spec/src/current/(?:server|governance)\\.md$",
+      canonicalPattern:
+        "^spec/src/current/(?:server|governance|hosted|delivery)\\.md$",
       protected: ["^(?:crates/|scripts/|\\.github/|Cargo\\.toml$|Dockerfile$)"],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [

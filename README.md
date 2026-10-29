@@ -31,11 +31,14 @@ repository does not publish an npm package. Local image commands are in
 
 ## Credentials
 
-Compose reads the bootstrap password from `LAPIS_SERVER_PASSWORD_FILE`. Point
-that variable at a file outside this checkout. The compose secret mounts the
-file at `/run/secrets/lapis_bootstrap_password`. Do not commit the password
-file, and do not pass the password on the command line. That file is the
-owner password only when the profile has no owner yet. An existing profile
+`LAPIS_SERVER_BOOTSTRAP_PASSWORD`, when set to a non-empty value, is the
+initial owner password and wins over the password file. When it is unset or
+empty, Compose reads the bootstrap password from `LAPIS_SERVER_PASSWORD_FILE`.
+Point that variable at a file outside this checkout. The compose secret mounts
+the file at `/run/secrets/lapis_bootstrap_password` and the server reads it as
+`LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE`. Do not commit the password file, do
+not pass the password on the command line, and do not log either value. That
+password is used only when the profile has no owner yet. An existing profile
 keeps the password from its first start. The bootstrap username is
 `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
 

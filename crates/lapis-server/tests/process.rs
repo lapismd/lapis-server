@@ -29,6 +29,7 @@ async fn start_selected(config: &Path, agents: Option<(&Path, &Path)>) -> (Child
         .env_remove("LAPIS_SERVER_AGENTS_CONFIG")
         .env_remove("LAPIS_SERVER_BOOTSTRAP_USERNAME")
         .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE")
+        .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD")
         .env_remove("LAPIS_SERVER_INSECURE_COOKIE")
         .stdout(Stdio::piped())
         .stderr(Stdio::inherit())
