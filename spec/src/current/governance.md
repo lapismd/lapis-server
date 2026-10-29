@@ -23,16 +23,18 @@ MUST NOT publish an npm package.
 
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
-- GitHub Pages publishes this specification at `/lapis-server/` and Storybook at `/lapis-server/storybook/` from registry packages using Node 24.
+- GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
 - The server mounts published `@lapis-notes/workspace`, `main` requires a pull request plus the Server CI jobs, and a git tag publishes the image without npm.
 
 ## SRV-GOV-002 — Published shell styles
 
 <a id="srv-gov-002"></a>
 
-**Requirement.** Storybook MUST import the published `@lapismd/design-core/storybook.css` and `@lapismd/design-core/themes/lapis.css` styles before rendering `WorkspaceShell`. The hosted application entry MUST keep loading the published design-core styles.
+**Requirement.** Storybook MUST import the published `@lapismd/design-core/storybook.css` and `@lapismd/design-core/themes/lapis.css` styles before rendering `WorkspaceShell`. Shell stories MUST fill the viewport with no root padding. The preview MUST default the brand theme to `lapis` and expose the color-mode and theme toggles. The hosted application entry MUST keep loading the published design-core styles.
 
 ### Acceptance details
 
-- The Storybook preview imports those published stylesheets.
-- The hosted Notes story requires grid layout on the shell and a loaded `--background` token.
+- The Storybook preview imports those published stylesheets and defaults `data-ui-theme` to lapis.
+- The hosted Notes story requires grid layout, a loaded `--background` token, zero root padding, and full viewport height.
+- The credential story renders the sign-in card over the workspace shell with the same full-viewport contract.
+- Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents follows those headings.

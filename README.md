@@ -1,7 +1,7 @@
 # Lapis server
 
 [![Server CI](https://github.com/lapismd/lapis-server/actions/workflows/ci.yml/badge.svg)](https://github.com/lapismd/lapis-server/actions/workflows/ci.yml)
-[![Specification Pages](https://github.com/lapismd/lapis-server/actions/workflows/publish-spec-pages.yml/badge.svg)](https://github.com/lapismd/lapis-server/actions/workflows/publish-spec-pages.yml)
+[![Storybook Pages](https://github.com/lapismd/lapis-server/actions/workflows/publish-spec-pages.yml/badge.svg)](https://github.com/lapismd/lapis-server/actions/workflows/publish-spec-pages.yml)
 [![Storybook](https://img.shields.io/badge/storybook-live-ff4785?logo=storybook&logoColor=white)](https://lapismd.github.io/lapis-server/storybook/)
 
 Lapis server is the hosted application for Lapis Notes. One process serves the
@@ -9,8 +9,8 @@ Rust host and the Notes workspace. The workspace UI comes from the published
 `@lapis-notes/workspace` package. Shared Notes packages stay in lapis-notes and
 install from the npm registry.
 
-Specification: <https://lapismd.github.io/lapis-server/>.
-Storybook: <https://lapismd.github.io/lapis-server/storybook/>.
+Specification and Storybook:
+<https://lapismd.github.io/lapis-server/storybook/>.
 
 ## Run
 

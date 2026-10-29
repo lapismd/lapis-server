@@ -34,6 +34,7 @@
 </script>
 
 <section
+  class="hosted-notes"
   data-testid="hosted-notes-workspace"
   data-shell-export={typeof shellExport}
 >
@@ -51,3 +52,12 @@
     <p data-testid="hosted-notes-workspace-status">Opening Lapis Notes</p>
   {/if}
 </section>
+
+<style>
+  .hosted-notes {
+    height: 100%;
+    min-height: 100vh;
+    padding: 0;
+    overflow: hidden;
+  }
+</style>
