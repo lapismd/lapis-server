@@ -1,5 +1,8 @@
 # Hosted server
 
+This book owns the hosted server. Shared Notes product requirements stay in
+the Notes specification at <https://lapismd.github.io/lapis-notes/>.
+
 ## SRV-SRV-001 — Public image
 
 <a id="srv-srv-001"></a>
@@ -30,3 +33,25 @@ jj-store path, a crate tag, or pull request 22 head
 
 - The core and server manifests pin that jj-store revision.
 - The configure script rejects a jj-store path, a crate tag, and the unmerged head.
+
+## SRV-SRV-003 — Initial owner password
+
+<a id="srv-srv-003"></a>
+
+**Requirement.** A non-empty `LAPIS_SERVER_BOOTSTRAP_PASSWORD` MUST supply the initial owner password and MUST win over `LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE`. When that variable is unset or empty, the server MUST read the password file. The server MUST NOT log the password, and an existing owner MUST keep the first password.
+
+### Acceptance details
+
+- The selector returns the environment fixture when both sources are present.
+- The selector returns the file fixture when the environment value is unset, and the source message contains neither fixture.
+
+## SRV-SRV-004 — Server crates
+
+<a id="srv-srv-004"></a>
+
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates. Shared Notes product requirements MUST stay in the Notes specification.
+
+### Acceptance details
+
+- The Cargo workspace contains those three crates.
+- The Notes hosted-server chapter points at this book instead of restating it.

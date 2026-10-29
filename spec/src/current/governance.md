@@ -22,3 +22,14 @@ MUST NOT publish an npm package.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes this specification at `/lapis-server/` and Storybook at `/lapis-server/storybook/` from registry packages using Node 24.
 - The server mounts published `@lapis-notes/workspace`, `main` requires a pull request plus the Server CI jobs, and a git tag publishes the image without npm.
+
+## SRV-GOV-002 — Published shell styles
+
+<a id="srv-gov-002"></a>
+
+**Requirement.** Storybook MUST import the published `@lapismd/design-core/storybook.css` and `@lapismd/design-core/themes/lapis.css` styles before rendering `WorkspaceShell`. The hosted application entry MUST keep loading the published design-core styles.
+
+### Acceptance details
+
+- The Storybook preview imports those published stylesheets.
+- The hosted Notes story requires grid layout on the shell and a loaded `--background` token.

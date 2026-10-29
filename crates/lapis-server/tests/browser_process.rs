@@ -25,7 +25,8 @@ async fn start(config: &Path, profile: &Path, password: Option<&Path>) -> (Child
         .env("LAPIS_SERVER_ORIGIN", ORIGIN)
         .env("LAPIS_SERVER_INSECURE_COOKIE", "1")
         .env_remove("LAPIS_SERVER_BOOTSTRAP_USERNAME")
-        .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE");
+        .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE")
+        .env_remove("LAPIS_SERVER_BOOTSTRAP_PASSWORD");
     if let Some(password) = password {
         command
             .env("LAPIS_SERVER_BOOTSTRAP_USERNAME", "Owner")
