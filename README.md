@@ -25,8 +25,8 @@ resolves the pinned jj-store revision. It is not a compile and not a release.
 
 The public image is `ghcr.io/lapismd/lapis-server`. It listens on port `8787`,
 stores the profile on `/data`, and reports readiness at
-`http://127.0.0.1:8787/readyz`. Publishing that image is a separate
-authorization. Local image commands are in
+`http://127.0.0.1:8787/readyz`. A git tag `v*` publishes that image. This
+repository does not publish an npm package. Local image commands are in
 [Hosted server image](docs/hosted-server.md).
 
 ## Credentials

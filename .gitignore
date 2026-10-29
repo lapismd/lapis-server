@@ -4,5 +4,6 @@ test-results
 target
 .local
 spec/book
+.qmd/index.sqlite*
 storybook-static
 dist
