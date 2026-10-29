@@ -58,6 +58,7 @@ jobs:
         with:
           toolchain: "1.99.0"
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
+        name: Restore Rust dependency cache
         id: rust-cache
         with:
           workspaces: . -> .local/rust-core-target
@@ -71,6 +72,46 @@ jobs:
         run: 'echo "Rust cache exact hit: $CACHE_HIT" >> "$GITHUB_STEP_SUMMARY"'
         env:
           CACHE_HIT: ${{ steps.rust-cache.outputs.cache-hit }}
+      - name: Cancel this run after a required failure
+        if: "${{ failure() && !cancelled() }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          curl --fail-with-body --silent --show-error --request POST
+          --header "Authorization: Bearer $GH_TOKEN"
+          --header "Accept: application/vnd.github+json"
+          --header "X-GitHub-Api-Version: 2022-11-28"
+          "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/cancel"
+
+  rust:
+    name: Rust tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CARGO_BUILD_JOBS: "1"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
+        with:
+          toolchain: "1.99.0"
+          components: clippy
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
+        name: Restore Rust dependency cache
+        id: rust-cache
+        with:
+          workspaces: . -> .local/rust-core-target
+          save-if: ${{ github.repository == 'lapismd/lapis-server' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
+          key: ordinary-1.99-debug
+          cache-workspace-crates: "false"
+          cache-on-failure: "false"
+      - name: Report Rust cache match
+        run: 'echo "Rust cache exact hit: $CACHE_HIT" >> "$GITHUB_STEP_SUMMARY"'
+        env:
+          CACHE_HIT: ${{ steps.rust-cache.outputs.cache-hit }}
+      - name: Install pinned upstream JJ for repository fixtures
+        run: node scripts/ci-setup-jj.mjs
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
       - name: Cancel this run after a required failure
         if: "${{ failure() && !cancelled() }}"
         env:

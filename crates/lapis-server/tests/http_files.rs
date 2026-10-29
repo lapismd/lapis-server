@@ -7,8 +7,10 @@ mod database;
 mod editing_recovery;
 mod history_indexing;
 mod history_reader;
+#[cfg(feature = "local-sibling-projections")]
 mod indexing;
 mod lifetime;
+#[cfg(feature = "local-sibling-projections")]
 mod native_tasks;
 mod physical;
 mod repository_backup;

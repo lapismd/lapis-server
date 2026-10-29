@@ -1,18 +1,15 @@
 use lapis_app_core::database::Database;
 use lapis_app_protocol::{
-    ErrorCode,
     database::memory::{jobs::*, records::*},
+    ErrorCode,
 };
 use serde::de::DeserializeOwned;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::{future::Future, task::Poll};
 use uuid::Uuid;
 mod indexed_support;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/memory-storage.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/memory-storage.json")).unwrap()
 }
 fn data<T: DeserializeOwned>(v: Value) -> T {
     serde_json::from_value(v).unwrap()

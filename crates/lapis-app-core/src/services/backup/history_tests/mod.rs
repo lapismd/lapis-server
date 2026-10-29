@@ -5,11 +5,11 @@ mod read;
 use super::*;
 use crate::services::{Runtime, VaultService};
 use jj_vault::{
-    Binding,
     search::{
-        NativeHistory,
         indexed::{Expression, Request},
+        NativeHistory,
     },
+    Binding,
 };
 use std::{fs, path::PathBuf, time::Duration};
 use uuid::Uuid;
@@ -53,6 +53,16 @@ async fn fixture(selected: bool) -> Fixture {
         history,
     }
 }
+fn index_published(state: &std::path::Path) -> bool {
+    let Ok(entries) = fs::read_dir(state.join("history-search-v2")) else {
+        return false;
+    };
+    entries.flatten().any(|entry| {
+        let name = entry.file_name();
+        let name = name.to_string_lossy();
+        !name.starts_with('.') && entry.path().join("index").join("meta.json").is_file()
+    })
+}
 fn request(value: &str) -> Request {
     Request {
         expression: Expression::Term {
@@ -71,7 +81,7 @@ async fn indexed(f: &Fixture, value: &str) -> jj_vault::search::indexed::Page {
         loop {
             // Query must never create the cache or perform indexing on behalf
             // of the missing owner. Only read after background publication.
-            if binding.state.join("history-search-v2").is_dir() {
+            if index_published(&binding.state) {
                 let source = binding.clone();
                 let query = request(&value);
                 let result = tokio::task::spawn_blocking(move || {
@@ -109,11 +119,10 @@ async fn selected_history_index_publishes_without_a_client_or_renderer_step() {
     let f = fixture(true).await;
     assert_eq!(f.vault.status().unwrap().clients, 0);
     let page = indexed(&f, "rare initial history").await;
-    assert!(
-        page.hits
-            .iter()
-            .any(|hit| hit.record.path.as_deref() == Some("Note.md"))
-    );
+    assert!(page
+        .hits
+        .iter()
+        .any(|hit| hit.record.path.as_deref() == Some("Note.md")));
     assert!(f.vault.history_indexing_status().unwrap().passes > 0);
     close(&f).await;
     assert_eq!(
@@ -218,12 +227,10 @@ async fn selected_history_rejects_replaced_roots_and_retains_owner_for_close_ret
     fs::write(f.binding.root.join("Note.md"), "unadmitted replacement").unwrap();
     let runtime = f.runtime.clone();
     let id = f.vault.id();
-    assert!(
-        tokio::task::spawn_blocking(move || runtime.close_vault(id))
-            .await
-            .unwrap()
-            .is_err()
-    );
+    assert!(tokio::task::spawn_blocking(move || runtime.close_vault(id))
+        .await
+        .unwrap()
+        .is_err());
     wait_progress(&first, |status| status.error.is_some()).await;
     assert!(Arc::ptr_eq(&first, &owner(&f)));
     assert!(!first.is_finished());

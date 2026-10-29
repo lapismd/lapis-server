@@ -1,12 +1,9 @@
 use lapis_app_core::database::Database;
-use serde::{Serialize, de::DeserializeOwned};
-use serde_json::{Value, json};
+use serde::{de::DeserializeOwned, Serialize};
+use serde_json::{json, Value};
 use uuid::Uuid;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/memory-storage.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/memory-storage.json")).unwrap()
 }
 fn data<T: DeserializeOwned>(v: Value) -> T {
     serde_json::from_value(v).unwrap()
@@ -181,26 +178,23 @@ async fn native_daily_recall_aggregation_and_clear_preserve_unrelated_domains() 
         .unwrap(),
         json!([{"targetRef":"curated:memory:1","queryFingerprint":"salted-sha256","day":"2026-10-24","bestScore":0.8,"hitCount":5}]),
     );
-    assert!(
-        db.list_memory_recall_signals(Some("other"))
-            .await
-            .unwrap()
-            .is_empty()
-    );
+    assert!(db
+        .list_memory_recall_signals(Some("other"))
+        .await
+        .unwrap()
+        .is_empty());
     db.clear_memory_derived_state().await.unwrap();
     assert!(db.list_memory_source_states().await.unwrap().is_empty());
-    assert!(
-        db.query_memory_candidates(Default::default())
-            .await
-            .unwrap()
-            .is_empty()
-    );
-    assert!(
-        db.list_memory_recall_signals(None)
-            .await
-            .unwrap()
-            .is_empty()
-    );
+    assert!(db
+        .query_memory_candidates(Default::default())
+        .await
+        .unwrap()
+        .is_empty());
+    assert!(db
+        .list_memory_recall_signals(None)
+        .await
+        .unwrap()
+        .is_empty());
     assert!(db.list_memory_jobs(None).await.unwrap().is_empty());
     assert_eq!(
         db.get_meta("unrelated").await.unwrap(),

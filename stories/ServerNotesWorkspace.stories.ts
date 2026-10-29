@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte-vite";
 import { expect, waitFor, within } from "storybook/test";
 import ServerNotesWorkspace from "./ServerNotesWorkspace.svelte";
+import { expectShellFillsViewport } from "./shell-layout";
 
 const meta = {
-  title: "Server/Notes workspace",
+  title: "Shell/Hosted Notes",
   component: ServerNotesWorkspace,
+  parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof ServerNotesWorkspace>;
 
 export default meta;
@@ -29,6 +31,7 @@ export const HostedNotes: Story = {
           .getPropertyValue("--background")
           .trim(),
       ).not.toBe("");
+      expectShellFillsViewport(canvasElement);
     });
   },
 };

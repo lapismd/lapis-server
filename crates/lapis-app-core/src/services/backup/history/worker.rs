@@ -1,11 +1,12 @@
 use super::HistoryIndexStatus;
 use crate::services::VaultService;
 use jj_vault::search::indexed;
+use sha2::{Digest, Sha256};
 use std::{
+    fs,
     sync::{
-        Arc, Mutex, Weak,
         atomic::{AtomicBool, Ordering},
-        mpsc,
+        mpsc, Arc, Mutex, Weak,
     },
     time::{Duration, Instant},
 };
@@ -51,14 +52,18 @@ pub(super) fn run(
                 return;
             };
             state.passes = state.passes.saturating_add(1);
+            let busy = matches!(result, Err(ref error) if error == "History index is busy");
             match result {
                 Ok(status) => {
                     state.source = Some(status);
                     state.error = None;
                 }
+                Err(_) if busy => state.error = None,
                 Err(error) => state.error = Some(error),
             }
-            let delay = if state.error.is_some() {
+            let delay = if busy {
+                Duration::from_millis(30)
+            } else if state.error.is_some() {
                 Duration::from_secs(5)
             } else if state.source.as_ref().is_some_and(|status| status.complete) {
                 Duration::from_secs(60)
@@ -97,6 +102,10 @@ fn step(vault: &Weak<VaultService>) -> Result<indexed::Status, String> {
     if let Some(pause) = vault.history_index_pause.lock().unwrap().take() {
         pause();
     }
+    // Publish a finished index directory before readers can see the cache root.
+    // The indexer creates that root before its index, and a reader that wins
+    // the owner lock then observes a missing index and blocks publication.
+    publish_index(&source)?;
     let status = source.index_step()?;
     let current = vault
         .backup_storage
@@ -108,4 +117,46 @@ fn step(vault: &Weak<VaultService>) -> Result<indexed::Status, String> {
         return Err("History storage changed during indexing".into());
     }
     Ok(status)
+}
+
+fn publish_index(history: &jj_vault::search::NativeHistory) -> Result<(), String> {
+    // A read may index an existing repository. It must not create one.
+    if !history.binding.state.is_dir() {
+        return Err("History repository is not initialized".into());
+    }
+    let namespace = serde_json::to_string(&(&history.binding.vault_id, &history.exclusions))
+        .map_err(|error| error.to_string())?;
+    let key = lower_hex(Sha256::digest(namespace.as_bytes()));
+    let parent = history.binding.state.join("history-search-v2");
+    let root = parent.join(&key);
+    if root.join("index").join("meta.json").is_file() {
+        return Ok(());
+    }
+    let staging = history
+        .binding
+        .state
+        .join(".history-search-staging")
+        .join(&key);
+    let _ = fs::remove_dir_all(&staging);
+    fs::create_dir_all(&staging).map_err(|error| error.to_string())?;
+    drop(indexed::Engine::open(&staging, &namespace)?);
+    fs::create_dir_all(&parent).map_err(|error| error.to_string())?;
+    match fs::rename(&staging, &root) {
+        Ok(()) => Ok(()),
+        Err(_) if root.join("index").join("meta.json").is_file() => {
+            let _ = fs::remove_dir_all(&staging);
+            Ok(())
+        }
+        Err(error) => Err(error.to_string()),
+    }
+}
+
+fn lower_hex(bytes: impl AsRef<[u8]>) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut out = String::with_capacity(bytes.as_ref().len() * 2);
+    for byte in bytes.as_ref() {
+        out.push(HEX[(byte >> 4) as usize] as char);
+        out.push(HEX[(byte & 0xf) as usize] as char);
+    }
+    out
 }

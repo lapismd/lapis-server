@@ -3,10 +3,7 @@ use lapis_app_core::database::Database;
 use serde_json::Value;
 
 pub fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../../packages/api/src/lib/__tests__/fixtures/search-storage.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("../fixtures/search-storage.json")).unwrap()
 }
 pub async fn seed(db: &Database) {
     for record in fixture()["records"].as_array().unwrap() {

@@ -3,10 +3,7 @@ use serde_json::Value;
 use uuid::Uuid;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/search-semantic-retrieval.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/search-semantic-retrieval.json")).unwrap()
 }
 fn assert_result(actual: &Value, expected: &Value) {
     match (actual, expected) {

@@ -1,12 +1,9 @@
 #![allow(dead_code)]
 use lapis_app_core::{database::Database, services::Result};
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 
 pub fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../../packages/api/src/lib/__tests__/fixtures/indexed-mutations.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("../fixtures/indexed-mutations.json")).unwrap()
 }
 pub async fn seed(db: &Database, seed: &Value) {
     for row in seed["indexed"].as_array().unwrap() {

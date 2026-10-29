@@ -1,15 +1,13 @@
 use lapis_app_core::database::Database;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 mod projection_support;
 use projection_support::{definition, inspect, source};
 
 #[tokio::test]
 async fn native_projection_values_conform_to_the_retained_browser_fixture() {
-    let fixture: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/projection-values.json"
-    ))
-    .unwrap();
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/projection-values.json")).unwrap();
     let profile = tempfile::tempdir().unwrap();
     let id = Uuid::new_v4();
     let db = Database::open(profile.path(), id).await.unwrap();
@@ -115,9 +113,7 @@ async fn projection_replacement_accepts_64_rows_caps_fields_and_bounds_utf16_val
     assert!(values.iter().any(|v| v[0] == json!("2")));
     assert!(values.iter().any(|v| v[0] == json!("field61")));
     assert!(!values.iter().any(|v| v[0] == json!("field62")));
-    assert!(
-        values
-            .iter()
-            .all(|v| v[1] == json!(format!("{}🪨", "a".repeat(4094))))
-    );
+    assert!(values
+        .iter()
+        .all(|v| v[1] == json!(format!("{}🪨", "a".repeat(4094)))));
 }

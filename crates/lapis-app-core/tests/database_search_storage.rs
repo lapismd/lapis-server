@@ -30,7 +30,7 @@ async fn existing_turso_search_schema_and_fts_survive_native_publication_and_flo
     let dir = tempfile::tempdir().unwrap();
     let id = Uuid::new_v4();
     let (engine, connection) = raw(dir.path(), id).await;
-    let source = include_str!("../../../packages/api/src/lib/storage/turso-app-database.ts");
+    let source = include_str!("fixtures/storage/turso-app-database.ts");
     for marker in [
         "export const TURSO_APP_DATABASE_SCHEMA = `",
         "const TURSO_SEARCH_FTS_SCHEMA = `",
@@ -158,15 +158,13 @@ async fn failed_search_schema_intake_rolls_back_new_tables_and_preserves_existin
         Database::open(dir.path(), id).await.err().unwrap().code(),
         ErrorCode::Io
     );
-    assert!(
-        projection_support::inspect(
-            dir.path(),
-            id,
-            "SELECT name FROM sqlite_schema WHERE name='search_docs'"
-        )
-        .await
-        .is_empty()
-    );
+    assert!(projection_support::inspect(
+        dir.path(),
+        id,
+        "SELECT name FROM sqlite_schema WHERE name='search_docs'"
+    )
+    .await
+    .is_empty());
     assert_eq!(
         projection_support::inspect(
             dir.path(),
@@ -187,7 +185,7 @@ async fn failed_search_schema_intake_rolls_back_new_tables_and_preserves_existin
 async fn search_message_bounds_reject_large_materialization_without_breaking_manifests_or_storage()
 {
     use lapis_app_protocol::database::search::{
-        SearchManifestQuery, records::SearchDocumentRecord,
+        records::SearchDocumentRecord, SearchManifestQuery,
     };
     let dir = tempfile::tempdir().unwrap();
     let db = Database::open(dir.path(), Uuid::new_v4()).await.unwrap();

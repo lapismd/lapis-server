@@ -1,16 +1,13 @@
 use lapis_app_core::database::Database;
 use lapis_app_protocol::ErrorCode;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 mod indexed_support;
 mod projection_support;
 use projection_support::definition;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/projection-query.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/projection-query.json")).unwrap()
 }
 
 #[tokio::test]
@@ -257,14 +254,13 @@ async fn native_queries_retain_source_status_privacy_and_invalid_cursor_errors()
         .code,
         ErrorCode::PermissionDenied
     );
-    assert!(
-        db.query_projection(
+    assert!(db
+        .query_projection(
             "books/book",
             serde_json::from_value(json!({})).unwrap(),
             Some("books")
         )
         .await
-        .is_ok()
-    );
+        .is_ok());
     db.close().await.unwrap();
 }

@@ -1,6 +1,6 @@
 use lapis_app_core::database::Database;
-use lapis_app_protocol::{ErrorCode, database::call::DatabaseCall};
-use serde_json::{Value, json};
+use lapis_app_protocol::{database::call::DatabaseCall, ErrorCode};
+use serde_json::{json, Value};
 use std::{collections::BTreeSet, future::Future, task::Poll};
 use uuid::Uuid;
 
@@ -59,10 +59,8 @@ fn numbers(value: Value) -> Value {
 
 #[tokio::test]
 async fn every_allowlisted_call_retains_the_actual_turso_argument_and_result_reference() {
-    let fixture: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/native-facade-contract.json"
-    ))
-    .unwrap();
+    let fixture: Value =
+        serde_json::from_str(include_str!("fixtures/native-facade-contract.json")).unwrap();
     let profile = tempfile::tempdir().unwrap();
     let db = Database::open(profile.path(), Uuid::new_v4())
         .await
@@ -81,12 +79,10 @@ async fn every_allowlisted_call_retains_the_actual_turso_argument_and_result_ref
             let stored = &mut result["value"];
             assert!(!stored["fileId"].as_str().unwrap().is_empty());
             assert_eq!(stored["fileId"], stored["revision"]["fileId"]);
-            assert!(
-                !stored["revision"]["revisionId"]
-                    .as_str()
-                    .unwrap()
-                    .is_empty()
-            );
+            assert!(!stored["revision"]["revisionId"]
+                .as_str()
+                .unwrap()
+                .is_empty());
             stored["fileId"] = json!("<generated-file>");
             stored["revision"]["fileId"] = json!("<generated-file>");
             stored["revision"]["revisionId"] = json!("<generated-revision>");
@@ -104,7 +100,7 @@ async fn every_allowlisted_call_retains_the_actual_turso_argument_and_result_ref
 
 #[test]
 fn native_wire_methods_match_the_retained_allowlist_and_reject_paths_sql_and_unknown_values() {
-    let source = include_str!("../../../packages/api/src/lib/storage/remote-app-database.ts");
+    let source = include_str!("fixtures/storage/remote-app-database.ts");
     let methods = source
         .split_once("export const REMOTE_APP_DATABASE_METHODS = [")
         .unwrap()
@@ -227,10 +223,7 @@ async fn omitted_and_undefined_optional_read_queries_keep_defaults_without_write
             ErrorCode::InvalidRequest
         );
     }
-    let tasks: Value = serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap();
+    let tasks: Value = serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap();
     call(
         &db,
         "upsertTaskProjection",

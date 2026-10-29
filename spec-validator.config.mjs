@@ -17,6 +17,7 @@ export default defineConfig(headingRequirements(), {
     bookIgnore: "SRV-GOV-001",
     specFirst: "SRV-GOV-001",
     internal: "SRV-GOV-001",
+    storybookMirrors: "SRV-GOV-002",
   },
   validators: {
     summary: true,
@@ -25,6 +26,16 @@ export default defineConfig(headingRequirements(), {
     verification: singleIdVerification(),
     book: true,
     qmd: { collection: "lapis-server", configPath: ".qmd/index.yml" },
+    storybookMirrors: {
+      style: "src-spec-mdx",
+      directory: "stories/spec",
+      titlePrefix: "Specification",
+      verifyTarget: true,
+      verifyTitle: true,
+      verifyContent: true,
+      previewPath: ".storybook/preview.ts",
+      verifyOrder: true,
+    },
     specFirst: {
       mode: "mapped",
       canonicalPattern:

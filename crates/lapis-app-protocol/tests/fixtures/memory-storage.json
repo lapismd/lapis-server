@@ -1,0 +1,309 @@
+{
+  "source": {
+    "sourceKey": "conversation-1",
+    "sourcePath": ".lapis/agents/sessions/conversation-1/transcript.jsonl",
+    "sourceHash": "sha256:source",
+    "lastEntryId": "entry-1",
+    "lastEntryHash": "sha256:entry",
+    "status": "ready",
+    "indexedAt": 100
+  },
+  "candidates": [
+    {
+      "candidate": {
+        "id": "a",
+        "scopeKind": "project",
+        "scopePath": "Projects/Alpha",
+        "kind": "preference",
+        "normalizedClaim": "Use compact headings",
+        "claimHash": "sha256:claim",
+        "supersessionKey": "writing.headings",
+        "originClass": "owner",
+        "importance": 4,
+        "triggers": ["writing", "headings"],
+        "state": "staged",
+        "firstSeenAt": 100,
+        "lastSeenAt": 200,
+        "recurrenceCount": 2,
+        "conversationCount": 2
+      },
+      "origins": [
+        {
+          "candidateId": "a",
+          "conversationId": "conversation-1",
+          "entryId": "entry-1",
+          "entryHash": "sha256:entry",
+          "observedAt": 100
+        },
+        {
+          "candidateId": "a",
+          "conversationId": "conversation-2",
+          "entryId": "entry-2",
+          "entryHash": "sha256:entry",
+          "observedAt": 200
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "id": "b",
+        "scopeKind": "project",
+        "scopePath": "Projects/Alpha",
+        "kind": "preference",
+        "normalizedClaim": "Use compact headings",
+        "claimHash": "sha256:claim",
+        "supersessionKey": "writing.headings",
+        "originClass": "owner",
+        "importance": 4,
+        "triggers": ["writing", "headings"],
+        "state": "review",
+        "firstSeenAt": 100,
+        "lastSeenAt": 300,
+        "recurrenceCount": 2,
+        "conversationCount": 2
+      },
+      "origins": [
+        {
+          "candidateId": "b",
+          "conversationId": "conversation-1",
+          "entryId": "entry-1",
+          "entryHash": "sha256:entry",
+          "observedAt": 100
+        }
+      ]
+    },
+    {
+      "candidate": {
+        "id": "c",
+        "scopeKind": "user",
+        "scopePath": "Memory/User",
+        "kind": "preference",
+        "normalizedClaim": "Use compact headings",
+        "claimHash": "sha256:claim",
+        "supersessionKey": "writing.headings",
+        "originClass": "owner",
+        "importance": 4,
+        "triggers": ["writing", "headings"],
+        "state": "promoted",
+        "firstSeenAt": 100,
+        "lastSeenAt": 300,
+        "recurrenceCount": 2,
+        "conversationCount": 2
+      },
+      "origins": [
+        {
+          "candidateId": "c",
+          "conversationId": "conversation-1",
+          "entryId": "entry-1",
+          "entryHash": "sha256:entry",
+          "observedAt": 100
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "query": {},
+      "ids": ["b", "c", "a"]
+    },
+    {
+      "query": {
+        "scopeKind": "project",
+        "scopePath": "Projects/Alpha"
+      },
+      "ids": ["b", "a"]
+    },
+    {
+      "query": {
+        "states": ["staged", "promoted"]
+      },
+      "ids": ["c", "a"]
+    },
+    {
+      "query": {
+        "scopeKind": "project",
+        "limit": 1
+      },
+      "ids": ["b"]
+    },
+    {
+      "query": {
+        "scopePath": ""
+      },
+      "ids": []
+    }
+  ],
+  "job": {
+    "id": "ingest:conversation-1",
+    "kind": "ingest",
+    "scopeKey": "project:Projects/Alpha",
+    "status": "queued",
+    "attempts": 0,
+    "maxAttempts": 2,
+    "createdAt": 100,
+    "cursor": "entry-0"
+  },
+  "jobSteps": [
+    {
+      "action": "claim",
+      "ownerId": "a",
+      "now": 200,
+      "leaseMs": 100,
+      "expected": {
+        "id": "ingest:conversation-1",
+        "kind": "ingest",
+        "scopeKey": "project:Projects/Alpha",
+        "status": "running",
+        "attempts": 1,
+        "maxAttempts": 2,
+        "createdAt": 100,
+        "cursor": "entry-0",
+        "ownerId": "a",
+        "leaseUntil": 300,
+        "startedAt": 200
+      }
+    },
+    {
+      "action": "claim",
+      "ownerId": "b",
+      "now": 250,
+      "leaseMs": 100,
+      "expected": null
+    },
+    {
+      "action": "claim",
+      "ownerId": "a",
+      "now": 260,
+      "leaseMs": 100,
+      "expected": {
+        "id": "ingest:conversation-1",
+        "kind": "ingest",
+        "scopeKey": "project:Projects/Alpha",
+        "status": "running",
+        "attempts": 1,
+        "maxAttempts": 2,
+        "createdAt": 100,
+        "cursor": "entry-0",
+        "ownerId": "a",
+        "leaseUntil": 360,
+        "startedAt": 200
+      }
+    },
+    {
+      "action": "update",
+      "ownerId": "b",
+      "now": 270,
+      "patch": {
+        "status": "completed"
+      },
+      "expected": null
+    },
+    {
+      "action": "update",
+      "ownerId": "a",
+      "now": 361,
+      "patch": {
+        "status": "completed"
+      },
+      "expected": null
+    },
+    {
+      "action": "claim",
+      "ownerId": "b",
+      "now": 360,
+      "leaseMs": 50,
+      "expected": {
+        "id": "ingest:conversation-1",
+        "kind": "ingest",
+        "scopeKey": "project:Projects/Alpha",
+        "status": "running",
+        "attempts": 2,
+        "maxAttempts": 2,
+        "createdAt": 100,
+        "cursor": "entry-0",
+        "ownerId": "b",
+        "leaseUntil": 410,
+        "startedAt": 360
+      }
+    },
+    {
+      "action": "update",
+      "ownerId": "a",
+      "now": 370,
+      "patch": {
+        "status": "completed"
+      },
+      "expected": null
+    },
+    {
+      "action": "update",
+      "ownerId": "b",
+      "now": 410,
+      "patch": {
+        "status": "running",
+        "cursor": "entry-2"
+      },
+      "expected": {
+        "id": "ingest:conversation-1",
+        "kind": "ingest",
+        "scopeKey": "project:Projects/Alpha",
+        "status": "running",
+        "attempts": 2,
+        "maxAttempts": 2,
+        "createdAt": 100,
+        "cursor": "entry-2",
+        "ownerId": "b",
+        "leaseUntil": 410,
+        "startedAt": 360
+      }
+    },
+    {
+      "action": "update",
+      "ownerId": "b",
+      "now": 410,
+      "patch": {
+        "status": "completed",
+        "finishedAt": 410
+      },
+      "expected": {
+        "id": "ingest:conversation-1",
+        "kind": "ingest",
+        "scopeKey": "project:Projects/Alpha",
+        "status": "completed",
+        "attempts": 2,
+        "maxAttempts": 2,
+        "createdAt": 100,
+        "cursor": "entry-2",
+        "startedAt": 360,
+        "finishedAt": 410
+      }
+    },
+    {
+      "action": "claim",
+      "ownerId": "c",
+      "now": 500,
+      "leaseMs": 100,
+      "expected": null
+    }
+  ],
+  "tursoQueries": [
+    {
+      "query": {
+        "states": []
+      },
+      "ids": ["b", "c", "a"]
+    },
+    {
+      "query": {
+        "limit": 0
+      },
+      "ids": ["b"]
+    },
+    {
+      "query": {
+        "limit": -2
+      },
+      "ids": ["b"]
+    }
+  ]
+}

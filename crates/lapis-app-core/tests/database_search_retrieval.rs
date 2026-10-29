@@ -2,14 +2,11 @@ mod search_support;
 use lapis_app_core::database::Database;
 use lapis_app_protocol::ErrorCode;
 use search_support::assert_json;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/search-retrieval.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/search-retrieval.json")).unwrap()
 }
 
 #[tokio::test]

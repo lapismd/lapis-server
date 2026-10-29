@@ -1,0 +1,1513 @@
+{
+  "cases": [
+    {
+      "name": "unprepared-without-metadata",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "keep my supplied chunk",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "chunks": [
+          {
+            "id": "custom",
+            "text": "supplied",
+            "startOffset": 1,
+            "endOffset": 4,
+            "kind": "code",
+            "embedding": {
+              "status": "pending",
+              "modelId": "retained"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "keep my supplied chunk",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "chunks": [
+          {
+            "id": "custom",
+            "text": "supplied",
+            "startOffset": 1,
+            "endOffset": 4,
+            "kind": "code",
+            "embedding": {
+              "status": "pending",
+              "modelId": "retained"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "without-metadata-or-chunks",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "retained",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "metadataText": "keep metadata"
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "retained",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "metadataText": "keep metadata"
+      }
+    },
+    {
+      "name": "empty-content",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": []
+      }
+    },
+    {
+      "name": "ecmascript-whitespace",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "﻿ \t\r\n xy　\n",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "﻿ \t\r\n xy　\n",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-6-9",
+            "text": "xy",
+            "startOffset": 6,
+            "endOffset": 9,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ordered-tags-and-null-frontmatter",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "tagged",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [
+            "#work/project",
+            "#work/project",
+            "work/project",
+            "#",
+            "  ",
+            "# work",
+            "a//b",
+            "Work"
+          ],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": null
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "tagged",
+        "tags": ["work/project", "work/project", "", " work", "a//b", "Work"],
+        "tagParts": ["work", "project", " work", "a", "b", "Work"],
+        "tagHierarchy": ["work", "work/project", " work", "a", "a/b", "Work"],
+        "sourceMetadata": {
+          "rawTags": [
+            "#work/project",
+            "#work/project",
+            "work/project",
+            "#",
+            "  ",
+            "# work",
+            "a//b",
+            "Work"
+          ],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": null
+        },
+        "metadataText": "{}",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-6",
+            "text": "tagged",
+            "startOffset": 0,
+            "endOffset": 6,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontmatter-json-order-and-numbers",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "text",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": {
+            "2": "two",
+            "10": "ten",
+            "z": 1,
+            "first": {
+              "b": 1e-7,
+              "a": 1e21
+            },
+            "zero": 0,
+            "list": [null, true, "x\ny"]
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "text",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": {
+            "2": "two",
+            "10": "ten",
+            "z": 1,
+            "first": {
+              "b": 1e-7,
+              "a": 1e21
+            },
+            "zero": 0,
+            "list": [null, true, "x\ny"]
+          }
+        },
+        "metadataText": "{\"2\":\"two\",\"10\":\"ten\",\"z\":1,\"first\":{\"b\":1e-7,\"a\":1e+21},\"zero\":0,\"list\":[null,true,\"x\\ny\"]}",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-4",
+            "text": "text",
+            "startOffset": 0,
+            "endOffset": 4,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "absent-frontmatter-retains-metadata-text",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "text",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "keep text"
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "text",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "metadataText": "keep text",
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        },
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-4",
+            "text": "text",
+            "startOffset": 0,
+            "endOffset": 4,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "emoji-on-cutoff",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "AB📝CD",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 3,
+            "breakpointWindowChars": 0,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "AB📝CD",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 3,
+            "breakpointWindowChars": 0,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-4",
+            "text": "AB📝",
+            "startOffset": 0,
+            "endOffset": 4,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-4-6",
+            "text": "CD",
+            "startOffset": 4,
+            "endOffset": 6,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "utf16-offsets-and-headings",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "  📝中文\n# Heading\nαβγ text more",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Heading",
+              "level": 2,
+              "position": {
+                "start": {
+                  "offset": 8
+                },
+                "end": {
+                  "offset": 17
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 7
+                }
+              }
+            },
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 8
+                },
+                "end": {
+                  "offset": 17
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 18
+                },
+                "end": {
+                  "offset": 30
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 18,
+            "breakpointWindowChars": 12,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "  📝中文\n# Heading\nαβγ text more",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Heading",
+              "level": 2,
+              "position": {
+                "start": {
+                  "offset": 8
+                },
+                "end": {
+                  "offset": 17
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 7
+                }
+              }
+            },
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 8
+                },
+                "end": {
+                  "offset": 17
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 18
+                },
+                "end": {
+                  "offset": 30
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 18,
+            "breakpointWindowChars": 12,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-2-8",
+            "text": "📝中文\n#",
+            "startOffset": 2,
+            "endOffset": 8,
+            "kind": "paragraph"
+          },
+          {
+            "id": "Note.md#chunk-9-18",
+            "text": "Heading\nα",
+            "startOffset": 9,
+            "endOffset": 18,
+            "heading": "Heading",
+            "kind": "heading"
+          },
+          {
+            "id": "Note.md#chunk-18-30",
+            "text": "βγ text more",
+            "startOffset": 18,
+            "endOffset": 30,
+            "heading": "Heading",
+            "kind": "paragraph"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontmatter-excluded",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "---\nx: 1\n---\n\nBody text",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [
+            {
+              "type": "yaml",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 12
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 23
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": {
+            "x": 1
+          },
+          "frontmatterEndOffset": 13
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "---\nx: 1\n---\n\nBody text",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [
+            {
+              "type": "yaml",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 12
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 23
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatter": {
+            "x": 1
+          },
+          "frontmatterEndOffset": 13
+        },
+        "metadataText": "{\"x\":1}",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-14-23",
+            "text": "Body text",
+            "startOffset": 14,
+            "endOffset": 23,
+            "kind": "paragraph"
+          }
+        ]
+      }
+    },
+    {
+      "name": "heading-beats-nearer-paragraph",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n# Heading\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\nNear cutoff paragraph\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Heading",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 941
+                },
+                "end": {
+                  "offset": 950
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 940
+                }
+              }
+            },
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 941
+                },
+                "end": {
+                  "offset": 950
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 951
+                },
+                "end": {
+                  "offset": 1171
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 1173
+                },
+                "end": {
+                  "offset": 1315
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 1200,
+            "breakpointWindowChars": 320,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n# Heading\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\nNear cutoff paragraph\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Heading",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 941
+                },
+                "end": {
+                  "offset": 950
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 940
+                }
+              }
+            },
+            {
+              "type": "heading",
+              "position": {
+                "start": {
+                  "offset": 941
+                },
+                "end": {
+                  "offset": 950
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 951
+                },
+                "end": {
+                  "offset": 1171
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 1173
+                },
+                "end": {
+                  "offset": 1315
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 1200,
+            "breakpointWindowChars": 320,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-940",
+            "text": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "startOffset": 0,
+            "endOffset": 940,
+            "kind": "paragraph"
+          },
+          {
+            "id": "Note.md#chunk-941-1315",
+            "text": "# Heading\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\nNear cutoff paragraph\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC",
+            "startOffset": 941,
+            "endOffset": 1315,
+            "heading": "Heading",
+            "kind": "heading"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fallback-heading-levels-and-breaks",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\n####### no heading\n###### six\n##### five\n#### four\n### three\n## two\n# one\n---\nnext\n***\nlast\n___\nend",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\n####### no heading\n###### six\n##### five\n#### four\n### three\n## two\n# one\n---\nnext\n***\nlast\n___\nend",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-20",
+            "text": "start\n####### no hea",
+            "startOffset": 0,
+            "endOffset": 20,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-20-35",
+            "text": "ding\n###### six",
+            "startOffset": 20,
+            "endOffset": 35,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-36-55",
+            "text": "##### five\n#### fou",
+            "startOffset": 36,
+            "endOffset": 55,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-55-73",
+            "text": "r\n### three\n## two",
+            "startOffset": 55,
+            "endOffset": 73,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-74-88",
+            "text": "# one\n---\nnext",
+            "startOffset": 74,
+            "endOffset": 88,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-89-105",
+            "text": "***\nlast\n___\nend",
+            "startOffset": 89,
+            "endOffset": 105,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fallback-fences-and-lists",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "intro\n```md\n# inside\n\nbody\n```\n- item\n* item\n1. item\n9. next\nend",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 27,
+            "breakpointWindowChars": 20,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "intro\n```md\n# inside\n\nbody\n```\n- item\n* item\n1. item\n9. next\nend",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 27,
+            "breakpointWindowChars": 20,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-26",
+            "text": "intro\n```md\n# inside\n\nbody",
+            "startOffset": 0,
+            "endOffset": 26,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-27-52",
+            "text": "```\n- item\n* item\n1. item",
+            "startOffset": 27,
+            "endOffset": 52,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-53-64",
+            "text": "9. next\nend",
+            "startOffset": 53,
+            "endOffset": 64,
+            "kind": "fallback"
+          }
+        ]
+      }
+    },
+    {
+      "name": "metadata-code-fences",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\n```md\n# inside\n\nbody\n```\nend",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 5
+                }
+              }
+            },
+            {
+              "type": "code",
+              "position": {
+                "start": {
+                  "offset": 6
+                },
+                "end": {
+                  "offset": 32
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 25,
+            "breakpointWindowChars": 20,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\n```md\n# inside\n\nbody\n```\nend",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [
+            {
+              "type": "paragraph",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 5
+                }
+              }
+            },
+            {
+              "type": "code",
+              "position": {
+                "start": {
+                  "offset": 6
+                },
+                "end": {
+                  "offset": 32
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 25,
+            "breakpointWindowChars": 20,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-5",
+            "text": "start",
+            "startOffset": 0,
+            "endOffset": 5,
+            "kind": "paragraph"
+          },
+          {
+            "id": "Note.md#chunk-6-30",
+            "text": "```md\n# inside\n\nbody\n```",
+            "startOffset": 6,
+            "endOffset": 30,
+            "kind": "code"
+          },
+          {
+            "id": "Note.md#chunk-31-34",
+            "text": "end",
+            "startOffset": 31,
+            "endOffset": 34,
+            "kind": "code"
+          }
+        ]
+      }
+    },
+    {
+      "name": "sorted-nearest-heading-and-callout",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "one\ntwo\nthree\nfour\nfive\nsix\nseven",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Later",
+              "level": 6,
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 18
+                }
+              }
+            },
+            {
+              "heading": "First",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 3
+                }
+              }
+            },
+            {
+              "heading": "Equal last",
+              "level": 2,
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 3
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "callout",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 13
+                }
+              }
+            },
+            {
+              "type": "list",
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 27
+                }
+              }
+            },
+            {
+              "type": "unknown",
+              "position": {
+                "start": {
+                  "offset": 28
+                },
+                "end": {
+                  "offset": 33
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 13,
+            "breakpointWindowChars": 9,
+            "breakpointDecay": 0
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "one\ntwo\nthree\nfour\nfive\nsix\nseven",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [
+            {
+              "heading": "Later",
+              "level": 6,
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 18
+                }
+              }
+            },
+            {
+              "heading": "First",
+              "level": 1,
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 3
+                }
+              }
+            },
+            {
+              "heading": "Equal last",
+              "level": 2,
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 3
+                }
+              }
+            }
+          ],
+          "sections": [
+            {
+              "type": "callout",
+              "position": {
+                "start": {
+                  "offset": 0
+                },
+                "end": {
+                  "offset": 13
+                }
+              }
+            },
+            {
+              "type": "list",
+              "position": {
+                "start": {
+                  "offset": 14
+                },
+                "end": {
+                  "offset": 27
+                }
+              }
+            },
+            {
+              "type": "unknown",
+              "position": {
+                "start": {
+                  "offset": 28
+                },
+                "end": {
+                  "offset": 33
+                }
+              }
+            }
+          ],
+          "chunking": {
+            "targetChars": 13,
+            "breakpointWindowChars": 9,
+            "breakpointDecay": 0
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-13",
+            "text": "one\ntwo\nthree",
+            "startOffset": 0,
+            "endOffset": 13,
+            "heading": "Equal last",
+            "kind": "blockquote"
+          },
+          {
+            "id": "Note.md#chunk-14-23",
+            "text": "four\nfive",
+            "startOffset": 14,
+            "endOffset": 23,
+            "heading": "Later",
+            "kind": "list"
+          },
+          {
+            "id": "Note.md#chunk-24-33",
+            "text": "six\nseven",
+            "startOffset": 24,
+            "endOffset": 33,
+            "heading": "Later",
+            "kind": "list"
+          }
+        ]
+      }
+    },
+    {
+      "name": "frontmatter-beyond-content",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "short",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatterEndOffset": 100
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "short",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 20,
+            "breakpointWindowChars": 8,
+            "breakpointDecay": 0.7
+          },
+          "frontmatterEndOffset": 100
+        },
+        "metadataText": "",
+        "chunks": []
+      }
+    },
+    {
+      "name": "crlf-and-unclosed-fence",
+      "input": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\r\n```\r\n- body\r\n\r\nnext\r\nend",
+        "tags": ["retained"],
+        "tagParts": ["retained"],
+        "tagHierarchy": ["retained"],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 19,
+            "breakpointWindowChars": 15,
+            "breakpointDecay": 0.7
+          }
+        }
+      },
+      "expected": {
+        "path": "Note.md",
+        "sourceProviderId": "reference/provider",
+        "name": "Note",
+        "extension": "md",
+        "checksum": "reference",
+        "content": "start\r\n```\r\n- body\r\n\r\nnext\r\nend",
+        "tags": [],
+        "tagParts": [],
+        "tagHierarchy": [],
+        "sourceMetadata": {
+          "rawTags": [],
+          "headings": [],
+          "sections": [],
+          "chunking": {
+            "targetChars": 19,
+            "breakpointWindowChars": 15,
+            "breakpointDecay": 0.7
+          }
+        },
+        "metadataText": "",
+        "chunks": [
+          {
+            "id": "Note.md#chunk-0-5",
+            "text": "start",
+            "startOffset": 0,
+            "endOffset": 5,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-7-25",
+            "text": "```\r\n- body\r\n\r\nnex",
+            "startOffset": 7,
+            "endOffset": 25,
+            "kind": "fallback"
+          },
+          {
+            "id": "Note.md#chunk-25-31",
+            "text": "t\r\nend",
+            "startOffset": 25,
+            "endOffset": 31,
+            "kind": "fallback"
+          }
+        ]
+      }
+    }
+  ]
+}

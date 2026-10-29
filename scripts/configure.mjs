@@ -15,6 +15,12 @@ if (
 )
   throw new Error("lapis-ai-service must stay on tag v0.2.0");
 for (const manifest of [server, core]) {
+  for (const line of manifest.split("\n")) {
+    if (/path\s*=\s*"[^"]*\.\.\/\.\.\/\.\./u.test(line))
+      throw new Error(
+        "Cargo path dependencies must stay inside this repository",
+      );
+  }
   if (manifest.includes(forbidden))
     throw new Error("jj-store pull request 22 is not a server dependency");
   const pinned = manifest

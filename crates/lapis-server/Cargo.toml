@@ -7,6 +7,9 @@ license.workspace = true
 publish.workspace = true
 description = "Hosted HTTP adapter for shared Lapis native application services"
 
+[features]
+local-sibling-projections = []
+
 [dependencies]
 lapis-app-core = { path = "../lapis-app-core" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }

@@ -1,16 +1,13 @@
 use lapis_app_core::database::Database;
 use lapis_app_protocol::{
-    ErrorCode,
     database::memory::records::{MemoryCandidateInput, MemoryCandidateQuery},
+    ErrorCode,
 };
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 mod projection_support;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/memory-storage.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/memory-storage.json")).unwrap()
 }
 
 #[tokio::test]

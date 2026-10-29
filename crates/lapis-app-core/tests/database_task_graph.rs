@@ -1,12 +1,9 @@
 use lapis_app_core::database::Database;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use uuid::Uuid;
 mod indexed_support;
 fn fixture() -> Value {
-    serde_json::from_str(include_str!(
-        "../../../packages/api/src/lib/__tests__/fixtures/task-projection.json"
-    ))
-    .unwrap()
+    serde_json::from_str(include_str!("fixtures/task-projection.json")).unwrap()
 }
 async fn seed(db: &Database) {
     for row in fixture()["records"].as_array().unwrap() {
@@ -17,8 +14,8 @@ async fn seed(db: &Database) {
 }
 
 #[tokio::test]
-async fn task_descendants_follow_only_resolved_task_edges_in_breadth_first_order_and_deduplicate_cycles()
- {
+async fn task_descendants_follow_only_resolved_task_edges_in_breadth_first_order_and_deduplicate_cycles(
+) {
     let profile = tempfile::tempdir().unwrap();
     let db = Database::open(profile.path(), Uuid::new_v4())
         .await
@@ -61,12 +58,11 @@ async fn task_descendants_follow_only_resolved_task_edges_in_breadth_first_order
             .collect::<Vec<_>>(),
         ["inbox", "list", "future"]
     );
-    assert!(
-        db.list_task_descendants("missing.md")
-            .await
-            .unwrap()
-            .is_empty()
-    );
+    assert!(db
+        .list_task_descendants("missing.md")
+        .await
+        .unwrap()
+        .is_empty());
     assert_eq!(db.revision().await.unwrap(), revision);
     db.delete_task_projection("tasks/inbox.md").await.unwrap();
     assert_eq!(
@@ -82,8 +78,8 @@ async fn task_descendants_follow_only_resolved_task_edges_in_breadth_first_order
 }
 
 #[tokio::test]
-async fn child_links_preserve_normalized_order_kind_and_source_filters_without_the_generic_page_limit()
- {
+async fn child_links_preserve_normalized_order_kind_and_source_filters_without_the_generic_page_limit(
+) {
     use lapis_app_protocol::database::indexed::records::LinkKind;
     let profile = tempfile::tempdir().unwrap();
     let db = Database::open(profile.path(), Uuid::new_v4())
@@ -126,11 +122,10 @@ async fn child_links_preserve_normalized_order_kind_and_source_filters_without_t
             .len(),
         501
     );
-    assert!(
-        db.list_child_links(serde_json::from_value(json!({"sourcePath":"other.md"})).unwrap())
-            .await
-            .unwrap()
-            .is_empty()
-    );
+    assert!(db
+        .list_child_links(serde_json::from_value(json!({"sourcePath":"other.md"})).unwrap())
+        .await
+        .unwrap()
+        .is_empty());
     db.close().await.unwrap();
 }

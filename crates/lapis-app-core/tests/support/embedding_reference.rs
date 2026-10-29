@@ -2,8 +2,7 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::{collections::BTreeSet, path::Path};
 
-const LEGACY: &str =
-    include_str!("../../../../packages/api/src/lib/__tests__/fixtures/search-semantic-model.json");
+const LEGACY: &str = include_str!("../fixtures/search-semantic-model.json");
 const LINUX: &str =
     include_str!("../fixtures/search-model/linux-x64-ort-1.30.0-amd-7800x3d.json.txt");
 const PROVENANCE: &str =

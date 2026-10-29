@@ -101,6 +101,7 @@ impl Database {
 }
 
 impl crate::database::Database {
+    #[cfg(feature = "local-sibling-projections")]
     pub(crate) fn validate_search_chunking(
         chunking: &lapis_app_protocol::database::search::source::SearchChunkingSettings,
     ) -> crate::services::Result<()> {

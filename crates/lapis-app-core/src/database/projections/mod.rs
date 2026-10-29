@@ -4,6 +4,7 @@ mod query;
 mod query_evaluation;
 mod query_page;
 mod reads;
+#[cfg(feature = "local-sibling-projections")]
 mod source_paths;
 pub(super) mod values;
 mod writes;
@@ -24,22 +25,28 @@ pub(super) enum Action {
 }
 #[derive(Serialize)]
 pub(super) enum ReadAction {
+    #[cfg(feature = "local-sibling-projections")]
     NativeState(String, String),
+    #[cfg(feature = "local-sibling-projections")]
     NativeSourcePaths(String, Option<String>),
     Get(String, String, Option<String>),
     Query(String, ProjectionQuery, Option<String>),
     Related(ProjectionRelatedQuery, Option<String>),
 }
 pub(super) enum ReadValue {
+    #[cfg(feature = "local-sibling-projections")]
     NativeState(NativeProjectionState),
+    #[cfg(feature = "local-sibling-projections")]
     NativeSourcePaths(Vec<String>),
     Row(Option<serde_json::Value>),
     Query(ProjectionQueryResult),
 }
+#[cfg(feature = "local-sibling-projections")]
 pub(crate) struct NativeProjectionState {
     pub definition: Option<ProjectionDefinition>,
     pub source: Option<NativeSourceState>,
 }
+#[cfg(feature = "local-sibling-projections")]
 pub(crate) struct NativeSourceState {
     pub hash: String,
     pub schema_version: f64,

@@ -1,10 +1,13 @@
-use super::{Action, NativeProjectionState, ReadAction, ReadValue, write_access};
+#[cfg(feature = "local-sibling-projections")]
+use super::NativeProjectionState;
+use super::{Action, ReadAction, ReadValue, write_access};
 use crate::database::{Database, Operation, Output, invalid};
 use crate::services::Result;
 use lapis_app_protocol::database::projections::queries::*;
 use lapis_app_protocol::database::projections::*;
 
 impl Database {
+    #[cfg(feature = "local-sibling-projections")]
     pub(crate) async fn native_projection_state(
         &self,
         id: &str,

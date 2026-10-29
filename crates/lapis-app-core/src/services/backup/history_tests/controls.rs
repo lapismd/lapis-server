@@ -1,5 +1,5 @@
 use super::*;
-use lapis_app_protocol::{ErrorCode, history_index::*};
+use lapis_app_protocol::{history_index::*, ErrorCode};
 
 fn query(text: &str) -> HistoryIndexCommand {
     HistoryIndexCommand::Query {

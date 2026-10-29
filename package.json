@@ -46,6 +46,8 @@
   "devDependencies": {
     "@lapismd/spec-validator": "^0.2.0",
     "@playwright/test": "1.61.1",
+    "@storybook/addon-docs": "^10.6.5",
+    "@storybook/addon-themes": "^10.6.5",
     "@storybook/svelte-vite": "^10.6.5",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@testing-library/svelte": "^5.4.2",
@@ -53,6 +55,7 @@
     "jsdom": "^26.1.0",
     "prettier": "3.6.2",
     "prettier-plugin-svelte": "^4.1.1",
+    "remark-gfm": "^4.0.1",
     "storybook": "^10.6.5",
     "svelte": "^5.57.3",
     "typescript": "^5.9.3",
