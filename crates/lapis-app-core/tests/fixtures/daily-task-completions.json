@@ -1,0 +1,452 @@
+{
+  "sourceRevision": "a2e9f126afd54ab3e9f4418c5c41769bbf9876b0",
+  "sourceSha256": "35b099569d7aa630380828891ca682f250e6d84126b45c9051ec6433f250dea8",
+  "cases": [
+    {
+      "name": "boolean / LF / {\"type\": \"boolean\"}",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "boolean"
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 76,
+              "sourceEnd": 213,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 76,
+              "sourceEnd": 213,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "boolean / CRLF / {\"type\": \"boolean\"}",
+      "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "boolean"
+      },
+      "expected": {
+        "value": {
+          "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 87,
+              "sourceEnd": 228,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ],
+          "repeated": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 87,
+              "sourceEnd": 228,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "count / LF / {\"type\": \"count\", \"value\": 0, \"unit\": \" cups \"}",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "count",
+        "value": 0,
+        "unit": " cups "
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "count",
+              "value": 0,
+              "unit": "cups",
+              "sourceStart": 76,
+              "sourceEnd": 229,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "count",
+              "value": 0,
+              "unit": "cups",
+              "sourceStart": 76,
+              "sourceEnd": 229,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "count / CRLF / {\"type\": \"count\", \"value\": 0, \"unit\": \" cups \"}",
+      "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "count",
+        "value": 0,
+        "unit": " cups "
+      },
+      "expected": {
+        "value": {
+          "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "count",
+              "value": 0,
+              "unit": "cups",
+              "sourceStart": 87,
+              "sourceEnd": 244,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ],
+          "repeated": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "count",
+              "value": 0,
+              "unit": "cups",
+              "sourceStart": 87,
+              "sourceEnd": 244,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 0 cups <!-- task-occurrence task=read date=2026-08-20 kind=count unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "duration / LF / {\"type\": \"duration\", \"durationMinutes\": 90}",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "duration",
+        "durationMinutes": 90
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "duration",
+              "durationMinutes": 90,
+              "sourceStart": 76,
+              "sourceEnd": 222,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "duration",
+              "durationMinutes": 90,
+              "sourceStart": 76,
+              "sourceEnd": 222,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "duration / CRLF / {\"type\": \"duration\", \"durationMinutes\": 90}",
+      "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "duration",
+        "durationMinutes": 90
+      },
+      "expected": {
+        "value": {
+          "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "duration",
+              "durationMinutes": 90,
+              "sourceStart": 87,
+              "sourceEnd": 237,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ],
+          "repeated": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "duration",
+              "durationMinutes": 90,
+              "sourceStart": 87,
+              "sourceEnd": 237,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 1h30m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "number / LF / {\"type\": \"number\", \"value\": 12.5, \"unit\": \" kg \"}",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "number",
+        "value": 12.5,
+        "unit": " kg "
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "number",
+              "value": 12.5,
+              "unit": "kg",
+              "sourceStart": 76,
+              "sourceEnd": 231,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "number",
+              "value": 12.5,
+              "unit": "kg",
+              "sourceStart": 76,
+              "sourceEnd": 231,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "number / CRLF / {\"type\": \"number\", \"value\": 12.5, \"unit\": \" kg \"}",
+      "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "number",
+        "value": 12.5,
+        "unit": " kg "
+      },
+      "expected": {
+        "value": {
+          "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "number",
+              "value": 12.5,
+              "unit": "kg",
+              "sourceStart": 87,
+              "sourceEnd": 246,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ],
+          "repeated": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n\r\n# Day 📝\r\n\r\n## Tasks\r\n\r\n### Morning\r\n\r\n- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n\r\n- [ ] Handwritten\r\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "number",
+              "value": 12.5,
+              "unit": "kg",
+              "sourceStart": 87,
+              "sourceEnd": 246,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) : 12.5 kg <!-- task-occurrence task=read date=2026-08-20 kind=number unit=old -->\r\n  nested context 📝\r\n\r\n  preserve paragraph\r\n"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

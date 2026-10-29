@@ -1,0 +1,29 @@
+{
+  "name": "@lapismd/lapis-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hosted Lapis server image",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lapismd/lapis-server.git"
+  },
+  "type": "module",
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": "^24"
+  },
+  "scripts": {
+    "spec:build": "spec-validator build",
+    "spec:check": "spec-validator check",
+    "spec:first": "spec-validator first",
+    "spec:validate": "spec-validator validate",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "configure": "node scripts/configure.mjs"
+  },
+  "devDependencies": {
+    "@lapismd/spec-validator": "^0.2.0",
+    "prettier": "3.6.2"
+  }
+}

@@ -1,0 +1,2209 @@
+{
+  "schema": 1,
+  "desktopRevision": "f276120b30395860aebed67362bfb320ded6f22c",
+  "sources": [
+    {
+      "path": "src/lib/ai/conversations/dispatch-intent.ts",
+      "sha256": "26a9f1122d8723145c9e0d6cfeb31fe893171ef186d651333bfb504994112c3a"
+    },
+    {
+      "path": "src/lib/ai/conversations/recipients.ts",
+      "sha256": "877c7fa3207861c2db7949f357057f73cc9f0547e78650364bc9c3580bd0b0da"
+    },
+    {
+      "path": "src/lib/ai/conversations/validation-fields.ts",
+      "sha256": "fa6470db1fe0a5308fd500e30a62e7a9145ae25c3e417cb6fc62902136bbdc3d"
+    },
+    {
+      "path": "src/lib/ai/conversations/types.ts",
+      "sha256": "143294ebe528a35b030b9d06920e4acc3968a54a3fe882d3842143c436b4a590"
+    },
+    {
+      "path": "src/lib/ai/conversations/conversation-dispatches.ts",
+      "sha256": "83066cecd4ac4d05d2edb9d62f22684fb445b9e2e7469a05d3037cc57cfb3e91"
+    },
+    {
+      "path": "src/lib/ai/chat/controller/binding.ts",
+      "sha256": "b6bc64aa7251b6304396ad9fb718c6e88af44c13a8288d4308e9aace3f2fe4f0"
+    }
+  ],
+  "cases": [
+    {
+      "action": "delivery",
+      "name": "delivery-pending",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-pending",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-started",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": "binding-original"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "started",
+          "agentBindingId": "binding-original"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-started",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "started",
+            "agentBindingId": "binding-original"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "started",
+              "agentBindingId": "binding-original"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-completed",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "completed"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "completed"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-completed",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "completed"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "completed"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-rejected",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "rejected"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "rejected"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-rejected",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "rejected"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "rejected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-unknown",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "unknown"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "unknown"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-unknown",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "unknown"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "unknown"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-not_sent",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "not_sent"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "not_sent"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-not_sent",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "not_sent"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "not_sent"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-cancelled",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "cancelled"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "cancelled"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-cancelled",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "cancelled"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "cancelled"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-null",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery must be an object"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-array",
+      "input": [],
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery must be an object"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-number",
+      "input": 1,
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery must be an object"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-string",
+      "input": "x",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery must be an object"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-null",
+      "input": null,
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message must be an object"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-array",
+      "input": [],
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message must be an object"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-number",
+      "input": 1,
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message must be an object"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-string",
+      "input": "x",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message must be an object"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-forged-executable",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending",
+        "executable": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery contains unsupported fields"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-forged-executable",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ],
+        "executable": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-forged-vault_id",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending",
+        "vault_id": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery contains unsupported fields"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-forged-vault_id",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ],
+        "vault_id": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-forged-environment",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending",
+        "environment": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery contains unsupported fields"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-forged-environment",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ],
+        "environment": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-forged-root",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending",
+        "root": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery contains unsupported fields"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-forged-root",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ],
+        "root": "forged"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-missing",
+      "input": {
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-missing",
+      "input": {
+        "version": 1,
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-empty",
+      "input": {
+        "id": "",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-empty",
+      "input": {
+        "version": 1,
+        "id": "",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-number",
+      "input": {
+        "id": 7,
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-number",
+      "input": {
+        "version": 1,
+        "id": 7,
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.id must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-too-long",
+      "input": {
+        "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery identity or state is invalid"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-too-long",
+      "input": {
+        "version": 1,
+        "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message identity is too long"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-utf16-bound",
+      "input": {
+        "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "pending"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-utf16-bound",
+      "input": {
+        "version": 1,
+        "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery:writer",
+              "recipient": {
+                "id": "writer",
+                "token": "jj-store-agent:777269746572;",
+                "label": "Captured Writer"
+              },
+              "state": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-id-utf16-over",
+      "input": {
+        "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery identity or state is invalid"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-id-utf16-over",
+      "input": {
+        "version": 1,
+        "id": "📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message identity is too long"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-binding-undefined",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Started delivery requires a binding"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-binding-null",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": null
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery binding is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-binding-",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": ""
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery binding is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-binding-7",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": 7
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery binding is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-binding-xxxxxxxxxxxxxxx",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery binding is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-unknown-state",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "sent"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery identity or state is invalid"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-missing-userEntryId",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.userEntryId must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-invalid-userEntryId",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": 7,
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.userEntryId must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-missing-startedAt",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.startedAt must be a non-empty string"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-invalid-startedAt",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "not-a-date",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message.startedAt must be an ISO timestamp"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-version-0",
+      "input": {
+        "version": 0,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-version-2",
+      "input": {
+        "version": 2,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-version-1",
+      "input": {
+        "version": "1",
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-version-null",
+      "input": {
+        "version": null,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Pending addressed message format is unsupported"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-deliveries-null",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": null
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "An addressed message requires one to four deliveries"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-deliveries-[object Object]",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": {}
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "An addressed message requires one to four deliveries"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-deliveries-0",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": []
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "An addressed message requires one to four deliveries"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-deliveries-5",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery-0",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-1",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-2",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-3",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-4",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "An addressed message requires one to four deliveries"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-four",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery-0",
+            "recipient": {
+              "id": "writer0",
+              "token": "jj-store-agent:77726974657230;",
+              "label": "Same label"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-1",
+            "recipient": {
+              "id": "writer1",
+              "token": "jj-store-agent:77726974657231;",
+              "label": "Same label"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-2",
+            "recipient": {
+              "id": "writer2",
+              "token": "jj-store-agent:77726974657232;",
+              "label": "Same label"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery-3",
+            "recipient": {
+              "id": "writer3",
+              "token": "jj-store-agent:77726974657233;",
+              "label": "Same label"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "version": 1,
+          "id": "dispatch-authored",
+          "userEntryId": "user-authored-café",
+          "startedAt": "2026-10-27T04:30:00.000Z",
+          "deliveries": [
+            {
+              "id": "delivery-0",
+              "recipient": {
+                "id": "writer0",
+                "token": "jj-store-agent:77726974657230;",
+                "label": "Same label"
+              },
+              "state": "pending"
+            },
+            {
+              "id": "delivery-1",
+              "recipient": {
+                "id": "writer1",
+                "token": "jj-store-agent:77726974657231;",
+                "label": "Same label"
+              },
+              "state": "pending"
+            },
+            {
+              "id": "delivery-2",
+              "recipient": {
+                "id": "writer2",
+                "token": "jj-store-agent:77726974657232;",
+                "label": "Same label"
+              },
+              "state": "pending"
+            },
+            {
+              "id": "delivery-3",
+              "recipient": {
+                "id": "writer3",
+                "token": "jj-store-agent:77726974657233;",
+                "label": "Same label"
+              },
+              "state": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-duplicate-delivery",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "reviewer",
+              "token": "jj-store-agent:7265766965776572;",
+              "label": "Reviewer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Agent delivery identities must be distinct"
+        }
+      }
+    },
+    {
+      "action": "dispatch",
+      "name": "dispatch-duplicate-recipient",
+      "input": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          },
+          {
+            "id": "another-delivery",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-bad-token",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:ff;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-mismatch",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "reviewer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-empty-label",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": " "
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-control-label",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "bad\nlabel"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-long-label",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    },
+    {
+      "action": "delivery",
+      "name": "delivery-recipient-extra",
+      "input": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer",
+          "executable": "/tmp/agent"
+        },
+        "state": "pending"
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "Error",
+          "message": "Message recipient identity or label is invalid"
+        }
+      }
+    }
+  ],
+  "entries": [
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "pending"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:pending",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "pending"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "started",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:started",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "started",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "completed",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:completed",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "completed",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "rejected",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:rejected",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "rejected",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "unknown",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:unknown",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "unknown",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "not_sent",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:not_sent",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "not_sent",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    },
+    {
+      "dispatch": {
+        "version": 1,
+        "id": "dispatch-authored",
+        "userEntryId": "user-authored-café",
+        "startedAt": "2026-10-27T04:30:00.000Z",
+        "deliveries": [
+          {
+            "id": "delivery:writer",
+            "recipient": {
+              "id": "writer",
+              "token": "jj-store-agent:777269746572;",
+              "label": "Captured Writer"
+            },
+            "state": "pending"
+          }
+        ]
+      },
+      "delivery": {
+        "id": "delivery:writer",
+        "recipient": {
+          "id": "writer",
+          "token": "jj-store-agent:777269746572;",
+          "label": "Captured Writer"
+        },
+        "state": "cancelled",
+        "agentBindingId": "binding-original"
+      },
+      "entry": {
+        "schemaVersion": 3,
+        "type": "agent.delivery",
+        "id": "delivery:delivery:writer:cancelled",
+        "parentId": "user-authored-café",
+        "dispatchId": "dispatch-authored",
+        "createdAt": "2026-10-27T04:30:00.000Z",
+        "delivery": {
+          "id": "delivery:writer",
+          "recipient": {
+            "id": "writer",
+            "token": "jj-store-agent:777269746572;",
+            "label": "Captured Writer"
+          },
+          "state": "cancelled",
+          "agentBindingId": "binding-original"
+        },
+        "provenance": {
+          "originClass": "system",
+          "sourceKind": "app-system"
+        }
+      }
+    }
+  ]
+}

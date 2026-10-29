@@ -1,0 +1,3098 @@
+{
+  "schema": 1,
+  "reference": {
+    "repository": "lapis-desktop",
+    "revision": "6c6243202e05b04e57de0a737829ca3a48e3ed3e",
+    "sources": [
+      {
+        "path": "src/lib/ai/skills/parser.ts",
+        "sha256": "58215e6d0380cbfa71cfbd71acea476431408357cf714ed24a4a15053f510b1f"
+      },
+      {
+        "path": "src/lib/ai/skills/discovery.ts",
+        "sha256": "1906ea3b24683ec318b45050fffeb868f9e4cd1ab67e961b86d2dad6efe2583b"
+      },
+      {
+        "path": "src/lib/ai/skills/registry.ts",
+        "sha256": "f6248fe4a32cc40e5e4d904468cfb52fe303d921f9794d9e95422fef9c24f563"
+      },
+      {
+        "path": "src/lib/ai/skills/types.ts",
+        "sha256": "6d459dfb051aac97c2ee6dba90889bed14f353e8fa56b22bbfffe8cf626e2c7f"
+      }
+    ],
+    "namePattern": "^[a-z][a-z0-9_-]{0,63}$",
+    "apiExportSha256": "aa0cc95dcb38c2fa436e01ba838e539a5caa3d4ac994517b95376cdc24196fc8"
+  },
+  "parse": [
+    {
+      "content": "---\nname: research\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:b73fc42c",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:b73fc42c",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:811c9dc5",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must start with YAML frontmatter.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "No frontmatter",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:25bda89c",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must start with YAML frontmatter.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\n---\nbody",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:62324e75",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must start with YAML frontmatter.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\n[]\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:0de59dab",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter must be a mapping.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nnull\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:412f1968",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter must be a mapping.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\ntrue\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:d3befa1f",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter must be a mapping.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: [\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:caf0d621",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter is not valid YAML.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: a\nname: b\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:b901a2ae",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter is not valid YAML.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\ndescription: x\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:ce42e8bf",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must declare name.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: Research\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:d1be0ccc",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "Invalid skill name: Research",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: a/b\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:9d77a81f",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "Invalid skill name: a/b",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:4298ea63",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:4298ea63",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:98450bac",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "Invalid skill name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: a_1-b\ndescription: Research notes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:d307b599",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:a_1-b",
+          "name": "a_1-b",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:d307b599",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\n---\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:73ef66bf",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must declare description.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: 3\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:dbed89f7",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md must declare description.",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nuser-invocable: false\ndisable-model-invocation: true\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:6fdbf5dd",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:6fdbf5dd",
+          "userInvocable": false,
+          "modelInvocable": false,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nuser-invocable: \"false\"\ndisable-model-invocation: yes\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:653d9060",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:653d9060",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nargument-hint: \" <topic> \"\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:764e95e6",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:764e95e6",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "argumentHint": "<topic>",
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\ncommand-dispatch: tool\ncommand-tool: notes_search\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:aa517d28",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:aa517d28",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "tool",
+            "tool": "notes_search",
+            "argMode": "raw"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\ncommand-dispatch: tool\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:61787b20",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "command-dispatch: tool requires command-tool",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\ncommand-dispatch: native\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:42477a83",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "Unsupported command-dispatch: native",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\ncommand-dispatch: tool\ncommand-tool: x\ncommand-arg-mode: parsed\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:8086096d",
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "Unsupported command-arg-mode: parsed",
+          "path": ".agents/skills/example/SKILL.md"
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\ncommand-dispatch: \" \"\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:419dc4d2",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:419dc4d2",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nmetadata:\n  lapis:\n    requires:\n      tools: [notes_search, ' x ', 3, null, '']\n      capabilities: [read]\n      extensions: [search]\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:c533f5fb",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:c533f5fb",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "requirements": {
+            "tools": ["notes_search", "x"],
+            "capabilities": ["read"],
+            "extensions": ["search"]
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {tools: [], extensions: no}}}\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:140119d6",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:140119d6",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nmetadata: []\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:9a4e6357",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:9a4e6357",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\n---\n﻿ café 📝 \n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:3dca5b8a",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:3dca5b8a",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "café 📝 "
+        }
+      }
+    },
+    {
+      "content": "---\r\nname: research\r\ndescription: Research notes\r\n---\r\nRead notes.\r\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:9e89515d",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:9e89515d",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: |\n  Read notes\n  Carefully\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:a828a9ca",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Read notes\nCarefully",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:a828a9ca",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nmetadata: &m {lapis: {requires: {tools: [search]}}}\ncopy: *m\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:db5ea406",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:db5ea406",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "requirements": {
+            "tools": ["search"]
+          },
+          "instructions": "Read notes."
+        }
+      }
+    },
+    {
+      "content": "---\nname: research\ndescription: Research notes\nargument-hint: null\n---\nRead notes.\n",
+      "input": {
+        "path": ".agents/skills/example/SKILL.md",
+        "source": "folder",
+        "root": ".agents/skills/example"
+      },
+      "version": "fnv1a:d7848816",
+      "expected": {
+        "ok": true,
+        "value": {
+          "id": "folder:research",
+          "name": "research",
+          "description": "Research notes",
+          "source": "folder",
+          "root": ".agents/skills/example",
+          "version": "fnv1a:d7848816",
+          "userInvocable": true,
+          "modelInvocable": true,
+          "command": {
+            "kind": "model"
+          },
+          "instructions": "Read notes."
+        }
+      }
+    }
+  ],
+  "discovery": [
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "Projects/日本"
+        },
+        "sources": {},
+        "files": [
+          [
+            "Projects/日本/.agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            "Projects/日本/.agents/skills",
+            ["Projects/日本/.agents/skills/research/SKILL.md"]
+          ],
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": "Projects/日本/.agents/skills/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": "Projects/日本/.agents/skills/**/SKILL.md"
+        },
+        {
+          "read": "Projects/日本/.agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "bundled": [
+            {
+              "id": "bundled:research",
+              "name": "research",
+              "description": "Bundled research",
+              "source": "bundled",
+              "root": "bundled/research",
+              "version": "bundled-version",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Bundled rules"
+            }
+          ]
+        },
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": "bundled/research",
+              "source": "bundled",
+              "message": "Shadowed by vault skill research",
+              "shadowedBy": ".agents/skills/research"
+            },
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "bundled": [
+            {
+              "id": "bundled:research",
+              "name": "research",
+              "description": "Bundled research",
+              "source": "bundled",
+              "root": "bundled/research",
+              "version": "bundled-version",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Bundled rules"
+            }
+          ],
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules"
+              }
+            }
+          ]
+        },
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/user/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nUser\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", [".agents/user/skills/research/SKILL.md"]]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": "bundled/research",
+              "source": "bundled",
+              "message": "Shadowed by programmatic skill research",
+              "shadowedBy": "programmatic:demo/research"
+            },
+            {
+              "path": "programmatic:demo/research",
+              "source": "programmatic",
+              "message": "Shadowed by user skill research",
+              "shadowedBy": ".agents/user/skills/research"
+            },
+            {
+              "path": ".agents/user/skills/research",
+              "source": "user",
+              "message": "Shadowed by vault skill research",
+              "shadowedBy": ".agents/skills/research"
+            },
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/user/skills/research/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "Projects"
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules"
+              }
+            }
+          ]
+        },
+        "files": [
+          [
+            "Projects/.agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            "Projects/.agents/skills",
+            ["Projects/.agents/skills/research/SKILL.md"]
+          ],
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": "Projects/.agents/skills/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": "programmatic:demo/research",
+              "source": "programmatic",
+              "message": "Shadowed by vault skill research",
+              "shadowedBy": ".agents/skills/research"
+            },
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": "Projects/.agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": "Projects/.agents/skills/**/SKILL.md"
+        },
+        {
+          "read": "Projects/.agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/other/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            [
+              ".agents/skills/research/SKILL.md",
+              ".agents/skills/other/SKILL.md"
+            ]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/other",
+              "source": "vault",
+              "message": "Duplicate skill name at the same precedence: research"
+            },
+            {
+              "path": ".agents/skills/other",
+              "source": "folder",
+              "message": "Duplicate skill name at the same precedence: research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/other/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/other/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/other/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/third/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            [
+              ".agents/skills/research/SKILL.md",
+              ".agents/skills/other/SKILL.md",
+              ".agents/skills/third/SKILL.md"
+            ]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/other",
+              "source": "vault",
+              "message": "Duplicate skill name at the same precedence: research"
+            },
+            {
+              "path": ".agents/skills/third",
+              "source": "vault",
+              "message": "Duplicate skill name at the same precedence: research"
+            },
+            {
+              "path": ".agents/skills/other",
+              "source": "folder",
+              "message": "Duplicate skill name at the same precedence: research"
+            },
+            {
+              "path": ".agents/skills/third",
+              "source": "folder",
+              "message": "Duplicate skill name at the same precedence: research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/other/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/third/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/other/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/third/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [".agents/skills/research/SKILL.md", "Bad"],
+          [
+            ".agents/skills/good/SKILL.md",
+            "---\nname: good\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            [".agents/skills/research/SKILL.md", ".agents/skills/good/SKILL.md"]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:good",
+              "name": "good",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/good",
+              "version": "fnv1a:74819cb8",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research/SKILL.md",
+              "source": "folder",
+              "message": "SKILL.md must start with YAML frontmatter."
+            },
+            {
+              "path": ".agents/skills/research/SKILL.md",
+              "source": "vault",
+              "message": "SKILL.md must start with YAML frontmatter."
+            },
+            {
+              "path": ".agents/skills/good",
+              "source": "vault",
+              "message": "Shadowed by folder skill good",
+              "shadowedBy": ".agents/skills/good"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/good/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/good/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/x/scripts/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/x/references/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            [
+              ".agents/skills/x/scripts/SKILL.md",
+              ".agents/skills/x/references/SKILL.md"
+            ]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {tools: [search]}}}\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Required tool is unavailable: search"
+            },
+            {
+              "path": ".agents/skills/research",
+              "source": "folder",
+              "message": "Required tool is unavailable: search"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "",
+          "availableToolNames": ["search"]
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {tools: [search]}}}\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:301e266d",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "requirements": {
+                "tools": ["search"]
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "",
+          "enabledPluginIds": []
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {extensions: [needed]}}}\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:e62ed841",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "requirements": {
+                "extensions": ["needed"]
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "",
+          "enabledPluginIds": ["other"]
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {extensions: [needed]}}}\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Required extension is unavailable: needed"
+            },
+            {
+              "path": ".agents/skills/research",
+              "source": "folder",
+              "message": "Required extension is unavailable: needed"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\nmetadata: {lapis: {requires: {capabilities: [unsupported]}}}\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", [".agents/skills/research/SKILL.md"]],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/research",
+              "version": "fnv1a:2b2192fb",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "requirements": {
+                "capabilities": ["unsupported"]
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/research",
+              "source": "vault",
+              "message": "Shadowed by folder skill research",
+              "shadowedBy": ".agents/skills/research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "",
+          "enabledPluginIds": ["other"]
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules"
+              }
+            }
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": "research",
+              "source": "programmatic",
+              "message": "Disabled extension root is excluded: demo"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": "",
+          "enabledPluginIds": []
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules"
+              }
+            }
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "programmatic:research",
+              "name": "research",
+              "description": "Extension research",
+              "source": "programmatic",
+              "root": "programmatic:demo/research",
+              "version": "fnv1a:2f848be4",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Registered rules"
+            }
+          ],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules",
+                "userInvocable": false,
+                "disableModelInvocation": true,
+                "argumentHint": "<x>",
+                "command": {
+                  "kind": "tool",
+                  "tool": "search",
+                  "argMode": "raw"
+                }
+              }
+            }
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "programmatic:research",
+              "name": "research",
+              "description": "Extension research",
+              "source": "programmatic",
+              "root": "programmatic:demo/research",
+              "version": "fnv1a:a78a3ccc",
+              "userInvocable": false,
+              "modelInvocable": false,
+              "argumentHint": "<x>",
+              "command": {
+                "kind": "tool",
+                "tool": "search",
+                "argMode": "raw"
+              },
+              "instructions": "Registered rules"
+            }
+          ],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "invalid: mapping",
+                "instructions": "Registered rules"
+              }
+            }
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": {
+          "name": "SkillParseError",
+          "message": "SKILL.md frontmatter is not valid YAML.",
+          "path": "programmatic:demo/research"
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Registered rules"
+              }
+            },
+            {
+              "ownerPluginId": "demo",
+              "kind": "programmatic",
+              "skill": {
+                "name": "research",
+                "description": "Extension research",
+                "instructions": "Other"
+              }
+            }
+          ],
+          "bundled": [
+            {
+              "id": "bundled:research",
+              "name": "research",
+              "description": "Bundled research",
+              "source": "bundled",
+              "root": "bundled/research",
+              "version": "bundled-version",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Bundled rules"
+            }
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": "bundled/research",
+              "source": "bundled",
+              "message": "Shadowed by programmatic skill research",
+              "shadowedBy": "programmatic:demo/research"
+            },
+            {
+              "path": "programmatic:demo/research",
+              "source": "programmatic",
+              "message": "Duplicate skill name at the same precedence: research"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "directory",
+              "path": "skills"
+            }
+          ],
+          "extensionFiles": [
+            [
+              "demo:skills",
+              [
+                [
+                  "research/SKILL.md",
+                  "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+                ],
+                ["README.md", "Ignored"],
+                ["bad/SKILL.md", "Bad"]
+              ]
+            ]
+          ]
+        },
+        "files": [],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "extension:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "extension",
+              "root": "demo/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": "demo/bad/SKILL.md",
+              "source": "extension",
+              "message": "SKILL.md must start with YAML frontmatter."
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "registered": [
+            {
+              "ownerPluginId": "demo",
+              "kind": "root",
+              "path": "skills"
+            }
+          ],
+          "extensionRoots": [["demo", ".lapis/plugins/demo"]]
+        },
+        "files": [
+          [
+            ".lapis/plugins/demo/skills/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", []],
+          [".agents/user/skills", []],
+          [
+            ".lapis/plugins/demo/skills",
+            [".lapis/plugins/demo/skills/research/SKILL.md"]
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "extension:research",
+              "name": "research",
+              "description": "Research notes",
+              "source": "extension",
+              "root": "demo/research",
+              "version": "fnv1a:b73fc42c",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".lapis/plugins/demo/skills/**/SKILL.md"
+        },
+        {
+          "read": ".lapis/plugins/demo/skills/research/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {
+          "userPrefix": "custom/"
+        },
+        "files": [
+          [
+            "custom/research/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [".agents/skills", []],
+          ["custom/", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": []
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": "custom/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            ".agents/skills/z/SKILL.md",
+            "---\nname: z\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/a/SKILL.md",
+            "---\nname: a\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/a_b/SKILL.md",
+            "---\nname: a_b\ndescription: Research notes\n---\nRead notes.\n"
+          ],
+          [
+            ".agents/skills/a-b/SKILL.md",
+            "---\nname: a-b\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            [
+              ".agents/skills/z/SKILL.md",
+              ".agents/skills/a/SKILL.md",
+              ".agents/skills/a_b/SKILL.md",
+              ".agents/skills/a-b/SKILL.md"
+            ]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [
+            {
+              "id": "folder:a",
+              "name": "a",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/a",
+              "version": "fnv1a:77549eec",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            },
+            {
+              "id": "folder:a_b",
+              "name": "a_b",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/a_b",
+              "version": "fnv1a:32a1160f",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            },
+            {
+              "id": "folder:a-b",
+              "name": "a-b",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/a-b",
+              "version": "fnv1a:45a1d825",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            },
+            {
+              "id": "folder:z",
+              "name": "z",
+              "description": "Research notes",
+              "source": "folder",
+              "root": ".agents/skills/z",
+              "version": "fnv1a:7b0db67b",
+              "userInvocable": true,
+              "modelInvocable": true,
+              "command": {
+                "kind": "model"
+              },
+              "instructions": "Read notes."
+            }
+          ],
+          "diagnostics": [
+            {
+              "path": ".agents/skills/z",
+              "source": "vault",
+              "message": "Shadowed by folder skill z",
+              "shadowedBy": ".agents/skills/z"
+            },
+            {
+              "path": ".agents/skills/a",
+              "source": "vault",
+              "message": "Shadowed by folder skill a",
+              "shadowedBy": ".agents/skills/a"
+            },
+            {
+              "path": ".agents/skills/a_b",
+              "source": "vault",
+              "message": "Shadowed by folder skill a_b",
+              "shadowedBy": ".agents/skills/a_b"
+            },
+            {
+              "path": ".agents/skills/a-b",
+              "source": "vault",
+              "message": "Shadowed by folder skill a-b",
+              "shadowedBy": ".agents/skills/a-b"
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/z/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a_b/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a-b/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/z/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a_b/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/a-b/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "context": {
+          "scopeDir": ""
+        },
+        "sources": {},
+        "files": [
+          [
+            "outside/SKILL.md",
+            "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+          ]
+        ],
+        "lists": [
+          [
+            ".agents/skills",
+            ["outside/SKILL.md", ".agents/skills/a/../b/SKILL.md"]
+          ],
+          [".agents/user/skills", []]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "skills": [],
+          "diagnostics": [
+            {
+              "path": "outside/SKILL.md",
+              "source": "folder",
+              "message": "Skill path escapes the trusted root."
+            },
+            {
+              "path": ".agents/skills/a/../b/SKILL.md",
+              "source": "folder",
+              "message": "Skill path escapes the trusted root."
+            },
+            {
+              "path": "outside/SKILL.md",
+              "source": "vault",
+              "message": "Skill path escapes the trusted root."
+            },
+            {
+              "path": ".agents/skills/a/../b/SKILL.md",
+              "source": "vault",
+              "message": "Skill path escapes the trusted root."
+            }
+          ]
+        }
+      },
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    }
+  ],
+  "registry": [
+    {
+      "input": {
+        "seed": {
+          "context": {
+            "scopeDir": ""
+          },
+          "sources": {},
+          "files": [
+            [
+              ".agents/skills/research/SKILL.md",
+              "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+            ]
+          ],
+          "lists": [
+            [".agents/skills", [".agents/skills/research/SKILL.md"]],
+            [".agents/user/skills", []]
+          ]
+        },
+        "steps": [
+          {
+            "op": "snapshot"
+          },
+          {
+            "op": "getLoaded",
+            "name": "research"
+          },
+          {
+            "op": "modify",
+            "path": ".agents/skills/research/SKILL.md",
+            "content": "---\nname: research\ndescription: Research notes\n---\nNew rules\n"
+          },
+          {
+            "op": "invalidate"
+          },
+          {
+            "op": "snapshot"
+          },
+          {
+            "op": "loadSaved",
+            "snapshot": 0
+          },
+          {
+            "op": "load",
+            "id": "research",
+            "versionFrom": 0
+          },
+          {
+            "op": "load",
+            "id": "folder:research",
+            "version": "wrong"
+          },
+          {
+            "op": "getLoaded",
+            "name": "missing"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-0-00000000-0000-4000-8000-000000000001",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": [
+              {
+                "skillId": "folder:research",
+                "name": "research",
+                "description": "Research notes",
+                "version": "fnv1a:b73fc42c",
+                "userInvocable": true,
+                "modelInvocable": true
+              }
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "folder:research",
+            "name": "research",
+            "description": "Research notes",
+            "source": "folder",
+            "root": ".agents/skills/research",
+            "version": "fnv1a:b73fc42c",
+            "userInvocable": true,
+            "modelInvocable": true,
+            "command": {
+              "kind": "model"
+            },
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-1-00000000-0000-4000-8000-000000000002",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": [
+              {
+                "skillId": "folder:research",
+                "name": "research",
+                "description": "Research notes",
+                "version": "fnv1a:6ff23f40",
+                "userInvocable": true,
+                "modelInvocable": true
+              }
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "folder:research",
+            "name": "research",
+            "description": "Research notes",
+            "source": "folder",
+            "root": ".agents/skills/research",
+            "version": "fnv1a:b73fc42c",
+            "userInvocable": true,
+            "modelInvocable": true,
+            "command": {
+              "kind": "model"
+            },
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "folder:research",
+            "name": "research",
+            "description": "Research notes",
+            "source": "folder",
+            "root": ".agents/skills/research",
+            "version": "fnv1a:b73fc42c",
+            "userInvocable": true,
+            "modelInvocable": true,
+            "command": {
+              "kind": "model"
+            },
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": false,
+          "error": {
+            "name": "Error",
+            "message": "Skill is not available: folder:research"
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        }
+      ],
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "seed": {
+          "context": {
+            "scopeDir": ""
+          },
+          "sources": {},
+          "files": [
+            [
+              ".agents/skills/research/SKILL.md",
+              "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+            ]
+          ],
+          "lists": [
+            [".agents/skills", [".agents/skills/research/SKILL.md"]],
+            [".agents/user/skills", []]
+          ]
+        },
+        "steps": [
+          {
+            "op": "activate",
+            "name": "research",
+            "source": "user",
+            "arguments": ""
+          },
+          {
+            "op": "activate",
+            "name": "research",
+            "source": "model",
+            "arguments": "café 📝"
+          },
+          {
+            "op": "activate",
+            "name": "missing",
+            "source": "app"
+          },
+          {
+            "op": "load",
+            "id": "missing",
+            "version": "missing"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "ok": true,
+          "value": {
+            "skillId": "folder:research",
+            "skillName": "research",
+            "version": "fnv1a:b73fc42c",
+            "source": "user",
+            "arguments": "",
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "skillId": "folder:research",
+            "skillName": "research",
+            "version": "fnv1a:b73fc42c",
+            "source": "model",
+            "arguments": "café 📝",
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": false,
+          "error": {
+            "name": "Error",
+            "message": "Unknown skill: missing"
+          }
+        },
+        {
+          "ok": false,
+          "error": {
+            "name": "Error",
+            "message": "Skill is not available: missing"
+          }
+        }
+      ],
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "seed": {
+          "context": {
+            "scopeDir": ""
+          },
+          "sources": {},
+          "files": [
+            [
+              ".agents/skills/research/SKILL.md",
+              "---\nname: research\ndescription: Research notes\n---\nRead notes.\n"
+            ]
+          ],
+          "lists": [
+            [".agents/skills", [".agents/skills/research/SKILL.md"]],
+            [".agents/user/skills", []]
+          ]
+        },
+        "steps": [
+          {
+            "op": "snapshot"
+          },
+          {
+            "op": "snapshot"
+          },
+          {
+            "op": "invalidate"
+          },
+          {
+            "op": "getLoaded",
+            "name": "research"
+          },
+          {
+            "op": "loadSaved",
+            "snapshot": 0
+          },
+          {
+            "op": "snapshot"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-0-00000000-0000-4000-8000-000000000001",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": [
+              {
+                "skillId": "folder:research",
+                "name": "research",
+                "description": "Research notes",
+                "version": "fnv1a:b73fc42c",
+                "userInvocable": true,
+                "modelInvocable": true
+              }
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-0-00000000-0000-4000-8000-000000000002",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": [
+              {
+                "skillId": "folder:research",
+                "name": "research",
+                "description": "Research notes",
+                "version": "fnv1a:b73fc42c",
+                "userInvocable": true,
+                "modelInvocable": true
+              }
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "folder:research",
+            "name": "research",
+            "description": "Research notes",
+            "source": "folder",
+            "root": ".agents/skills/research",
+            "version": "fnv1a:b73fc42c",
+            "userInvocable": true,
+            "modelInvocable": true,
+            "command": {
+              "kind": "model"
+            },
+            "instructions": "Read notes."
+          }
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-1-00000000-0000-4000-8000-000000000003",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": [
+              {
+                "skillId": "folder:research",
+                "name": "research",
+                "description": "Research notes",
+                "version": "fnv1a:b73fc42c",
+                "userInvocable": true,
+                "modelInvocable": true
+              }
+            ]
+          }
+        }
+      ],
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    },
+    {
+      "input": {
+        "seed": {
+          "context": {
+            "scopeDir": ""
+          },
+          "sources": {},
+          "files": [[".agents/skills/research/SKILL.md", "Bad"]],
+          "lists": [
+            [".agents/skills", [".agents/skills/research/SKILL.md"]],
+            [".agents/user/skills", []]
+          ]
+        },
+        "steps": [
+          {
+            "op": "discover"
+          },
+          {
+            "op": "invalidate"
+          },
+          {
+            "op": "diagnostics"
+          },
+          {
+            "op": "snapshot"
+          }
+        ]
+      },
+      "expected": [
+        {
+          "ok": true,
+          "value": []
+        },
+        {
+          "ok": true,
+          "value": {
+            "$undefined": true
+          }
+        },
+        {
+          "ok": true,
+          "value": [
+            {
+              "path": ".agents/skills/research/SKILL.md",
+              "source": "folder",
+              "message": "SKILL.md must start with YAML frontmatter."
+            },
+            {
+              "path": ".agents/skills/research/SKILL.md",
+              "source": "vault",
+              "message": "SKILL.md must start with YAML frontmatter."
+            }
+          ]
+        },
+        {
+          "ok": true,
+          "value": {
+            "id": "skill-snapshot-1-00000000-0000-4000-8000-000000000001",
+            "createdAt": "2026-10-27T00:00:00.000Z",
+            "skills": []
+          }
+        }
+      ],
+      "reads": [
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/skills/**/SKILL.md"
+        },
+        {
+          "read": ".agents/skills/research/SKILL.md"
+        },
+        {
+          "glob": ".agents/user/skills/**/SKILL.md"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+import { writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createRequire } from 'node:module';
+const { env, pipeline, AutoTokenizer } = createRequire(resolve('packages/api/package.json'))('@huggingface/transformers');
+import { createSearchEmbeddingProvider } from '../packages/api/src/lib/storage/search-embedding-provider.ts';
+const modelId='Xenova/all-MiniLM-L6-v2';
+const revision='751bff37182d3f1213fa05d7196b954e230abad9';
+env.allowLocalModels=true;env.allowRemoteModels=false;env.localModelPath=resolve('.local/search-models/')+'/';
+const extractor=await pipeline('feature-extraction',modelId,{device:'cpu',dtype:'q8',revision});
+const tokenizer=await AutoTokenizer.from_pretrained(modelId,{revision});
+const texts=['A cat sits on the warm windowsill.','A kitten rests beside the window.','Rust services own background jobs.','Café café naïve — Ελληνικά 中文 🪨','  Spaces and\nlines\twith punctuation.  ', 'A cat and a kitten share a window. '.repeat(96)+'TRUNCATEDTAIL'];
+const options={pooling:'mean',normalize:true};
+const queries=[];
+for(const text of texts) {
+ const result=await extractor(text,options);
+ const encoding=await tokenizer(text,{padding:true,truncation:true});
+ queries.push({text,vector:result.tolist()[0],inputIds:Array.from(encoding.input_ids.data,Number),attentionMask:Array.from(encoding.attention_mask.data,Number),typeIds:Array.from(encoding.token_type_ids.data,Number)});
+}
+const batch=await extractor(texts,options);
+const document={path:'fixture.md',name:'Fixture',extension:'md',checksum:'fixture',content:texts.join('\n'),tags:[],tagParts:[],tagHierarchy:[],chunks:texts.map((text,i)=>({id:`fixture.md#${i}`,text,startOffset:0,endOffset:text.length}))};
+const hashProvider=createSearchEmbeddingProvider({kind:'token-hash'})!;
+const hashes=await hashProvider.embedDocument(document);
+const result={modelId,revision,dtype:'q8',runtime:'onnxruntime-node 1.30.0 / transformers 4.3.1 CPU',queries,chunks:hashes.map((row,index)=>({chunkId:row.chunkId,vector:batch.tolist()[index],fingerprint:row.fingerprint}))};
+const mixedTexts=Array.from({length:9},(_,i)=>texts[i%texts.length]);
+const mixedBatch=await tokenizer(mixedTexts.slice(0,8),{padding:true,truncation:true});
+const mixedVectors=[];
+for(let i=0;i<mixedTexts.length;i+=8) mixedVectors.push(...(await extractor(mixedTexts.slice(i,i+8),options)).tolist());
+const raw=(await extractor(texts[0],{pooling:'mean',normalize:false})).tolist()[0];
+Object.assign(result,{mixed:{texts:mixedTexts,rows:8,columns:mixedBatch.input_ids.dims[1],inputIds:Array.from(mixedBatch.input_ids.data,Number),attentionMask:Array.from(mixedBatch.attention_mask.data,Number),typeIds:Array.from(mixedBatch.token_type_ids.data,Number),vectors:mixedVectors},raw:{text:texts[0],vector:raw}});
+writeFileSync('.local/search-semantic-cpu-reference.json',JSON.stringify(result,null,2)+'\n');
+console.log({queries:queries.length,dimensions:queries[0].vector.length,chunks:result.chunks.length});

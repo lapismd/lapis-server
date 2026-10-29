@@ -1,0 +1,80 @@
+name: Server CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: lapis-server-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance:
+    name: Specification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm spec:check
+      - run: pnpm format:check
+      - name: Cancel this run after a required failure
+        if: "${{ failure() && !cancelled() }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          curl --fail-with-body --silent --show-error --request POST
+          --header "Authorization: Bearer $GH_TOKEN"
+          --header "Accept: application/vnd.github+json"
+          --header "X-GitHub-Api-Version: 2022-11-28"
+          "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/cancel"
+
+  configure:
+    name: Configure the server package
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
+        with:
+          toolchain: "1.99.0"
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
+        id: rust-cache
+        with:
+          workspaces: . -> .local/rust-core-target
+          save-if: ${{ github.repository == 'lapismd/lapis-server' && (github.event_name == 'pull_request' || github.ref == 'refs/heads/main') }}
+          key: ordinary-1.99-debug
+          cache-workspace-crates: "false"
+          cache-on-failure: "false"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm configure
+      - name: Report Rust cache match
+        run: 'echo "Rust cache exact hit: $CACHE_HIT" >> "$GITHUB_STEP_SUMMARY"'
+        env:
+          CACHE_HIT: ${{ steps.rust-cache.outputs.cache-hit }}
+      - name: Cancel this run after a required failure
+        if: "${{ failure() && !cancelled() }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          curl --fail-with-body --silent --show-error --request POST
+          --header "Authorization: Bearer $GH_TOKEN"
+          --header "Accept: application/vnd.github+json"
+          --header "X-GitHub-Api-Version: 2022-11-28"
+          "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/cancel"

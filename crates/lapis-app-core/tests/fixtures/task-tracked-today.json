@@ -1,0 +1,1486 @@
+{
+  "schema": 1,
+  "oracleRevision": "da17eba0c7d9a6c90056cb957ef88fb60b975a43",
+  "cases": [
+    {
+      "name": "boolean and local date refresh",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "count at afternoon boundary",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '12:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: count\n    target: 8\n    unit: glasses\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "count",
+                  "unit": "glasses",
+                  "sourceStart": 80,
+                  "sourceEnd": 195,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '12:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: count\n    target: 8\n    unit: glasses\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "count",
+                  "unit": "glasses",
+                  "sourceStart": 80,
+                  "sourceEnd": 195,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '12:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: count\n    target: 8\n    unit: glasses\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=count unit=glasses -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=count unit=glasses -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "count",
+                  "unit": "glasses",
+                  "sourceStart": 80,
+                  "sourceEnd": 195,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=count unit=glasses -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "count",
+                  "unit": "glasses",
+                  "sourceStart": 80,
+                  "sourceEnd": 195,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=count unit=glasses -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '12:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: count\n    target: 8\n    unit: glasses\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "duration at evening boundary",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '18:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: duration\n    target: 30m\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 80,
+                  "sourceEnd": 185,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '18:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: duration\n    target: 30m\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 80,
+                  "sourceEnd": 185,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '18:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: duration\n    target: 30m\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=duration -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Anytime\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 80,
+                  "sourceEnd": 185,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=duration -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 80,
+                  "sourceEnd": 185,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "anytime",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=duration -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: time\n    time: '18:00'\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: duration\n    target: 30m\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "untracked current recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ordinary tracked task",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "future recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-22\n    at: anytime\n  repeat:\n    start: 2026-08-22\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-22\n    at: anytime\n  repeat:\n    start: 2026-08-22\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-22\n    at: anytime\n  repeat:\n    start: 2026-08-22\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-22\n    at: anytime\n  repeat:\n    start: 2026-08-22\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "overdue carry",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "paused recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n    paused: true\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n    paused: true\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n    paused: true\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n    paused: true\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "unsupported recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=HOURLY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=HOURLY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=HOURLY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=HOURLY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "exhausted recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-19\n    at: anytime\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "completed current recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: completed\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: completed\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: completed\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: completed\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "canceled current recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: canceled\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: canceled\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: canceled\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [],
+            "daily": {},
+            "observations": {},
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: canceled\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "current inbox recurrence",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n  inbox: true\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n  inbox: true\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n  inbox: true\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n  inbox: true\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "uppercase Markdown source",
+      "files": {
+        "Habits/Current.MARKDOWN": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {},
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habits/Current.MARKDOWN",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 199,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habits/Current.MARKDOWN",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habits/Current.MARKDOWN": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habits/Current.MARKDOWN",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 199,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habits/Current.MARKDOWN",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habits/Current.MARKDOWN": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# 2026-08-20\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habits/Current.MARKDOWN",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 199,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habits/Current.MARKDOWN",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habits/Current.MARKDOWN",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 199,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habits/Current.MARKDOWN",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habits/Current.MARKDOWN) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habits/Current.MARKDOWN": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "existing authored daily at another path",
+      "files": {
+        "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+      },
+      "dates": [
+        "2026-08-20",
+        "2026-08-20",
+        "2026-08-21"
+      ],
+      "daily": {
+        "Journal/Existing.MD": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n"
+      },
+      "expected": {
+        "settings": {
+          "afternoonStartsAt": "12:00",
+          "eveningStartsAt": "18:00"
+        },
+        "attempts": [
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "Journal/Existing.MD"
+              },
+              {
+                "kind": "daily-write",
+                "path": "Journal/Existing.MD",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "Journal/Existing.MD": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "Journal/Existing.MD": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "Journal/Existing.MD",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 107,
+                  "sourceEnd": 211,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-20",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "Journal/Existing.MD"
+              },
+              {
+                "kind": "daily-write",
+                "path": "Journal/Existing.MD",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "Journal/Existing.MD": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+            },
+            "observations": {
+              "Journal/Existing.MD": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "Journal/Existing.MD",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 107,
+                  "sourceEnd": 211,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          },
+          {
+            "date": "2026-08-21",
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-21",
+                "path": "daily/2026-08-21.md"
+              },
+              {
+                "kind": "create-daily",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-21.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+              }
+            ],
+            "daily": {
+              "Journal/Existing.MD": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Authored day\n\nPersonal notes survive.\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n",
+              "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n\n## Tasks\n\n### Morning\n\n- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+            },
+            "observations": {
+              "Journal/Existing.MD": [
+                {
+                  "observationId": "tracked:2026-08-20",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "Journal/Existing.MD",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 107,
+                  "sourceEnd": 211,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-20 kind=boolean -->\n"
+                }
+              ],
+              "daily/2026-08-21.md": [
+                {
+                  "observationId": "tracked:2026-08-21",
+                  "taskId": "tracked",
+                  "taskPath": "Habit.md",
+                  "dailyDocumentPath": "daily/2026-08-21.md",
+                  "occurrenceDate": "2026-08-21",
+                  "outcome": "pending",
+                  "trackingKind": "boolean",
+                  "sourceStart": 80,
+                  "sourceEnd": 184,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "A tracked habit",
+                  "href": "../Habit.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [A tracked habit](../Habit.md) <!-- task-occurrence task=tracked date=2026-08-21 kind=boolean -->\n"
+                }
+              ]
+            },
+            "tasks": {
+              "Habit.md": "---\ntype: task\nid: tracked\ntask:\n  status: open\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: skip\n  tracking:\n    type: boolean\n---\n\n# A tracked habit\n\nAuthored Task content.\n"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

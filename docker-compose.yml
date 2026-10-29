@@ -1,0 +1,29 @@
+name: lapis-server
+
+services:
+  lapis-server:
+    image: ghcr.io/lapismd/lapis-server
+    ports:
+      - "8787:8787"
+    environment:
+      LAPIS_SERVER_ORIGIN: ${LAPIS_SERVER_ORIGIN:-http://localhost:8787}
+      LAPIS_SERVER_INSECURE_COOKIE: ${LAPIS_SERVER_INSECURE_COOKIE:-1}
+      LAPIS_SERVER_BOOTSTRAP_USERNAME: ${LAPIS_SERVER_BOOTSTRAP_USERNAME:-owner}
+      LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE: /run/secrets/lapis_bootstrap_password
+    secrets:
+      - lapis_bootstrap_password
+    volumes:
+      - lapis_data:/data
+      - ${LAPIS_SERVER_CONFIG_FILE:?Set LAPIS_SERVER_CONFIG_FILE}:/run/lapis/config.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+    stop_grace_period: 30s
+    restart: unless-stopped
+
+secrets:
+  lapis_bootstrap_password:
+    file: ${LAPIS_SERVER_PASSWORD_FILE:?Set LAPIS_SERVER_PASSWORD_FILE}
+
+volumes:
+  lapis_data:

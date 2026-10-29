@@ -1,0 +1,132 @@
+{
+  "documentPath": {
+    "type": "path",
+    "indexed": true,
+    "sortable": true
+  },
+  "documentId": {
+    "type": "string",
+    "indexed": true,
+    "unique": true
+  },
+  "kind": {
+    "type": "string",
+    "indexed": true
+  },
+  "title": {
+    "type": "string",
+    "indexed": true,
+    "sortable": true
+  },
+  "status": {
+    "type": "string",
+    "indexed": true,
+    "sortable": true
+  },
+  "priority": {
+    "type": "string",
+    "indexed": true,
+    "sortable": true
+  },
+  "inbox": {
+    "type": "boolean",
+    "indexed": true
+  },
+  "startKind": {
+    "type": "string",
+    "indexed": true
+  },
+  "startDate": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "planDate": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "planKind": {
+    "type": "string",
+    "indexed": true
+  },
+  "planTime": {
+    "type": "string",
+    "indexed": true,
+    "sortable": true
+  },
+  "durationMinutes": {
+    "type": "number",
+    "indexed": true,
+    "sortable": true
+  },
+  "deadline": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "completedAt": {
+    "type": "string",
+    "indexed": true
+  },
+  "repeat": {
+    "type": "json"
+  },
+  "repeatStart": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "repeatRRule": {
+    "type": "string",
+    "indexed": true
+  },
+  "repeatAnchor": {
+    "type": "string",
+    "indexed": true
+  },
+  "repeatMissed": {
+    "type": "string",
+    "indexed": true
+  },
+  "repeatPaused": {
+    "type": "boolean",
+    "indexed": true
+  },
+  "repeatPausedSince": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "tracking": {
+    "type": "json"
+  },
+  "effectiveOccurrenceDate": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "effectiveOccurrenceState": {
+    "type": "string",
+    "indexed": true,
+    "sortable": true
+  },
+  "effectiveForDate": {
+    "type": "date",
+    "indexed": true,
+    "sortable": true
+  },
+  "checklistTotal": {
+    "type": "number"
+  },
+  "checklistCompleted": {
+    "type": "number"
+  },
+  "commentCount": {
+    "type": "number",
+    "indexed": true
+  },
+  "structure": {
+    "type": "json"
+  }
+}

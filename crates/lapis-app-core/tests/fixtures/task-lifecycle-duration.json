@@ -1,0 +1,2527 @@
+{
+  "schema": 1,
+  "oracleRevision": "a2e9f126afd54ab3e9f4418c5c41769bbf9876b0",
+  "cases": [
+    {
+      "name": "valid duration / complete / ordinary / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "completed",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-20",
+                "planKind": "morning",
+                "completedAt": "2026-08-20T09:00:00Z",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: completed\n  inbox: false\n  start: anytime\n  completedAt: 2026-08-20T09:00:00Z\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: completed\n  inbox: false\n  start: anytime\n  completedAt: 2026-08-20T09:00:00Z\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+            },
+            "intents": [
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: completed\n  inbox: false\n  start: anytime\n  completedAt: 2026-08-20T09:00:00Z\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: completed\n  inbox: false\n  start: anytime\n  completedAt: 2026-08-20T09:00:00Z\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: completed\n  inbox: false\n  start: anytime\n  completedAt: 2026-08-20T09:00:00Z\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "completed",
+                "completedAt": "2026-08-20T09:00:00Z",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "unparsedTracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 273,
+                  "sourceEnd": 284,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 285,
+                  "sourceEnd": 297,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "tracking-without-repeat",
+                  "field": "task.tracking",
+                  "message": "tracking requires an executable or preserved RRULE recurrence."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / schedule / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-21",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceDate": "2026-08-21",
+                "effectiveOccurrenceState": "future",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": 8
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": 8
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n",
+                "failed": false
+              },
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-21",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 434,
+                  "sourceEnd": 445,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 446,
+                  "sourceEnd": 458,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "read:2026-08-20",
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "completed",
+                  "trackingKind": "duration",
+                  "durationMinutes": 8,
+                  "sourceStart": 93,
+                  "sourceEnd": 197,
+                  "projectionVersion": 1,
+                  "checked": true,
+                  "title": "Read 📝",
+                  "href": "../tasks/Read.md",
+                  "dayPart": "morning",
+                  "source": "- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / completion / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-21",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceDate": "2026-08-21",
+                "effectiveOccurrenceState": "future",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": 8
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": 8
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n",
+                "failed": false
+              },
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-21",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 436,
+                  "sourceEnd": 447,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 448,
+                  "sourceEnd": 460,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "read:2026-08-20",
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "completed",
+                  "trackingKind": "duration",
+                  "durationMinutes": 8,
+                  "sourceStart": 93,
+                  "sourceEnd": 197,
+                  "projectionVersion": 1,
+                  "checked": true,
+                  "title": "Read 📝",
+                  "href": "../tasks/Read.md",
+                  "dayPart": "morning",
+                  "source": "- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / completion-without-start / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-21",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "start": "2026-08-20",
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceDate": "2026-08-21",
+                "effectiveOccurrenceState": "future",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    start: 2026-08-20\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": 8
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    start: 2026-08-20\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": 8
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n",
+                "failed": false
+              },
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    start: 2026-08-20\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    start: 2026-08-20\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n    start: 2026-08-20\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-21",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false,
+                  "lastCompletedAt": "2026-08-20T09:00:00Z",
+                  "completionCount": 1
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 436,
+                  "sourceEnd": 447,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 448,
+                  "sourceEnd": 460,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "read:2026-08-20",
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "completed",
+                  "trackingKind": "duration",
+                  "durationMinutes": 8,
+                  "sourceStart": 93,
+                  "sourceEnd": 197,
+                  "projectionVersion": 1,
+                  "checked": true,
+                  "title": "Read 📝",
+                  "href": "../tasks/Read.md",
+                  "dayPart": "morning",
+                  "source": "- [x] [Read 📝](../tasks/Read.md) : 8m <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / paused / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "This recurrence is invalid or legacy. Replace or remove it before completion or skip.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "This recurrence is invalid or legacy. Replace or remove it before completion or skip.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "unparsedRepeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "paused": true
+                },
+                "unparsedTracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 327,
+                  "sourceEnd": 338,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 339,
+                  "sourceEnd": 351,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "invalid-repeat",
+                  "field": "task.repeat",
+                  "message": "repeat must use a valid RRULE, anchor/missed policy, date-only start and exceptions, pause ranges, and non-negative completionCount."
+                },
+                {
+                  "code": "tracking-without-repeat",
+                  "field": "task.tracking",
+                  "message": "tracking requires an executable or preserved RRULE recurrence."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / exhausted / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Cannot complete a recurrence in exhausted state.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Cannot complete a recurrence in exhausted state.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-19",
+                  "rrule": "FREQ=DAILY;COUNT=1",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 318,
+                  "sourceEnd": 329,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 330,
+                  "sourceEnd": 342,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / complete / unsupported / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Replace unsupported recurrence properties before advancement: BYHOUR.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Replace unsupported recurrence properties before advancement: BYHOUR.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY;BYHOUR=12",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 320,
+                  "sourceEnd": 331,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 332,
+                  "sourceEnd": 344,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "unsupported-repeat-rule",
+                  "field": "task.repeat.rrule",
+                  "message": "The RRULE is preserved but automatic advancement is blocked because Tasks does not execute: BYHOUR."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / ordinary / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-20",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+            },
+            "intents": [
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "unparsedTracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 202,
+                  "sourceEnd": 213,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 214,
+                  "sourceEnd": 226,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "tracking-without-repeat",
+                  "field": "task.tracking",
+                  "message": "tracking requires an executable or preserved RRULE recurrence."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / schedule / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-21",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceDate": "2026-08-21",
+                "effectiveOccurrenceState": "future",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n",
+                "failed": false
+              },
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-21",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 369,
+                  "sourceEnd": 380,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 381,
+                  "sourceEnd": 393,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "read:2026-08-20",
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 93,
+                  "sourceEnd": 192,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "Read 📝",
+                  "href": "../tasks/Read.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / completion / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-21",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceDate": "2026-08-21",
+                "effectiveOccurrenceState": "future",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              },
+              {
+                "kind": "daily-write",
+                "path": "daily/2026-08-20.md",
+                "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n",
+                "failed": false
+              },
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "updated": "2026-08-20T09:00:00Z",
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-21",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 371,
+                  "sourceEnd": 382,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 383,
+                  "sourceEnd": 395,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Morning\n\n- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": [
+                {
+                  "observationId": "read:2026-08-20",
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "dailyDocumentPath": "daily/2026-08-20.md",
+                  "occurrenceDate": "2026-08-20",
+                  "outcome": "pending",
+                  "trackingKind": "duration",
+                  "sourceStart": 93,
+                  "sourceEnd": 192,
+                  "projectionVersion": 1,
+                  "checked": false,
+                  "title": "Read 📝",
+                  "href": "../tasks/Read.md",
+                  "dayPart": "morning",
+                  "source": "- [ ] [Read 📝](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=duration -->\n"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / completion-without-start / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "Error",
+                "message": "Completion-anchored recurrence has not established a start."
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "Error",
+                "message": "Completion-anchored recurrence has not established a start."
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    rrule: FREQ=DAILY\n    anchor: completion\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "completion",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 290,
+                  "sourceEnd": 301,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 302,
+                  "sourceEnd": 314,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / paused / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "This recurrence is invalid or legacy. Replace or remove it before completion or skip.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "This recurrence is invalid or legacy. Replace or remove it before completion or skip.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    paused: true\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "unparsedRepeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "paused": true
+                },
+                "unparsedTracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 327,
+                  "sourceEnd": 338,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 339,
+                  "sourceEnd": 351,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "invalid-repeat",
+                  "field": "task.repeat",
+                  "message": "repeat must use a valid RRULE, anchor/missed policy, date-only start and exceptions, pause ranges, and non-negative completionCount."
+                },
+                {
+                  "code": "tracking-without-repeat",
+                  "field": "task.tracking",
+                  "message": "tracking requires an executable or preserved RRULE recurrence."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / exhausted / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "value": {
+                "id": "read",
+                "path": "tasks/Read.md",
+                "title": "Read 📝",
+                "kind": "task",
+                "status": "open",
+                "inbox": false,
+                "startKind": "anytime",
+                "planDate": "2026-08-20",
+                "planKind": "morning",
+                "checklistTotal": 2,
+                "checklistCompleted": 1,
+                "commentCount": 0,
+                "repeat": {
+                  "start": "2026-08-19",
+                  "rrule": "FREQ=DAILY;COUNT=1",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "effectiveOccurrenceState": "exhausted",
+                "effectiveForDate": "2026-08-20"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+            },
+            "intents": [
+              {
+                "kind": "task-write",
+                "path": "tasks/Read.md",
+                "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "failed": false
+              }
+            ],
+            "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-19\n    rrule: FREQ=DAILY;COUNT=1\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-19",
+                  "rrule": "FREQ=DAILY;COUNT=1",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 347,
+                  "sourceEnd": 358,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 359,
+                  "sourceEnd": 371,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / skip / unsupported / duration",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "skip",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 8
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Replace unsupported recurrence properties before advancement: BYHOUR.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "TaskRecurrenceMutationError",
+                "message": "Replace unsupported recurrence properties before advancement: BYHOUR.",
+                "code": "recurrence-advancement-blocked"
+              }
+            },
+            "plan": {},
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY;BYHOUR=12\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY;BYHOUR=12",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 320,
+                  "sourceEnd": 331,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 332,
+                  "sourceEnd": 344,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": [
+                {
+                  "code": "unsupported-repeat-rule",
+                  "field": "task.repeat.rrule",
+                  "message": "The RRULE is preserved but automatic advancement is blocked because Tasks does not execute: BYHOUR."
+                }
+              ]
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / missing duration value",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20"
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "InvalidTaskOccurrenceValueError",
+                "message": "Duration completion requires minutes.",
+                "code": "invalid-task-occurrence-value"
+              }
+            },
+            "planner": {
+              "error": {
+                "name": "InvalidTaskOccurrenceValueError",
+                "message": "Duration completion requires minutes.",
+                "code": "invalid-task-occurrence-value"
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n"
+            },
+            "intents": [],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 310,
+                  "sourceEnd": 321,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 322,
+                  "sourceEnd": 334,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / invalid duration value 0",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 0
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "InvalidTaskOccurrenceValueError",
+                "message": "Duration must be at least one minute.",
+                "code": "invalid-task-occurrence-value"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": 0
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": 0
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              }
+            ],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 310,
+                  "sourceEnd": 321,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 322,
+                  "sourceEnd": 334,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / invalid duration value -1",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": -1
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "InvalidTaskOccurrenceValueError",
+                "message": "Duration must be at least one minute.",
+                "code": "invalid-task-occurrence-value"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": -1
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": -1
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              }
+            ],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 310,
+                  "sourceEnd": 321,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 322,
+                  "sourceEnd": 334,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "valid duration / invalid duration value 1.5",
+      "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+      "path": "tasks/Read.md",
+      "settings": {
+        "afternoonStartsAt": "12:00",
+        "eveningStartsAt": "17:00"
+      },
+      "actions": [
+        {
+          "type": "complete",
+          "at": "2026-08-20T09:00:00Z",
+          "localDate": "2026-08-20",
+          "trackedValue": 1.5
+        }
+      ],
+      "daily": {
+        "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+      },
+      "expected": {
+        "attempts": [
+          {
+            "result": {
+              "error": {
+                "name": "InvalidTaskOccurrenceValueError",
+                "message": "Duration must be at least one minute.",
+                "code": "invalid-task-occurrence-value"
+              }
+            },
+            "planner": {
+              "value": {
+                "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+                "observation": {
+                  "input": {
+                    "taskId": "read",
+                    "taskPath": "tasks/Read.md",
+                    "title": "Read 📝",
+                    "occurrenceDate": "2026-08-20",
+                    "tracking": {
+                      "type": "duration",
+                      "target": "30m"
+                    },
+                    "dayPart": "morning"
+                  },
+                  "completion": {
+                    "type": "duration",
+                    "durationMinutes": 1.5
+                  }
+                }
+              }
+            },
+            "plan": {
+              "taskRaw": "---\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-21\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n    resetChecklist: false\n    paused: false\n    lastCompletedAt: 2026-08-20T09:00:00Z\n    completionCount: 1\n  tracking:\n    type: duration\n    target: 30m\ntype: task\nid: read\nupdated: 2026-08-20T09:00:00Z\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "observation": {
+                "input": {
+                  "taskId": "read",
+                  "taskPath": "tasks/Read.md",
+                  "title": "Read 📝",
+                  "occurrenceDate": "2026-08-20",
+                  "tracking": {
+                    "type": "duration",
+                    "target": "30m"
+                  },
+                  "dayPart": "morning"
+                },
+                "completion": {
+                  "type": "duration",
+                  "durationMinutes": 1.5
+                }
+              }
+            },
+            "intents": [
+              {
+                "kind": "ensure-daily",
+                "date": "2026-08-20",
+                "path": "daily/2026-08-20.md"
+              }
+            ],
+            "taskRaw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+            "task": {
+              "path": "tasks/Read.md",
+              "raw": "---\ntype: task\nid: read\nopaque: preserve\ntask:\n  status: open\n  inbox: false\n  start: anytime\n  plan:\n    date: 2026-08-20\n    at: morning\n  repeat:\n    start: 2026-08-20\n    rrule: FREQ=DAILY\n    anchor: schedule\n    missed: carry\n  tracking:\n    type: duration\n    target: 30m\n  comments: []\n---\n\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "id": "read",
+              "kind": "task",
+              "title": "Read 📝",
+              "tags": [],
+              "task": {
+                "status": "open",
+                "inbox": false,
+                "start": {
+                  "kind": "anytime"
+                },
+                "plan": {
+                  "date": "2026-08-20",
+                  "at": "morning"
+                },
+                "repeat": {
+                  "start": "2026-08-20",
+                  "rrule": "FREQ=DAILY",
+                  "anchor": "schedule",
+                  "missed": "carry",
+                  "resetChecklist": false,
+                  "paused": false
+                },
+                "tracking": {
+                  "type": "duration",
+                  "target": "30m"
+                },
+                "comments": []
+              },
+              "body": "\n# Read 📝\n\n- [x] First\n- [ ] Second\n",
+              "checklist": [
+                {
+                  "text": "First",
+                  "checked": true,
+                  "position": 0,
+                  "sourceStart": 310,
+                  "sourceEnd": 321,
+                  "source": "- [x] First"
+                },
+                {
+                  "text": "Second",
+                  "checked": false,
+                  "position": 1,
+                  "sourceStart": 322,
+                  "sourceEnd": 334,
+                  "source": "- [ ] Second"
+                }
+              ],
+              "structuralLinks": [],
+              "diagnostics": []
+            },
+            "daily": {
+              "daily/2026-08-20.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n"
+            },
+            "observations": {
+              "daily/2026-08-20.md": []
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
