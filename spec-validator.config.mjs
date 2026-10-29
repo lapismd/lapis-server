@@ -10,6 +10,7 @@ export default defineConfig(headingRequirements(), {
   ruleIds: {
     governance: "SRV-GOV-001",
     fileLimits: "SRV-GOV-001",
+    qmd: "SRV-GOV-001",
     summary: "SRV-GOV-001",
     verification: "SRV-GOV-001",
     book: "SRV-GOV-001",
@@ -23,6 +24,7 @@ export default defineConfig(headingRequirements(), {
     fileLimits: { maxLines: 400, maxBytes: 32768 },
     verification: singleIdVerification(),
     book: true,
+    qmd: { collection: "lapis-server", configPath: ".qmd/index.yml" },
     specFirst: {
       mode: "mapped",
       canonicalPattern: "^spec/src/current/(?:server|governance)\\.md$",
