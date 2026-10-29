@@ -143,7 +143,7 @@ fn publish_index(history: &jj_vault::search::NativeHistory) -> Result<(), String
     fs::create_dir_all(&parent).map_err(|error| error.to_string())?;
     match fs::rename(&staging, &root) {
         Ok(()) => Ok(()),
-        Err(error) if root.join("index").join("meta.json").is_file() => {
+        Err(_) if root.join("index").join("meta.json").is_file() => {
             let _ = fs::remove_dir_all(&staging);
             Ok(())
         }

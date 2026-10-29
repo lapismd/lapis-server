@@ -1,4 +1,6 @@
-use super::{NativeProjectionState, NativeSourceState, ReadAction, ReadValue};
+#[cfg(feature = "local-sibling-projections")]
+use super::{NativeProjectionState, NativeSourceState};
+use super::{ReadAction, ReadValue};
 use crate::database::{MAX_BYTES, engine, invalid, store::Store};
 use crate::services::{Error, Result};
 use lapis_app_protocol::{
@@ -9,10 +11,12 @@ use lapis_app_protocol::{
 impl Store {
     pub async fn read_projection(&self, action: ReadAction) -> Result<ReadValue> {
         match action {
+            #[cfg(feature = "local-sibling-projections")]
             ReadAction::NativeSourcePaths(id, after) => self
                 .native_projection_source_paths(&id, after.as_deref())
                 .await
                 .map(ReadValue::NativeSourcePaths),
+            #[cfg(feature = "local-sibling-projections")]
             ReadAction::NativeState(id, path) => self
                 .native_projection_state(&id, &path)
                 .await
@@ -31,6 +35,7 @@ impl Store {
                 .map(ReadValue::Query),
         }
     }
+    #[cfg(feature = "local-sibling-projections")]
     async fn native_projection_state(&self, id: &str, path: &str) -> Result<NativeProjectionState> {
         let mut rows = self
             .connection

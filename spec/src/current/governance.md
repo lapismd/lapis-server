@@ -20,14 +20,15 @@ a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use
 MUST NOT publish an npm package. Every pull request MUST run
 `cargo test --workspace --locked` with the ordinary Rust dependency cache, and
 that command MUST resolve without a Cargo path dependency outside this repository.
-The Rust job MUST install checksum-verified upstream jj 0.45.1 before those tests.
+The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
+`cargo clippy --workspace --all-targets --locked -- -D warnings`, before those tests.
 
 ### Acceptance details
 
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
-- The server mounts published `@lapis-notes/workspace`, every pull request runs the workspace Rust tests with the ordinary dependency cache after installing checksum-verified upstream jj 0.45.1, and `main` requires those Server CI jobs plus a pull request before a git tag publishes the image without npm.
+- The server mounts published `@lapis-notes/workspace`, every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, and runs the workspace Rust tests with the ordinary dependency cache, and `main` requires those Server CI jobs plus a pull request before a git tag publishes the image without npm.
 
 ## SRV-GOV-002 — Published shell styles
 

@@ -17,6 +17,7 @@ pub struct VaultService {
     pub(super) storage: Option<Arc<DatabaseStorage>>,
     pub(super) database_open: tokio::sync::Mutex<()>,
     pub(super) indexing: Mutex<Option<super::indexing::Owner>>,
+    #[cfg(feature = "local-sibling-projections")]
     pub(super) indexing_control: tokio::sync::Mutex<()>,
     pub(super) backup_storage: Option<Arc<super::BackupStorage>>,
     pub(super) backup: super::backup::Slot,
@@ -26,6 +27,7 @@ pub struct VaultService {
     pub(super) history_index_pause: Mutex<Option<Box<dyn FnOnce() + Send>>>,
     pub(super) history_reader: Mutex<Option<Arc<super::history::Owner>>>,
     pub(super) close_gate: Mutex<()>,
+    #[cfg(feature = "local-sibling-projections")]
     pub(super) task_lifecycle: Mutex<()>,
     pub(super) task_storage: Option<Arc<super::TaskStorage>>,
     pub(super) tasks: Mutex<Option<Arc<super::tasks::service::Owner>>>,
@@ -120,6 +122,7 @@ impl VaultService {
             storage,
             database_open: tokio::sync::Mutex::new(()),
             indexing: Mutex::new(None),
+            #[cfg(feature = "local-sibling-projections")]
             indexing_control: tokio::sync::Mutex::new(()),
             backup_storage: None,
             backup: super::backup::Slot::default(),
@@ -129,6 +132,7 @@ impl VaultService {
             history_index_pause: Mutex::new(None),
             history_reader: Mutex::new(None),
             close_gate: Mutex::new(()),
+            #[cfg(feature = "local-sibling-projections")]
             task_lifecycle: Mutex::new(()),
             task_storage: None,
             tasks: Mutex::new(None),

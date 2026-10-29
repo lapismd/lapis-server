@@ -38,6 +38,7 @@ pub(super) fn write(
 }
 
 /// Validate an explicit existing-file write, including when its result is a no-op.
+#[cfg(feature = "local-sibling-projections")]
 pub(super) fn guard_existing_write(
     state: &State,
     path: &str,
@@ -62,6 +63,7 @@ pub(super) fn guard_existing_write(
     })
 }
 
+#[cfg(feature = "local-sibling-projections")]
 pub(super) fn write_if_changed(
     state: &State,
     path: &str,

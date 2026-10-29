@@ -94,6 +94,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
         with:
           toolchain: "1.99.0"
+          components: clippy
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0
         name: Restore Rust dependency cache
         id: rust-cache
@@ -109,6 +110,7 @@ jobs:
           CACHE_HIT: ${{ steps.rust-cache.outputs.cache-hit }}
       - name: Install pinned upstream JJ for repository fixtures
         run: node scripts/ci-setup-jj.mjs
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo test --workspace --locked
       - name: Cancel this run after a required failure
         if: "${{ failure() && !cancelled() }}"

@@ -19,20 +19,25 @@ pub(super) struct Authority {
     projections: BTreeSet<String>,
 }
 impl Database {
+    #[cfg(any(test, feature = "local-sibling-projections"))]
     pub(crate) async fn claim_native_metadata(&self) {
         // Fair exclusive acquisition drains every previously admitted complete
         // generated call, including a multi-stage call whose waiter detached.
         self.authority.write().await.metadata = true;
     }
+    #[cfg(any(test, feature = "local-sibling-projections"))]
     pub(crate) async fn claim_native_search(&self) {
         self.authority.write().await.search = true;
     }
+    #[cfg(feature = "local-sibling-projections")]
     pub(crate) async fn release_native_search(&self) {
         self.authority.write().await.search = false;
     }
+    #[cfg(any(test, feature = "local-sibling-projections"))]
     pub(crate) async fn claim_native_projection(&self, id: &str) {
         self.authority.write().await.projections.insert(id.into());
     }
+    #[cfg(any(test, feature = "local-sibling-projections"))]
     pub(crate) async fn release_native_projection(&self, id: &str) {
         self.authority.write().await.projections.remove(id);
     }

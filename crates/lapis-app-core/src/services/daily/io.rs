@@ -30,9 +30,11 @@ pub(in crate::services) fn prepare(
     Ok(Prepared { snapshot, plan })
 }
 impl Prepared {
+    #[cfg(feature = "local-sibling-projections")]
     pub(in crate::services) fn plan(&self) -> &Option<DailyDocumentPlan> {
         &self.plan
     }
+    #[cfg(feature = "local-sibling-projections")]
     pub(in crate::services) fn existing(
         &self,
         path: &str,
