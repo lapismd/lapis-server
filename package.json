@@ -1,6 +1,6 @@
 {
   "name": "@lapismd/lapis-server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Hosted Notes UI backed by the Lapis server",
   "license": "Apache-2.0",
@@ -26,6 +26,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "configure": "node scripts/configure.mjs",
+    "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
+    "release:github": "node scripts/release-github.mjs",
     "test:hosted-ui": "vite build --config web/vite.config.ts && playwright test -c web/playwright.hosted-notes.config.ts"
   },
   "dependencies": {
@@ -44,6 +46,8 @@
     "fflate": "^0.8.3"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@lapismd/spec-validator": "^0.2.0",
     "@playwright/test": "1.61.1",
     "@storybook/addon-docs": "^10.6.5",

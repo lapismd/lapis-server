@@ -2,8 +2,11 @@ name: Release server image
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -20,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - name: Check out the tagged revision
+      - name: Check out the published revision
         uses: actions/checkout@v6
 
       - name: Log in to GitHub Container Registry
@@ -30,6 +33,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Resolve the main commit tag
+        id: short
+        if: github.ref == 'refs/heads/main'
+        run: echo "tag=$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+
       - name: Resolve image tags
         id: meta
         uses: docker/metadata-action@v6
@@ -37,7 +45,8 @@ jobs:
           images: ghcr.io/lapismd/lapis-server
           tags: |
             type=ref,event=tag
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+            type=raw,value=${{ steps.short.outputs.tag }},enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and publish the server image
         uses: docker/build-push-action@v7

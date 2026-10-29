@@ -7,9 +7,11 @@ jj-store crates use `git = "https://github.com/stevejuma/jj-store"` and
 `rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161"`. Do not invent a jj-store
 tag. `lapis-ai-service` stays tag `v0.2.0`.
 
-Use Jujutsu. Do not publish crates or push the image without a separate
-release authorization. A git tag `v*` is the image release. Do not use
-Changesets and do not publish an npm package.
+Use Jujutsu. Do not publish crates. A push to `main` publishes
+`ghcr.io/lapismd/lapis-server` tagged with the 7-character
+`git rev-parse --short` hash. Changesets record the release note, open the
+version pull request, and create the `v*` tag and GitHub release. That tag
+also publishes the image. Do not publish an npm package.
 
 Use the installed `spec-validator` skill. Prefer
 `pnpm spec:search "<topic or ID>"` before any manual scan of `spec/src`.
