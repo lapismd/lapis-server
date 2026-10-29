@@ -1,5 +1,8 @@
 # Governance
 
+The project README documents how to run the image and set the initial owner
+password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
+
 ## SRV-GOV-001 — Specification and source limits
 
 <a id="srv-gov-001"></a>
