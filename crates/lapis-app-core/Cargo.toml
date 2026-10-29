@@ -7,10 +7,11 @@ license.workspace = true
 publish.workspace = true
 description = "Transport-independent native application services for Lapis Notes"
 
+[features]
+# Keeps projection tests in the tree without making sibling crates workspace path members.
+local-sibling-projections = []
+
 [dependencies]
-lapis-docs-projection = { path = "../../../lapis-plugin-docs/crates/lapis-docs-projection", version = "0.0.0" }
-lapis-task-services = { path = "../../../lapis-plugin-tasks/crates/lapis-task-services", version = "0.1.0" }
-lapis-plugin-services = { path = "../../../lapis-plugins/crates/lapis-plugin-services", version = "0.1.0" }
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
 async-trait = "0.1"
@@ -43,3 +44,55 @@ zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt-multi-thread", "time"] }
+
+[[test]]
+name = "native_indexing_authority"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "native_indexing_contributions"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_daily_task_guards"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_daily_task_reference"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_indexing"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_markdown_parser_upgrade"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_search_controls"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_search_sources"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_task_lifecycle"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_task_lifecycle_guards"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_task_occurrences"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_task_write_guards"
+required-features = ["local-sibling-projections"]
+
+[[test]]
+name = "service_task_writes"
+required-features = ["local-sibling-projections"]

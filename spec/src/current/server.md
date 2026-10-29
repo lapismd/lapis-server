@@ -49,9 +49,10 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates. Shared Notes product requirements MUST stay in the Notes specification.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates. Cargo path dependencies MUST stay inside this repository. Shared Notes product requirements MUST stay in the Notes specification.
 
 ### Acceptance details
 
 - The Cargo workspace contains those three crates.
+- The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.

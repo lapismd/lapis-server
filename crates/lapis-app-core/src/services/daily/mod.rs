@@ -4,6 +4,7 @@ mod format;
 pub(in crate::services) mod io;
 mod macros;
 mod observation_error;
+#[cfg(feature = "local-sibling-projections")]
 mod observations;
 mod policy;
 mod registry;

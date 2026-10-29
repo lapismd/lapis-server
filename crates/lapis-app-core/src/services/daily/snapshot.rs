@@ -15,6 +15,24 @@ pub(super) struct Snapshot {
     observed: BTreeMap<String, TextSnapshot>,
     pub candidates: Vec<DailyDocumentCandidate>,
 }
+pub(super) fn note_frontmatter(text: &str) -> serde_json::Value {
+    let Some(rest) = text
+        .strip_prefix("---\r\n")
+        .or_else(|| text.strip_prefix("---\n"))
+    else {
+        return serde_json::Value::Null;
+    };
+    let Some((yaml, _)) = rest.split_once("\n---") else {
+        return serde_json::Value::Null;
+    };
+    let yaml = yaml.trim_end_matches('\r').replace("\r\n", "\n");
+    let value = serde_yaml::from_str::<serde_json::Value>(&yaml).unwrap_or(serde_json::Value::Null);
+    if value.is_object() {
+        value
+    } else {
+        serde_json::json!({})
+    }
+}
 pub(super) fn admitted_root(work: &Work) -> Result<VaultRoot> {
     let state = work.vault.lock()?;
     if state.phase == VaultPhase::Closed {
@@ -41,9 +59,7 @@ impl Snapshot {
             }
             candidates.push(DailyDocumentCandidate {
                 path: path.clone(),
-                frontmatter:
-                    lapis_plugin_services::markdown::extract_metadata(&value.text)["frontmatter"]
-                        .clone(),
+                frontmatter: note_frontmatter(&value.text),
             });
             observed.insert(path.clone(), value);
         }

@@ -18,7 +18,8 @@ a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use
 `rg` only when QMD is unavailable. A git tag `v*` MUST publish
 `ghcr.io/lapismd/lapis-server` through the image workflow, and this repository
 MUST NOT publish an npm package. Every pull request MUST run
-`cargo test --workspace --locked` with the ordinary Rust dependency cache.
+`cargo test --workspace --locked` with the ordinary Rust dependency cache, and
+that command MUST resolve without a Cargo path dependency outside this repository.
 
 ### Acceptance details
 

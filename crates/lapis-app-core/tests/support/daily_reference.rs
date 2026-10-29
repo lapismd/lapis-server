@@ -8,6 +8,21 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+fn note_frontmatter(text: &str) -> Value {
+    let Some(rest) = text
+        .strip_prefix("---\r\n")
+        .or_else(|| text.strip_prefix("---\n"))
+    else {
+        return Value::Null;
+    };
+    let Some((yaml, _)) = rest.split_once("\n---") else {
+        return Value::Null;
+    };
+    let yaml = yaml.trim_end_matches('\r').replace("\r\n", "\n");
+    let value = serde_yaml::from_str::<Value>(&yaml).unwrap_or(Value::Null);
+    if value.is_object() { value } else { json!({}) }
+}
+
 fn context(value: &Value) -> DailyFormatContext {
     serde_json::from_value(json!({
         "locale": value["locale"]["locale"],
@@ -58,13 +73,10 @@ pub fn providers(fixture: &Value) {
             .iter()
             .map(|(path, raw)| DailyDocumentCandidate {
                 path: path.clone(),
-                frontmatter: case["cached"][path].as_object().cloned().map_or_else(
-                    || {
-                        lapis_plugin_services::markdown::extract_metadata(raw.as_str().unwrap())
-                        ["frontmatter"].clone()
-                    },
-                    Value::Object,
-                ),
+                frontmatter: case["cached"][path]
+                    .as_object()
+                    .cloned()
+                    .map_or_else(|| note_frontmatter(raw.as_str().unwrap()), Value::Object),
             })
             .collect::<Vec<_>>();
         // The actual provider's read trace preserves its supplied Vault inventory
