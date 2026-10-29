@@ -107,6 +107,8 @@ jobs:
         run: 'echo "Rust cache exact hit: $CACHE_HIT" >> "$GITHUB_STEP_SUMMARY"'
         env:
           CACHE_HIT: ${{ steps.rust-cache.outputs.cache-hit }}
+      - name: Install pinned upstream JJ for repository fixtures
+        run: node scripts/ci-setup-jj.mjs
       - run: cargo test --workspace --locked
       - name: Cancel this run after a required failure
         if: "${{ failure() && !cancelled() }}"
