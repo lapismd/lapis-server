@@ -1,0 +1,2062 @@
+[
+  {
+    "name": "nested YAML and linked headings",
+    "path": "Reference/Case-1.md",
+    "text": "---\ntype: task\ntask:\n  status: open\n  plan:\n    date: 2026-08-21\n---\n\n# Release\n## Subtasks\n- [Parser](./parser.md)\nSee [[Ideas|Idea inbox]]\n",
+    "cache": {
+      "frontmatter": {
+        "type": "task",
+        "task": {
+          "status": "open",
+          "plan": {
+            "date": "2026-08-21"
+          }
+        }
+      },
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 7,
+          "col": 0,
+          "offset": 69
+        }
+      },
+      "headings": [
+        {
+          "heading": "Release",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 8,
+              "col": 0,
+              "offset": 70
+            },
+            "end": {
+              "line": 8,
+              "col": 9,
+              "offset": 79
+            }
+          }
+        },
+        {
+          "heading": "Subtasks",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 9,
+              "col": 0,
+              "offset": 80
+            },
+            "end": {
+              "line": 9,
+              "col": 11,
+              "offset": 91
+            }
+          }
+        }
+      ],
+      "links": [
+        {
+          "link": "./parser.md",
+          "original": "[Parser](./parser.md)",
+          "displayText": "Parser",
+          "position": {
+            "start": {
+              "line": 10,
+              "col": 2,
+              "offset": 94
+            },
+            "end": {
+              "line": 10,
+              "col": 23,
+              "offset": 115
+            }
+          },
+          "heading": "Subtasks"
+        },
+        {
+          "link": "Ideas|Idea inbox",
+          "original": "[[Ideas|Idea inbox]]",
+          "displayText": "Idea inbox",
+          "position": {
+            "start": {
+              "line": 11,
+              "col": 4,
+              "offset": 120
+            },
+            "end": {
+              "line": 11,
+              "col": 24,
+              "offset": 140
+            }
+          },
+          "heading": "Subtasks"
+        }
+      ]
+    },
+    "mtime": 2,
+    "size": 141,
+    "expected": {
+      "path": "Reference/Case-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-1.md",
+      "extension": "md",
+      "checksum": "1196ef0145bfc59d95722c5a17a91a28",
+      "content": "---\ntype: task\ntask:\n  status: open\n  plan:\n    date: 2026-08-21\n---\n\n# Release\n## Subtasks\n- [Parser](./parser.md)\nSee [[Ideas|Idea inbox]]\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "29d4da2bafb75c602c2c74f079c2029b",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 141,
+        "rawTags": [],
+        "frontmatter": {
+          "type": "task",
+          "task": {
+            "status": "open",
+            "plan": {
+              "date": "2026-08-21"
+            }
+          }
+        },
+        "frontmatterEndOffset": 69,
+        "headings": [
+          {
+            "heading": "Release",
+            "level": 1,
+            "position": {
+              "start": {
+                "offset": 70
+              },
+              "end": {
+                "offset": 79
+              }
+            }
+          },
+          {
+            "heading": "Subtasks",
+            "level": 2,
+            "position": {
+              "start": {
+                "offset": 80
+              },
+              "end": {
+                "offset": 91
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "unicode UTF16 offsets and CRLF",
+    "path": "Reference/Case-2.md",
+    "text": "---\r\ntitle: café 📝\r\ntags: [work, team/notes]\r\n---\r\n# Café 📝\r\n📝 [[Ideas|Idée]] [Guide](guide.md) #team/notes\r\n",
+    "cache": {
+      "frontmatter": {
+        "title": "café 📝",
+        "tags": ["work", "team/notes"]
+      },
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 4,
+          "col": 0,
+          "offset": 52
+        }
+      },
+      "headings": [
+        {
+          "heading": "Café 📝",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 52
+            },
+            "end": {
+              "line": 4,
+              "col": 10,
+              "offset": 62
+            }
+          }
+        }
+      ],
+      "links": [
+        {
+          "link": "Ideas|Idée",
+          "original": "[[Ideas|Idée]]",
+          "displayText": "Idée",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 3,
+              "offset": 66
+            },
+            "end": {
+              "line": 5,
+              "col": 17,
+              "offset": 80
+            }
+          },
+          "heading": "Café 📝"
+        },
+        {
+          "link": "guide.md",
+          "original": "[Guide](guide.md)",
+          "displayText": "Guide",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 18,
+              "offset": 81
+            },
+            "end": {
+              "line": 5,
+              "col": 35,
+              "offset": 98
+            }
+          },
+          "heading": "Café 📝"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#team/notes",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 36,
+              "offset": 99
+            },
+            "end": {
+              "line": 5,
+              "col": 47,
+              "offset": 110
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 2,
+    "size": 121,
+    "expected": {
+      "path": "Reference/Case-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-2.md",
+      "extension": "md",
+      "checksum": "b4c828df1a9f88cac986a9c3f1f9d635",
+      "content": "---\r\ntitle: café 📝\r\ntags: [work, team/notes]\r\n---\r\n# Café 📝\r\n📝 [[Ideas|Idée]] [Guide](guide.md) #team/notes\r\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "51bda03c5402d7eaef9f322d66c7aa09",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 121,
+        "rawTags": ["#team/notes"],
+        "frontmatter": {
+          "title": "café 📝",
+          "tags": ["work", "team/notes"]
+        },
+        "frontmatterEndOffset": 52,
+        "headings": [
+          {
+            "heading": "Café 📝",
+            "level": 1,
+            "position": {
+              "start": {
+                "offset": 52
+              },
+              "end": {
+                "offset": 62
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "invalid YAML and no image metadata",
+    "path": "Reference/Case-3.md",
+    "text": "---\nbroken: [\n---\n![image](image.png) [[Note]] #one #one\n",
+    "cache": {
+      "frontmatter": {},
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 3,
+          "col": 0,
+          "offset": 18
+        }
+      },
+      "links": [
+        {
+          "link": "Note",
+          "original": "[[Note]]",
+          "displayText": "Note",
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 20,
+              "offset": 38
+            },
+            "end": {
+              "line": 3,
+              "col": 28,
+              "offset": 46
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#one",
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 29,
+              "offset": 47
+            },
+            "end": {
+              "line": 3,
+              "col": 33,
+              "offset": 51
+            }
+          }
+        },
+        {
+          "tag": "#one",
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 34,
+              "offset": 52
+            },
+            "end": {
+              "line": 3,
+              "col": 38,
+              "offset": 56
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 2,
+    "size": 57,
+    "expected": {
+      "path": "Reference/Case-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-3.md",
+      "extension": "md",
+      "checksum": "d9c192237526da26da361810f0e5d211",
+      "content": "---\nbroken: [\n---\n![image](image.png) [[Note]] #one #one\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "7d8108c43ae4d4a004184789d17038ae",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 57,
+        "rawTags": ["#one", "#one"],
+        "frontmatter": {},
+        "frontmatterEndOffset": 18,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "empty plain text",
+    "path": "Reference/Case-4.md",
+    "text": "plain text",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Reference/Case-4.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-4.md",
+      "extension": "md",
+      "checksum": "777aceb903989f9e33d11823ce7b470b",
+      "content": "plain text",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "31bc5c2b8fd4f20cd747347b7504a385",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "frontmatter arrays and primitives",
+    "path": "Reference/Case-5.md",
+    "text": "---\n- one\n- two\n---\n## Done\n(#nested/tag) #under_score\n",
+    "cache": {
+      "frontmatter": {},
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 4,
+          "col": 0,
+          "offset": 20
+        }
+      },
+      "headings": [
+        {
+          "heading": "Done",
+          "level": 2,
+          "position": {
+            "start": {
+              "line": 4,
+              "col": 0,
+              "offset": 20
+            },
+            "end": {
+              "line": 4,
+              "col": 7,
+              "offset": 27
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#nested/tag",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 1,
+              "offset": 29
+            },
+            "end": {
+              "line": 5,
+              "col": 12,
+              "offset": 40
+            }
+          }
+        },
+        {
+          "tag": "#under_score",
+          "position": {
+            "start": {
+              "line": 5,
+              "col": 14,
+              "offset": 42
+            },
+            "end": {
+              "line": 5,
+              "col": 26,
+              "offset": 54
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 2,
+    "size": 55,
+    "expected": {
+      "path": "Reference/Case-5.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-5.md",
+      "extension": "md",
+      "checksum": "0eaca0345c50a05cf5bd3a1abcee57d6",
+      "content": "---\n- one\n- two\n---\n## Done\n(#nested/tag) #under_score\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "895d8f7abd237187e97ae436496f889b",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 55,
+        "rawTags": ["#nested/tag", "#under_score"],
+        "frontmatter": {},
+        "frontmatterEndOffset": 20,
+        "headings": [
+          {
+            "heading": "Done",
+            "level": 2,
+            "position": {
+              "start": {
+                "offset": 20
+              },
+              "end": {
+                "offset": 27
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "adjacent links and heading retention",
+    "path": "Reference/Case-6.md",
+    "text": "# One\n[[A]][[B|Bee]] [one](a.md)[two](b.md)\n### Two\nSee [C](c.md)\n",
+    "cache": {
+      "headings": [
+        {
+          "heading": "One",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 5,
+              "offset": 5
+            }
+          }
+        },
+        {
+          "heading": "Two",
+          "level": 3,
+          "position": {
+            "start": {
+              "line": 2,
+              "col": 0,
+              "offset": 44
+            },
+            "end": {
+              "line": 2,
+              "col": 7,
+              "offset": 51
+            }
+          }
+        }
+      ],
+      "links": [
+        {
+          "link": "A",
+          "original": "[[A]]",
+          "displayText": "A",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 0,
+              "offset": 6
+            },
+            "end": {
+              "line": 1,
+              "col": 5,
+              "offset": 11
+            }
+          },
+          "heading": "One"
+        },
+        {
+          "link": "B|Bee",
+          "original": "[[B|Bee]]",
+          "displayText": "Bee",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 5,
+              "offset": 11
+            },
+            "end": {
+              "line": 1,
+              "col": 14,
+              "offset": 20
+            }
+          },
+          "heading": "One"
+        },
+        {
+          "link": "a.md",
+          "original": "[one](a.md)",
+          "displayText": "one",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 15,
+              "offset": 21
+            },
+            "end": {
+              "line": 1,
+              "col": 26,
+              "offset": 32
+            }
+          },
+          "heading": "One"
+        },
+        {
+          "link": "b.md",
+          "original": "[two](b.md)",
+          "displayText": "two",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 26,
+              "offset": 32
+            },
+            "end": {
+              "line": 1,
+              "col": 37,
+              "offset": 43
+            }
+          },
+          "heading": "One"
+        },
+        {
+          "link": "c.md",
+          "original": "[C](c.md)",
+          "displayText": "C",
+          "position": {
+            "start": {
+              "line": 3,
+              "col": 4,
+              "offset": 56
+            },
+            "end": {
+              "line": 3,
+              "col": 13,
+              "offset": 65
+            }
+          },
+          "heading": "Two"
+        }
+      ]
+    },
+    "mtime": 2,
+    "size": 66,
+    "expected": {
+      "path": "Reference/Case-6.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Case-6.md",
+      "extension": "md",
+      "checksum": "0041ade0104f75144ec7a4d69c0b88f8",
+      "content": "# One\n[[A]][[B|Bee]] [one](a.md)[two](b.md)\n### Two\nSee [C](c.md)\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "9dc76be553e316672c59369e94efca86",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 66,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [
+          {
+            "heading": "One",
+            "level": 1,
+            "position": {
+              "start": {
+                "offset": 0
+              },
+              "end": {
+                "offset": 5
+              }
+            }
+          },
+          {
+            "heading": "Two",
+            "level": 3,
+            "position": {
+              "start": {
+                "offset": 44
+              },
+              "end": {
+                "offset": 51
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "relative fragment and image target resolution",
+    "path": "Folder/Source.md",
+    "text": "# Source\n[[Target]] [Root](../Target.md) [[#Heading]] [[Target#Heading|Shown]] [Logo](../assets/logo.png)\n",
+    "cache": {
+      "headings": [
+        {
+          "heading": "Source",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 8,
+              "offset": 8
+            }
+          }
+        }
+      ],
+      "links": [
+        {
+          "link": "Target",
+          "original": "[[Target]]",
+          "displayText": "Target",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 0,
+              "offset": 9
+            },
+            "end": {
+              "line": 1,
+              "col": 10,
+              "offset": 19
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "#Heading",
+          "original": "[[#Heading]]",
+          "displayText": "#Heading",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 32,
+              "offset": 41
+            },
+            "end": {
+              "line": 1,
+              "col": 44,
+              "offset": 53
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "Target#Heading|Shown",
+          "original": "[[Target#Heading|Shown]]",
+          "displayText": "Shown",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 45,
+              "offset": 54
+            },
+            "end": {
+              "line": 1,
+              "col": 69,
+              "offset": 78
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "../Target.md",
+          "original": "[Root](../Target.md)",
+          "displayText": "Root",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 11,
+              "offset": 20
+            },
+            "end": {
+              "line": 1,
+              "col": 31,
+              "offset": 40
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "../assets/logo.png",
+          "original": "[Logo](../assets/logo.png)",
+          "displayText": "Logo",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 70,
+              "offset": 79
+            },
+            "end": {
+              "line": 1,
+              "col": 96,
+              "offset": 105
+            }
+          },
+          "heading": "Source"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#Heading",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 34,
+              "offset": 43
+            },
+            "end": {
+              "line": 1,
+              "col": 42,
+              "offset": 51
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 1,
+    "size": 106,
+    "expected": {
+      "path": "Folder/Source.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Source.md",
+      "extension": "md",
+      "checksum": "2c34d2d99ad7bf11e8562e2bd1a59bd5",
+      "content": "# Source\n[[Target]] [Root](../Target.md) [[#Heading]] [[Target#Heading|Shown]] [Logo](../assets/logo.png)\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "45cf4e16285327c12115b7b8885b7f7f",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 1,
+        "sourceSize": 106,
+        "rawTags": ["#Heading"],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [
+          {
+            "heading": "Source",
+            "level": 1,
+            "position": {
+              "start": {
+                "offset": 0
+              },
+              "end": {
+                "offset": 8
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "same basenames and unresolved links",
+    "path": "Area/Source.md",
+    "text": "[[Target]] [[Missing]] [[Target.MD]] [[https://example.org]]\n",
+    "cache": {
+      "links": [
+        {
+          "link": "Target",
+          "original": "[[Target]]",
+          "displayText": "Target",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 10,
+              "offset": 10
+            }
+          }
+        },
+        {
+          "link": "Missing",
+          "original": "[[Missing]]",
+          "displayText": "Missing",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 11,
+              "offset": 11
+            },
+            "end": {
+              "line": 0,
+              "col": 22,
+              "offset": 22
+            }
+          }
+        },
+        {
+          "link": "Target.MD",
+          "original": "[[Target.MD]]",
+          "displayText": "Target.MD",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 23,
+              "offset": 23
+            },
+            "end": {
+              "line": 0,
+              "col": 36,
+              "offset": 36
+            }
+          }
+        },
+        {
+          "link": "https://example.org",
+          "original": "[[https://example.org]]",
+          "displayText": "https://example.org",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 37,
+              "offset": 37
+            },
+            "end": {
+              "line": 0,
+              "col": 60,
+              "offset": 60
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 1,
+    "size": 61,
+    "expected": {
+      "path": "Area/Source.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Source.md",
+      "extension": "md",
+      "checksum": "99d532c80968489aea69ce5892936341",
+      "content": "[[Target]] [[Missing]] [[Target.MD]] [[https://example.org]]\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "b6f6c8f221a474efd98fb8b3441b9054",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 1,
+        "sourceSize": 61,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "frontmatter types tags hierarchy and duplicates",
+    "path": "Note.md",
+    "text": "---\ntitle: Café 📝\ntags: [team/notes, project alpha, not:valid, null, true, 42]\ntag: inbox, waiting; next\naliases: [One, Two]\ncheck: false\nnumber: 2\nnone: null\nlist: [one, 2]\nnested:\n  item: value\ndate: 2026-10-25\n---\n# Heading\n#team/notes #same #same #unicodeé\n",
+    "cache": {
+      "frontmatter": {
+        "title": "Café 📝",
+        "tags": ["team/notes", "project alpha", "not:valid", null, true, 42],
+        "tag": "inbox, waiting; next",
+        "aliases": ["One", "Two"],
+        "check": false,
+        "number": 2,
+        "none": null,
+        "list": ["one", 2],
+        "nested": {
+          "item": "value"
+        },
+        "date": "2026-10-25"
+      },
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 13,
+          "col": 0,
+          "offset": 218
+        }
+      },
+      "headings": [
+        {
+          "heading": "Heading",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 13,
+              "col": 0,
+              "offset": 218
+            },
+            "end": {
+              "line": 13,
+              "col": 9,
+              "offset": 227
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#team/notes",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 228
+            },
+            "end": {
+              "line": 14,
+              "col": 11,
+              "offset": 239
+            }
+          }
+        },
+        {
+          "tag": "#same",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 12,
+              "offset": 240
+            },
+            "end": {
+              "line": 14,
+              "col": 17,
+              "offset": 245
+            }
+          }
+        },
+        {
+          "tag": "#same",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 18,
+              "offset": 246
+            },
+            "end": {
+              "line": 14,
+              "col": 23,
+              "offset": 251
+            }
+          }
+        },
+        {
+          "tag": "#unicode",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 24,
+              "offset": 252
+            },
+            "end": {
+              "line": 14,
+              "col": 32,
+              "offset": 260
+            }
+          }
+        }
+      ]
+    },
+    "mtime": 1,
+    "size": 266,
+    "expected": {
+      "path": "Note.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Note.md",
+      "extension": "md",
+      "checksum": "58f7e51bd2809cfbadb3f53af66b122b",
+      "content": "---\ntitle: Café 📝\ntags: [team/notes, project alpha, not:valid, null, true, 42]\ntag: inbox, waiting; next\naliases: [One, Two]\ncheck: false\nnumber: 2\nnone: null\nlist: [one, 2]\nnested:\n  item: value\ndate: 2026-10-25\n---\n# Heading\n#team/notes #same #same #unicodeé\n",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "7bde6ec96309b75ad1d1175fc0c1be21",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 1,
+        "sourceSize": 266,
+        "rawTags": ["#team/notes", "#same", "#same", "#unicode"],
+        "frontmatter": {
+          "title": "Café 📝",
+          "tags": ["team/notes", "project alpha", "not:valid", null, true, 42],
+          "tag": "inbox, waiting; next",
+          "aliases": ["One", "Two"],
+          "check": false,
+          "number": 2,
+          "none": null,
+          "list": ["one", 2],
+          "nested": {
+            "item": "value"
+          },
+          "date": "2026-10-25"
+        },
+        "frontmatterEndOffset": 218,
+        "headings": [
+          {
+            "heading": "Heading",
+            "level": 1,
+            "position": {
+              "start": {
+                "offset": 218
+              },
+              "end": {
+                "offset": 227
+              }
+            }
+          }
+        ],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 1/0",
+    "path": "Checksums/Glyph-1-0.md",
+    "text": "éZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 7,
+    "expected": {
+      "path": "Checksums/Glyph-1-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-1-0.md",
+      "extension": "md",
+      "checksum": "5d55f7b061ceb03d44bd7fcb95f23709",
+      "content": "éZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "8f5a145f6e45b4958020dc9bdd76820e",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 7,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 1/1",
+    "path": "Checksums/Glyph-1-1.md",
+    "text": "aéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 8,
+    "expected": {
+      "path": "Checksums/Glyph-1-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-1-1.md",
+      "extension": "md",
+      "checksum": "1a5d983bb39eabd64f3957b7b5154772",
+      "content": "aéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "9dbbaa7f5a5a6198d90d34b980f24bfa",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 8,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 1/2",
+    "path": "Checksums/Glyph-1-2.md",
+    "text": "aaéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 9,
+    "expected": {
+      "path": "Checksums/Glyph-1-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-1-2.md",
+      "extension": "md",
+      "checksum": "7ca592011d196ac8928b4c583e91ed9a",
+      "content": "aaéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "929a2a4c7cdb702267ad0611892eb2e5",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 9,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 1/3",
+    "path": "Checksums/Glyph-1-3.md",
+    "text": "aaaéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Checksums/Glyph-1-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-1-3.md",
+      "extension": "md",
+      "checksum": "e0099ed7b4d47de38ca6d64284b50f34",
+      "content": "aaaéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "d0fcdc5af4c5f6f41102f67f3748b1c6",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 2/0",
+    "path": "Checksums/Glyph-2-0.md",
+    "text": "📝Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 9,
+    "expected": {
+      "path": "Checksums/Glyph-2-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-2-0.md",
+      "extension": "md",
+      "checksum": "75f458e45fedaf8f93717b695f304eba",
+      "content": "📝Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "4f4916e96f84a5e560f90e2252e28f3d",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 9,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 2/1",
+    "path": "Checksums/Glyph-2-1.md",
+    "text": "a📝Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Checksums/Glyph-2-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-2-1.md",
+      "extension": "md",
+      "checksum": "9481887770d30a094f96eca6ac561bfe",
+      "content": "a📝Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "dd9a9997f11618c08192daa9882f24b8",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 2/2",
+    "path": "Checksums/Glyph-2-2.md",
+    "text": "aa📝Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 11,
+    "expected": {
+      "path": "Checksums/Glyph-2-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-2-2.md",
+      "extension": "md",
+      "checksum": "2c38cb47d0e0eb5c32674a94ef91d204",
+      "content": "aa📝Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "45993d36723cc0943995f0cce39314ee",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 11,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 2/3",
+    "path": "Checksums/Glyph-2-3.md",
+    "text": "aaa📝Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 12,
+    "expected": {
+      "path": "Checksums/Glyph-2-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-2-3.md",
+      "extension": "md",
+      "checksum": "38167eddca47815913a287d86f1a4917",
+      "content": "aaa📝Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "e7d6b5a0924d60ed2d65c8cf34fefe1a",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 12,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 3/0",
+    "path": "Checksums/Glyph-3-0.md",
+    "text": "éZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 8,
+    "expected": {
+      "path": "Checksums/Glyph-3-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-3-0.md",
+      "extension": "md",
+      "checksum": "c66d1195bd3803cfbabc3cb3e8fd867f",
+      "content": "éZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "8972c1a00254c77c13ba8b2d6edbab39",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 8,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 3/1",
+    "path": "Checksums/Glyph-3-1.md",
+    "text": "aéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 9,
+    "expected": {
+      "path": "Checksums/Glyph-3-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-3-1.md",
+      "extension": "md",
+      "checksum": "32e511dd05b37c3e6efe787c6f34f597",
+      "content": "aéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "341c0e08765e137aadbe49d598158234",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 9,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 3/2",
+    "path": "Checksums/Glyph-3-2.md",
+    "text": "aaéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Checksums/Glyph-3-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-3-2.md",
+      "extension": "md",
+      "checksum": "caa976d1559bfadf0775c679c986d241",
+      "content": "aaéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "f34e49344f95f007da967014c5c85993",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 3/3",
+    "path": "Checksums/Glyph-3-3.md",
+    "text": "aaaéZ\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 11,
+    "expected": {
+      "path": "Checksums/Glyph-3-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-3-3.md",
+      "extension": "md",
+      "checksum": "eaf85bdef64029271d9d4cf621b28a5f",
+      "content": "aaaéZ\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "357c94a8a86f74eca3c63c0f7d2aacec",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 11,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 4/0",
+    "path": "Checksums/Glyph-4-0.md",
+    "text": " Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 8,
+    "expected": {
+      "path": "Checksums/Glyph-4-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-4-0.md",
+      "extension": "md",
+      "checksum": "52c5a65a924564b7cab72c5c14a4ec16",
+      "content": " Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "409f91de01bc31871f7be960e05d4401",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 8,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 4/1",
+    "path": "Checksums/Glyph-4-1.md",
+    "text": "a Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 9,
+    "expected": {
+      "path": "Checksums/Glyph-4-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-4-1.md",
+      "extension": "md",
+      "checksum": "7dc446e5fe2217ee56f448d3a9bd4fcd",
+      "content": "a Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "de2b49f1f778e94b5e5f81f21273f54e",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 9,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 4/2",
+    "path": "Checksums/Glyph-4-2.md",
+    "text": "aa Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Checksums/Glyph-4-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-4-2.md",
+      "extension": "md",
+      "checksum": "2054b5f802554cbc3d0423288fce854f",
+      "content": "aa Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "7fc1b24740928b512e6d81b326a7ccc9",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 4/3",
+    "path": "Checksums/Glyph-4-3.md",
+    "text": "aaa Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 11,
+    "expected": {
+      "path": "Checksums/Glyph-4-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-4-3.md",
+      "extension": "md",
+      "checksum": "362d81196581ba2c1cc912fd95b35e5f",
+      "content": "aaa Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "dd537c72b747af0fa833de8cb3b99f3f",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 11,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 5/0",
+    "path": "Checksums/Glyph-5-0.md",
+    "text": " Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 8,
+    "expected": {
+      "path": "Checksums/Glyph-5-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-5-0.md",
+      "extension": "md",
+      "checksum": "a5e8b6d10caa6425c2e8a32db953e3b5",
+      "content": " Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "ac0b8c8deeb66f1db808baacb078f222",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 8,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 5/1",
+    "path": "Checksums/Glyph-5-1.md",
+    "text": "a Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 9,
+    "expected": {
+      "path": "Checksums/Glyph-5-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-5-1.md",
+      "extension": "md",
+      "checksum": "985fa38103b76a919f8173195c742716",
+      "content": "a Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "1d40c413b3fcc541397e557f95e1a82f",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 9,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 5/2",
+    "path": "Checksums/Glyph-5-2.md",
+    "text": "aa Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 10,
+    "expected": {
+      "path": "Checksums/Glyph-5-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-5-2.md",
+      "extension": "md",
+      "checksum": "4131c714d33251ddedf86f888bb8c0aa",
+      "content": "aa Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "78d9df60bcb441003d45964b6872908d",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 10,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 5/3",
+    "path": "Checksums/Glyph-5-3.md",
+    "text": "aaa Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 11,
+    "expected": {
+      "path": "Checksums/Glyph-5-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-5-3.md",
+      "extension": "md",
+      "checksum": "6ebd23e18cb8c22675d8a11d15b9d824",
+      "content": "aaa Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "7b39fcfa31e50171f5ded150e52f74a9",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 11,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 6/0",
+    "path": "Checksums/Glyph-6-0.md",
+    "text": "é📝x é  Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 22,
+    "expected": {
+      "path": "Checksums/Glyph-6-0.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-6-0.md",
+      "extension": "md",
+      "checksum": "93533eef1f1eb34e3192c6e32e1b6ec7",
+      "content": "é📝x é  Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "cd72c60c8f9eb22937bb9e2d75548a93",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 22,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 6/1",
+    "path": "Checksums/Glyph-6-1.md",
+    "text": "aé📝x é  Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 23,
+    "expected": {
+      "path": "Checksums/Glyph-6-1.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-6-1.md",
+      "extension": "md",
+      "checksum": "02c72e206dfafb43256e025f8482d7cc",
+      "content": "aé📝x é  Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "d8fa65a542f2de488513eda3ee62dcf2",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 23,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 6/2",
+    "path": "Checksums/Glyph-6-2.md",
+    "text": "aaé📝x é  Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 24,
+    "expected": {
+      "path": "Checksums/Glyph-6-2.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-6-2.md",
+      "extension": "md",
+      "checksum": "6131b2c6ba049cc02b8a0f5a264b3229",
+      "content": "aaé📝x é  Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "51073a0838ebbea99130fb25b2189847",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 24,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  },
+  {
+    "name": "checksum word boundary 6/3",
+    "path": "Checksums/Glyph-6-3.md",
+    "text": "aaaé📝x é  Z\"\\\n\t",
+    "cache": {},
+    "mtime": 2,
+    "size": 25,
+    "expected": {
+      "path": "Checksums/Glyph-6-3.md",
+      "sourceProviderId": "search:markdown",
+      "name": "Glyph-6-3.md",
+      "extension": "md",
+      "checksum": "6ff35a14ae5ea73a55f2efa23fbccd91",
+      "content": "aaaé📝x é  Z\"\\\n\t",
+      "tags": [],
+      "tagParts": [],
+      "tagHierarchy": [],
+      "sourceMetadata": {
+        "metadataHash": "a8d78afbeddb52b22de4506df970d639",
+        "providerVersion": "1",
+        "projectionSignature": "daf809e588f402a5c1ffc578f78ba8c3",
+        "sourceMtime": 2,
+        "sourceSize": 25,
+        "rawTags": [],
+        "frontmatter": {},
+        "frontmatterEndOffset": 0,
+        "headings": [],
+        "sections": [],
+        "chunking": {
+          "targetChars": 1200,
+          "breakpointWindowChars": 320,
+          "breakpointDecay": 0.7
+        }
+      }
+    }
+  }
+]

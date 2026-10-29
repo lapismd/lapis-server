@@ -1,0 +1,578 @@
+[
+  {
+    "name": "yyyy-LL-dd",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "yyyy-LL-dd"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/2026-08-21.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/2026-08-21.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "yyyy-MM-dd",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "yyyy-MM-dd"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/2026-08-21.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/2026-08-21.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "dd-LL-yyyy",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "dd-LL-yyyy"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/21-08-2026.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/21-08-2026.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/21-08-2026.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "yyyy LLL dd",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "yyyy LLL dd"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/2026 Aug 21.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/2026 Aug 21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/2026 Aug 21.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "yyyy LLLL dd",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "yyyy LLLL dd"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/2026 August 21.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/2026 August 21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/2026 August 21.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "DD",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "DD"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/Aug 21, 2026.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/Aug 21, 2026.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/Aug 21, 2026.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "DDD",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "DDD"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/August 21, 2026.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/August 21, 2026.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/August 21, 2026.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "DDDD",
+    "date": "2026-08-21",
+    "operation": "ensure",
+    "configuration": {
+      "dailyNotes.folder": "Journal/Daily",
+      "dailyNotes.dateFormat": "DDDD"
+    },
+    "expected": {
+      "result": {
+        "value": "Journal/Daily/Friday, August 21, 2026.md",
+        "providerId": "lapis:daily-notes"
+      },
+      "files": {
+        "Journal/Daily/Friday, August 21, 2026.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+      },
+      "trace": [
+        {
+          "kind": "mkpath",
+          "path": "Journal/Daily"
+        },
+        {
+          "kind": "create",
+          "path": "Journal/Daily/Friday, August 21, 2026.md",
+          "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        {
+          "kind": "unregister",
+          "schema": {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        }
+      ],
+      "schema": [
+        {
+          "id": "dailyNotes",
+          "title": "Daily notes",
+          "type": "object",
+          "properties": {
+            "folder": {
+              "type": "string",
+              "default": "daily",
+              "title": "Folder",
+              "description": "Vault folder used when a daily note must be created."
+            },
+            "dateFormat": {
+              "type": "string",
+              "default": "yyyy-MM-dd",
+              "title": "Filename date format",
+              "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+            }
+          }
+        }
+      ]
+    }
+  }
+]

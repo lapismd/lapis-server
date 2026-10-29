@@ -1,0 +1,24 @@
+[
+  {
+    "name": "CRLF astral text and contextual source end",
+    "path": "daily/2026-08-20.md",
+    "raw": "---\r\ntype: daily-note\r\ndate: 2026-08-20\r\n---\r\n# 🌍 Daily\r\n- [ ] [Read](../tasks/read.md) : 2 pages <!-- task-occurrence task=read date=2026-08-20 kind=count -->\r\n  Notes 😀\r\n\r\n\tMore context\r\nEnd",
+    "canonical": true,
+    "expected": [
+      {
+        "observationId": "read:2026-08-20",
+        "taskId": "read",
+        "taskPath": "tasks/read.md",
+        "dailyDocumentPath": "daily/2026-08-20.md",
+        "occurrenceDate": "2026-08-20",
+        "outcome": "pending",
+        "trackingKind": "count",
+        "value": 2,
+        "unit": "pages",
+        "sourceStart": 58,
+        "sourceEnd": 191,
+        "projectionVersion": 1
+      }
+    ]
+  }
+]

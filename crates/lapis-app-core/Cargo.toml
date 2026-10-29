@@ -1,0 +1,45 @@
+[package]
+name = "lapis-app-core"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Transport-independent native application services for Lapis Notes"
+
+[dependencies]
+lapis-docs-projection = { path = "../../../lapis-plugin-docs/crates/lapis-docs-projection", version = "0.0.0" }
+lapis-task-services = { path = "../../../lapis-plugin-tasks/crates/lapis-task-services", version = "0.1.0" }
+lapis-plugin-services = { path = "../../../lapis-plugins/crates/lapis-plugin-services", version = "0.1.0" }
+lapis-app-protocol = { path = "../lapis-app-protocol" }
+lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
+async-trait = "0.1"
+jj-history-service = { path = "../../../jj-store/crates/jj-history-service", version = "0.1.0" }
+jj-store-model = { path = "../../../jj-store/crates/jj-store-model", version = "0.1.0" }
+cap-std = "=4.0.3"
+cap-tempfile = "=4.0.3"
+libc = "0.2"
+md5 = "=0.8.0"
+rustix = { version = "=1.1.5", features = ["fs"] }
+serde = { version = "1", features = ["derive"] }
+sha2 = "=0.10.9"
+uuid = { version = "1", features = ["v4"] }
+tempfile = "=3.27.0"
+serde_json = "1"
+serde_yaml = "=0.9.34"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros"] }
+turso = { version = "=0.7.2", default-features = false, features = ["fts"] }
+base64 = "=0.22.1"
+icu_collator = "=2.4.0"
+chrono = "0.4"
+regress = { version = "=0.12.0", features = ["utf16", "prohibit-unsafe"] }
+ort = { version = "=2.0.0-rc.15", default-features = false, features = ["std", "load-dynamic", "api-30"] }
+tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
+reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "rustls-tls"] }
+jj-vault = { path = "../../../jj-store/crates/jj-vault", version = "0.1.0" }
+jj-store-jj = { path = "../../../jj-store/crates/jj-store-jj", version = "0.1.0", default-features = false, features = ["vault-backup"] }
+notify = "=8.2.0"
+zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt-multi-thread", "time"] }

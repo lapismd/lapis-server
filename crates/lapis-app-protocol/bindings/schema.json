@@ -1,0 +1,5128 @@
+{
+  "$defs": {
+    "AttachClient": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": ["protocol_version"],
+      "type": "object"
+    },
+    "ChangeDomain": {
+      "enum": [
+        "metadata",
+        "search",
+        "history",
+        "notification",
+        "notebook",
+        "task",
+        "projection",
+        "memory",
+        "meta"
+      ],
+      "type": "string"
+    },
+    "ChangeSet": {
+      "additionalProperties": false,
+      "properties": {
+        "committedAt": { "format": "int64", "type": "integer" },
+        "domains": {
+          "items": { "$ref": "#/$defs/ChangeDomain" },
+          "type": "array"
+        },
+        "paths": { "items": { "type": "string" }, "type": "array" },
+        "renamed": {
+          "items": { "$ref": "#/$defs/ChangedPath" },
+          "type": ["array", "null"]
+        },
+        "reset": { "type": ["boolean", "null"] },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["revision", "domains", "paths", "committedAt"],
+      "type": "object"
+    },
+    "ChangedPath": {
+      "additionalProperties": false,
+      "properties": {
+        "newPath": { "type": "string" },
+        "oldPath": { "type": "string" }
+      },
+      "required": ["oldPath", "newPath"],
+      "type": "object"
+    },
+    "ClientDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "client_id": { "format": "uuid", "type": "string" },
+        "generation": { "format": "uuid", "type": "string" },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["client_id", "vault_id", "generation"],
+      "type": "object"
+    },
+    "ContributionPlacement": {
+      "enum": ["native", "client_dependent"],
+      "type": "string"
+    },
+    "ContributionStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "message": { "type": ["string", "null"] },
+        "placement": { "$ref": "#/$defs/ContributionPlacement" },
+        "projection_id": { "type": "string" }
+      },
+      "required": ["projection_id", "placement"],
+      "type": "object"
+    },
+    "CoreIndexedFile": {
+      "additionalProperties": false,
+      "description": "Core publication is independent of optional plugin projection work.",
+      "properties": {
+        "file": { "$ref": "#/$defs/FileRecord" },
+        "links": { "items": { "$ref": "#/$defs/LinkRecord" }, "type": "array" },
+        "metadata": { "$ref": "#/$defs/MetadataRecord" },
+        "properties": {
+          "items": { "$ref": "#/$defs/PropertyRecord" },
+          "type": "array"
+        },
+        "tags": { "items": { "$ref": "#/$defs/TagRecord" }, "type": "array" }
+      },
+      "required": ["file", "metadata", "links", "tags", "properties"],
+      "type": "object"
+    },
+    "DatabaseCall": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "default": [],
+          "items": { "$ref": "#/$defs/DatabaseValue" },
+          "maxItems": 4,
+          "type": "array"
+        },
+        "method": { "$ref": "#/$defs/DatabaseMethod" }
+      },
+      "required": ["method"],
+      "type": "object"
+    },
+    "DatabaseMethod": {
+      "enum": [
+        "migrate",
+        "beginSearchIndexingBatch",
+        "endSearchIndexingBatch",
+        "configureSearchEmbeddingProvider",
+        "getSearchEmbeddingProvider",
+        "getSearchEmbeddingRuntimeStatus",
+        "getSearchIndexStats",
+        "getMeta",
+        "setMeta",
+        "scanMeta",
+        "transactMeta",
+        "getNotebookState",
+        "setNotebookState",
+        "deleteNotebookState",
+        "loadMetadataSnapshot",
+        "saveMetadataSnapshot",
+        "getFileHistory",
+        "storeFileHistoryRevision",
+        "listNotifications",
+        "upsertNotification",
+        "markNotificationRead",
+        "clearNotification",
+        "clearAllNotifications",
+        "getMemorySourceState",
+        "listMemorySourceStates",
+        "upsertMemorySourceState",
+        "deleteMemorySourceState",
+        "upsertMemoryCandidate",
+        "queryMemoryCandidates",
+        "deleteMemoryCandidatesByConversation",
+        "recordMemoryRecallSignal",
+        "listMemoryRecallSignals",
+        "claimMemoryJob",
+        "updateMemoryJob",
+        "listMemoryJobs",
+        "clearMemoryDerivedState",
+        "getChangeRevision",
+        "upsertIndexedFile",
+        "getIndexedFile",
+        "listIndexedFileManifest",
+        "queryIndexedMetadata",
+        "queryIndexedMetadataPage",
+        "queryMetadataFacets",
+        "queryMetadataLinks",
+        "deleteIndexedFile",
+        "renameIndexedFile",
+        "upsertSearchDocument",
+        "deleteSearchDocument",
+        "getSearchDocument",
+        "listSearchDocumentManifest",
+        "listSearchDocuments",
+        "rebuildSearchIndex",
+        "searchDocuments",
+        "searchDocumentPaths",
+        "upsertTaskProjection",
+        "deleteTaskProjection",
+        "queryTasks",
+        "getTaskRow",
+        "listChildLinks",
+        "listTaskDescendants",
+        "registerProjectionDefinition",
+        "unregisterProjectionDefinition",
+        "replaceProjectionSource",
+        "markProjectionSourceError",
+        "deleteProjectionSource",
+        "queryProjection",
+        "getProjectionRow",
+        "queryRelated"
+      ],
+      "type": "string"
+    },
+    "DatabaseValue": {
+      "description": "Explicit tags preserve undefined array slots and undefined results over JSON.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "undefined", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "value", "type": "string" },
+            "value": true
+          },
+          "required": ["kind", "value"],
+          "type": "object"
+        }
+      ]
+    },
+    "EditingIntentCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "acquire", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "editor_id", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "changed", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "editor_id", "generation", "revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "expected": { "$ref": "#/$defs/ExpectedVersion" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "yield", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": [
+            "kind",
+            "editor_id",
+            "generation",
+            "revision",
+            "expected"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resume", "type": "string" }
+          },
+          "required": ["kind", "editor_id", "generation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "retire", "type": "string" }
+          },
+          "required": ["kind", "editor_id", "generation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "recover", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "editor_id", "generation", "revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "generation": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "discard", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "editor_id", "generation", "revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "inspect", "type": "string" }
+          },
+          "required": ["kind", "editor_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "list", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "EditingIntentState": {
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "detached": { "type": "boolean" },
+        "dirty": { "type": "boolean" },
+        "editor_id": { "format": "uuid", "type": "string" },
+        "generation": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "path": { "type": "string" },
+        "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "editor_id",
+        "path",
+        "generation",
+        "revision",
+        "dirty",
+        "active",
+        "detached"
+      ],
+      "type": "object"
+    },
+    "EditingIntentValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "state", "type": "string" },
+            "state": { "$ref": "#/$defs/EditingIntentState" }
+          },
+          "required": ["kind", "state"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "states", "type": "string" },
+            "states": {
+              "items": { "$ref": "#/$defs/EditingIntentState" },
+              "type": "array"
+            }
+          },
+          "required": ["kind", "states"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "retired", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "missing", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "EditorClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "detached": { "type": "boolean" },
+        "editor_id": { "format": "uuid", "type": "string" },
+        "path": { "type": "string" },
+        "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": ["editor_id", "path", "revision", "detached"],
+      "type": "object"
+    },
+    "EntryStat": {
+      "additionalProperties": false,
+      "properties": {
+        "ctime": { "format": "double", "type": "number" },
+        "mtime": { "format": "double", "type": "number" },
+        "size": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "type": { "type": "string" }
+      },
+      "required": ["type", "size", "ctime", "mtime"],
+      "type": "object"
+    },
+    "ErrorCode": {
+      "enum": [
+        "INVALID_REQUEST",
+        "PROTOCOL_MISMATCH",
+        "PERMISSION_DENIED",
+        "NOT_FOUND",
+        "CONFLICT",
+        "ALREADY_EXISTS",
+        "DIRECTORY_NOT_EMPTY",
+        "IS_DIRECTORY",
+        "NOT_DIRECTORY",
+        "UNSUPPORTED",
+        "BUSY",
+        "CLOSED",
+        "IO"
+      ],
+      "type": "string"
+    },
+    "ExpectedVersion": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "missing", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "version", "type": "string" },
+            "version": { "type": "string" }
+          },
+          "required": ["kind", "version"],
+          "type": "object"
+        }
+      ]
+    },
+    "FacetKind": {
+      "enum": ["tag", "property-name", "property-path", "property-value"],
+      "type": "string"
+    },
+    "FacetQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "$ref": "#/$defs/FacetKind" },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "pathPrefixes": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "propertyName": { "type": ["string", "null"] }
+      },
+      "required": ["kind"],
+      "type": "object"
+    },
+    "FacetRow": {
+      "additionalProperties": false,
+      "properties": {
+        "count": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "metadataTypes": {
+          "items": { "type": "string" },
+          "type": ["array", "null"]
+        },
+        "topLevel": { "type": ["boolean", "null"] },
+        "value": { "$ref": "#/$defs/MetadataScalar" },
+        "valueType": { "$ref": "#/$defs/ScalarKind" }
+      },
+      "required": ["value", "valueType", "count"],
+      "type": "object"
+    },
+    "FileCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "items": {
+                "format": "uint8",
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "operation": { "const": "create-file", "type": "string" },
+            "options": {
+              "$ref": "#/$defs/FileOptions",
+              "default": { "mtime": null }
+            },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "newPath": { "type": "string" },
+            "operation": { "const": "rename", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "newPath"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "newPath": { "type": "string" },
+            "operation": { "const": "copy", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "newPath"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "remove", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "rmdir", "type": "string" },
+            "path": { "type": "string" },
+            "recursive": { "default": false, "type": "boolean" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "stat", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "exists", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "list", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "read-text", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "read-binary", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "length": { "format": "uint", "minimum": 0, "type": "integer" },
+            "offset": { "format": "uint64", "minimum": 0, "type": "integer" },
+            "operation": { "const": "read-range", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "offset", "length"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": { "type": "string" },
+            "operation": { "const": "write-text", "type": "string" },
+            "options": {
+              "$ref": "#/$defs/FileOptions",
+              "default": { "mtime": null }
+            },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": { "type": "string" },
+            "expected": { "type": ["string", "null"] },
+            "operation": {
+              "const": "write-text-if-unchanged",
+              "type": "string"
+            },
+            "options": {
+              "$ref": "#/$defs/FileOptions",
+              "default": { "mtime": null }
+            },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "items": {
+                "format": "uint8",
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "operation": { "const": "write-binary", "type": "string" },
+            "options": {
+              "$ref": "#/$defs/FileOptions",
+              "default": { "mtime": null }
+            },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": { "type": "string" },
+            "operation": { "const": "append-text", "type": "string" },
+            "options": {
+              "$ref": "#/$defs/FileOptions",
+              "default": { "mtime": null }
+            },
+            "path": { "type": "string" }
+          },
+          "required": ["operation", "path", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "mkdir", "type": "string" },
+            "path": { "type": "string" },
+            "recursive": { "default": false, "type": "boolean" }
+          },
+          "required": ["operation", "path"],
+          "type": "object"
+        }
+      ]
+    },
+    "FileHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "file": { "$ref": "#/$defs/HistoryFile" },
+        "revisions": {
+          "items": { "$ref": "#/$defs/HistoryRevision" },
+          "type": "array"
+        }
+      },
+      "required": ["file", "revisions"],
+      "type": "object"
+    },
+    "FileListing": {
+      "additionalProperties": false,
+      "properties": {
+        "files": { "items": { "type": "string" }, "type": "array" },
+        "folders": { "items": { "type": "string" }, "type": "array" }
+      },
+      "required": ["files", "folders"],
+      "type": "object"
+    },
+    "FileOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "mtime": { "format": "double", "type": ["number", "null"] }
+      },
+      "type": "object"
+    },
+    "FileRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "deleted": { "type": ["boolean", "null"] },
+        "extension": { "type": "string" },
+        "hash": { "type": "string" },
+        "indexed": { "type": "boolean" },
+        "mtime": { "format": "double", "type": "number" },
+        "normalizedPath": { "type": "string" },
+        "parserVersion": { "type": ["string", "null"] },
+        "path": { "type": "string" },
+        "size": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "path",
+        "normalizedPath",
+        "extension",
+        "mtime",
+        "size",
+        "hash",
+        "indexed"
+      ],
+      "type": "object"
+    },
+    "FileSortField": {
+      "enum": ["path", "extension", "mtime", "size"],
+      "type": "string"
+    },
+    "FileValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": { "type": "string" },
+            "kind": { "const": "text", "type": "string" }
+          },
+          "required": ["kind", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "items": {
+                "format": "uint8",
+                "maximum": 255,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "kind": { "const": "binary", "type": "string" }
+          },
+          "required": ["kind", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "stat", "type": "string" },
+            "stat": {
+              "anyOf": [{ "$ref": "#/$defs/EntryStat" }, { "type": "null" }]
+            }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "exists": { "type": "boolean" },
+            "kind": { "const": "exists", "type": "string" }
+          },
+          "required": ["kind", "exists"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "list", "type": "string" },
+            "listing": { "$ref": "#/$defs/FileListing" }
+          },
+          "required": ["kind", "listing"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "done", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "HistoryCheckpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "change_id": { "type": "string" },
+        "commit": { "type": "string" },
+        "description": { "type": "string" },
+        "operation": { "type": "string" },
+        "timestamp_millis": { "format": "int64", "type": "integer" }
+      },
+      "required": [
+        "operation",
+        "commit",
+        "change_id",
+        "description",
+        "timestamp_millis"
+      ],
+      "type": "object"
+    },
+    "HistoryEvent": {
+      "enum": ["baseline", "create", "modify", "rename", "delete", "restore"],
+      "type": "string"
+    },
+    "HistoryExpression": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "field": { "type": ["string", "null"] },
+            "type": { "const": "term", "type": "string" },
+            "value": { "type": "string" }
+          },
+          "required": ["type", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "clauses": {
+              "items": { "$ref": "#/$defs/HistoryExpression" },
+              "type": "array"
+            },
+            "type": { "const": "and", "type": "string" }
+          },
+          "required": ["type", "clauses"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "clauses": {
+              "items": { "$ref": "#/$defs/HistoryExpression" },
+              "type": "array"
+            },
+            "type": { "const": "or", "type": "string" }
+          },
+          "required": ["type", "clauses"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operand": { "$ref": "#/$defs/HistoryExpression" },
+            "type": { "const": "not", "type": "string" }
+          },
+          "required": ["type", "operand"],
+          "type": "object"
+        }
+      ]
+    },
+    "HistoryFile": {
+      "additionalProperties": false,
+      "properties": {
+        "currentPath": { "type": "string" },
+        "deleted": { "type": "boolean" },
+        "fileId": { "type": "string" }
+      },
+      "required": ["fileId", "currentPath", "deleted"],
+      "type": "object"
+    },
+    "HistoryIndexCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "start", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "status", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "query", "type": "string" },
+            "search": { "$ref": "#/$defs/HistoryIndexQuery" }
+          },
+          "required": ["kind", "search"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "commit": { "type": "string" },
+            "end": { "format": "uint", "minimum": 0, "type": "integer" },
+            "kind": { "const": "context", "type": "string" },
+            "path": { "type": "string" },
+            "start": { "format": "uint", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "commit", "path", "start", "end"],
+          "type": "object"
+        }
+      ]
+    },
+    "HistoryIndexContext": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "type": "boolean" },
+        "before": { "type": "boolean" },
+        "end": { "format": "uint", "minimum": 0, "type": "integer" },
+        "start": { "format": "uint", "minimum": 0, "type": "integer" },
+        "text": { "type": "string" }
+      },
+      "required": ["text", "start", "end", "before", "after"],
+      "type": "object"
+    },
+    "HistoryIndexHit": {
+      "additionalProperties": false,
+      "properties": {
+        "excerpt": { "type": "string" },
+        "line": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "record": { "$ref": "#/$defs/HistoryIndexRecord" }
+      },
+      "required": ["record", "excerpt"],
+      "type": "object"
+    },
+    "HistoryIndexPage": {
+      "additionalProperties": false,
+      "properties": {
+        "hits": {
+          "items": { "$ref": "#/$defs/HistoryIndexHit" },
+          "type": "array"
+        },
+        "next": { "type": ["string", "null"] },
+        "reset": { "type": "boolean" },
+        "status": { "$ref": "#/$defs/HistoryIndexProgress" }
+      },
+      "required": ["status", "hits", "reset"],
+      "type": "object"
+    },
+    "HistoryIndexProgress": {
+      "additionalProperties": false,
+      "properties": {
+        "complete": { "type": "boolean" },
+        "generation": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "indexed": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "omitted": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["generation", "indexed", "omitted", "complete"],
+      "type": "object"
+    },
+    "HistoryIndexQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "case_sensitive": { "type": "boolean" },
+        "cursor": { "type": ["string", "null"] },
+        "expression": { "$ref": "#/$defs/HistoryExpression" },
+        "limit": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": ["expression", "case_sensitive", "limit"],
+      "type": "object"
+    },
+    "HistoryIndexRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "content_id": { "type": ["string", "null"] },
+        "deleted": { "type": "boolean" },
+        "parents": { "items": { "type": "string" }, "type": "array" },
+        "path": { "type": ["string", "null"] },
+        "previous": { "type": ["string", "null"] },
+        "revision": { "$ref": "#/$defs/HistorySavedRevision" },
+        "unavailable": { "type": "boolean" }
+      },
+      "required": ["revision", "parents", "deleted", "unavailable"],
+      "type": "object"
+    },
+    "HistoryIndexValue": {
+      "anyOf": [
+        { "$ref": "#/$defs/HistoryIndexProgress" },
+        { "$ref": "#/$defs/HistoryIndexPage" },
+        { "$ref": "#/$defs/HistoryIndexContext" }
+      ]
+    },
+    "HistoryRevision": {
+      "additionalProperties": false,
+      "properties": {
+        "capturedPath": { "type": "string" },
+        "content": { "type": "string" },
+        "contentHash": { "type": "string" },
+        "createdAt": { "format": "double", "type": "number" },
+        "currentPath": { "type": "string" },
+        "eventType": { "$ref": "#/$defs/HistoryEvent" },
+        "fileId": { "type": "string" },
+        "revisionId": { "type": "string" },
+        "sourceMtime": { "format": "double", "type": ["number", "null"] },
+        "sourceSize": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": [
+        "revisionId",
+        "fileId",
+        "currentPath",
+        "capturedPath",
+        "eventType",
+        "createdAt",
+        "contentHash",
+        "content"
+      ],
+      "type": "object"
+    },
+    "HistorySavedRevision": {
+      "additionalProperties": false,
+      "properties": {
+        "author": { "type": "string" },
+        "checkpoint": { "$ref": "#/$defs/HistoryCheckpoint" },
+        "email": { "type": "string" }
+      },
+      "required": ["checkpoint", "author", "email"],
+      "type": "object"
+    },
+    "HostInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "browser_auth": { "type": "boolean" },
+        "build_id": { "type": "string" },
+        "manage_vaults": { "type": "boolean" },
+        "protocol_major": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "transfer_vaults": { "type": "boolean" }
+      },
+      "required": [
+        "protocol_major",
+        "build_id",
+        "browser_auth",
+        "manage_vaults",
+        "transfer_vaults"
+      ],
+      "type": "object"
+    },
+    "IndexedFile": {
+      "additionalProperties": false,
+      "properties": {
+        "file": { "$ref": "#/$defs/FileRecord" },
+        "links": { "items": { "$ref": "#/$defs/LinkRecord" }, "type": "array" },
+        "metadata": { "$ref": "#/$defs/MetadataRecord" },
+        "properties": {
+          "items": { "$ref": "#/$defs/PropertyRecord" },
+          "type": "array"
+        },
+        "tags": { "items": { "$ref": "#/$defs/TagRecord" }, "type": "array" },
+        "task": {
+          "anyOf": [{ "$ref": "#/$defs/TaskRecord" }, { "type": "null" }]
+        }
+      },
+      "required": ["file", "metadata", "links", "tags", "properties"],
+      "type": "object"
+    },
+    "IndexedRow": {
+      "additionalProperties": false,
+      "properties": {
+        "file": { "$ref": "#/$defs/FileRecord" },
+        "links": { "items": { "$ref": "#/$defs/LinkRecord" }, "type": "array" },
+        "metadata": {
+          "anyOf": [{ "$ref": "#/$defs/MetadataRecord" }, { "type": "null" }]
+        },
+        "properties": {
+          "items": { "$ref": "#/$defs/PropertyRecord" },
+          "type": "array"
+        },
+        "tags": { "items": { "$ref": "#/$defs/TagRecord" }, "type": "array" }
+      },
+      "required": ["file", "properties", "tags", "links"],
+      "type": "object"
+    },
+    "IndexingCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "select_metadata", "type": "string" }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "select_search", "type": "string" },
+            "selection": { "$ref": "#/$defs/SearchIndexingSelection" }
+          },
+          "required": ["kind", "selection"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "disable_search", "type": "string" }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "extension": { "maxLength": 32, "minLength": 1, "type": "string" },
+            "kind": { "const": "register_processor", "type": "string" },
+            "owner_plugin_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": ["kind", "owner_plugin_id", "extension"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "contribution": { "$ref": "#/$defs/ProjectionContribution" },
+            "kind": { "const": "register_projection", "type": "string" }
+          },
+          "required": ["kind", "contribution"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "disable_projection", "type": "string" },
+            "projection_id": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": ["kind", "projection_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "refresh", "type": "string" },
+            "rebuild": { "type": "boolean" }
+          },
+          "required": ["kind", "rebuild"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "status", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "IndexingPhase": {
+      "enum": ["idle", "discovering", "metadata", "tasks", "docs", "search"],
+      "type": "string"
+    },
+    "IndexingStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "completed_at": { "format": "double", "type": ["number", "null"] },
+        "deleted": { "format": "uint", "minimum": 0, "type": "integer" },
+        "error": { "type": ["string", "null"] },
+        "indexed": { "format": "uint", "minimum": 0, "type": "integer" },
+        "passes": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "pending": { "format": "uint", "minimum": 0, "type": "integer" },
+        "phase": { "$ref": "#/$defs/IndexingPhase" },
+        "processed": { "format": "uint", "minimum": 0, "type": "integer" },
+        "total": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "passes",
+        "indexed",
+        "deleted",
+        "pending",
+        "active",
+        "processed",
+        "total",
+        "phase"
+      ],
+      "type": "object"
+    },
+    "IndexingValue": {
+      "additionalProperties": false,
+      "properties": {
+        "contribution": {
+          "anyOf": [
+            { "$ref": "#/$defs/ContributionStatus" },
+            { "type": "null" }
+          ]
+        },
+        "status": {
+          "anyOf": [{ "$ref": "#/$defs/IndexingStatus" }, { "type": "null" }]
+        }
+      },
+      "type": "object"
+    },
+    "LinkDirection": { "enum": ["incoming", "outgoing"], "type": "string" },
+    "LinkKind": {
+      "enum": ["reference", "task-entry", "list-entry", "navigation-item"],
+      "type": "string"
+    },
+    "LinkQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": { "$ref": "#/$defs/LinkDirection" },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "path": { "type": ["string", "null"] },
+        "paths": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "resolution": {
+          "anyOf": [{ "$ref": "#/$defs/LinkResolution" }, { "type": "null" }]
+        }
+      },
+      "required": ["direction"],
+      "type": "object"
+    },
+    "LinkRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "count": { "format": "double", "type": "number" },
+        "heading": { "type": ["string", "null"] },
+        "kind": {
+          "anyOf": [{ "$ref": "#/$defs/LinkKind" }, { "type": "null" }]
+        },
+        "ordinal": { "format": "double", "type": ["number", "null"] },
+        "original": { "type": ["string", "null"] },
+        "position": true,
+        "resolvedTargetPath": { "type": ["string", "null"] },
+        "sourcePath": { "type": "string" },
+        "targetText": { "type": "string" },
+        "type": { "$ref": "#/$defs/LinkType" }
+      },
+      "required": ["sourcePath", "targetText", "type", "count"],
+      "type": "object"
+    },
+    "LinkResolution": {
+      "enum": ["resolved", "unresolved", "all"],
+      "type": "string"
+    },
+    "LinkType": { "enum": ["link", "embed"], "type": "string" },
+    "LoginRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "password": { "type": "string" },
+        "username": { "type": "string" }
+      },
+      "required": ["username", "password"],
+      "type": "object"
+    },
+    "LogoutReply": {
+      "additionalProperties": false,
+      "properties": { "ok": { "type": "boolean" } },
+      "required": ["ok"],
+      "type": "object"
+    },
+    "ManagedVault": {
+      "additionalProperties": false,
+      "properties": {
+        "archived_at": { "format": "int64", "type": ["integer", "null"] },
+        "name": { "type": "string" },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["vault_id", "name"],
+      "type": "object"
+    },
+    "ManifestPage": {
+      "additionalProperties": false,
+      "properties": {
+        "nextCursor": { "type": ["string", "null"] },
+        "rows": { "items": { "$ref": "#/$defs/FileRecord" }, "type": "array" }
+      },
+      "required": ["rows"],
+      "type": "object"
+    },
+    "ManifestQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "type": ["string", "null"] },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "paths": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MemoryCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "claimHash": { "type": "string" },
+        "conversationCount": { "format": "double", "type": "number" },
+        "firstSeenAt": { "format": "double", "type": "number" },
+        "id": { "type": "string" },
+        "importance": {
+          "format": "uint8",
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "kind": { "$ref": "#/$defs/MemoryKind" },
+        "lastSeenAt": { "format": "double", "type": "number" },
+        "normalizedClaim": { "type": "string" },
+        "originClass": { "$ref": "#/$defs/MemoryOrigin" },
+        "promotedMemoryId": { "type": ["string", "null"] },
+        "recurrenceCount": { "format": "double", "type": "number" },
+        "scopeKind": { "$ref": "#/$defs/MemoryScope" },
+        "scopePath": { "type": "string" },
+        "state": { "$ref": "#/$defs/MemoryCandidateState" },
+        "supersessionKey": { "type": ["string", "null"] },
+        "triggers": { "items": { "type": "string" }, "type": "array" }
+      },
+      "required": [
+        "id",
+        "scopeKind",
+        "scopePath",
+        "kind",
+        "normalizedClaim",
+        "claimHash",
+        "originClass",
+        "importance",
+        "triggers",
+        "state",
+        "firstSeenAt",
+        "lastSeenAt",
+        "recurrenceCount",
+        "conversationCount"
+      ],
+      "type": "object"
+    },
+    "MemoryCandidateInput": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate": { "$ref": "#/$defs/MemoryCandidate" },
+        "origins": {
+          "items": { "$ref": "#/$defs/MemoryCandidateOrigin" },
+          "type": "array"
+        }
+      },
+      "required": ["candidate", "origins"],
+      "type": "object"
+    },
+    "MemoryCandidateOrigin": {
+      "additionalProperties": false,
+      "properties": {
+        "candidateId": { "type": "string" },
+        "conversationId": { "type": "string" },
+        "entryHash": { "type": "string" },
+        "entryId": { "type": "string" },
+        "observedAt": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "candidateId",
+        "conversationId",
+        "entryId",
+        "entryHash",
+        "observedAt"
+      ],
+      "type": "object"
+    },
+    "MemoryCandidateQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "limit": { "format": "double", "type": ["number", "null"] },
+        "scopeKind": {
+          "anyOf": [{ "$ref": "#/$defs/MemoryScope" }, { "type": "null" }]
+        },
+        "scopePath": { "type": ["string", "null"] },
+        "states": {
+          "items": { "$ref": "#/$defs/MemoryCandidateState" },
+          "type": ["array", "null"]
+        }
+      },
+      "type": "object"
+    },
+    "MemoryCandidateState": {
+      "enum": ["staged", "review", "promoted", "rejected"],
+      "type": "string"
+    },
+    "MemoryJob": {
+      "additionalProperties": false,
+      "properties": {
+        "attempts": { "format": "double", "type": "number" },
+        "createdAt": { "format": "double", "type": "number" },
+        "cursor": { "type": ["string", "null"] },
+        "errorCode": { "type": ["string", "null"] },
+        "finishedAt": { "format": "double", "type": ["number", "null"] },
+        "id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/MemoryJobKind" },
+        "leaseUntil": { "format": "double", "type": ["number", "null"] },
+        "maxAttempts": { "format": "double", "type": "number" },
+        "ownerId": { "type": ["string", "null"] },
+        "scopeKey": { "type": "string" },
+        "startedAt": { "format": "double", "type": ["number", "null"] },
+        "status": { "$ref": "#/$defs/MemoryJobStatus" }
+      },
+      "required": [
+        "id",
+        "kind",
+        "scopeKey",
+        "status",
+        "attempts",
+        "maxAttempts",
+        "createdAt"
+      ],
+      "type": "object"
+    },
+    "MemoryJobClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "job": { "$ref": "#/$defs/MemoryJob" },
+        "leaseMs": { "format": "double", "type": "number" },
+        "now": { "format": "double", "type": "number" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["job", "ownerId", "now", "leaseMs"],
+      "type": "object"
+    },
+    "MemoryJobKind": {
+      "enum": ["ingest", "consolidate", "rebuild", "forget"],
+      "type": "string"
+    },
+    "MemoryJobPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "cursor": { "type": ["string", "null"] },
+        "errorCode": { "type": ["string", "null"] },
+        "finishedAt": { "format": "double", "type": ["number", "null"] },
+        "leaseUntil": { "format": "double", "type": ["number", "null"] },
+        "status": { "$ref": "#/$defs/MemoryJobStatus" }
+      },
+      "required": ["status"],
+      "type": "object"
+    },
+    "MemoryJobStatus": {
+      "enum": ["queued", "running", "completed", "failed"],
+      "type": "string"
+    },
+    "MemoryJobUpdate": {
+      "additionalProperties": false,
+      "properties": {
+        "jobId": { "type": "string" },
+        "now": { "format": "double", "type": "number" },
+        "ownerId": { "type": "string" },
+        "patch": { "$ref": "#/$defs/MemoryJobPatch" }
+      },
+      "required": ["jobId", "ownerId", "now", "patch"],
+      "type": "object"
+    },
+    "MemoryKind": {
+      "enum": ["preference", "fact", "decision", "procedure", "constraint"],
+      "type": "string"
+    },
+    "MemoryOrigin": {
+      "enum": ["owner", "agent", "untrusted", "system"],
+      "type": "string"
+    },
+    "MemoryRecallSignal": {
+      "additionalProperties": false,
+      "properties": {
+        "bestScore": { "format": "double", "type": "number" },
+        "day": { "type": "string" },
+        "hitCount": { "format": "double", "type": "number" },
+        "queryFingerprint": { "type": "string" },
+        "targetRef": { "type": "string" }
+      },
+      "required": [
+        "targetRef",
+        "queryFingerprint",
+        "day",
+        "bestScore",
+        "hitCount"
+      ],
+      "type": "object"
+    },
+    "MemoryScope": {
+      "enum": ["user", "workspace", "project"],
+      "type": "string"
+    },
+    "MemorySource": {
+      "additionalProperties": false,
+      "properties": {
+        "errorCode": { "type": ["string", "null"] },
+        "indexedAt": { "format": "double", "type": "number" },
+        "lastEntryHash": { "type": ["string", "null"] },
+        "lastEntryId": { "type": ["string", "null"] },
+        "sourceHash": { "type": "string" },
+        "sourceKey": { "type": "string" },
+        "sourcePath": { "type": "string" },
+        "status": { "$ref": "#/$defs/MemorySourceStatus" }
+      },
+      "required": [
+        "sourceKey",
+        "sourcePath",
+        "sourceHash",
+        "status",
+        "indexedAt"
+      ],
+      "type": "object"
+    },
+    "MemorySourceStatus": {
+      "enum": ["ready", "inconsistent", "error", "excluded"],
+      "type": "string"
+    },
+    "MetaCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "type": ["boolean", "null"] },
+        "key": { "type": "string" },
+        "value": true
+      },
+      "required": ["key"],
+      "type": "object"
+    },
+    "MetaEntry": {
+      "additionalProperties": false,
+      "properties": { "key": { "type": "string" }, "value": true },
+      "required": ["key", "value"],
+      "type": "object"
+    },
+    "MetaMutation": {
+      "additionalProperties": false,
+      "properties": {
+        "delete": { "default": false, "type": "boolean" },
+        "key": { "type": "string" },
+        "value": true
+      },
+      "required": ["key"],
+      "type": "object"
+    },
+    "MetaPage": {
+      "additionalProperties": false,
+      "properties": {
+        "entries": {
+          "items": { "$ref": "#/$defs/MetaEntry" },
+          "type": "array"
+        },
+        "nextCursor": { "type": ["string", "null"] }
+      },
+      "required": ["entries"],
+      "type": "object"
+    },
+    "MetaScan": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "default": null, "type": ["string", "null"] },
+        "limit": {
+          "default": null,
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "prefix": { "type": "string" }
+      },
+      "required": ["prefix"],
+      "type": "object"
+    },
+    "MetaTransaction": {
+      "additionalProperties": false,
+      "properties": {
+        "checks": {
+          "default": [],
+          "items": { "$ref": "#/$defs/MetaCheck" },
+          "type": "array"
+        },
+        "mutations": {
+          "items": { "$ref": "#/$defs/MetaMutation" },
+          "type": "array"
+        }
+      },
+      "required": ["mutations"],
+      "type": "object"
+    },
+    "MetadataDomain": {
+      "enum": ["metadata", "properties", "tags", "links"],
+      "type": "string"
+    },
+    "MetadataPage": {
+      "additionalProperties": false,
+      "properties": {
+        "nextCursor": { "type": ["string", "null"] },
+        "rows": { "items": { "$ref": "#/$defs/IndexedRow" }, "type": "array" }
+      },
+      "required": ["rows"],
+      "type": "object"
+    },
+    "MetadataPageQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "type": ["string", "null"] },
+        "include": {
+          "items": { "$ref": "#/$defs/MetadataDomain" },
+          "type": ["array", "null"]
+        },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "query": {
+          "anyOf": [{ "$ref": "#/$defs/MetadataQuery" }, { "type": "null" }]
+        }
+      },
+      "type": "object"
+    },
+    "MetadataQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "excludeHiddenPaths": { "default": false, "type": "boolean" },
+        "extensions": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "pathPrefixes": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "propertyFilters": {
+          "default": [],
+          "items": { "$ref": "#/$defs/PropertyFilter" },
+          "type": "array"
+        },
+        "requiredTags": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "resolvedTargetPaths": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "sort": {
+          "default": [],
+          "items": { "$ref": "#/$defs/MetadataSort" },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "MetadataRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "hash": { "type": "string" },
+        "metadata": true,
+        "parserVersion": { "type": "string" },
+        "path": { "type": "string" }
+      },
+      "required": ["path", "hash", "parserVersion", "metadata"],
+      "type": "object"
+    },
+    "MetadataScalar": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "boolean" },
+        { "format": "double", "type": "number" },
+        { "type": "string" }
+      ]
+    },
+    "MetadataSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "fileCache": {
+          "additionalProperties": { "$ref": "#/$defs/SnapshotFile" },
+          "type": "object"
+        },
+        "metadataCache": { "additionalProperties": true, "type": "object" },
+        "resolvedLinks": {
+          "additionalProperties": {
+            "additionalProperties": { "format": "double", "type": "number" },
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "unresolvedLinks": {
+          "additionalProperties": {
+            "additionalProperties": { "format": "double", "type": "number" },
+            "type": "object"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "fileCache",
+        "metadataCache",
+        "resolvedLinks",
+        "unresolvedLinks"
+      ],
+      "type": "object"
+    },
+    "MetadataSort": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": { "$ref": "#/$defs/SortDirection" },
+        "field": { "$ref": "#/$defs/MetadataSortField" }
+      },
+      "required": ["field", "direction"],
+      "type": "object"
+    },
+    "MetadataSortField": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "field": { "$ref": "#/$defs/FileSortField" },
+            "kind": { "const": "file", "type": "string" }
+          },
+          "required": ["kind", "field"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "property", "type": "string" },
+            "name": { "type": "string" }
+          },
+          "required": ["kind", "name"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "configuration": { "$ref": "#/$defs/NativeTaskConfiguration" },
+            "kind": { "const": "configure", "type": "string" }
+          },
+          "required": ["kind", "configuration"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "disable", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "status", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_version": { "type": "string" },
+            "kind": { "const": "mutate", "type": "string" },
+            "mutation": { "$ref": "#/$defs/NativeTaskMutation" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "path", "expected_version", "mutation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "submit", "type": "string" },
+            "request": { "$ref": "#/$defs/NativeTaskLifecycleRequest" }
+          },
+          "required": ["kind", "request"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "inspect", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "retry", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "completion": {
+              "anyOf": [
+                { "$ref": "#/$defs/NativeTaskCompletion" },
+                { "type": "null" }
+              ]
+            },
+            "date": { "type": "string" },
+            "expected_version": { "type": "string" },
+            "kind": { "const": "occurrence", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "path", "expected_version", "date"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskCompletion": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "type": { "const": "boolean", "type": "string" } },
+          "required": ["type"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": { "const": "count", "type": "string" },
+            "unit": { "type": "string" },
+            "value": { "format": "double", "type": "number" }
+          },
+          "required": ["type", "value", "unit"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "durationMinutes": { "format": "double", "type": "number" },
+            "type": { "const": "duration", "type": "string" }
+          },
+          "required": ["type", "durationMinutes"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "type": { "const": "number", "type": "string" },
+            "unit": { "type": "string" },
+            "value": { "format": "double", "type": "number" }
+          },
+          "required": ["type", "value", "unit"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "daily": { "$ref": "#/$defs/NativeTaskDailySettings" },
+        "day_parts": { "$ref": "#/$defs/NativeTaskDayParts" },
+        "format": { "$ref": "#/$defs/NativeTaskDailyFormat" },
+        "provider": { "$ref": "#/$defs/NativeTaskProvider" }
+      },
+      "required": ["day_parts", "daily", "format", "provider"],
+      "type": "object"
+    },
+    "NativeTaskDailyFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "firstDay": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "locale": { "type": "string" },
+        "minimalDays": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": ["locale", "firstDay", "minimalDays"],
+      "type": "object"
+    },
+    "NativeTaskDailySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "date_format": { "type": "string" },
+        "folder": { "type": "string" }
+      },
+      "required": ["folder", "date_format"],
+      "type": "object"
+    },
+    "NativeTaskDayPart": {
+      "enum": ["anytime", "morning", "afternoon", "evening"],
+      "type": "string"
+    },
+    "NativeTaskDayParts": {
+      "additionalProperties": false,
+      "properties": {
+        "afternoonStartsAt": { "type": "string" },
+        "eveningStartsAt": { "type": "string" }
+      },
+      "required": ["afternoonStartsAt", "eveningStartsAt"],
+      "type": "object"
+    },
+    "NativeTaskDisposition": {
+      "enum": ["retryable", "divergent", "completed"],
+      "type": "string"
+    },
+    "NativeTaskFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": ["string", "null"] },
+        "message": { "type": "string" },
+        "name": { "type": "string" },
+        "operation": {
+          "anyOf": [
+            { "$ref": "#/$defs/NativeTaskOperation" },
+            { "type": "null" }
+          ]
+        },
+        "parts": { "items": { "type": "string" }, "type": ["array", "null"] },
+        "request_id": { "format": "uuid", "type": ["string", "null"] },
+        "uncertain": { "type": "boolean" }
+      },
+      "required": ["name", "message", "uncertain"],
+      "type": "object"
+    },
+    "NativeTaskKnownFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "required": ["code", "message"],
+      "type": "object"
+    },
+    "NativeTaskLifecycleAction": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "localDate": { "type": "string" },
+            "trackedValue": { "format": "double", "type": ["number", "null"] },
+            "type": { "const": "complete", "type": "string" }
+          },
+          "required": ["type", "at", "localDate"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "localDate": { "type": "string" },
+            "type": { "const": "skip", "type": "string" }
+          },
+          "required": ["type", "at", "localDate"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskLifecycleRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "action": { "$ref": "#/$defs/NativeTaskLifecycleAction" },
+        "expected_version": { "type": "string" },
+        "path": { "type": "string" },
+        "request_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["request_id", "path", "expected_version", "action"],
+      "type": "object"
+    },
+    "NativeTaskMutation": {
+      "description": "Complete and skip use the journal route, never this one-file route.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "checked": { "type": "boolean" },
+            "expectedText": { "type": "string" },
+            "position": { "format": "double", "type": "number" },
+            "type": { "const": "checklist", "type": "string" }
+          },
+          "required": ["type", "position", "expectedText", "checked"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "plan": {
+              "anyOf": [
+                { "$ref": "#/$defs/NativeTaskPlan" },
+                { "type": "null" }
+              ]
+            },
+            "type": { "const": "plan", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "start": { "$ref": "#/$defs/NativeTaskStart" },
+            "type": { "const": "start", "type": "string" }
+          },
+          "required": ["type", "start", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "deadline": { "type": ["string", "null"] },
+            "type": { "const": "deadline", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "inbox": { "type": "boolean" },
+            "type": { "const": "inbox", "type": "string" }
+          },
+          "required": ["type", "inbox", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "repeat": {
+              "anyOf": [
+                { "$ref": "#/$defs/NativeTaskRepeat" },
+                { "type": "null" }
+              ]
+            },
+            "type": { "const": "repeat", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "tracking": {
+              "anyOf": [
+                { "$ref": "#/$defs/NativeTaskTracking" },
+                { "type": "null" }
+              ]
+            },
+            "type": { "const": "tracking", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "localDate": { "type": ["string", "null"] },
+            "type": { "const": "pause", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "localDate": { "type": ["string", "null"] },
+            "type": { "const": "resume", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "type": { "const": "cancel", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "at": { "type": "string" },
+            "type": { "const": "reopen", "type": "string" }
+          },
+          "required": ["type", "at"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "checked": { "type": "boolean" },
+        "dailyDocumentPath": { "type": "string" },
+        "dayPart": { "$ref": "#/$defs/NativeTaskDayPart" },
+        "durationMinutes": { "format": "double", "type": ["number", "null"] },
+        "href": { "type": "string" },
+        "observationId": { "type": "string" },
+        "occurrenceDate": { "type": "string" },
+        "outcome": { "$ref": "#/$defs/NativeTaskOutcome" },
+        "projectionVersion": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source": { "type": "string" },
+        "sourceEnd": { "format": "uint", "minimum": 0, "type": "integer" },
+        "sourceStart": { "format": "uint", "minimum": 0, "type": "integer" },
+        "taskId": { "type": "string" },
+        "taskPath": { "type": "string" },
+        "title": { "type": "string" },
+        "trackingKind": { "$ref": "#/$defs/NativeTaskTrackingKind" },
+        "unit": { "type": ["string", "null"] },
+        "value": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": [
+        "observationId",
+        "taskId",
+        "taskPath",
+        "dailyDocumentPath",
+        "occurrenceDate",
+        "outcome",
+        "trackingKind",
+        "sourceStart",
+        "sourceEnd",
+        "projectionVersion",
+        "checked",
+        "title",
+        "href",
+        "dayPart",
+        "source"
+      ],
+      "type": "object"
+    },
+    "NativeTaskOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "daily": {
+          "anyOf": [{ "$ref": "#/$defs/TextSnapshot" }, { "type": "null" }]
+        },
+        "daily_replacement": { "type": ["string", "null"] },
+        "disposition": { "$ref": "#/$defs/NativeTaskDisposition" },
+        "last_failure": {
+          "anyOf": [
+            { "$ref": "#/$defs/NativeTaskKnownFailure" },
+            { "type": "null" }
+          ]
+        },
+        "original": { "$ref": "#/$defs/TextSnapshot" },
+        "request": { "$ref": "#/$defs/NativeTaskLifecycleRequest" },
+        "task_replacement": { "type": "string" }
+      },
+      "required": ["request", "disposition", "original", "task_replacement"],
+      "type": "object"
+    },
+    "NativeTaskOutcome": { "enum": ["completed", "pending"], "type": "string" },
+    "NativeTaskPauseRange": {
+      "additionalProperties": false,
+      "properties": {
+        "end": { "type": "string" },
+        "start": { "type": "string" }
+      },
+      "required": ["start", "end"],
+      "type": "object"
+    },
+    "NativeTaskPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "at": { "$ref": "#/$defs/NativeTaskPlanAt" },
+        "date": { "type": "string" },
+        "duration": { "type": ["string", "null"] },
+        "durationMinutes": { "format": "double", "type": ["number", "null"] },
+        "time": { "type": ["string", "null"] }
+      },
+      "required": ["date", "at"],
+      "type": "object"
+    },
+    "NativeTaskPlanAt": {
+      "enum": ["anytime", "morning", "afternoon", "evening", "time"],
+      "type": "string"
+    },
+    "NativeTaskProvider": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "default", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "unavailable", "type": "string" },
+            "message": { "type": "string" }
+          },
+          "required": ["kind", "message"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskRepeat": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor": { "$ref": "#/$defs/NativeTaskRepeatAnchor" },
+        "completionCount": { "format": "double", "type": ["number", "null"] },
+        "exdate": { "items": { "type": "string" }, "type": ["array", "null"] },
+        "lastCompletedAt": { "type": ["string", "null"] },
+        "missed": { "$ref": "#/$defs/NativeTaskRepeatMissed" },
+        "pauseRanges": {
+          "items": { "$ref": "#/$defs/NativeTaskPauseRange" },
+          "type": ["array", "null"]
+        },
+        "paused": { "type": ["boolean", "null"] },
+        "pausedSince": { "type": ["string", "null"] },
+        "rdate": { "items": { "type": "string" }, "type": ["array", "null"] },
+        "resetChecklist": { "type": ["boolean", "null"] },
+        "rrule": { "type": "string" },
+        "start": { "type": ["string", "null"] }
+      },
+      "required": ["rrule", "anchor", "missed"],
+      "type": "object"
+    },
+    "NativeTaskRepeatAnchor": {
+      "enum": ["schedule", "completion"],
+      "type": "string"
+    },
+    "NativeTaskRepeatMissed": { "enum": ["carry", "skip"], "type": "string" },
+    "NativeTaskStart": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "anytime", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "someday", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "date": { "type": "string" },
+            "kind": { "const": "date", "type": "string" }
+          },
+          "required": ["kind", "date"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskTrackedFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "daily_path": { "type": ["string", "null"] },
+        "daily_version": { "type": ["string", "null"] },
+        "message": { "type": "string" },
+        "path": { "type": "string" }
+      },
+      "required": ["path", "message"],
+      "type": "object"
+    },
+    "NativeTaskTrackedStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "attempted": { "format": "uint", "minimum": 0, "type": "integer" },
+        "changed": { "format": "uint", "minimum": 0, "type": "integer" },
+        "date": { "type": "string" },
+        "failures": {
+          "items": { "$ref": "#/$defs/NativeTaskTrackedFailure" },
+          "type": "array"
+        },
+        "materialized": { "format": "uint", "minimum": 0, "type": "integer" },
+        "omitted_failures": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "date",
+        "attempted",
+        "materialized",
+        "changed",
+        "failures",
+        "omitted_failures"
+      ],
+      "type": "object"
+    },
+    "NativeTaskTracking": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "type": { "const": "boolean", "type": "string" } },
+          "required": ["type"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "format": "double", "type": ["number", "null"] },
+            "type": { "const": "count", "type": "string" },
+            "unit": { "type": "string" }
+          },
+          "required": ["type", "unit"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "type": ["string", "null"] },
+            "type": { "const": "duration", "type": "string" }
+          },
+          "required": ["type"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "format": "double", "type": ["number", "null"] },
+            "type": { "const": "number", "type": "string" },
+            "unit": { "type": "string" }
+          },
+          "required": ["type", "unit"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTaskTrackingKind": {
+      "enum": ["boolean", "count", "duration", "number"],
+      "type": "string"
+    },
+    "NativeTaskValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "status", "type": "string" },
+            "status": { "$ref": "#/$defs/NativeTasksStatus" }
+          },
+          "required": ["kind", "status"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "snapshot", "type": "string" },
+            "snapshot": { "$ref": "#/$defs/TextSnapshot" }
+          },
+          "required": ["kind", "snapshot"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "operation", "type": "string" },
+            "operation": {
+              "anyOf": [
+                { "$ref": "#/$defs/NativeTaskOperation" },
+                { "type": "null" }
+              ]
+            }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "document": { "$ref": "#/$defs/TextSnapshot" },
+            "kind": { "const": "observation", "type": "string" },
+            "observation": { "$ref": "#/$defs/NativeTaskObservation" }
+          },
+          "required": ["kind", "document", "observation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "failure": { "$ref": "#/$defs/NativeTaskFailure" },
+            "kind": { "const": "failure", "type": "string" }
+          },
+          "required": ["kind", "failure"],
+          "type": "object"
+        }
+      ]
+    },
+    "NativeTasksStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "configuration": {
+          "anyOf": [
+            { "$ref": "#/$defs/NativeTaskConfiguration" },
+            { "type": "null" }
+          ]
+        },
+        "enabled": { "type": "boolean" },
+        "tracked": {
+          "anyOf": [
+            { "$ref": "#/$defs/NativeTaskTrackedStatus" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": ["enabled"],
+      "type": "object"
+    },
+    "NotebookCell": {
+      "additionalProperties": false,
+      "properties": {
+        "durationMs": { "format": "double", "type": ["number", "null"] },
+        "error": { "type": ["string", "null"] },
+        "inputValues": {
+          "additionalProperties": true,
+          "type": ["object", "null"]
+        },
+        "outputs": { "items": true, "type": "array" },
+        "setupPhases": {
+          "items": { "$ref": "#/$defs/NotebookPhase" },
+          "type": ["array", "null"]
+        },
+        "sourceHash": { "type": ["string", "null"] },
+        "state": { "type": "string" }
+      },
+      "required": ["state", "outputs"],
+      "type": "object"
+    },
+    "NotebookPhase": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": { "type": ["string", "null"] },
+        "durationMs": { "format": "double", "type": ["number", "null"] },
+        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["key", "label", "status"],
+      "type": "object"
+    },
+    "NotebookState": {
+      "additionalProperties": false,
+      "properties": {
+        "cells": {
+          "additionalProperties": { "$ref": "#/$defs/NotebookCell" },
+          "type": "object"
+        },
+        "mtime": { "format": "double", "type": "number" },
+        "sourcePath": { "type": "string" },
+        "updatedAt": { "format": "double", "type": "number" }
+      },
+      "required": ["sourcePath", "mtime", "updatedAt", "cells"],
+      "type": "object"
+    },
+    "NotificationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "cleared": { "type": "boolean" },
+        "createdAt": { "format": "double", "type": "number" },
+        "id": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "severity": { "$ref": "#/$defs/NotificationSeverity" },
+        "source": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "updatedAt": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "id",
+        "message",
+        "severity",
+        "createdAt",
+        "updatedAt",
+        "read",
+        "cleared"
+      ],
+      "type": "object"
+    },
+    "NotificationSeverity": {
+      "enum": ["info", "warning", "error"],
+      "type": "string"
+    },
+    "Outcome": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "status": { "const": "ok", "type": "string" },
+            "value": { "$ref": "#/$defs/VaultValue" }
+          },
+          "required": ["status", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "error": { "$ref": "#/$defs/ServiceError" },
+            "status": { "const": "error", "type": "string" }
+          },
+          "required": ["status", "error"],
+          "type": "object"
+        }
+      ]
+    },
+    "ParticipantCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "profiles", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "for_turn", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "input": { "$ref": "#/$defs/ParticipantMessageInput" },
+            "kind": { "const": "accept", "type": "string" }
+          },
+          "required": ["kind", "input"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acceptance_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "read", "type": "string" }
+          },
+          "required": ["kind", "acceptance_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acceptance_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "stop", "type": "string" }
+          },
+          "required": ["kind", "acceptance_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acceptance_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "cancel", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "acceptance_id", "request_id"],
+          "type": "object"
+        }
+      ]
+    },
+    "ParticipantDelivery": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_binding_id": { "format": "uuid", "type": "string" },
+        "delivery_id": { "type": "string" },
+        "outcome_published": { "type": "boolean" },
+        "request_id": { "format": "uuid", "type": "string" },
+        "session_id": { "format": "uuid", "type": "string" },
+        "state": { "$ref": "#/$defs/ParticipantState" }
+      },
+      "required": [
+        "delivery_id",
+        "request_id",
+        "agent_binding_id",
+        "session_id",
+        "state",
+        "outcome_published"
+      ],
+      "type": "object"
+    },
+    "ParticipantMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_id": { "format": "uuid", "type": "string" },
+        "conversation_id": { "format": "uuid", "type": "string" },
+        "deliveries": {
+          "items": { "$ref": "#/$defs/ParticipantDelivery" },
+          "type": "array"
+        },
+        "input": { "$ref": "#/$defs/ParticipantMessageInput" },
+        "recovered": { "type": "boolean" },
+        "schema_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": [
+        "schema_version",
+        "vault_id",
+        "acceptance_id",
+        "conversation_id",
+        "input",
+        "deliveries",
+        "recovered"
+      ],
+      "type": "object"
+    },
+    "ParticipantMessageInput": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_id": { "format": "uuid", "type": "string" },
+        "dispatch": true,
+        "profiles": {
+          "items": { "$ref": "#/$defs/ParticipantProfile" },
+          "type": ["array", "null"]
+        },
+        "turns": { "items": { "$ref": "#/$defs/TurnInput" }, "type": "array" },
+        "user": true
+      },
+      "required": ["acceptance_id", "user", "dispatch", "turns"],
+      "type": "object"
+    },
+    "ParticipantProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "options": { "$ref": "#/$defs/TurnOptions" },
+        "selection": { "$ref": "#/$defs/QueueSelection" },
+        "target_id": { "type": "string" }
+      },
+      "required": ["target_id", "selection", "options"],
+      "type": "object"
+    },
+    "ParticipantState": {
+      "enum": [
+        "pending",
+        "started",
+        "completed",
+        "rejected",
+        "unknown",
+        "not_sent",
+        "cancelled"
+      ],
+      "type": "string"
+    },
+    "ParticipantValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "profiles", "type": "string" },
+            "profiles": {
+              "items": { "$ref": "#/$defs/ParticipantProfile" },
+              "type": "array"
+            }
+          },
+          "required": ["kind", "profiles"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "message", "type": "string" },
+            "message": {
+              "anyOf": [
+                { "$ref": "#/$defs/ParticipantMessage" },
+                { "type": "null" }
+              ]
+            }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "accepted": { "type": "boolean" },
+            "kind": { "const": "stop_requested", "type": "string" }
+          },
+          "required": ["kind", "accepted"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "accepted": { "type": "boolean" },
+            "kind": { "const": "cancel_requested", "type": "string" }
+          },
+          "required": ["kind", "accepted"],
+          "type": "object"
+        }
+      ]
+    },
+    "ProjectionCardinality": { "enum": ["one", "many"], "type": "string" },
+    "ProjectionComparison": {
+      "enum": ["eq", "ne", "lt", "lte", "gt", "gte"],
+      "type": "string"
+    },
+    "ProjectionContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "configuration_hash": { "maxLength": 1024, "type": "string" },
+        "owner_plugin_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "path_prefix": {
+          "default": null,
+          "maxLength": 1024,
+          "type": ["string", "null"]
+        },
+        "projection_id": { "maxLength": 128, "minLength": 1, "type": "string" },
+        "schema_version": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "projection_id",
+        "owner_plugin_id",
+        "schema_version",
+        "configuration_hash"
+      ],
+      "type": "object"
+    },
+    "ProjectionDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "configHash": { "type": "string" },
+        "fields": {
+          "additionalProperties": { "$ref": "#/$defs/ProjectionField" },
+          "type": "object"
+        },
+        "ownerPluginId": { "type": "string" },
+        "projectionId": { "type": "string" },
+        "schemaVersion": { "format": "double", "type": "number" },
+        "updatedAt": { "format": "double", "type": "number" },
+        "visibility": { "$ref": "#/$defs/ProjectionVisibility" }
+      },
+      "required": [
+        "projectionId",
+        "ownerPluginId",
+        "schemaVersion",
+        "configHash",
+        "visibility",
+        "fields",
+        "active",
+        "updatedAt"
+      ],
+      "type": "object"
+    },
+    "ProjectionEdge": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "additionalProperties": true,
+          "default": null,
+          "type": ["object", "null"]
+        },
+        "ordinal": { "format": "double", "type": "number" },
+        "relation": { "type": "string" },
+        "sourceRowId": { "type": "string" },
+        "targetPath": { "default": null, "type": ["string", "null"] },
+        "targetProjectionId": { "default": null, "type": ["string", "null"] },
+        "targetRowId": { "default": null, "type": ["string", "null"] },
+        "targetText": { "default": null, "type": ["string", "null"] }
+      },
+      "required": ["sourceRowId", "relation", "ordinal"],
+      "type": "object"
+    },
+    "ProjectionField": {
+      "additionalProperties": false,
+      "properties": {
+        "cardinality": {
+          "anyOf": [
+            { "$ref": "#/$defs/ProjectionCardinality" },
+            { "type": "null" }
+          ]
+        },
+        "indexed": { "default": false, "type": "boolean" },
+        "sortable": { "default": false, "type": "boolean" },
+        "type": { "$ref": "#/$defs/ProjectionFieldType" },
+        "unique": { "default": false, "type": "boolean" }
+      },
+      "required": ["type"],
+      "type": "object"
+    },
+    "ProjectionFieldType": {
+      "enum": [
+        "string",
+        "number",
+        "boolean",
+        "date",
+        "datetime",
+        "path",
+        "json"
+      ],
+      "type": "string"
+    },
+    "ProjectionFilter": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "op": { "const": "and", "type": "string" },
+            "operands": {
+              "items": { "$ref": "#/$defs/ProjectionFilter" },
+              "type": "array"
+            }
+          },
+          "required": ["op", "operands"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "op": { "const": "or", "type": "string" },
+            "operands": {
+              "items": { "$ref": "#/$defs/ProjectionFilter" },
+              "type": "array"
+            }
+          },
+          "required": ["op", "operands"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "op": { "const": "not", "type": "string" },
+            "operand": { "$ref": "#/$defs/ProjectionFilter" }
+          },
+          "required": ["op", "operand"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "comparison": { "$ref": "#/$defs/ProjectionComparison" },
+            "field": { "type": "string" },
+            "op": { "const": "compare", "type": "string" },
+            "value": { "$ref": "#/$defs/MetadataScalar" }
+          },
+          "required": ["op", "field", "comparison", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "field": { "type": "string" },
+            "op": { "const": "in", "type": "string" },
+            "values": {
+              "items": { "$ref": "#/$defs/MetadataScalar" },
+              "type": "array"
+            }
+          },
+          "required": ["op", "field", "values"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "field": { "type": "string" },
+            "op": { "const": "exists", "type": "string" }
+          },
+          "required": ["op", "field"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "field": { "type": "string" },
+            "op": { "const": "not-exists", "type": "string" }
+          },
+          "required": ["op", "field"],
+          "type": "object"
+        }
+      ]
+    },
+    "ProjectionIndexStatus": {
+      "enum": ["ready", "building", "error"],
+      "type": "string"
+    },
+    "ProjectionNulls": { "enum": ["first", "last"], "type": "string" },
+    "ProjectionOrder": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "anyOf": [
+            { "$ref": "#/$defs/ProjectionSortDirection" },
+            { "type": "null" }
+          ]
+        },
+        "field": { "type": "string" },
+        "nulls": {
+          "anyOf": [{ "$ref": "#/$defs/ProjectionNulls" }, { "type": "null" }]
+        }
+      },
+      "required": ["field"],
+      "type": "object"
+    },
+    "ProjectionQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "type": ["string", "null"] },
+        "includeStale": { "default": false, "type": "boolean" },
+        "limit": { "format": "double", "type": ["number", "null"] },
+        "orderBy": {
+          "default": [],
+          "items": { "$ref": "#/$defs/ProjectionOrder" },
+          "type": "array"
+        },
+        "select": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "where": {
+          "anyOf": [{ "$ref": "#/$defs/ProjectionFilter" }, { "type": "null" }]
+        }
+      },
+      "type": "object"
+    },
+    "ProjectionQueryResult": {
+      "additionalProperties": false,
+      "properties": {
+        "complete": { "type": "boolean" },
+        "indexStatus": { "$ref": "#/$defs/ProjectionIndexStatus" },
+        "nextCursor": { "type": ["string", "null"] },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "rows": { "items": true, "type": "array" }
+      },
+      "required": ["rows", "revision", "complete", "indexStatus"],
+      "type": "object"
+    },
+    "ProjectionRelatedQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "anyOf": [
+            { "$ref": "#/$defs/ProjectionRelationDirection" },
+            { "type": "null" }
+          ]
+        },
+        "limit": { "format": "double", "type": ["number", "null"] },
+        "projectionId": { "type": "string" },
+        "relation": { "type": "string" },
+        "rowId": { "type": "string" },
+        "targetWhere": {
+          "anyOf": [{ "$ref": "#/$defs/ProjectionFilter" }, { "type": "null" }]
+        }
+      },
+      "required": ["projectionId", "rowId", "relation"],
+      "type": "object"
+    },
+    "ProjectionRelationDirection": { "enum": ["in", "out"], "type": "string" },
+    "ProjectionRow": {
+      "additionalProperties": false,
+      "properties": {
+        "data": { "additionalProperties": true, "type": "object" },
+        "id": { "type": "string" },
+        "kind": { "type": "string" },
+        "ordinal": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": ["id", "kind", "data"],
+      "type": "object"
+    },
+    "ProjectionSortDirection": { "enum": ["asc", "desc"], "type": "string" },
+    "ProjectionSource": {
+      "additionalProperties": false,
+      "properties": {
+        "edges": {
+          "default": [],
+          "items": { "$ref": "#/$defs/ProjectionEdge" },
+          "type": "array"
+        },
+        "projectionId": { "type": "string" },
+        "rows": {
+          "items": { "$ref": "#/$defs/ProjectionRow" },
+          "type": "array"
+        },
+        "sourceHash": { "type": "string" },
+        "sourcePath": { "type": "string" },
+        "writerPluginId": { "type": ["string", "null"] }
+      },
+      "required": ["projectionId", "sourcePath", "sourceHash", "rows"],
+      "type": "object"
+    },
+    "ProjectionSourceError": {
+      "additionalProperties": false,
+      "properties": {
+        "error": { "type": "string" },
+        "projectionId": { "type": "string" },
+        "sourceHash": { "type": "string" },
+        "sourcePath": { "type": "string" },
+        "writerPluginId": { "type": ["string", "null"] }
+      },
+      "required": ["projectionId", "sourcePath", "sourceHash", "error"],
+      "type": "object"
+    },
+    "ProjectionVisibility": { "enum": ["public", "private"], "type": "string" },
+    "PropertyFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "op": { "$ref": "#/$defs/PropertyOp" },
+        "value": {
+          "anyOf": [{ "$ref": "#/$defs/MetadataScalar" }, { "type": "null" }]
+        }
+      },
+      "required": ["name", "op"],
+      "type": "object"
+    },
+    "PropertyOp": {
+      "enum": ["exists", "not-exists", "=", "!=", ">", ">=", "<", "<="],
+      "type": "string"
+    },
+    "PropertyRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "declaredType": { "type": ["string", "null"] },
+        "inferredType": { "type": "string" },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "value": true
+      },
+      "required": ["path", "name", "inferredType", "value"],
+      "type": "object"
+    },
+    "QueueAccept": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_id": { "format": "uuid", "type": "string" },
+        "after_request_id": { "format": "uuid", "type": "string" },
+        "capture": true,
+        "conversation_id": { "format": "uuid", "type": "string" },
+        "scope_dir": { "type": "string" },
+        "target_id": { "type": "string" }
+      },
+      "required": [
+        "acceptance_id",
+        "conversation_id",
+        "after_request_id",
+        "scope_dir",
+        "target_id",
+        "capture"
+      ],
+      "type": "object"
+    },
+    "QueueAgent": {
+      "enum": ["codex", "cursor", "opencode", "local"],
+      "type": "string"
+    },
+    "QueueCaptureTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "agent": { "$ref": "#/$defs/QueueAgent" },
+        "executionMode": { "type": ["string", "null"] },
+        "id": { "type": "string" },
+        "model": {
+          "anyOf": [{ "$ref": "#/$defs/QueueModel" }, { "type": "null" }]
+        },
+        "thinking": {
+          "anyOf": [{ "$ref": "#/$defs/QueueThinking" }, { "type": "null" }]
+        }
+      },
+      "required": ["id", "agent"],
+      "type": "object"
+    },
+    "QueueCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "input": { "$ref": "#/$defs/QueueAccept" },
+            "kind": { "const": "accept", "type": "string" }
+          },
+          "required": ["kind", "input"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "conversation_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "read", "type": "string" }
+          },
+          "required": ["kind", "conversation_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "conversation_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "stop", "type": "string" }
+          },
+          "required": ["kind", "conversation_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "acceptance_id": { "format": "uuid", "type": "string" },
+            "conversation_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "cancel", "type": "string" }
+          },
+          "required": ["kind", "conversation_id", "acceptance_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "after_request_id": { "format": "uuid", "type": "string" },
+            "conversation_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "resume", "type": "string" }
+          },
+          "required": ["kind", "conversation_id", "after_request_id"],
+          "type": "object"
+        }
+      ]
+    },
+    "QueueEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "input": { "$ref": "#/$defs/QueueAccept" },
+        "phase": { "$ref": "#/$defs/QueuePhase" },
+        "receipt": true,
+        "receipt_published": { "type": "boolean" },
+        "request_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["input", "request_id", "phase", "receipt_published"],
+      "type": "object"
+    },
+    "QueueModel": {
+      "additionalProperties": false,
+      "properties": {
+        "model": { "type": "string" },
+        "provider": { "type": "string" }
+      },
+      "required": ["provider", "model"],
+      "type": "object"
+    },
+    "QueuePhase": {
+      "enum": [
+        "pending",
+        "started",
+        "completed",
+        "cancelled",
+        "rejected",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "QueueRecipient": {
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "token": { "type": "string" }
+      },
+      "required": ["id", "label", "token"],
+      "type": "object"
+    },
+    "QueueRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "barrier": { "type": ["string", "null"] },
+        "conversation_id": { "format": "uuid", "type": "string" },
+        "entries": {
+          "items": { "$ref": "#/$defs/QueueEntry" },
+          "type": "array"
+        },
+        "head_request_id": { "format": "uuid", "type": "string" },
+        "paused": { "type": "boolean" },
+        "schema_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "scope_dir": { "type": "string" },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": [
+        "schema_version",
+        "vault_id",
+        "conversation_id",
+        "scope_dir",
+        "head_request_id",
+        "paused",
+        "entries"
+      ],
+      "type": "object"
+    },
+    "QueueSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "recipient": { "$ref": "#/$defs/QueueRecipient" },
+        "target": { "$ref": "#/$defs/QueueCaptureTarget" },
+        "thinking": {
+          "anyOf": [{ "$ref": "#/$defs/QueueThinking" }, { "type": "null" }]
+        }
+      },
+      "required": ["recipient", "target"],
+      "type": "object"
+    },
+    "QueueThinking": {
+      "enum": ["default", "off", "low", "medium", "high"],
+      "type": "string"
+    },
+    "QueueValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "queue", "type": "string" },
+            "queue": {
+              "anyOf": [{ "$ref": "#/$defs/QueueRecord" }, { "type": "null" }]
+            }
+          },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "Reply": {
+      "additionalProperties": false,
+      "properties": {
+        "outcome": { "$ref": "#/$defs/Outcome" },
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "request_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["protocol_version", "request_id", "outcome"],
+      "type": "object"
+    },
+    "RepositoryBackupCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "status", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "capture", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "expected": { "$ref": "#/$defs/ExpectedVersion" },
+            "kind": { "const": "set_enabled", "type": "string" }
+          },
+          "required": ["kind", "enabled", "expected"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositoryBackupPhase": {
+      "enum": ["saving", "ready", "failed", "closed"],
+      "type": "string"
+    },
+    "RepositoryBackupSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "configuration": { "$ref": "#/$defs/ExpectedVersion" },
+        "enabled": { "type": "boolean" },
+        "status": { "$ref": "#/$defs/RepositoryBackupStatus" }
+      },
+      "required": ["enabled", "configuration", "status"],
+      "type": "object"
+    },
+    "RepositoryBackupStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositoryCheckpoint" },
+            { "type": "null" }
+          ]
+        },
+        "error": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/RepositoryBackupPhase" }
+      },
+      "required": ["phase"],
+      "type": "object"
+    },
+    "RepositoryCapture": {
+      "additionalProperties": false,
+      "properties": {
+        "changed": { "type": "boolean" },
+        "checkpoint": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositoryCheckpoint" },
+            { "type": "null" }
+          ]
+        },
+        "operation": { "type": "string" },
+        "working_copy": { "type": "string" }
+      },
+      "required": ["changed", "operation", "working_copy"],
+      "type": "object"
+    },
+    "RepositoryCheckpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "change_id": { "type": "string" },
+        "commit": { "type": "string" },
+        "description": { "type": "string" },
+        "operation": { "type": "string" },
+        "timestamp_millis": { "format": "int64", "type": "integer" }
+      },
+      "required": [
+        "operation",
+        "commit",
+        "change_id",
+        "description",
+        "timestamp_millis"
+      ],
+      "type": "object"
+    },
+    "RepositoryFileRestorePreview": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": { "format": "uint", "minimum": 0, "type": "integer" },
+        "checkpoint": { "type": "string" },
+        "deleted": { "type": "boolean" },
+        "expected": { "type": "string" },
+        "path": { "type": "string" }
+      },
+      "required": ["checkpoint", "path", "expected", "bytes", "deleted"],
+      "type": "object"
+    },
+    "RepositoryFileRestoreRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": { "type": "string" },
+        "expected": { "type": "string" },
+        "path": { "type": "string" },
+        "request_id": { "type": "string" }
+      },
+      "required": ["request_id", "checkpoint", "path", "expected"],
+      "type": "object"
+    },
+    "RepositoryRestoreCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint": { "type": "string" },
+            "kind": { "const": "preview", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "checkpoint", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "apply", "type": "string" },
+            "request": { "$ref": "#/$defs/RepositoryFileRestoreRequest" }
+          },
+          "required": ["kind", "request"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint": { "type": "string" },
+            "kind": { "const": "preview_vault", "type": "string" }
+          },
+          "required": ["kind", "checkpoint"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "apply_vault", "type": "string" },
+            "request": { "$ref": "#/$defs/RepositoryVaultRestoreRequest" }
+          },
+          "required": ["kind", "request"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "keep_current", "type": "string" }
+          },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositoryRestoreValue": {
+      "anyOf": [
+        { "$ref": "#/$defs/RepositoryFileRestorePreview" },
+        { "$ref": "#/$defs/RepositoryVaultRestorePreview" },
+        { "$ref": "#/$defs/RepositoryCapture" }
+      ]
+    },
+    "RepositorySources": {
+      "additionalProperties": false,
+      "properties": {
+        "original": { "type": "boolean" },
+        "token": { "type": ["string", "null"] }
+      },
+      "required": ["original"],
+      "type": "object"
+    },
+    "RepositorySourcesCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "discover", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "open_original", "type": "string" }
+          },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositoryVaultRestorePreview": {
+      "additionalProperties": false,
+      "properties": {
+        "added": { "format": "uint", "minimum": 0, "type": "integer" },
+        "checkpoint": { "type": "string" },
+        "deleted": { "format": "uint", "minimum": 0, "type": "integer" },
+        "expected": { "type": "string" },
+        "modified": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": ["checkpoint", "expected", "added", "modified", "deleted"],
+      "type": "object"
+    },
+    "RepositoryVaultRestoreRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint": { "type": "string" },
+        "expected": { "type": "string" },
+        "request_id": { "type": "string" }
+      },
+      "required": ["request_id", "checkpoint", "expected"],
+      "type": "object"
+    },
+    "Request": {
+      "additionalProperties": false,
+      "properties": {
+        "command": { "$ref": "#/$defs/VaultCommand" },
+        "generation": { "format": "uuid", "type": "string" },
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "request_id": { "format": "uuid", "type": "string" },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": [
+        "protocol_version",
+        "request_id",
+        "vault_id",
+        "generation",
+        "command"
+      ],
+      "type": "object"
+    },
+    "ScalarKind": {
+      "enum": ["null", "string", "number", "boolean", "date"],
+      "type": "string"
+    },
+    "SearchChunkEmbedding": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": { "format": "double", "type": ["number", "null"] },
+        "dirty": { "type": ["boolean", "null"] },
+        "error": { "type": ["string", "null"] },
+        "fingerprint": { "type": ["string", "null"] },
+        "modelId": { "type": "string" },
+        "modelVersion": { "type": ["string", "null"] },
+        "status": { "$ref": "#/$defs/SearchEmbeddingStatus" },
+        "updatedAt": { "format": "double", "type": ["number", "null"] },
+        "vector": {
+          "items": { "format": "double", "type": "number" },
+          "type": ["array", "null"]
+        }
+      },
+      "required": ["status", "modelId"],
+      "type": "object"
+    },
+    "SearchChunkKind": {
+      "enum": [
+        "frontmatter",
+        "heading",
+        "paragraph",
+        "list",
+        "blockquote",
+        "code",
+        "fallback"
+      ],
+      "type": "string"
+    },
+    "SearchChunkingSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "breakpointDecay": { "format": "double", "type": "number" },
+        "breakpointWindowChars": { "format": "double", "type": "number" },
+        "targetChars": { "format": "double", "type": "number" }
+      },
+      "required": ["targetChars", "breakpointWindowChars", "breakpointDecay"],
+      "type": "object"
+    },
+    "SearchDiagnostics": {
+      "additionalProperties": false,
+      "properties": {
+        "appliedMode": { "$ref": "#/$defs/SearchRetrievalMode" },
+        "backendKind": { "type": "string" },
+        "lexicalCandidateCount": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "modelId": { "type": ["string", "null"] },
+        "modelReady": { "type": "boolean" },
+        "providerKind": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEmbeddingProviderKind" },
+            { "type": "null" }
+          ]
+        },
+        "queryEnhancement": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEnhancementDiagnostics" },
+            { "type": "null" }
+          ]
+        },
+        "requestedMode": { "$ref": "#/$defs/SearchMode" },
+        "totalCandidateCount": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vectorCandidateCount": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "requestedMode",
+        "appliedMode",
+        "backendKind",
+        "lexicalCandidateCount",
+        "vectorCandidateCount",
+        "totalCandidateCount",
+        "modelReady"
+      ],
+      "type": "object"
+    },
+    "SearchDocumentChunk": {
+      "additionalProperties": false,
+      "properties": {
+        "embedding": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchChunkEmbedding" },
+            { "type": "null" }
+          ]
+        },
+        "endOffset": { "format": "double", "type": "number" },
+        "heading": { "type": ["string", "null"] },
+        "id": { "type": "string" },
+        "kind": {
+          "anyOf": [{ "$ref": "#/$defs/SearchChunkKind" }, { "type": "null" }]
+        },
+        "startOffset": { "format": "double", "type": "number" },
+        "text": { "type": "string" }
+      },
+      "required": ["id", "text", "startOffset", "endOffset"],
+      "type": "object"
+    },
+    "SearchDocumentRecord": {
+      "additionalProperties": false,
+      "description": "The retained, prepared Search record. Preparation/inference precedes storage.",
+      "properties": {
+        "checksum": { "type": "string" },
+        "chunks": {
+          "items": { "$ref": "#/$defs/SearchDocumentChunk" },
+          "type": ["array", "null"]
+        },
+        "content": { "type": "string" },
+        "extension": { "type": "string" },
+        "metadataText": { "type": ["string", "null"] },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "sourceMetadata": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchSourceMetadata" },
+            { "type": "null" }
+          ]
+        },
+        "sourceProviderId": { "type": ["string", "null"] },
+        "tagHierarchy": { "items": { "type": "string" }, "type": "array" },
+        "tagParts": { "items": { "type": "string" }, "type": "array" },
+        "tags": { "items": { "type": "string" }, "type": "array" }
+      },
+      "required": [
+        "path",
+        "name",
+        "extension",
+        "checksum",
+        "content",
+        "tags",
+        "tagParts",
+        "tagHierarchy"
+      ],
+      "type": "object"
+    },
+    "SearchEmbeddingDevice": { "enum": ["wasm", "webgpu"], "type": "string" },
+    "SearchEmbeddingPooling": { "enum": ["mean"], "type": "string" },
+    "SearchEmbeddingProviderConfig": {
+      "additionalProperties": false,
+      "description": "Portable retained options. Native paths and executable selection are absent.",
+      "properties": {
+        "allowRemoteModels": { "type": ["boolean", "null"] },
+        "device": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEmbeddingDevice" },
+            { "type": "null" }
+          ]
+        },
+        "dimensions": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "dtype": { "type": ["string", "null"] },
+        "kind": { "$ref": "#/$defs/SearchEmbeddingProviderKind" },
+        "modelId": { "type": ["string", "null"] },
+        "modelVersion": { "type": ["string", "null"] },
+        "normalize": { "type": ["boolean", "null"] },
+        "pooling": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEmbeddingPooling" },
+            { "type": "null" }
+          ]
+        },
+        "revision": { "type": ["string", "null"] }
+      },
+      "required": ["kind"],
+      "type": "object"
+    },
+    "SearchEmbeddingProviderKind": {
+      "enum": ["token-hash", "transformers-js"],
+      "type": "string"
+    },
+    "SearchEmbeddingRuntimePhase": {
+      "enum": ["ready", "downloading", "embedding", "error"],
+      "type": "string"
+    },
+    "SearchEmbeddingRuntimeStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "message": { "type": ["string", "null"] },
+        "modelId": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/SearchEmbeddingRuntimePhase" },
+        "progress": { "format": "double", "type": ["number", "null"] },
+        "providerKind": { "$ref": "#/$defs/SearchEmbeddingProviderKind" },
+        "updatedAt": { "format": "double", "type": "number" }
+      },
+      "required": ["providerKind", "phase", "updatedAt"],
+      "type": "object"
+    },
+    "SearchEmbeddingStatus": {
+      "enum": ["pending", "ready", "error"],
+      "type": "string"
+    },
+    "SearchEnhancementDiagnostics": {
+      "additionalProperties": false,
+      "properties": {
+        "applied": { "type": "boolean" },
+        "expandQuery": { "type": "boolean" },
+        "providerKind": { "$ref": "#/$defs/SearchEnhancementProviderKind" },
+        "rerankResults": { "type": "boolean" },
+        "runtimeTarget": { "$ref": "#/$defs/SearchEnhancementRuntime" },
+        "signal": { "$ref": "#/$defs/SearchEnhancementSignal" },
+        "skipReason": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEnhancementSkipReason" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "required": [
+        "runtimeTarget",
+        "providerKind",
+        "expandQuery",
+        "rerankResults",
+        "applied",
+        "signal"
+      ],
+      "type": "object"
+    },
+    "SearchEnhancementProvider": {
+      "additionalProperties": false,
+      "properties": {
+        "allowRemoteModels": { "type": ["boolean", "null"] },
+        "kind": { "$ref": "#/$defs/SearchEnhancementProviderKind" },
+        "localModelPath": { "type": ["string", "null"] },
+        "maxExpandedQueries": { "format": "double", "type": "number" },
+        "maxRerankCandidates": { "format": "double", "type": "number" },
+        "queryExpansionModelId": { "type": "string" },
+        "rerankerModelId": { "type": "string" }
+      },
+      "required": [
+        "kind",
+        "queryExpansionModelId",
+        "rerankerModelId",
+        "maxExpandedQueries",
+        "maxRerankCandidates"
+      ],
+      "type": "object"
+    },
+    "SearchEnhancementProviderKind": {
+      "enum": ["local-model"],
+      "type": "string"
+    },
+    "SearchEnhancementRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "expandQuery": { "type": "boolean" },
+        "provider": { "$ref": "#/$defs/SearchEnhancementProvider" },
+        "rerankResults": { "type": "boolean" },
+        "runtimeTarget": { "$ref": "#/$defs/SearchEnhancementRuntime" }
+      },
+      "required": ["runtimeTarget", "provider", "expandQuery", "rerankResults"],
+      "type": "object"
+    },
+    "SearchEnhancementRuntime": {
+      "enum": [
+        "web-pwa",
+        "deno-desktop",
+        "tauri-desktop",
+        "node-server",
+        "deno-server",
+        "test"
+      ],
+      "type": "string"
+    },
+    "SearchEnhancementSignal": {
+      "additionalProperties": false,
+      "properties": {
+        "requestedMode": { "$ref": "#/$defs/SearchMode" },
+        "resultCount": { "format": "uint", "minimum": 0, "type": "integer" },
+        "topFusedScore": { "format": "double", "type": "number" },
+        "topLexicalScore": { "format": "double", "type": "number" },
+        "topVectorScore": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "requestedMode",
+        "topLexicalScore",
+        "topVectorScore",
+        "topFusedScore",
+        "resultCount"
+      ],
+      "type": "object"
+    },
+    "SearchEnhancementSkipReason": {
+      "enum": ["unsupported-runtime", "strong-signal", "provider-unavailable"],
+      "type": "string"
+    },
+    "SearchField": {
+      "enum": ["content", "path", "name", "tags", "metadata"],
+      "type": "string"
+    },
+    "SearchFusion": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": { "$ref": "#/$defs/SearchFusionAlgorithm" },
+        "k": { "format": "double", "type": ["number", "null"] },
+        "lexicalContribution": {
+          "format": "double",
+          "type": ["number", "null"]
+        },
+        "lexicalRank": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "vectorContribution": {
+          "format": "double",
+          "type": ["number", "null"]
+        },
+        "vectorRank": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        }
+      },
+      "required": ["algorithm"],
+      "type": "object"
+    },
+    "SearchFusionAlgorithm": {
+      "enum": ["lexical-score", "vector-score", "reciprocal-rank-fusion"],
+      "type": "string"
+    },
+    "SearchIndexStats": {
+      "additionalProperties": false,
+      "properties": {
+        "chunkCount": { "format": "uint", "minimum": 0, "type": "integer" },
+        "documentCount": { "format": "uint", "minimum": 0, "type": "integer" },
+        "errorChunkCount": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "lastError": { "type": ["string", "null"] },
+        "pendingChunkCount": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "readyChunkCount": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "documentCount",
+        "chunkCount",
+        "readyChunkCount",
+        "pendingChunkCount",
+        "errorChunkCount"
+      ],
+      "type": "object"
+    },
+    "SearchIndexingSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "chunking": { "$ref": "#/$defs/SearchChunkingSettings" },
+        "providers": {
+          "items": { "$ref": "#/$defs/SearchProviderContribution" },
+          "maxItems": 64,
+          "type": "array"
+        }
+      },
+      "required": ["providers", "chunking"],
+      "type": "object"
+    },
+    "SearchManifestPage": {
+      "additionalProperties": false,
+      "properties": {
+        "nextCursor": { "type": ["string", "null"] },
+        "rows": {
+          "items": { "$ref": "#/$defs/SearchManifestRecord" },
+          "type": "array"
+        }
+      },
+      "required": ["rows"],
+      "type": "object"
+    },
+    "SearchManifestQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "after": { "type": ["string", "null"] },
+        "limit": { "format": "uint", "minimum": 0, "type": ["integer", "null"] }
+      },
+      "type": "object"
+    },
+    "SearchManifestRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "checksum": { "type": "string" },
+        "metadataHash": { "type": ["string", "null"] },
+        "path": { "type": "string" },
+        "projectionSignature": { "type": ["string", "null"] },
+        "providerVersion": { "type": ["string", "null"] },
+        "sourceMtime": { "format": "double", "type": ["number", "null"] },
+        "sourceProviderId": { "type": ["string", "null"] },
+        "sourceSize": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": ["path", "checksum"],
+      "type": "object"
+    },
+    "SearchMode": {
+      "enum": ["auto", "lexical", "vector", "hybrid"],
+      "type": "string"
+    },
+    "SearchOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "caseSensitive": { "type": ["boolean", "null"] },
+        "includeDiagnostics": { "type": ["boolean", "null"] },
+        "limit": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "mode": {
+          "anyOf": [{ "$ref": "#/$defs/SearchMode" }, { "type": "null" }]
+        },
+        "pathPrefix": { "type": ["string", "null"] },
+        "queryEnhancement": {
+          "anyOf": [
+            { "$ref": "#/$defs/SearchEnhancementRequest" },
+            { "type": "null" }
+          ]
+        },
+        "snippetLength": {
+          "format": "uint",
+          "minimum": 0,
+          "type": ["integer", "null"]
+        },
+        "sourceProviderIds": {
+          "items": { "type": "string" },
+          "type": ["array", "null"]
+        }
+      },
+      "type": "object"
+    },
+    "SearchProviderContribution": {
+      "additionalProperties": false,
+      "properties": {
+        "priority": { "format": "double", "type": "number" },
+        "provider_id": { "maxLength": 128, "minLength": 1, "type": "string" },
+        "version": { "maxLength": 128, "type": "string" }
+      },
+      "required": ["provider_id", "version", "priority"],
+      "type": "object"
+    },
+    "SearchRange": {
+      "additionalProperties": false,
+      "properties": {
+        "end": { "format": "uint", "minimum": 0, "type": "integer" },
+        "start": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": ["start", "end"],
+      "type": "object"
+    },
+    "SearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnostics": {
+          "anyOf": [{ "$ref": "#/$defs/SearchDiagnostics" }, { "type": "null" }]
+        },
+        "document": { "$ref": "#/$defs/SearchDocumentRecord" },
+        "matchedChunkIds": { "items": { "type": "string" }, "type": "array" },
+        "retrievalMode": { "$ref": "#/$defs/SearchRetrievalMode" },
+        "score": { "format": "double", "type": "number" },
+        "scoreBreakdown": { "$ref": "#/$defs/SearchScore" },
+        "snippets": {
+          "items": { "$ref": "#/$defs/SearchSnippet" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "document",
+        "score",
+        "snippets",
+        "retrievalMode",
+        "scoreBreakdown",
+        "matchedChunkIds"
+      ],
+      "type": "object"
+    },
+    "SearchRetrievalMode": {
+      "enum": ["lexical", "vector", "hybrid"],
+      "type": "string"
+    },
+    "SearchScore": {
+      "additionalProperties": false,
+      "properties": {
+        "fused": { "format": "double", "type": "number" },
+        "fusion": {
+          "anyOf": [{ "$ref": "#/$defs/SearchFusion" }, { "type": "null" }]
+        },
+        "lexical": { "format": "double", "type": ["number", "null"] },
+        "vector": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": ["fused"],
+      "type": "object"
+    },
+    "SearchSnippet": {
+      "additionalProperties": false,
+      "properties": {
+        "chunkId": { "type": ["string", "null"] },
+        "chunkLabel": { "type": ["string", "null"] },
+        "field": { "$ref": "#/$defs/SearchField" },
+        "offset": { "format": "double", "type": "number" },
+        "ranges": {
+          "items": { "$ref": "#/$defs/SearchRange" },
+          "type": "array"
+        },
+        "text": { "type": "string" }
+      },
+      "required": ["field", "text", "ranges", "offset"],
+      "type": "object"
+    },
+    "SearchSourceHeading": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": { "type": "string" },
+        "level": { "format": "double", "type": "number" },
+        "position": { "$ref": "#/$defs/SearchSourceRange" }
+      },
+      "required": ["heading", "level", "position"],
+      "type": "object"
+    },
+    "SearchSourceMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "chunking": { "$ref": "#/$defs/SearchChunkingSettings" },
+        "frontmatter": true,
+        "frontmatterEndOffset": {
+          "format": "double",
+          "type": ["number", "null"]
+        },
+        "headings": {
+          "items": { "$ref": "#/$defs/SearchSourceHeading" },
+          "type": "array"
+        },
+        "metadataHash": { "type": ["string", "null"] },
+        "projectionSignature": { "type": ["string", "null"] },
+        "providerVersion": { "type": ["string", "null"] },
+        "rawTags": { "items": { "type": "string" }, "type": "array" },
+        "sections": {
+          "items": { "$ref": "#/$defs/SearchSourceSection" },
+          "type": "array"
+        },
+        "sourceMtime": { "format": "double", "type": ["number", "null"] },
+        "sourceSize": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": ["rawTags", "headings", "sections", "chunking"],
+      "type": "object"
+    },
+    "SearchSourcePosition": {
+      "additionalProperties": false,
+      "properties": { "offset": { "format": "double", "type": "number" } },
+      "required": ["offset"],
+      "type": "object"
+    },
+    "SearchSourceRange": {
+      "additionalProperties": false,
+      "properties": {
+        "end": { "$ref": "#/$defs/SearchSourcePosition" },
+        "start": { "$ref": "#/$defs/SearchSourcePosition" }
+      },
+      "required": ["start", "end"],
+      "type": "object"
+    },
+    "SearchSourceSection": {
+      "additionalProperties": false,
+      "properties": {
+        "position": { "$ref": "#/$defs/SearchSourceRange" },
+        "type": { "type": "string" }
+      },
+      "required": ["type", "position"],
+      "type": "object"
+    },
+    "ServiceError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "$ref": "#/$defs/ErrorCode" },
+        "message": { "type": "string" }
+      },
+      "required": ["code", "message"],
+      "type": "object"
+    },
+    "SessionInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "csrf_token": { "type": "string" },
+        "expires_at": { "format": "int64", "type": "integer" },
+        "username": { "type": "string" }
+      },
+      "required": ["username", "csrf_token", "expires_at"],
+      "type": "object"
+    },
+    "SnapshotFile": {
+      "additionalProperties": false,
+      "properties": {
+        "hash": { "type": "string" },
+        "mtime": { "format": "double", "type": "number" },
+        "size": { "format": "double", "type": "number" }
+      },
+      "required": ["mtime", "size", "hash"],
+      "type": "object"
+    },
+    "SortDirection": { "enum": ["ASC", "DESC"], "type": "string" },
+    "StoreHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "content": { "type": ["string", "null"] },
+        "contentHash": { "type": ["string", "null"] },
+        "createdAt": { "format": "double", "type": "number" },
+        "eventType": { "$ref": "#/$defs/HistoryEvent" },
+        "maxRevisions": { "format": "double", "type": ["number", "null"] },
+        "path": { "type": "string" },
+        "previousPath": { "type": ["string", "null"] },
+        "replaceLatest": { "default": false, "type": "boolean" },
+        "sourceMtime": { "format": "double", "type": ["number", "null"] },
+        "sourceSize": { "format": "double", "type": ["number", "null"] }
+      },
+      "required": ["path", "eventType", "createdAt"],
+      "type": "object"
+    },
+    "StoredHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "deduplicated": { "type": "boolean" },
+        "fileId": { "type": "string" },
+        "revision": {
+          "anyOf": [{ "$ref": "#/$defs/HistoryRevision" }, { "type": "null" }]
+        },
+        "stored": { "type": "boolean" }
+      },
+      "required": ["fileId", "stored", "deduplicated"],
+      "type": "object"
+    },
+    "TagRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "hierarchy": { "items": { "type": "string" }, "type": "array" },
+        "parts": { "items": { "type": "string" }, "type": "array" },
+        "path": { "type": "string" },
+        "position": true,
+        "tag": { "type": "string" }
+      },
+      "required": ["path", "tag", "parts", "hierarchy"],
+      "type": "object"
+    },
+    "TaskChildQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "anyOf": [{ "$ref": "#/$defs/LinkKind" }, { "type": "null" }]
+        },
+        "sourcePath": { "type": "string" }
+      },
+      "required": ["sourcePath"],
+      "type": "object"
+    },
+    "TaskKind": { "enum": ["task", "task-list"], "type": "string" },
+    "TaskLookup": {
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "path": { "type": ["string", "null"] }
+      },
+      "type": "object"
+    },
+    "TaskOccurrenceState": {
+      "enum": [
+        "current",
+        "overdue",
+        "future",
+        "exhausted",
+        "paused",
+        "unsupported"
+      ],
+      "type": "string"
+    },
+    "TaskPauseRange": {
+      "additionalProperties": false,
+      "properties": {
+        "end": { "type": "string" },
+        "start": { "type": "string" }
+      },
+      "required": ["start", "end"],
+      "type": "object"
+    },
+    "TaskPlanKind": {
+      "enum": ["anytime", "morning", "afternoon", "evening", "time"],
+      "type": "string"
+    },
+    "TaskPriority": { "enum": ["low", "medium", "high"], "type": "string" },
+    "TaskQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "documentId": { "type": ["string", "null"] },
+        "documentPath": { "type": ["string", "null"] },
+        "kind": {
+          "anyOf": [{ "$ref": "#/$defs/TaskKind" }, { "type": "null" }]
+        },
+        "limit": { "format": "double", "type": ["number", "null"] },
+        "today": { "type": ["string", "null"] },
+        "view": {
+          "anyOf": [{ "$ref": "#/$defs/TaskView" }, { "type": "null" }]
+        }
+      },
+      "type": "object"
+    },
+    "TaskRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "checklistCompleted": { "format": "double", "type": "number" },
+        "checklistTotal": { "format": "double", "type": "number" },
+        "commentCount": { "format": "double", "type": "number" },
+        "completedAt": { "type": ["string", "null"] },
+        "deadline": { "type": ["string", "null"] },
+        "documentId": { "type": "string" },
+        "documentPath": { "type": "string" },
+        "durationMinutes": { "format": "double", "type": ["number", "null"] },
+        "effectiveForDate": { "type": ["string", "null"] },
+        "effectiveOccurrenceDate": { "type": ["string", "null"] },
+        "effectiveOccurrenceState": {
+          "anyOf": [
+            { "$ref": "#/$defs/TaskOccurrenceState" },
+            { "type": "null" }
+          ]
+        },
+        "inbox": { "type": "boolean" },
+        "kind": { "$ref": "#/$defs/TaskKind" },
+        "planDate": { "type": ["string", "null"] },
+        "planKind": {
+          "anyOf": [{ "$ref": "#/$defs/TaskPlanKind" }, { "type": "null" }]
+        },
+        "planTime": { "type": ["string", "null"] },
+        "priority": {
+          "anyOf": [{ "$ref": "#/$defs/TaskPriority" }, { "type": "null" }]
+        },
+        "projectionVersion": { "format": "double", "type": "number" },
+        "repeat": {
+          "anyOf": [{ "$ref": "#/$defs/TaskRepeat" }, { "type": "null" }]
+        },
+        "repeatAnchor": { "type": ["string", "null"] },
+        "repeatFrequency": { "type": ["string", "null"] },
+        "repeatInterval": { "format": "double", "type": ["number", "null"] },
+        "repeatStrategy": { "type": ["string", "null"] },
+        "startDate": { "type": ["string", "null"] },
+        "startKind": { "$ref": "#/$defs/TaskStartKind" },
+        "status": { "$ref": "#/$defs/TaskStatus" },
+        "structure": {
+          "anyOf": [{ "$ref": "#/$defs/TaskStructure" }, { "type": "null" }]
+        },
+        "title": { "type": "string" },
+        "tracking": {
+          "anyOf": [{ "$ref": "#/$defs/TaskTracking" }, { "type": "null" }]
+        }
+      },
+      "required": [
+        "documentPath",
+        "documentId",
+        "kind",
+        "title",
+        "status",
+        "inbox",
+        "startKind",
+        "checklistTotal",
+        "checklistCompleted",
+        "commentCount",
+        "projectionVersion"
+      ],
+      "type": "object"
+    },
+    "TaskRepeat": {
+      "additionalProperties": false,
+      "properties": {
+        "anchor": { "$ref": "#/$defs/TaskRepeatAnchor" },
+        "completionCount": { "format": "double", "type": ["number", "null"] },
+        "exdate": { "items": { "type": "string" }, "type": ["array", "null"] },
+        "lastCompletedAt": { "type": ["string", "null"] },
+        "missed": { "$ref": "#/$defs/TaskRepeatMissed" },
+        "pauseRanges": {
+          "items": { "$ref": "#/$defs/TaskPauseRange" },
+          "type": ["array", "null"]
+        },
+        "paused": { "type": ["boolean", "null"] },
+        "pausedSince": { "type": ["string", "null"] },
+        "rdate": { "items": { "type": "string" }, "type": ["array", "null"] },
+        "resetChecklist": { "type": ["boolean", "null"] },
+        "rrule": { "type": "string" },
+        "start": { "type": ["string", "null"] }
+      },
+      "required": ["rrule", "anchor", "missed"],
+      "type": "object"
+    },
+    "TaskRepeatAnchor": {
+      "enum": ["schedule", "completion"],
+      "type": "string"
+    },
+    "TaskRepeatMissed": { "enum": ["carry", "skip"], "type": "string" },
+    "TaskRun": {
+      "additionalProperties": false,
+      "properties": {
+        "documentId": { "type": "string" },
+        "documentPath": { "type": "string" },
+        "endOffset": { "format": "double", "type": "number" },
+        "entryCount": { "format": "double", "type": "number" },
+        "headingLevel": { "format": "double", "type": ["number", "null"] },
+        "headingPath": { "items": { "type": "string" }, "type": "array" },
+        "headingText": { "type": ["string", "null"] },
+        "id": { "type": "string" },
+        "listDepth": { "format": "double", "type": "number" },
+        "startOffset": { "format": "double", "type": "number" }
+      },
+      "required": [
+        "id",
+        "documentId",
+        "documentPath",
+        "headingPath",
+        "listDepth",
+        "startOffset",
+        "endOffset",
+        "entryCount"
+      ],
+      "type": "object"
+    },
+    "TaskStartKind": {
+      "enum": ["anytime", "someday", "date"],
+      "type": "string"
+    },
+    "TaskStatus": {
+      "enum": ["open", "completed", "canceled", "active", "archived"],
+      "type": "string"
+    },
+    "TaskStructuralEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "authoredHref": { "type": "string" },
+        "authoredLabel": { "type": "string" },
+        "headingLevel": { "format": "double", "type": ["number", "null"] },
+        "headingPath": { "items": { "type": "string" }, "type": "array" },
+        "headingText": { "type": ["string", "null"] },
+        "kind": { "$ref": "#/$defs/TaskStructuralKind" },
+        "positionInRun": { "format": "double", "type": "number" },
+        "runId": { "type": "string" },
+        "sourceDocumentId": { "type": "string" },
+        "sourceDocumentPath": { "type": "string" },
+        "sourceEnd": { "format": "double", "type": "number" },
+        "sourceStart": { "format": "double", "type": "number" },
+        "targetDocumentId": { "type": "string" },
+        "targetDocumentPath": { "type": "string" }
+      },
+      "required": [
+        "sourceDocumentId",
+        "sourceDocumentPath",
+        "targetDocumentId",
+        "targetDocumentPath",
+        "kind",
+        "headingPath",
+        "runId",
+        "positionInRun",
+        "sourceStart",
+        "sourceEnd",
+        "authoredLabel",
+        "authoredHref"
+      ],
+      "type": "object"
+    },
+    "TaskStructuralKind": {
+      "enum": ["task-entry", "list-entry"],
+      "type": "string"
+    },
+    "TaskStructure": {
+      "additionalProperties": false,
+      "properties": {
+        "diagnostics": {
+          "items": { "$ref": "#/$defs/TaskStructureDiagnostic" },
+          "type": "array"
+        },
+        "entries": {
+          "items": { "$ref": "#/$defs/TaskStructuralEntry" },
+          "type": "array"
+        },
+        "runs": { "items": { "$ref": "#/$defs/TaskRun" }, "type": "array" },
+        "sourceHash": { "type": "string" },
+        "version": { "format": "double", "type": "number" }
+      },
+      "required": ["version", "sourceHash", "entries", "runs", "diagnostics"],
+      "type": "object"
+    },
+    "TaskStructureDiagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "sourceEnd": { "format": "double", "type": ["number", "null"] },
+        "sourceStart": { "format": "double", "type": ["number", "null"] },
+        "target": { "type": ["string", "null"] }
+      },
+      "required": ["code", "message"],
+      "type": "object"
+    },
+    "TaskTracking": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "type": { "const": "boolean", "type": "string" } },
+          "required": ["type"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "format": "double", "type": ["number", "null"] },
+            "type": { "const": "count", "type": "string" },
+            "unit": { "type": "string" }
+          },
+          "required": ["type", "unit"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "type": ["string", "null"] },
+            "type": { "const": "duration", "type": "string" }
+          },
+          "required": ["type"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "target": { "format": "double", "type": ["number", "null"] },
+            "type": { "const": "number", "type": "string" },
+            "unit": { "type": "string" }
+          },
+          "required": ["type", "unit"],
+          "type": "object"
+        }
+      ]
+    },
+    "TaskView": {
+      "enum": [
+        "inbox",
+        "today",
+        "anytime",
+        "upcoming",
+        "someday",
+        "completed",
+        "review"
+      ],
+      "type": "string"
+    },
+    "TextSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "text": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "required": ["path", "text", "version"],
+      "type": "object"
+    },
+    "TurnCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "targets", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "kind": { "const": "set_enabled", "type": "string" }
+          },
+          "required": ["kind", "enabled"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "input": { "$ref": "#/$defs/TurnInput" },
+            "kind": { "const": "submit", "type": "string" }
+          },
+          "required": ["kind", "input"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "read", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "list", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "cancel", "type": "string" },
+            "request_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "request_id"],
+          "type": "object"
+        }
+      ]
+    },
+    "TurnContinuation": {
+      "additionalProperties": false,
+      "properties": {
+        "after_request_id": { "format": "uuid", "type": "string" },
+        "conversation_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["conversation_id", "after_request_id"],
+      "type": "object"
+    },
+    "TurnInput": {
+      "additionalProperties": false,
+      "properties": {
+        "context": { "type": ["string", "null"] },
+        "continuation": {
+          "anyOf": [{ "$ref": "#/$defs/TurnContinuation" }, { "type": "null" }]
+        },
+        "options": {
+          "$ref": "#/$defs/TurnOptions",
+          "default": {
+            "effort": null,
+            "max_duration_ms": 60000,
+            "mode": "ask",
+            "model": null
+          }
+        },
+        "prompt": { "type": "string" },
+        "request_id": { "format": "uuid", "type": "string" },
+        "scope_dir": { "type": "string" },
+        "target_id": { "type": "string" }
+      },
+      "required": ["request_id", "target_id", "scope_dir", "prompt"],
+      "type": "object"
+    },
+    "TurnOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "effort": { "type": ["string", "null"] },
+        "max_duration_ms": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "mode": { "type": "string" },
+        "model": { "type": ["string", "null"] }
+      },
+      "required": ["mode", "max_duration_ms"],
+      "type": "object"
+    },
+    "TurnPhase": {
+      "enum": [
+        "accepted",
+        "running",
+        "completed",
+        "failed",
+        "cancelled",
+        "interrupted",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "TurnRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_at_ms": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "conversation_id": { "format": "uuid", "type": "string" },
+        "failure_code": { "type": ["string", "null"] },
+        "input": { "$ref": "#/$defs/TurnInput" },
+        "output": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/TurnPhase" },
+        "schema_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "updated_at_ms": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": [
+        "schema_version",
+        "vault_id",
+        "conversation_id",
+        "input",
+        "phase",
+        "accepted_at_ms",
+        "updated_at_ms"
+      ],
+      "type": "object"
+    },
+    "TurnSummary": {
+      "additionalProperties": false,
+      "description": "Metadata-only native query; prompts, context and response bodies stay on read.",
+      "properties": {
+        "accepted_at_ms": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "conversation_id": { "format": "uuid", "type": "string" },
+        "failure_code": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/TurnPhase" },
+        "request_id": { "format": "uuid", "type": "string" },
+        "scope_dir": { "type": "string" },
+        "target_id": { "type": "string" },
+        "updated_at_ms": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "request_id",
+        "conversation_id",
+        "target_id",
+        "scope_dir",
+        "phase",
+        "accepted_at_ms",
+        "updated_at_ms"
+      ],
+      "type": "object"
+    },
+    "TurnTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "default_mode": { "type": "string" },
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "queue_selection": {
+          "anyOf": [{ "$ref": "#/$defs/QueueSelection" }, { "type": "null" }]
+        }
+      },
+      "required": ["id", "label", "default_mode"],
+      "type": "object"
+    },
+    "TurnValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "targets", "type": "string" },
+            "targets": {
+              "items": { "$ref": "#/$defs/TurnTarget" },
+              "type": "array"
+            }
+          },
+          "required": ["kind", "targets"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "kind": { "const": "availability", "type": "string" }
+          },
+          "required": ["kind", "enabled"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "record", "type": "string" },
+            "record": {
+              "anyOf": [{ "$ref": "#/$defs/TurnRecord" }, { "type": "null" }]
+            }
+          },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "records", "type": "string" },
+            "records": {
+              "items": { "$ref": "#/$defs/TurnSummary" },
+              "type": "array"
+            }
+          },
+          "required": ["kind", "records"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "accepted": { "type": "boolean" },
+            "kind": { "const": "cancel_requested", "type": "string" }
+          },
+          "required": ["kind", "accepted"],
+          "type": "object"
+        }
+      ]
+    },
+    "VaultCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "command": { "$ref": "#/$defs/EditingIntentCommand" },
+            "kind": { "const": "editing_intents", "type": "string" }
+          },
+          "required": ["kind", "command"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "files", "type": "string" },
+            "operation": { "$ref": "#/$defs/FileCommand" }
+          },
+          "required": ["kind", "operation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "read_text", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected": { "$ref": "#/$defs/ExpectedVersion" },
+            "kind": { "const": "write_text", "type": "string" },
+            "path": { "type": "string" },
+            "text": { "type": "string" }
+          },
+          "required": ["kind", "path", "text", "expected"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "status", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "open_editor", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "mark_dirty", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "editor_id", "revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "mark_saved", "type": "string" },
+            "revision": { "format": "uint32", "minimum": 0, "type": "integer" },
+            "version": { "type": "string" }
+          },
+          "required": ["kind", "editor_id", "revision", "version"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "close_editor", "type": "string" }
+          },
+          "required": ["kind", "editor_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "discard_editor", "type": "string" }
+          },
+          "required": ["kind", "editor_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "recover_editor", "type": "string" }
+          },
+          "required": ["kind", "editor_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "editor_claims", "type": "string" }
+          },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "VaultName": {
+      "additionalProperties": false,
+      "properties": { "name": { "type": "string" } },
+      "required": ["name"],
+      "type": "object"
+    },
+    "VaultPhase": { "enum": ["open", "closing", "closed"], "type": "string" },
+    "VaultStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "clients": { "format": "uint", "minimum": 0, "type": "integer" },
+        "dirty_editors": { "format": "uint", "minimum": 0, "type": "integer" },
+        "generation": { "format": "uuid", "type": "string" },
+        "phase": { "$ref": "#/$defs/VaultPhase" },
+        "vault_id": { "format": "uuid", "type": "string" },
+        "work": { "format": "uint", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "vault_id",
+        "generation",
+        "phase",
+        "clients",
+        "work",
+        "dirty_editors"
+      ],
+      "type": "object"
+    },
+    "VaultValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "editing_intents", "type": "string" },
+            "value": { "$ref": "#/$defs/EditingIntentValue" }
+          },
+          "required": ["kind", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "files", "type": "string" },
+            "value": { "$ref": "#/$defs/FileValue" }
+          },
+          "required": ["kind", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "text", "type": "string" },
+            "snapshot": { "$ref": "#/$defs/TextSnapshot" }
+          },
+          "required": ["kind", "snapshot"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "written", "type": "string" },
+            "version": { "type": "string" }
+          },
+          "required": ["kind", "version"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "status", "type": "string" },
+            "status": { "$ref": "#/$defs/VaultStatus" }
+          },
+          "required": ["kind", "status"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "editor_id": { "format": "uuid", "type": "string" },
+            "kind": { "const": "editor", "type": "string" }
+          },
+          "required": ["kind", "editor_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "cleared": { "type": "boolean" },
+            "kind": { "const": "saved", "type": "string" }
+          },
+          "required": ["kind", "cleared"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "claims": {
+              "items": { "$ref": "#/$defs/EditorClaim" },
+              "type": "array"
+            },
+            "kind": { "const": "editor_claims", "type": "string" }
+          },
+          "required": ["kind", "claims"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "done", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "attach": { "$ref": "#/$defs/AttachClient" },
+    "client": { "$ref": "#/$defs/ClientDescriptor" },
+    "core_indexed_file": { "$ref": "#/$defs/CoreIndexedFile" },
+    "database_call": { "$ref": "#/$defs/DatabaseCall" },
+    "database_change": { "$ref": "#/$defs/ChangeSet" },
+    "database_value": { "$ref": "#/$defs/DatabaseValue" },
+    "editing_intent_command": { "$ref": "#/$defs/EditingIntentCommand" },
+    "editing_intent_value": { "$ref": "#/$defs/EditingIntentValue" },
+    "file_history": { "$ref": "#/$defs/FileHistory" },
+    "history_index_command": { "$ref": "#/$defs/HistoryIndexCommand" },
+    "history_index_value": { "$ref": "#/$defs/HistoryIndexValue" },
+    "host": { "$ref": "#/$defs/HostInfo" },
+    "indexed_file": { "$ref": "#/$defs/IndexedFile" },
+    "indexed_manifest_page": { "$ref": "#/$defs/ManifestPage" },
+    "indexed_manifest_query": { "$ref": "#/$defs/ManifestQuery" },
+    "indexing_command": { "$ref": "#/$defs/IndexingCommand" },
+    "indexing_value": { "$ref": "#/$defs/IndexingValue" },
+    "login": { "$ref": "#/$defs/LoginRequest" },
+    "logout": { "$ref": "#/$defs/LogoutReply" },
+    "memory_candidate": { "$ref": "#/$defs/MemoryCandidateInput" },
+    "memory_candidate_query": { "$ref": "#/$defs/MemoryCandidateQuery" },
+    "memory_job_claim": { "$ref": "#/$defs/MemoryJobClaim" },
+    "memory_job_update": { "$ref": "#/$defs/MemoryJobUpdate" },
+    "memory_signal": { "$ref": "#/$defs/MemoryRecallSignal" },
+    "memory_source": { "$ref": "#/$defs/MemorySource" },
+    "meta_page": { "$ref": "#/$defs/MetaPage" },
+    "meta_scan": { "$ref": "#/$defs/MetaScan" },
+    "meta_transaction": { "$ref": "#/$defs/MetaTransaction" },
+    "metadata_facet_query": { "$ref": "#/$defs/FacetQuery" },
+    "metadata_facets": {
+      "items": { "$ref": "#/$defs/FacetRow" },
+      "type": "array"
+    },
+    "metadata_link_query": { "$ref": "#/$defs/LinkQuery" },
+    "metadata_page": { "$ref": "#/$defs/MetadataPage" },
+    "metadata_page_query": { "$ref": "#/$defs/MetadataPageQuery" },
+    "metadata_snapshot": { "$ref": "#/$defs/MetadataSnapshot" },
+    "native_task_command": { "$ref": "#/$defs/NativeTaskCommand" },
+    "native_task_value": { "$ref": "#/$defs/NativeTaskValue" },
+    "notebook": { "$ref": "#/$defs/NotebookState" },
+    "notification": { "$ref": "#/$defs/NotificationRecord" },
+    "participant_command": { "$ref": "#/$defs/ParticipantCommand" },
+    "participant_value": { "$ref": "#/$defs/ParticipantValue" },
+    "projection_definition": { "$ref": "#/$defs/ProjectionDefinition" },
+    "projection_error": { "$ref": "#/$defs/ProjectionSourceError" },
+    "projection_query": { "$ref": "#/$defs/ProjectionQuery" },
+    "projection_related": { "$ref": "#/$defs/ProjectionRelatedQuery" },
+    "projection_result": { "$ref": "#/$defs/ProjectionQueryResult" },
+    "projection_source": { "$ref": "#/$defs/ProjectionSource" },
+    "queue_command": { "$ref": "#/$defs/QueueCommand" },
+    "queue_value": { "$ref": "#/$defs/QueueValue" },
+    "reply": { "$ref": "#/$defs/Reply" },
+    "repository_backup_command": { "$ref": "#/$defs/RepositoryBackupCommand" },
+    "repository_backup_snapshot": {
+      "$ref": "#/$defs/RepositoryBackupSnapshot"
+    },
+    "repository_restore_command": {
+      "$ref": "#/$defs/RepositoryRestoreCommand"
+    },
+    "repository_restore_value": { "$ref": "#/$defs/RepositoryRestoreValue" },
+    "repository_sources": { "$ref": "#/$defs/RepositorySources" },
+    "repository_sources_command": {
+      "$ref": "#/$defs/RepositorySourcesCommand"
+    },
+    "request": { "$ref": "#/$defs/Request" },
+    "search_document": { "$ref": "#/$defs/SearchDocumentRecord" },
+    "search_embedding_config": {
+      "$ref": "#/$defs/SearchEmbeddingProviderConfig"
+    },
+    "search_embedding_status": {
+      "$ref": "#/$defs/SearchEmbeddingRuntimeStatus"
+    },
+    "search_manifest": { "$ref": "#/$defs/SearchManifestPage" },
+    "search_manifest_query": { "$ref": "#/$defs/SearchManifestQuery" },
+    "search_options": { "$ref": "#/$defs/SearchOptions" },
+    "search_results": {
+      "items": { "$ref": "#/$defs/SearchResult" },
+      "type": "array"
+    },
+    "search_stats": { "$ref": "#/$defs/SearchIndexStats" },
+    "session": { "$ref": "#/$defs/SessionInfo" },
+    "store_history": { "$ref": "#/$defs/StoreHistory" },
+    "stored_history": { "$ref": "#/$defs/StoredHistory" },
+    "task_children": { "$ref": "#/$defs/TaskChildQuery" },
+    "task_lookup": { "$ref": "#/$defs/TaskLookup" },
+    "task_query": { "$ref": "#/$defs/TaskQuery" },
+    "task_record": { "$ref": "#/$defs/TaskRecord" },
+    "turn_command": { "$ref": "#/$defs/TurnCommand" },
+    "turn_value": { "$ref": "#/$defs/TurnValue" },
+    "vault": { "$ref": "#/$defs/ManagedVault" },
+    "vault_name": { "$ref": "#/$defs/VaultName" }
+  },
+  "required": [
+    "participant_command",
+    "participant_value",
+    "repository_sources_command",
+    "repository_sources",
+    "repository_backup_command",
+    "repository_backup_snapshot",
+    "editing_intent_command",
+    "editing_intent_value",
+    "repository_restore_command",
+    "repository_restore_value",
+    "native_task_command",
+    "native_task_value",
+    "history_index_command",
+    "history_index_value",
+    "indexing_command",
+    "indexing_value",
+    "queue_command",
+    "queue_value",
+    "turn_command",
+    "turn_value",
+    "database_call",
+    "database_value",
+    "request",
+    "reply",
+    "client",
+    "vault",
+    "attach",
+    "login",
+    "session",
+    "host",
+    "logout",
+    "vault_name",
+    "meta_transaction",
+    "meta_scan",
+    "meta_page",
+    "notebook",
+    "metadata_snapshot",
+    "notification",
+    "database_change",
+    "file_history",
+    "store_history",
+    "stored_history",
+    "core_indexed_file",
+    "indexed_file",
+    "indexed_manifest_query",
+    "indexed_manifest_page",
+    "metadata_page_query",
+    "metadata_page",
+    "metadata_facet_query",
+    "metadata_facets",
+    "metadata_link_query",
+    "projection_definition",
+    "projection_source",
+    "projection_error",
+    "projection_query",
+    "projection_related",
+    "projection_result",
+    "memory_source",
+    "memory_candidate",
+    "memory_candidate_query",
+    "memory_signal",
+    "memory_job_claim",
+    "memory_job_update",
+    "task_record",
+    "task_query",
+    "task_lookup",
+    "task_children",
+    "search_document",
+    "search_manifest_query",
+    "search_manifest",
+    "search_stats",
+    "search_options",
+    "search_embedding_config",
+    "search_embedding_status",
+    "search_results"
+  ],
+  "title": "Contracts",
+  "type": "object"
+}

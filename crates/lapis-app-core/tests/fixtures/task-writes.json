@@ -1,0 +1,271 @@
+{
+  "sourceRevision": "fde58de0b03f97691a109b3448f414c5ac19eb5a",
+  "sourceSha256": "35b099569d7aa630380828891ca682f250e6d84126b45c9051ec6433f250dea8",
+  "cases": {
+    "mutation": {
+      "name": "trimmed-envelope / cancel",
+      "raw": "---\ntype: ' task '\nid: ' trimmed-id '\ntags: [' a ', '', 3, b]\ncreated: ' timestamp '\nupdated: false\n---\n# Trimmed\n",
+      "path": "tasks/trimmed-envelope.md",
+      "actions": [
+        {
+          "type": "cancel",
+          "at": "2026-08-20T10:00:00+01:00"
+        }
+      ],
+      "expected": {
+        "value": {
+          "raw": "---\ntype: task\nid: trimmed-id\ntags:\n  - a\n  - b\ncreated: timestamp\nupdated: 2026-08-20T10:00:00+01:00\ntask:\n  status: canceled\n  inbox: false\n  start: anytime\n---\n\n# Trimmed\n",
+          "steps": [
+            {
+              "document": {
+                "path": "tasks/trimmed-envelope.md",
+                "raw": "---\ntype: ' task '\nid: ' trimmed-id '\ntags: [' a ', '', 3, b]\ncreated: ' timestamp '\nupdated: false\n---\n# Trimmed\n",
+                "id": "trimmed-id",
+                "kind": "task",
+                "title": "Trimmed",
+                "tags": [
+                  "a",
+                  "b"
+                ],
+                "created": "timestamp",
+                "updated": "2026-08-20T10:00:00+01:00",
+                "task": {
+                  "status": "canceled",
+                  "inbox": false,
+                  "start": {
+                    "kind": "anytime"
+                  },
+                  "comments": []
+                },
+                "body": "# Trimmed\n",
+                "checklist": [],
+                "structuralLinks": [],
+                "diagnostics": []
+              },
+              "raw": "---\ntype: task\nid: trimmed-id\ntags:\n  - a\n  - b\ncreated: timestamp\nupdated: 2026-08-20T10:00:00+01:00\ntask:\n  status: canceled\n  inbox: false\n  start: anytime\n---\n\n# Trimmed\n",
+              "reparsed": {
+                "path": "tasks/trimmed-envelope.md",
+                "raw": "---\ntype: task\nid: trimmed-id\ntags:\n  - a\n  - b\ncreated: timestamp\nupdated: 2026-08-20T10:00:00+01:00\ntask:\n  status: canceled\n  inbox: false\n  start: anytime\n---\n\n# Trimmed\n",
+                "id": "trimmed-id",
+                "kind": "task",
+                "title": "Trimmed",
+                "tags": [
+                  "a",
+                  "b"
+                ],
+                "created": "timestamp",
+                "updated": "2026-08-20T10:00:00+01:00",
+                "task": {
+                  "status": "canceled",
+                  "inbox": false,
+                  "start": {
+                    "kind": "anytime"
+                  },
+                  "comments": []
+                },
+                "body": "\n# Trimmed\n",
+                "checklist": [],
+                "structuralLinks": [],
+                "diagnostics": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "materialization": {
+      "name": "no Tasks / anytime / None",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n",
+      "path": "daily/archive/2026-08-20.md",
+      "input": {
+        "taskId": "read 📝",
+        "taskPath": "tasks/Read [now].md",
+        "title": "Read ] [x] \\ now\nNext",
+        "occurrenceDate": "2026-08-20",
+        "dayPart": "anytime"
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Anytime\n\n- [ ] [Read \\] [x\\] \\\\ now Next](../../tasks/Read%20%5Bnow%5D.md) <!-- task-occurrence task=read%20%F0%9F%93%9D date=2026-08-20 kind=boolean -->\n",
+          "observations": [],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\nPersonal notes.\n\n## Tasks\n\n### Anytime\n\n- [ ] [Read \\] [x\\] \\\\ now Next](../../tasks/Read%20%5Bnow%5D.md) <!-- task-occurrence task=read%20%F0%9F%93%9D date=2026-08-20 kind=boolean -->\n\n- [ ] [Read \\] [x\\] \\\\ now Next](../../tasks/Read%20%5Bnow%5D.md) <!-- task-occurrence task=read%20%F0%9F%93%9D date=2026-08-20 kind=boolean -->\n",
+          "repeatedObservations": []
+        }
+      }
+    },
+    "completion": {
+      "name": "boolean / LF / {\"type\": \"boolean\"}",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+      "path": "daily/2026-08-20.md",
+      "completion": {
+        "type": "boolean"
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 76,
+              "sourceEnd": 213,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\n# Day 📝\n\n## Tasks\n\n### Morning\n\n- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n\n- [ ] Handwritten\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "completed",
+              "trackingKind": "boolean",
+              "sourceStart": 76,
+              "sourceEnd": 213,
+              "projectionVersion": 1,
+              "checked": true,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "morning",
+              "source": "- [x] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n  nested context 📝\n\n  preserve paragraph\n"
+            }
+          ]
+        }
+      }
+    },
+    "error": {
+      "name": "ordinary-markdown / checklist",
+      "raw": "# Ordinary\n- [Task](task.md)\n",
+      "path": "tasks/ordinary-markdown.md",
+      "actions": [
+        {
+          "type": "checklist",
+          "position": 0,
+          "expectedText": "First",
+          "checked": true
+        }
+      ],
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Not a task document: tasks/ordinary-markdown.md"
+        }
+      }
+    },
+    "noop": {
+      "name": "existing",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n",
+      "path": "daily/2026-08-20.md",
+      "input": {
+        "taskId": "read",
+        "taskPath": "tasks/Read.md",
+        "title": "New title",
+        "occurrenceDate": "2026-08-20",
+        "dayPart": "evening",
+        "tracking": {
+          "type": "number",
+          "unit": "kg"
+        }
+      },
+      "expected": {
+        "value": {
+          "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n",
+          "observations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "pending",
+              "trackingKind": "boolean",
+              "sourceStart": 42,
+              "sourceEnd": 137,
+              "projectionVersion": 1,
+              "checked": false,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "anytime",
+              "source": "- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n"
+            }
+          ],
+          "repeated": "---\ntype: daily-note\ndate: 2026-08-20\n---\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n",
+          "repeatedObservations": [
+            {
+              "observationId": "read:2026-08-20",
+              "taskId": "read",
+              "taskPath": "tasks/Read.md",
+              "dailyDocumentPath": "daily/2026-08-20.md",
+              "occurrenceDate": "2026-08-20",
+              "outcome": "pending",
+              "trackingKind": "boolean",
+              "sourceStart": 42,
+              "sourceEnd": 137,
+              "projectionVersion": 1,
+              "checked": false,
+              "title": "Read",
+              "href": "../tasks/Read.md",
+              "dayPart": "anytime",
+              "source": "- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n"
+            }
+          ]
+        }
+      }
+    },
+    "duplicate": {
+      "name": "duplicate",
+      "raw": "---\ntype: daily-note\ndate: 2026-08-20\n---\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n- [ ] [Read](../tasks/Read.md) <!-- task-occurrence task=read date=2026-08-20 kind=boolean -->\n",
+      "path": "daily/2026-08-20.md",
+      "input": {
+        "taskId": "read",
+        "taskPath": "tasks/Read.md",
+        "title": "New title",
+        "occurrenceDate": "2026-08-20",
+        "dayPart": "evening",
+        "tracking": {
+          "type": "number",
+          "unit": "kg"
+        }
+      },
+      "expected": {
+        "error": {
+          "name": "DuplicateTaskOccurrenceError",
+          "message": "Daily note contains duplicate observations for read on 2026-08-20.",
+          "code": "duplicate-task-occurrence"
+        }
+      }
+    },
+    "checklistError": {
+      "name": "missing-id / checklist",
+      "raw": "---\ntype: task\n---\n# Missing id\n",
+      "path": "tasks/missing-id.md",
+      "actions": [
+        {
+          "type": "checklist",
+          "position": 0,
+          "expectedText": "First",
+          "checked": true
+        }
+      ],
+      "expected": {
+        "error": {
+          "name": "TaskChecklistMutationError",
+          "message": "The checklist changed before this item could be updated.",
+          "code": "stale-checklist-item"
+        }
+      }
+    }
+  }
+}

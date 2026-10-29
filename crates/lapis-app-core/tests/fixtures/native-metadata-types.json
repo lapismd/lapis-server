@@ -1,0 +1,94 @@
+[
+  {
+    "name": "tags",
+    "value": ["one"],
+    "expected": "tags"
+  },
+  {
+    "name": " alias ",
+    "value": ["one"],
+    "expected": "aliases"
+  },
+  {
+    "name": "title",
+    "value": "Café 📝",
+    "expected": "text"
+  },
+  {
+    "name": "check",
+    "value": true,
+    "expected": "checkbox"
+  },
+  {
+    "name": "check",
+    "value": " FALSE ",
+    "expected": "checkbox"
+  },
+  {
+    "name": "none",
+    "value": null,
+    "expected": "text"
+  },
+  {
+    "name": "list",
+    "value": ["one", 2],
+    "expected": "multitext"
+  },
+  {
+    "name": "list",
+    "value": [true],
+    "expected": "array"
+  },
+  {
+    "name": "empty",
+    "value": [],
+    "expected": "multitext"
+  },
+  {
+    "name": "object",
+    "value": {
+      "a": 1
+    },
+    "expected": "object"
+  },
+  {
+    "name": "date",
+    "value": "2026-02-31",
+    "expected": "date"
+  },
+  {
+    "name": "date",
+    "value": "2026-10-25T12:34:56",
+    "expected": "datetime"
+  },
+  {
+    "name": "date",
+    "value": "20261025 123456",
+    "expected": "datetime"
+  },
+  {
+    "name": "number",
+    "value": "0123",
+    "expected": "number"
+  },
+  {
+    "name": "number",
+    "value": 12.3,
+    "expected": "number"
+  },
+  {
+    "name": "number",
+    "value": "-12",
+    "expected": "text"
+  },
+  {
+    "name": "tagtext",
+    "value": "#team/notes, #work",
+    "expected": "tags"
+  },
+  {
+    "name": "emptyString",
+    "value": "",
+    "expected": "tags"
+  }
+]

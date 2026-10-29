@@ -1,0 +1,5287 @@
+{
+  "schema": 1,
+  "oracleRevision": "d6e0427f83d613b662f4d28df8c65e691e0588b6",
+  "locale": {
+    "locale": "en-US",
+    "numberingSystem": "latn",
+    "outputCalendar": "gregory"
+  },
+  "weekSettings": {
+    "firstDay": 7,
+    "minimalDays": 1
+  },
+  "filenames": [
+    {
+      "date": "2026-08-21",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "value": "2026-08-21.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "dd-LL-yyyy",
+      "expected": {
+        "value": "21-08-2026.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy LLL dd",
+      "expected": {
+        "value": "2026 Aug 21.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy LLLL dd",
+      "expected": {
+        "value": "2026 August 21.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "y yy yyyy yyyyyy",
+      "expected": {
+        "value": "2026 26 2026 002026.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "M MM MMM MMMM MMMMM",
+      "expected": {
+        "value": "8 08 Aug August A.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "L LL LLL LLLL LLLLL",
+      "expected": {
+        "value": "8 08 Aug August A.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "d dd c ccc cccc ccccc E EEE EEEE EEEEE",
+      "expected": {
+        "value": "21 21 5 Fri Friday F 5 Fri Friday F.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "o ooo q qq",
+      "expected": {
+        "value": "233 233 3 03.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "k kk kkkk W WW",
+      "expected": {
+        "value": "k 26 2026 34 34.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "n nn ii iiii",
+      "expected": {
+        "value": "34 34 26 2026.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "G GG GGGGG",
+      "expected": {
+        "value": "AD Anno Domini A.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "S u uu uuu s ss m mm H HH h hh a",
+      "expected": {
+        "value": "0 000 00 0 0 00 0 00 0 00 12 12 AM.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "Z ZZ ZZZ ZZZZ ZZZZZ z",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"+0 +00:00 +0000 UTC UTC UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "X x",
+      "expected": {
+        "value": "1787270400 1787270400000.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "D DD DDD DDDD",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"8/21/2026 Aug 21, 2026 August 21, 2026 Friday, August 21, 2026\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "t tt ttt tttt",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12:00 AM 12:00:00 AM 12:00:00 AM UTC 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "T TT TTT TTTT",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00 00:00:00 00:00:00 UTC 00:00:00 UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "f ff fff ffff",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"8/21/2026, 12:00 AM Aug 21, 2026, 12:00 AM August 21, 2026 at 12:00 AM UTC Friday, August 21, 2026 at 12:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "F FF FFF FFFF",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"8/21/2026, 12:00:00 AM Aug 21, 2026, 12:00:00 AM August 21, 2026 at 12:00:00 AM UTC Friday, August 21, 2026 at 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'day' yyyy-MM-dd",
+      "expected": {
+        "value": "day 2026-08-21.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy 'a''b' MM",
+      "expected": {
+        "value": "2026 ab 08.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "''",
+      "expected": {
+        "value": "'.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'literal'",
+      "expected": {
+        "value": "literal.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'unterminated",
+      "expected": {
+        "value": "unterminated.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "unknown J JJ",
+      "expected": {
+        "value": "00034k34233w34 J JJ.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy/MM/dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2026/08/21\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy\\MM\\dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2026\\\\08\\\\21\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "HH:mm",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'.'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \".\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'..'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"..\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'a:b'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a:b\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'a\nb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\nb\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'a\u001fb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\u001fb\"."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "'ab'",
+      "expected": {
+        "value": "ab.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": " ",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "﻿yyyy﻿",
+      "expected": {
+        "value": "2026.md"
+      }
+    },
+    {
+      "date": "2026-08-21",
+      "format": "yyyy",
+      "expected": {
+        "value": "2026.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "value": "2024-02-29.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "dd-LL-yyyy",
+      "expected": {
+        "value": "29-02-2024.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy LLL dd",
+      "expected": {
+        "value": "2024 Feb 29.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy LLLL dd",
+      "expected": {
+        "value": "2024 February 29.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "y yy yyyy yyyyyy",
+      "expected": {
+        "value": "2024 24 2024 002024.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "M MM MMM MMMM MMMMM",
+      "expected": {
+        "value": "2 02 Feb February F.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "L LL LLL LLLL LLLLL",
+      "expected": {
+        "value": "2 02 Feb February F.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "d dd c ccc cccc ccccc E EEE EEEE EEEEE",
+      "expected": {
+        "value": "29 29 4 Thu Thursday T 4 Thu Thursday T.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "o ooo q qq",
+      "expected": {
+        "value": "60 060 1 01.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "k kk kkkk W WW",
+      "expected": {
+        "value": "k 24 2024 9 09.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "n nn ii iiii",
+      "expected": {
+        "value": "9 09 24 2024.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "G GG GGGGG",
+      "expected": {
+        "value": "AD Anno Domini A.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "S u uu uuu s ss m mm H HH h hh a",
+      "expected": {
+        "value": "0 000 00 0 0 00 0 00 0 00 12 12 AM.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "Z ZZ ZZZ ZZZZ ZZZZZ z",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"+0 +00:00 +0000 UTC UTC UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "X x",
+      "expected": {
+        "value": "1709164800 1709164800000.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "D DD DDD DDDD",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2/29/2024 Feb 29, 2024 February 29, 2024 Thursday, February 29, 2024\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "t tt ttt tttt",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12:00 AM 12:00:00 AM 12:00:00 AM UTC 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "T TT TTT TTTT",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00 00:00:00 00:00:00 UTC 00:00:00 UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "f ff fff ffff",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2/29/2024, 12:00 AM Feb 29, 2024, 12:00 AM February 29, 2024 at 12:00 AM UTC Thursday, February 29, 2024 at 12:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "F FF FFF FFFF",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2/29/2024, 12:00:00 AM Feb 29, 2024, 12:00:00 AM February 29, 2024 at 12:00:00 AM UTC Thursday, February 29, 2024 at 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'day' yyyy-MM-dd",
+      "expected": {
+        "value": "day 2024-02-29.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy 'a''b' MM",
+      "expected": {
+        "value": "2024 ab 02.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "''",
+      "expected": {
+        "value": "'.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'literal'",
+      "expected": {
+        "value": "literal.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'unterminated",
+      "expected": {
+        "value": "unterminated.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "unknown J JJ",
+      "expected": {
+        "value": "0009k960w9 J JJ.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy/MM/dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2024/02/29\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy\\MM\\dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2024\\\\02\\\\29\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "HH:mm",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'.'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \".\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'..'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"..\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'a:b'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a:b\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'a\nb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\nb\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'a\u001fb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\u001fb\"."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "'ab'",
+      "expected": {
+        "value": "ab.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": " ",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "﻿yyyy﻿",
+      "expected": {
+        "value": "2024.md"
+      }
+    },
+    {
+      "date": "2024-02-29",
+      "format": "yyyy",
+      "expected": {
+        "value": "2024.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "value": "2021-01-01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "dd-LL-yyyy",
+      "expected": {
+        "value": "01-01-2021.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy LLL dd",
+      "expected": {
+        "value": "2021 Jan 01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy LLLL dd",
+      "expected": {
+        "value": "2021 January 01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "y yy yyyy yyyyyy",
+      "expected": {
+        "value": "2021 21 2021 002021.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "M MM MMM MMMM MMMMM",
+      "expected": {
+        "value": "1 01 Jan January J.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "L LL LLL LLLL LLLLL",
+      "expected": {
+        "value": "1 01 Jan January J.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "d dd c ccc cccc ccccc E EEE EEEE EEEEE",
+      "expected": {
+        "value": "1 01 5 Fri Friday F 5 Fri Friday F.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "o ooo q qq",
+      "expected": {
+        "value": "1 001 1 01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "k kk kkkk W WW",
+      "expected": {
+        "value": "k 20 2020 53 53.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "n nn ii iiii",
+      "expected": {
+        "value": "1 01 21 2021.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "G GG GGGGG",
+      "expected": {
+        "value": "AD Anno Domini A.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "S u uu uuu s ss m mm H HH h hh a",
+      "expected": {
+        "value": "0 000 00 0 0 00 0 00 0 00 12 12 AM.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "Z ZZ ZZZ ZZZZ ZZZZZ z",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"+0 +00:00 +0000 UTC UTC UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "X x",
+      "expected": {
+        "value": "1609459200 1609459200000.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "D DD DDD DDDD",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/2021 Jan 1, 2021 January 1, 2021 Friday, January 1, 2021\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "t tt ttt tttt",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12:00 AM 12:00:00 AM 12:00:00 AM UTC 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "T TT TTT TTTT",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00 00:00:00 00:00:00 UTC 00:00:00 UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "f ff fff ffff",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/2021, 12:00 AM Jan 1, 2021, 12:00 AM January 1, 2021 at 12:00 AM UTC Friday, January 1, 2021 at 12:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "F FF FFF FFFF",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/2021, 12:00:00 AM Jan 1, 2021, 12:00:00 AM January 1, 2021 at 12:00:00 AM UTC Friday, January 1, 2021 at 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'day' yyyy-MM-dd",
+      "expected": {
+        "value": "day 2021-01-01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy 'a''b' MM",
+      "expected": {
+        "value": "2021 ab 01.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "''",
+      "expected": {
+        "value": "'.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'literal'",
+      "expected": {
+        "value": "literal.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'unterminated",
+      "expected": {
+        "value": "unterminated.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "unknown J JJ",
+      "expected": {
+        "value": "0001k11w1 J JJ.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy/MM/dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2021/01/01\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy\\MM\\dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"2021\\\\01\\\\01\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "HH:mm",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'.'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \".\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'..'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"..\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'a:b'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a:b\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'a\nb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\nb\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'a\u001fb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\u001fb\"."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "'ab'",
+      "expected": {
+        "value": "ab.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": " ",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "﻿yyyy﻿",
+      "expected": {
+        "value": "2021.md"
+      }
+    },
+    {
+      "date": "2021-01-01",
+      "format": "yyyy",
+      "expected": {
+        "value": "2021.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "value": "0000-01-01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "dd-LL-yyyy",
+      "expected": {
+        "value": "01-01-0000.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy LLL dd",
+      "expected": {
+        "value": "0000 Jan 01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy LLLL dd",
+      "expected": {
+        "value": "0000 January 01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "y yy yyyy yyyyyy",
+      "expected": {
+        "value": "0 00 0000 000000.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "M MM MMM MMMM MMMMM",
+      "expected": {
+        "value": "1 01 Jan January J.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "L LL LLL LLLL LLLLL",
+      "expected": {
+        "value": "1 01 Jan January J.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "d dd c ccc cccc ccccc E EEE EEEE EEEEE",
+      "expected": {
+        "value": "1 01 6 Sat Saturday S 6 Sat Saturday S.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "o ooo q qq",
+      "expected": {
+        "value": "1 001 1 01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "k kk kkkk W WW",
+      "expected": {
+        "value": "k -01 -0001 52 52.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "n nn ii iiii",
+      "expected": {
+        "value": "1 01 00 0000.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "G GG GGGGG",
+      "expected": {
+        "value": "AD Anno Domini A.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "S u uu uuu s ss m mm H HH h hh a",
+      "expected": {
+        "value": "0 000 00 0 0 00 0 00 0 00 12 12 AM.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "Z ZZ ZZZ ZZZZ ZZZZZ z",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"+0 +00:00 +0000 UTC UTC UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "X x",
+      "expected": {
+        "value": "-62167219200 -62167219200000.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "D DD DDD DDDD",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/1 Jan 1, 1 January 1, 1 Saturday, January 1, 1\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "t tt ttt tttt",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12:00 AM 12:00:00 AM 12:00:00 AM UTC 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "T TT TTT TTTT",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00 00:00:00 00:00:00 UTC 00:00:00 UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "f ff fff ffff",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/1, 12:00 AM Jan 1, 1, 12:00 AM January 1, 1 at 12:00 AM UTC Saturday, January 1, 1 at 12:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "F FF FFF FFFF",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"1/1/1, 12:00:00 AM Jan 1, 1, 12:00:00 AM January 1, 1 at 12:00:00 AM UTC Saturday, January 1, 1 at 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'day' yyyy-MM-dd",
+      "expected": {
+        "value": "day 0000-01-01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy 'a''b' MM",
+      "expected": {
+        "value": "0000 ab 01.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "''",
+      "expected": {
+        "value": "'.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'literal'",
+      "expected": {
+        "value": "literal.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'unterminated",
+      "expected": {
+        "value": "unterminated.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "unknown J JJ",
+      "expected": {
+        "value": "0001k11w1 J JJ.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy/MM/dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"0000/01/01\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy\\MM\\dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"0000\\\\01\\\\01\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "HH:mm",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'.'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \".\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'..'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"..\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'a:b'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a:b\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'a\nb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\nb\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'a\u001fb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\u001fb\"."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "'ab'",
+      "expected": {
+        "value": "ab.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": " ",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "﻿yyyy﻿",
+      "expected": {
+        "value": "0000.md"
+      }
+    },
+    {
+      "date": "0000-01-01",
+      "format": "yyyy",
+      "expected": {
+        "value": "0000.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "value": "0099-12-31.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "dd-LL-yyyy",
+      "expected": {
+        "value": "31-12-0099.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy LLL dd",
+      "expected": {
+        "value": "0099 Dec 31.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy LLLL dd",
+      "expected": {
+        "value": "0099 December 31.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "y yy yyyy yyyyyy",
+      "expected": {
+        "value": "99 99 0099 000099.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "M MM MMM MMMM MMMMM",
+      "expected": {
+        "value": "12 12 Dec December D.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "L LL LLL LLLL LLLLL",
+      "expected": {
+        "value": "12 12 Dec December D.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "d dd c ccc cccc ccccc E EEE EEEE EEEEE",
+      "expected": {
+        "value": "31 31 4 Thu Thursday T 4 Thu Thursday T.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "o ooo q qq",
+      "expected": {
+        "value": "365 365 4 04.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "k kk kkkk W WW",
+      "expected": {
+        "value": "k 99 0099 53 53.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "n nn ii iiii",
+      "expected": {
+        "value": "1 01 00 0100.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "G GG GGGGG",
+      "expected": {
+        "value": "AD Anno Domini A.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "S u uu uuu s ss m mm H HH h hh a",
+      "expected": {
+        "value": "0 000 00 0 0 00 0 00 0 00 12 12 AM.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "Z ZZ ZZZ ZZZZ ZZZZZ z",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"+0 +00:00 +0000 UTC UTC UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "X x",
+      "expected": {
+        "value": "-59011545600 -59011545600000.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "D DD DDD DDDD",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12/31/99 Dec 31, 99 December 31, 99 Thursday, December 31, 99\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "t tt ttt tttt",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12:00 AM 12:00:00 AM 12:00:00 AM UTC 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "T TT TTT TTTT",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00 00:00:00 00:00:00 UTC 00:00:00 UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "f ff fff ffff",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12/31/99, 12:00 AM Dec 31, 99, 12:00 AM December 31, 99 at 12:00 AM UTC Thursday, December 31, 99 at 12:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "F FF FFF FFFF",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"12/31/99, 12:00:00 AM Dec 31, 99, 12:00:00 AM December 31, 99 at 12:00:00 AM UTC Thursday, December 31, 99 at 12:00:00 AM UTC\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'day' yyyy-MM-dd",
+      "expected": {
+        "value": "day 0099-12-31.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy 'a''b' MM",
+      "expected": {
+        "value": "0099 ab 12.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "''",
+      "expected": {
+        "value": "'.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'literal'",
+      "expected": {
+        "value": "literal.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'unterminated",
+      "expected": {
+        "value": "unterminated.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "unknown J JJ",
+      "expected": {
+        "value": "0001k1365w1 J JJ.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy/MM/dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"0099/12/31\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy\\MM\\dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"0099\\\\12\\\\31\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "HH:mm",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"00:00\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'.'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \".\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'..'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"..\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'a:b'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a:b\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'a\nb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\nb\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'a\u001fb'",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must produce one safe filename segment; received \"a\\u001fb\"."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "'ab'",
+      "expected": {
+        "value": "ab.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": " ",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Daily-note date format must not be empty."
+        }
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "﻿yyyy﻿",
+      "expected": {
+        "value": "0099.md"
+      }
+    },
+    {
+      "date": "0099-12-31",
+      "format": "yyyy",
+      "expected": {
+        "value": "0099.md"
+      }
+    },
+    {
+      "date": "2026-02-30",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Invalid local date: 2026-02-30"
+        }
+      }
+    },
+    {
+      "date": "2026-2-01",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Invalid local date: 2026-2-01"
+        }
+      }
+    },
+    {
+      "date": "2026-08-21T00:00:00Z",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Invalid local date: 2026-08-21T00:00:00Z"
+        }
+      }
+    },
+    {
+      "date": "",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Invalid local date: "
+        }
+      }
+    },
+    {
+      "date": " 2026-08-21 ",
+      "format": "yyyy-MM-dd",
+      "expected": {
+        "error": {
+          "name": "Error",
+          "message": "Invalid local date:  2026-08-21 "
+        }
+      }
+    }
+  ],
+  "providers": [
+    {
+      "name": "locate never creates",
+      "date": "2026-08-21",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "value": null,
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "default canonical seed",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "canonical former path wins",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "archive/former.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+      },
+      "configuration": {
+        "dailyNotes.folder": "new",
+        "dailyNotes.dateFormat": "dd-LL-yyyy"
+      },
+      "expected": {
+        "result": {
+          "value": "archive/former.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "archive/former.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "archive/former.md"
+          },
+          {
+            "kind": "read",
+            "path": "archive/former.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "duplicate canonical dates",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "daily/one.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n",
+        "archive/two.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Multiple daily notes declare date 2026-08-21: daily/one.md, archive/two.md"
+          }
+        },
+        "files": {
+          "daily/one.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n",
+          "archive/two.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "daily/one.md"
+          },
+          {
+            "kind": "read",
+            "path": "daily/one.md"
+          },
+          {
+            "kind": "cache",
+            "path": "archive/two.md"
+          },
+          {
+            "kind": "read",
+            "path": "archive/two.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "occupied unrelated target",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "daily/2026-08-21.md": "# Unrelated\n"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Cannot create daily note for 2026-08-21: daily/2026-08-21.md already exists without matching daily-note front matter."
+          }
+        },
+        "files": {
+          "daily/2026-08-21.md": "# Unrelated\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "read",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "cache",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "read",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "different date is not canonical",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\nExisting\n"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Cannot create daily note for 2026-08-21: daily/2026-08-21.md already exists without matching daily-note front matter."
+          }
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-20\n---\n\nExisting\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "read",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "cache",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "read",
+            "path": "daily/2026-08-21.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cached metadata wins over bytes",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "old.md": "# Cached\n"
+      },
+      "cached": {
+        "old.md": {
+          "type": "daily-note",
+          "date": "2026-08-21"
+        }
+      },
+      "expected": {
+        "result": {
+          "value": "old.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "# Cached\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "cached noncanonical metadata wins",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "old.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+      },
+      "cached": {
+        "old.md": {
+          "type": "note",
+          "date": "2026-08-21"
+        }
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n",
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "canonical CRLF",
+      "date": "2026-08-21",
+      "operation": "locate",
+      "files": {
+        "old.md": "---\r\ntype: daily-note\r\ndate: 2026-08-21\r\n---\r\n\r\nExisting\r\n"
+      },
+      "expected": {
+        "result": {
+          "value": "old.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "---\r\ntype: daily-note\r\ndate: 2026-08-21\r\n---\r\n\r\nExisting\r\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "read",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "nonleading frontmatter ignored",
+      "date": "2026-08-21",
+      "operation": "locate",
+      "files": {
+        "old.md": "\n---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+      },
+      "expected": {
+        "result": {
+          "value": null,
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "\n---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "read",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "array type rejected",
+      "date": "2026-08-21",
+      "operation": "locate",
+      "files": {
+        "old.md": "# Cached\n"
+      },
+      "cached": {
+        "old.md": {
+          "type": [
+            "daily-note"
+          ],
+          "date": "2026-08-21"
+        }
+      },
+      "expected": {
+        "result": {
+          "value": null,
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "# Cached\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "date type remains strict",
+      "date": "2026-08-21",
+      "operation": "locate",
+      "files": {
+        "old.md": "# Cached\n"
+      },
+      "cached": {
+        "old.md": {
+          "type": "daily-note",
+          "date": 20260821
+        }
+      },
+      "expected": {
+        "result": {
+          "value": null,
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "# Cached\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "canonical target bypasses invalid new configuration",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "files": {
+        "old.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+      },
+      "configuration": {
+        "dailyNotes.folder": "../bad",
+        "dailyNotes.dateFormat": ""
+      },
+      "expected": {
+        "result": {
+          "value": "old.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "old.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\nExisting\n"
+        },
+        "trace": [
+          {
+            "kind": "cache",
+            "path": "old.md"
+          },
+          {
+            "kind": "read",
+            "path": "old.md"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "custom filename and nested directory",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "Journal/Daily",
+        "dailyNotes.dateFormat": "yyyy LLL dd"
+      },
+      "expected": {
+        "result": {
+          "value": "Journal/Daily/2026 Aug 21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "Journal/Daily/2026 Aug 21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "Journal/Daily"
+          },
+          {
+            "kind": "create",
+            "path": "Journal/Daily/2026 Aug 21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \" daily \"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": " daily "
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"/daily/\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "/daily/"
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"\\\\daily\\\\\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "\\daily\\"
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"one\\\\two\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "one\\two"
+      },
+      "expected": {
+        "result": {
+          "value": "one/two/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "one/two/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "one/two"
+          },
+          {
+            "kind": "create",
+            "path": "one/two/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a b/c d\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a b/c d"
+      },
+      "expected": {
+        "result": {
+          "value": "a b/c d/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "a b/c d/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "a b/c d"
+          },
+          {
+            "kind": "create",
+            "path": "a b/c d/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"﻿daily﻿\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "﻿daily﻿"
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"daily\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "daily"
+      },
+      "expected": {
+        "result": {
+          "value": "daily/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "daily/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "daily"
+          },
+          {
+            "kind": "create",
+            "path": "daily/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": ""
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \" \"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": " "
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \" \"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"/\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "/"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"/\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \".\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "."
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \".\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"..\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": ".."
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"..\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a/../b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a/../b"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a/../b\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a/./b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a/./b"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a/./b\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a//b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a//b"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a//b\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a:b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a:b"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a:b\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a\\nb\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a\nb"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a\\nb\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a\\u0000b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a\u0000b"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a\\u0000b\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a\\u001fb\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a\u001fb"
+      },
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid daily-note folder: \"a\\u001fb\"."
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"ab\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "ab"
+      },
+      "expected": {
+        "result": {
+          "value": "ab/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "ab/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "ab"
+          },
+          {
+            "kind": "create",
+            "path": "ab/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder \"a/ b\"",
+      "date": "2026-08-21",
+      "operation": "ensure",
+      "configuration": {
+        "dailyNotes.folder": "a/ b"
+      },
+      "expected": {
+        "result": {
+          "value": "a/ b/2026-08-21.md",
+          "providerId": "lapis:daily-notes"
+        },
+        "files": {
+          "a/ b/2026-08-21.md": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+        },
+        "trace": [
+          {
+            "kind": "mkpath",
+            "path": "a/ b"
+          },
+          {
+            "kind": "create",
+            "path": "a/ b/2026-08-21.md",
+            "raw": "---\ntype: daily-note\ndate: 2026-08-21\n---\n\n# 2026-08-21\n"
+          },
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "locate invalid date \"2026-02-30\"",
+      "date": "2026-02-30",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-02-30"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ensure invalid date \"2026-02-30\"",
+      "date": "2026-02-30",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-02-30"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "locate invalid date \"2026-2-01\"",
+      "date": "2026-2-01",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-2-01"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ensure invalid date \"2026-2-01\"",
+      "date": "2026-2-01",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-2-01"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "locate invalid date \"2026-08-21T00:00:00Z\"",
+      "date": "2026-08-21T00:00:00Z",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-08-21T00:00:00Z"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ensure invalid date \"2026-08-21T00:00:00Z\"",
+      "date": "2026-08-21T00:00:00Z",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: 2026-08-21T00:00:00Z"
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "locate invalid date \"\"",
+      "date": "",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: "
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ensure invalid date \"\"",
+      "date": "",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date: "
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "locate invalid date \" 2026-08-21 \"",
+      "date": " 2026-08-21 ",
+      "operation": "locate",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date:  2026-08-21 "
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ensure invalid date \" 2026-08-21 \"",
+      "date": " 2026-08-21 ",
+      "operation": "ensure",
+      "expected": {
+        "result": {
+          "error": {
+            "name": "Error",
+            "message": "Invalid local date:  2026-08-21 "
+          }
+        },
+        "files": {},
+        "trace": [
+          {
+            "kind": "unregister",
+            "schema": {
+              "id": "dailyNotes",
+              "title": "Daily notes",
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "string",
+                  "default": "daily",
+                  "title": "Folder",
+                  "description": "Vault folder used when a daily note must be created."
+                },
+                "dateFormat": {
+                  "type": "string",
+                  "default": "yyyy-MM-dd",
+                  "title": "Filename date format",
+                  "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+                }
+              }
+            }
+          }
+        ],
+        "schema": [
+          {
+            "id": "dailyNotes",
+            "title": "Daily notes",
+            "type": "object",
+            "properties": {
+              "folder": {
+                "type": "string",
+                "default": "daily",
+                "title": "Folder",
+                "description": "Vault folder used when a daily note must be created."
+              },
+              "dateFormat": {
+                "type": "string",
+                "default": "yyyy-MM-dd",
+                "title": "Filename date format",
+                "description": "Luxon date format used for new daily-note filenames. It must produce one safe filename segment."
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "registry": [
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "No daily document provider is registered."
+        }
+      },
+      "providers": [],
+      "changes": []
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": " default ",
+        "priority": 0
+      },
+      "result": {
+        "id": "default"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "selected": "default"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "override",
+        "priority": 10
+      },
+      "result": {
+        "id": "override"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "selected": "override"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "default",
+        "priority": 11
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Daily document provider already registered: default"
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "",
+        "priority": 0
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Daily document provider id must not be empty."
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "﻿",
+        "priority": 0
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Daily document provider id must not be empty."
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "infinite",
+        "priority": "Infinity"
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Daily document provider infinite must use a finite priority."
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "nan",
+        "priority": "NaN"
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Daily document provider nan must use a finite priority."
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "register",
+        "id": "other",
+        "priority": 10
+      },
+      "result": {
+        "id": "other"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        },
+        {
+          "id": "other",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "Ambiguous daily document providers: other, override"
+        }
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "override",
+          "priority": 10
+        },
+        {
+          "id": "other",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "dispose",
+        "id": "override"
+      },
+      "result": {
+        "disposed": "override"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "other",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "selected": "other"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "other",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "dispose",
+        "id": "override"
+      },
+      "result": {
+        "disposed": "override"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        },
+        {
+          "id": "other",
+          "priority": 10
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "dispose",
+        "id": "other"
+      },
+      "result": {
+        "disposed": "other"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "other",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "selected": "default"
+      },
+      "providers": [
+        {
+          "id": "default",
+          "priority": 0
+        }
+      ],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "other",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "dispose",
+        "id": "default"
+      },
+      "result": {
+        "disposed": "default"
+      },
+      "providers": [],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "other",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "default",
+          "reason": "unregistered"
+        }
+      ]
+    },
+    {
+      "action": {
+        "type": "resolve"
+      },
+      "result": {
+        "error": {
+          "name": "Error",
+          "message": "No daily document provider is registered."
+        }
+      },
+      "providers": [],
+      "changes": [
+        {
+          "providerId": "default",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "registered"
+        },
+        {
+          "providerId": "other",
+          "reason": "registered"
+        },
+        {
+          "providerId": "override",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "other",
+          "reason": "unregistered"
+        },
+        {
+          "providerId": "default",
+          "reason": "unregistered"
+        }
+      ]
+    }
+  ],
+  "contextOrigin": "Declared legacy Intl en-US week settings; not asserted as current Node defaults"
+}

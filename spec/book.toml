@@ -1,0 +1,8 @@
+[book]
+title = "Lapis Server Specification"
+authors = ["LapisMD"]
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"

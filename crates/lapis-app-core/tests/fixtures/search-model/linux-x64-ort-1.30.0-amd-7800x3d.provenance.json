@@ -1,0 +1,73 @@
+{
+  "context": "linux-x64-ort-1.30.0-amd-7800x3d",
+  "capturedAt": "2026-10-27T00:24:37.155Z",
+  "sourceRevision": "bd7a55d21e349bc6ce5208bb6895d11193919746",
+  "reference": {
+    "script": "node-cpu-reference.ts.txt",
+    "scriptSha256": "0910f508227ad106596a2dacbbca2a3802d3ebd5f31f42e4f9731863a9360df2",
+    "output": "linux-x64-ort-1.30.0-amd-7800x3d.json.txt",
+    "outputSha256": "4a5c17184d858df46f40ffdb34c78ebca1afd3dbb2327b599299efc38f13bbe6",
+    "retainedMacFixtureSha256": "fc735637f05dfd8aebce2ea75e1f5704f37248c4404ab40ef0117ded0dfcc133",
+    "comparisonSha256": "fa33db20c31e4768a560e571df693ad68e09cc06627ba10c0dfe202cea0ffef6",
+    "receiptSha256": "50cf1c2daf20850cc6d2e8181969dbdda12c05b9e48dcaf4e01345441dde0a99"
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD Ryzen 7 7800X3D 8-Core Processor",
+    "logicalCpus": 16,
+    "availableParallelism": 4,
+    "transformers": "4.3.1",
+    "onnxruntime": "1.30.0",
+    "runtime": "/work/lapis-notes/node_modules/.pnpm/onnxruntime-node@1.30.0/node_modules/onnxruntime-node/bin/napi-v6/linux/x64/libonnxruntime.so.1",
+    "runtimeSha256": "ffb75a925ba05e47b235bb66e3e3911714a80b328a9c9425539feb204aa32a23"
+  },
+  "model": {
+    "modelId": "Xenova/all-MiniLM-L6-v2",
+    "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+    "dtype": "q8",
+    "assets": [
+      {
+        "file": "config.json",
+        "bytes": 650,
+        "sha256": "7135149f7cffa1a573466c6e4d8423ed73b62fd2332c575bf738a0d033f70df7"
+      },
+      {
+        "file": "tokenizer.json",
+        "bytes": 711661,
+        "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0"
+      },
+      {
+        "file": "tokenizer_config.json",
+        "bytes": 366,
+        "sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3"
+      },
+      {
+        "file": "special_tokens_map.json",
+        "bytes": 125,
+        "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3"
+      },
+      {
+        "file": "onnx/model_quantized.onnx",
+        "bytes": 22972370,
+        "sha256": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1"
+      }
+    ]
+  },
+  "execution": {
+    "provider": "CPU",
+    "pooling": "mean",
+    "normalizedDimensions": 384,
+    "normalizationCases": [true, false],
+    "threading": "Unchanged Transformers.js and ONNX Runtime defaults",
+    "containerImage": "sha256:9fa6f3fb3c8787ac38334c121bce350f005454b079e4dbe090d5c10a6d460be9",
+    "resources": {
+      "cpus": 4,
+      "memoryGiB": 12,
+      "shmGiB": 2
+    },
+    "captureReceipt": "lapis-properties-semantic-node-reference-retry-28cb3619-c820-4efa-a24e-7b16a6f13ef6"
+  },
+  "qualification": "This exact Linux x64 AMD Ryzen 7 7800X3D CPU, ONNX Runtime binary and five model assets only. Other CPUs and platforms are unqualified. The Darwin ARM64 reference remains unchanged and separate."
+}

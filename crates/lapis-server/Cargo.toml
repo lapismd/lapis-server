@@ -1,0 +1,35 @@
+[package]
+name = "lapis-server"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Hosted HTTP adapter for shared Lapis native application services"
+
+[dependencies]
+lapis-app-core = { path = "../lapis-app-core" }
+lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
+lapis-app-protocol = { path = "../lapis-app-protocol" }
+axum = { version = "=0.8.9", default-features = false, features = ["http1", "json", "query", "tokio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "=0.10.9"
+futures-util = { version = "=0.3.34", default-features = false, features = ["std"] }
+mime_guess = "=2.0.5"
+tempfile = "=3.27.0"
+tokio-util = { version = "=0.7.20", features = ["io"] }
+subtle = "=2.6.1"
+base64 = "=0.22.1"
+getrandom = "=0.4.3"
+scrypt = { version = "=0.11.0", default-features = false, features = ["std"] }
+turso = { version = "=0.7.2", default-features = false }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "signal", "time", "fs", "io-util", "sync"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+reqwest = { version = "=0.12.28", default-features = false, features = ["rustls-tls", "stream"] }
+
+[dev-dependencies]
+zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+jj-store-jj = { path = "../../../jj-store/crates/jj-store-jj", version = "0.1.0", default-features = false, features = ["vault-backup"] }
+reqwest = { version = "=0.12.28", default-features = false, features = ["json", "stream"] }
+tokio = { version = "1", features = ["process", "io-util", "time"] }

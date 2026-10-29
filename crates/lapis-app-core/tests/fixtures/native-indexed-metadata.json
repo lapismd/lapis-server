@@ -1,0 +1,1107 @@
+[
+  {
+    "name": "relative fragment and image target resolution",
+    "path": "Folder/Source.md",
+    "files": [
+      "Deep/Target.md",
+      "Folder/Source.md",
+      "Folder/Target.md",
+      "Target.md",
+      "assets/logo.png"
+    ],
+    "text": "# Source\n[[Target]] [Root](../Target.md) [[#Heading]] [[Target#Heading|Shown]] [Logo](../assets/logo.png)\n",
+    "declared": {},
+    "mtime": 1,
+    "size": 106,
+    "hash": "45cf4e16285327c12115b7b8885b7f7f",
+    "cache": {
+      "headings": [
+        {
+          "heading": "Source",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 8,
+              "offset": 8
+            }
+          }
+        }
+      ],
+      "links": [
+        {
+          "link": "Target",
+          "original": "[[Target]]",
+          "displayText": "Target",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 0,
+              "offset": 9
+            },
+            "end": {
+              "line": 1,
+              "col": 10,
+              "offset": 19
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "#Heading",
+          "original": "[[#Heading]]",
+          "displayText": "#Heading",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 32,
+              "offset": 41
+            },
+            "end": {
+              "line": 1,
+              "col": 44,
+              "offset": 53
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "Target#Heading|Shown",
+          "original": "[[Target#Heading|Shown]]",
+          "displayText": "Shown",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 45,
+              "offset": 54
+            },
+            "end": {
+              "line": 1,
+              "col": 69,
+              "offset": 78
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "../Target.md",
+          "original": "[Root](../Target.md)",
+          "displayText": "Root",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 11,
+              "offset": 20
+            },
+            "end": {
+              "line": 1,
+              "col": 31,
+              "offset": 40
+            }
+          },
+          "heading": "Source"
+        },
+        {
+          "link": "../assets/logo.png",
+          "original": "[Logo](../assets/logo.png)",
+          "displayText": "Logo",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 70,
+              "offset": 79
+            },
+            "end": {
+              "line": 1,
+              "col": 96,
+              "offset": 105
+            }
+          },
+          "heading": "Source"
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#Heading",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 34,
+              "offset": 43
+            },
+            "end": {
+              "line": 1,
+              "col": 42,
+              "offset": 51
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "file": {
+        "path": "Folder/Source.md",
+        "normalizedPath": "Folder/Source.md",
+        "extension": "md",
+        "mtime": 1,
+        "size": 106,
+        "hash": "45cf4e16285327c12115b7b8885b7f7f",
+        "indexed": true
+      },
+      "metadata": {
+        "path": "Folder/Source.md",
+        "hash": "45cf4e16285327c12115b7b8885b7f7f",
+        "parserVersion": "metadata-cache-v2:md:0",
+        "metadata": {
+          "headings": [
+            {
+              "heading": "Source",
+              "level": 1,
+              "position": {
+                "start": {
+                  "line": 0,
+                  "col": 0,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 0,
+                  "col": 8,
+                  "offset": 8
+                }
+              }
+            }
+          ],
+          "links": [
+            {
+              "link": "Target",
+              "original": "[[Target]]",
+              "displayText": "Target",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 0,
+                  "offset": 9
+                },
+                "end": {
+                  "line": 1,
+                  "col": 10,
+                  "offset": 19
+                }
+              },
+              "heading": "Source"
+            },
+            {
+              "link": "#Heading",
+              "original": "[[#Heading]]",
+              "displayText": "#Heading",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 32,
+                  "offset": 41
+                },
+                "end": {
+                  "line": 1,
+                  "col": 44,
+                  "offset": 53
+                }
+              },
+              "heading": "Source"
+            },
+            {
+              "link": "Target#Heading|Shown",
+              "original": "[[Target#Heading|Shown]]",
+              "displayText": "Shown",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 45,
+                  "offset": 54
+                },
+                "end": {
+                  "line": 1,
+                  "col": 69,
+                  "offset": 78
+                }
+              },
+              "heading": "Source"
+            },
+            {
+              "link": "../Target.md",
+              "original": "[Root](../Target.md)",
+              "displayText": "Root",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 11,
+                  "offset": 20
+                },
+                "end": {
+                  "line": 1,
+                  "col": 31,
+                  "offset": 40
+                }
+              },
+              "heading": "Source"
+            },
+            {
+              "link": "../assets/logo.png",
+              "original": "[Logo](../assets/logo.png)",
+              "displayText": "Logo",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 70,
+                  "offset": 79
+                },
+                "end": {
+                  "line": 1,
+                  "col": 96,
+                  "offset": 105
+                }
+              },
+              "heading": "Source"
+            }
+          ],
+          "tags": [
+            {
+              "tag": "#Heading",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "col": 34,
+                  "offset": 43
+                },
+                "end": {
+                  "line": 1,
+                  "col": 42,
+                  "offset": 51
+                }
+              }
+            }
+          ]
+        }
+      },
+      "links": [
+        {
+          "sourcePath": "Folder/Source.md",
+          "targetText": "Target",
+          "original": "[[Target]]",
+          "resolvedTargetPath": "Folder/Target.md",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 0,
+              "offset": 9
+            },
+            "end": {
+              "line": 1,
+              "col": 10,
+              "offset": 19
+            }
+          },
+          "count": 1,
+          "heading": "Source",
+          "kind": "reference",
+          "ordinal": 0
+        },
+        {
+          "sourcePath": "Folder/Source.md",
+          "targetText": "#Heading",
+          "original": "[[#Heading]]",
+          "resolvedTargetPath": null,
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 32,
+              "offset": 41
+            },
+            "end": {
+              "line": 1,
+              "col": 44,
+              "offset": 53
+            }
+          },
+          "count": 1,
+          "heading": "Source",
+          "kind": "reference",
+          "ordinal": 1
+        },
+        {
+          "sourcePath": "Folder/Source.md",
+          "targetText": "Target#Heading|Shown",
+          "original": "[[Target#Heading|Shown]]",
+          "resolvedTargetPath": "Folder/Target.md",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 45,
+              "offset": 54
+            },
+            "end": {
+              "line": 1,
+              "col": 69,
+              "offset": 78
+            }
+          },
+          "count": 1,
+          "heading": "Source",
+          "kind": "reference",
+          "ordinal": 2
+        },
+        {
+          "sourcePath": "Folder/Source.md",
+          "targetText": "../Target.md",
+          "original": "[Root](../Target.md)",
+          "resolvedTargetPath": "Target.md",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 11,
+              "offset": 20
+            },
+            "end": {
+              "line": 1,
+              "col": 31,
+              "offset": 40
+            }
+          },
+          "count": 1,
+          "heading": "Source",
+          "kind": "reference",
+          "ordinal": 3
+        },
+        {
+          "sourcePath": "Folder/Source.md",
+          "targetText": "../assets/logo.png",
+          "original": "[Logo](../assets/logo.png)",
+          "resolvedTargetPath": "assets/logo.png",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 70,
+              "offset": 79
+            },
+            "end": {
+              "line": 1,
+              "col": 96,
+              "offset": 105
+            }
+          },
+          "count": 1,
+          "heading": "Source",
+          "kind": "reference",
+          "ordinal": 4
+        }
+      ],
+      "tags": [
+        {
+          "path": "Folder/Source.md",
+          "tag": "#Heading",
+          "parts": ["Heading"],
+          "hierarchy": ["Heading"],
+          "position": {
+            "start": {
+              "line": 1,
+              "col": 34,
+              "offset": 43
+            },
+            "end": {
+              "line": 1,
+              "col": 42,
+              "offset": 51
+            }
+          }
+        }
+      ],
+      "properties": []
+    }
+  },
+  {
+    "name": "same basenames and unresolved links",
+    "path": "Area/Source.md",
+    "files": ["Area/Source.md", "Else/Target.md", "More/Target.md"],
+    "text": "[[Target]] [[Missing]] [[Target.MD]] [[https://example.org]]\n",
+    "declared": {},
+    "mtime": 1,
+    "size": 61,
+    "hash": "b6f6c8f221a474efd98fb8b3441b9054",
+    "cache": {
+      "links": [
+        {
+          "link": "Target",
+          "original": "[[Target]]",
+          "displayText": "Target",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 10,
+              "offset": 10
+            }
+          }
+        },
+        {
+          "link": "Missing",
+          "original": "[[Missing]]",
+          "displayText": "Missing",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 11,
+              "offset": 11
+            },
+            "end": {
+              "line": 0,
+              "col": 22,
+              "offset": 22
+            }
+          }
+        },
+        {
+          "link": "Target.MD",
+          "original": "[[Target.MD]]",
+          "displayText": "Target.MD",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 23,
+              "offset": 23
+            },
+            "end": {
+              "line": 0,
+              "col": 36,
+              "offset": 36
+            }
+          }
+        },
+        {
+          "link": "https://example.org",
+          "original": "[[https://example.org]]",
+          "displayText": "https://example.org",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 37,
+              "offset": 37
+            },
+            "end": {
+              "line": 0,
+              "col": 60,
+              "offset": 60
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "file": {
+        "path": "Area/Source.md",
+        "normalizedPath": "Area/Source.md",
+        "extension": "md",
+        "mtime": 1,
+        "size": 61,
+        "hash": "b6f6c8f221a474efd98fb8b3441b9054",
+        "indexed": true
+      },
+      "metadata": {
+        "path": "Area/Source.md",
+        "hash": "b6f6c8f221a474efd98fb8b3441b9054",
+        "parserVersion": "metadata-cache-v2:md:0",
+        "metadata": {
+          "links": [
+            {
+              "link": "Target",
+              "original": "[[Target]]",
+              "displayText": "Target",
+              "position": {
+                "start": {
+                  "line": 0,
+                  "col": 0,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 0,
+                  "col": 10,
+                  "offset": 10
+                }
+              }
+            },
+            {
+              "link": "Missing",
+              "original": "[[Missing]]",
+              "displayText": "Missing",
+              "position": {
+                "start": {
+                  "line": 0,
+                  "col": 11,
+                  "offset": 11
+                },
+                "end": {
+                  "line": 0,
+                  "col": 22,
+                  "offset": 22
+                }
+              }
+            },
+            {
+              "link": "Target.MD",
+              "original": "[[Target.MD]]",
+              "displayText": "Target.MD",
+              "position": {
+                "start": {
+                  "line": 0,
+                  "col": 23,
+                  "offset": 23
+                },
+                "end": {
+                  "line": 0,
+                  "col": 36,
+                  "offset": 36
+                }
+              }
+            },
+            {
+              "link": "https://example.org",
+              "original": "[[https://example.org]]",
+              "displayText": "https://example.org",
+              "position": {
+                "start": {
+                  "line": 0,
+                  "col": 37,
+                  "offset": 37
+                },
+                "end": {
+                  "line": 0,
+                  "col": 60,
+                  "offset": 60
+                }
+              }
+            }
+          ]
+        }
+      },
+      "links": [
+        {
+          "sourcePath": "Area/Source.md",
+          "targetText": "Target",
+          "original": "[[Target]]",
+          "resolvedTargetPath": "Else/Target.md",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 0,
+              "col": 10,
+              "offset": 10
+            }
+          },
+          "count": 1,
+          "heading": null,
+          "kind": "reference",
+          "ordinal": 0
+        },
+        {
+          "sourcePath": "Area/Source.md",
+          "targetText": "Missing",
+          "original": "[[Missing]]",
+          "resolvedTargetPath": null,
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 11,
+              "offset": 11
+            },
+            "end": {
+              "line": 0,
+              "col": 22,
+              "offset": 22
+            }
+          },
+          "count": 1,
+          "heading": null,
+          "kind": "reference",
+          "ordinal": 1
+        },
+        {
+          "sourcePath": "Area/Source.md",
+          "targetText": "Target.MD",
+          "original": "[[Target.MD]]",
+          "resolvedTargetPath": "Else/Target.md",
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 23,
+              "offset": 23
+            },
+            "end": {
+              "line": 0,
+              "col": 36,
+              "offset": 36
+            }
+          },
+          "count": 1,
+          "heading": null,
+          "kind": "reference",
+          "ordinal": 2
+        },
+        {
+          "sourcePath": "Area/Source.md",
+          "targetText": "https://example.org",
+          "original": "[[https://example.org]]",
+          "resolvedTargetPath": null,
+          "type": "link",
+          "position": {
+            "start": {
+              "line": 0,
+              "col": 37,
+              "offset": 37
+            },
+            "end": {
+              "line": 0,
+              "col": 60,
+              "offset": 60
+            }
+          },
+          "count": 1,
+          "heading": null,
+          "kind": "reference",
+          "ordinal": 3
+        }
+      ],
+      "tags": [],
+      "properties": []
+    }
+  },
+  {
+    "name": "frontmatter types tags hierarchy and duplicates",
+    "path": "Note.md",
+    "files": ["Note.md"],
+    "text": "---\ntitle: Café 📝\ntags: [team/notes, project alpha, not:valid, null, true, 42]\ntag: inbox, waiting; next\naliases: [One, Two]\ncheck: false\nnumber: 2\nnone: null\nlist: [one, 2]\nnested:\n  item: value\ndate: 2026-10-25\n---\n# Heading\n#team/notes #same #same #unicodeé\n",
+    "declared": {
+      "title": "multitext",
+      "number": "text"
+    },
+    "mtime": 1,
+    "size": 266,
+    "hash": "8c205890ef246d03d62fcdeab0423b8e",
+    "cache": {
+      "frontmatter": {
+        "title": "Café 📝",
+        "tags": ["team/notes", "project alpha", "not:valid", null, true, 42],
+        "tag": "inbox, waiting; next",
+        "aliases": ["One", "Two"],
+        "check": false,
+        "number": 2,
+        "none": null,
+        "list": ["one", 2],
+        "nested": {
+          "item": "value"
+        },
+        "date": "2026-10-25"
+      },
+      "frontmatterPosition": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 13,
+          "col": 0,
+          "offset": 218
+        }
+      },
+      "headings": [
+        {
+          "heading": "Heading",
+          "level": 1,
+          "position": {
+            "start": {
+              "line": 13,
+              "col": 0,
+              "offset": 218
+            },
+            "end": {
+              "line": 13,
+              "col": 9,
+              "offset": 227
+            }
+          }
+        }
+      ],
+      "tags": [
+        {
+          "tag": "#team/notes",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 228
+            },
+            "end": {
+              "line": 14,
+              "col": 11,
+              "offset": 239
+            }
+          }
+        },
+        {
+          "tag": "#same",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 12,
+              "offset": 240
+            },
+            "end": {
+              "line": 14,
+              "col": 17,
+              "offset": 245
+            }
+          }
+        },
+        {
+          "tag": "#same",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 18,
+              "offset": 246
+            },
+            "end": {
+              "line": 14,
+              "col": 23,
+              "offset": 251
+            }
+          }
+        },
+        {
+          "tag": "#unicode",
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 24,
+              "offset": 252
+            },
+            "end": {
+              "line": 14,
+              "col": 32,
+              "offset": 260
+            }
+          }
+        }
+      ]
+    },
+    "expected": {
+      "file": {
+        "path": "Note.md",
+        "normalizedPath": "Note.md",
+        "extension": "md",
+        "mtime": 1,
+        "size": 266,
+        "hash": "8c205890ef246d03d62fcdeab0423b8e",
+        "indexed": true
+      },
+      "metadata": {
+        "path": "Note.md",
+        "hash": "8c205890ef246d03d62fcdeab0423b8e",
+        "parserVersion": "metadata-cache-v2:md:0",
+        "metadata": {
+          "frontmatter": {
+            "title": "Café 📝",
+            "tags": [
+              "team/notes",
+              "project alpha",
+              "not:valid",
+              null,
+              true,
+              42
+            ],
+            "tag": "inbox, waiting; next",
+            "aliases": ["One", "Two"],
+            "check": false,
+            "number": 2,
+            "none": null,
+            "list": ["one", 2],
+            "nested": {
+              "item": "value"
+            },
+            "date": "2026-10-25"
+          },
+          "frontmatterPosition": {
+            "start": {
+              "line": 0,
+              "col": 0,
+              "offset": 0
+            },
+            "end": {
+              "line": 13,
+              "col": 0,
+              "offset": 218
+            }
+          },
+          "headings": [
+            {
+              "heading": "Heading",
+              "level": 1,
+              "position": {
+                "start": {
+                  "line": 13,
+                  "col": 0,
+                  "offset": 218
+                },
+                "end": {
+                  "line": 13,
+                  "col": 9,
+                  "offset": 227
+                }
+              }
+            }
+          ],
+          "tags": [
+            {
+              "tag": "#team/notes",
+              "position": {
+                "start": {
+                  "line": 14,
+                  "col": 0,
+                  "offset": 228
+                },
+                "end": {
+                  "line": 14,
+                  "col": 11,
+                  "offset": 239
+                }
+              }
+            },
+            {
+              "tag": "#same",
+              "position": {
+                "start": {
+                  "line": 14,
+                  "col": 12,
+                  "offset": 240
+                },
+                "end": {
+                  "line": 14,
+                  "col": 17,
+                  "offset": 245
+                }
+              }
+            },
+            {
+              "tag": "#same",
+              "position": {
+                "start": {
+                  "line": 14,
+                  "col": 18,
+                  "offset": 246
+                },
+                "end": {
+                  "line": 14,
+                  "col": 23,
+                  "offset": 251
+                }
+              }
+            },
+            {
+              "tag": "#unicode",
+              "position": {
+                "start": {
+                  "line": 14,
+                  "col": 24,
+                  "offset": 252
+                },
+                "end": {
+                  "line": 14,
+                  "col": 32,
+                  "offset": 260
+                }
+              }
+            }
+          ]
+        }
+      },
+      "links": [],
+      "tags": [
+        {
+          "path": "Note.md",
+          "tag": "#team/notes",
+          "parts": ["team", "notes"],
+          "hierarchy": ["team", "team/notes"],
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 0,
+              "offset": 228
+            },
+            "end": {
+              "line": 14,
+              "col": 11,
+              "offset": 239
+            }
+          }
+        },
+        {
+          "path": "Note.md",
+          "tag": "#same",
+          "parts": ["same"],
+          "hierarchy": ["same"],
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 18,
+              "offset": 246
+            },
+            "end": {
+              "line": 14,
+              "col": 23,
+              "offset": 251
+            }
+          }
+        },
+        {
+          "path": "Note.md",
+          "tag": "#unicode",
+          "parts": ["unicode"],
+          "hierarchy": ["unicode"],
+          "position": {
+            "start": {
+              "line": 14,
+              "col": 24,
+              "offset": 252
+            },
+            "end": {
+              "line": 14,
+              "col": 32,
+              "offset": 260
+            }
+          }
+        },
+        {
+          "path": "Note.md",
+          "tag": "#project alpha",
+          "parts": ["project alpha"],
+          "hierarchy": ["project alpha"]
+        },
+        {
+          "path": "Note.md",
+          "tag": "#true",
+          "parts": ["true"],
+          "hierarchy": ["true"]
+        },
+        {
+          "path": "Note.md",
+          "tag": "#42",
+          "parts": ["42"],
+          "hierarchy": ["42"]
+        },
+        {
+          "path": "Note.md",
+          "tag": "#inbox",
+          "parts": ["inbox"],
+          "hierarchy": ["inbox"]
+        },
+        {
+          "path": "Note.md",
+          "tag": "#waiting",
+          "parts": ["waiting"],
+          "hierarchy": ["waiting"]
+        },
+        {
+          "path": "Note.md",
+          "tag": "#next",
+          "parts": ["next"],
+          "hierarchy": ["next"]
+        }
+      ],
+      "properties": [
+        {
+          "path": "Note.md",
+          "name": "title",
+          "inferredType": "text",
+          "declaredType": "multitext",
+          "value": "Café 📝"
+        },
+        {
+          "path": "Note.md",
+          "name": "tags",
+          "inferredType": "tags",
+          "value": ["team/notes", "project alpha", "not:valid", null, true, 42]
+        },
+        {
+          "path": "Note.md",
+          "name": "tag",
+          "inferredType": "tags",
+          "value": "inbox, waiting; next"
+        },
+        {
+          "path": "Note.md",
+          "name": "aliases",
+          "inferredType": "aliases",
+          "value": ["One", "Two"]
+        },
+        {
+          "path": "Note.md",
+          "name": "check",
+          "inferredType": "checkbox",
+          "value": false
+        },
+        {
+          "path": "Note.md",
+          "name": "number",
+          "inferredType": "number",
+          "declaredType": "text",
+          "value": 2
+        },
+        {
+          "path": "Note.md",
+          "name": "none",
+          "inferredType": "text",
+          "value": null
+        },
+        {
+          "path": "Note.md",
+          "name": "list",
+          "inferredType": "multitext",
+          "value": ["one", 2]
+        },
+        {
+          "path": "Note.md",
+          "name": "nested",
+          "inferredType": "object",
+          "value": {
+            "item": "value"
+          }
+        },
+        {
+          "path": "Note.md",
+          "name": "date",
+          "inferredType": "date",
+          "value": "2026-10-25"
+        }
+      ]
+    }
+  }
+]
