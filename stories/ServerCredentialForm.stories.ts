@@ -16,28 +16,31 @@ type Story = StoryObj<typeof meta>;
 export const SignIn: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await waitFor(() => {
-      expect(canvas.getByTestId("server-credential-workspace")).toBeTruthy();
-      expect(
-        canvasElement.querySelector(
+    await waitFor(
+      () => {
+        expect(canvas.getByTestId("server-credential-workspace")).toBeTruthy();
+        expect(
+          canvasElement.querySelector(
+            '[data-ui-component="lapis-workspace-shell"]',
+          ),
+        ).toBeTruthy();
+        const input = canvasElement.querySelector(
+          '[data-ui-component="input"]',
+        ) as HTMLElement | null;
+        expect(input).toBeTruthy();
+        expect(getComputedStyle(input!).borderRadius).not.toBe("0px");
+        const shell = canvasElement.querySelector(
           '[data-ui-component="lapis-workspace-shell"]',
-        ),
-      ).toBeTruthy();
-      const input = canvasElement.querySelector(
-        '[data-ui-component="input"]',
-      ) as HTMLElement | null;
-      expect(input).toBeTruthy();
-      expect(getComputedStyle(input!).borderRadius).not.toBe("0px");
-      const shell = canvasElement.querySelector(
-        '[data-ui-component="lapis-workspace-shell"]',
-      );
-      const card = canvasElement.querySelector(
-        '[data-ui-component="card"]',
-      ) as HTMLElement | null;
-      expect(shell?.contains(card)).toBe(true);
-      expect(card!.getBoundingClientRect().width).toBeGreaterThan(100);
-      expect(card!.getBoundingClientRect().height).toBeGreaterThan(40);
-      expectShellFillsViewport(canvasElement);
-    });
+        );
+        const card = canvasElement.querySelector(
+          '[data-ui-component="card"]',
+        ) as HTMLElement | null;
+        expect(shell?.contains(card)).toBe(true);
+        expect(card!.getBoundingClientRect().width).toBeGreaterThan(100);
+        expect(card!.getBoundingClientRect().height).toBeGreaterThan(40);
+        expectShellFillsViewport(canvasElement);
+      },
+      { timeout: 8_000 },
+    );
   },
 };

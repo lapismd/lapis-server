@@ -27,12 +27,16 @@
       const main = node.ownerDocument.querySelector(
         "[data-ui-component='lapis-workspace-shell'] [data-ui-component='app-shell-main']",
       );
-      if (main && node.parentElement !== main) main.append(node);
-      return Boolean(main);
+      if (!main) return false;
+      main.classList.add("app-shell-main");
+      if (node.parentElement !== main) main.append(node);
+      return true;
     };
     if (move()) return;
-    const frame = requestAnimationFrame(move);
-    return () => cancelAnimationFrame(frame);
+    const timer = window.setInterval(() => {
+      if (move()) window.clearInterval(timer);
+    }, 50);
+    return () => window.clearInterval(timer);
   }
 
   onMount(() => {
@@ -106,11 +110,11 @@
     min-height: 100vh;
   }
 
-  :global(
-    [data-ui-component="lapis-workspace-shell"]
-      [data-ui-component="app-shell-main"]
-  ) {
-    position: relative;
+  :global(.app-shell-main) {
+    height: 100vh;
+    max-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   .credential-form {
