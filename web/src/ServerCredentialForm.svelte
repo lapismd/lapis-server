@@ -23,18 +23,19 @@
   let password = $state("");
 
   function placeInShell(node: HTMLElement) {
+    let attempts = 0;
     const move = () => {
       const main = node.ownerDocument.querySelector(
         "[data-ui-component='lapis-workspace-shell'] [data-ui-component='app-shell-main']",
       );
-      if (!main) return false;
-      main.classList.add("app-shell-main");
+      if (!(main instanceof HTMLElement)) return false;
       if (node.parentElement !== main) main.append(node);
       return true;
     };
     if (move()) return;
     const timer = window.setInterval(() => {
-      if (move()) window.clearInterval(timer);
+      attempts += 1;
+      if (move() || attempts > 40) window.clearInterval(timer);
     }, 50);
     return () => window.clearInterval(timer);
   }
@@ -110,14 +111,16 @@
     min-height: 100vh;
   }
 
-  :global(.app-shell-main) {
-    height: 100vh;
-    max-height: 100vh;
-    padding: 0;
-    box-sizing: border-box;
+  :global(
+    [data-ui-component="lapis-workspace-shell"]
+      [data-ui-component="app-shell-main"]
+  ) {
+    position: relative;
   }
 
   .credential-form {
+    position: absolute;
+    inset: 0;
     display: grid;
     place-items: center;
     width: 100%;
