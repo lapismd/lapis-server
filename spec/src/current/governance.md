@@ -15,4 +15,5 @@ image build run in this repository.
 ### Acceptance details
 
 - Spec-validator enforces the line and byte limits.
+- CI installs mdbook 0.5.4 before the specification check.
 - Notes CI does not run server acceptance.
