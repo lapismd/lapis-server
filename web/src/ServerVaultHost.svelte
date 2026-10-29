@@ -33,7 +33,7 @@
     archiveServerImportDirectory,
     canPickServerImportDirectory,
   } from "./server-vault-import";
-  import WebWorkspaceSession from "@lapis-notes/web/src/WebWorkspaceSession.svelte";
+  import WebWorkspaceSession from "@lapis-notes/web/session";
 
   type VaultRow = HostedVault;
   type Prepared = HostedResources & {

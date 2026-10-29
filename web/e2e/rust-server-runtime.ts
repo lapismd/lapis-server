@@ -127,21 +127,20 @@ export class RustServerRuntime {
       });
     });
     if (!this.staticRoot) {
-      this.#spawn(
-        process.execPath,
-        [
-          join(this.repository, "packages/web/node_modules/vite/bin/vite.js"),
-          "preview",
-          "--mode",
-          "server-rust",
-          "--host",
-          "127.0.0.1",
-          "--port",
-          new URL(this.origin).port,
-        ],
-        join(this.repository, "packages/web"),
-        { ...process.env, LAPIS_RUST_SERVER_URL: address },
-      );
+    this.#spawn(
+      process.execPath,
+      [
+        join(this.repository, "node_modules/vite/bin/vite.js"),
+        "preview",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        new URL(this.origin).port,
+        "--strictPort",
+      ],
+      join(this.repository, "web"),
+      { ...process.env, LAPIS_RUST_SERVER_URL: address },
+    );
     }
     const until = Date.now() + 15_000;
     while (Date.now() < until) {

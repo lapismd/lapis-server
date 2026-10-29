@@ -1,4 +1,6 @@
 node_modules
+vendor
+test-results
 target
 .local
 spec/book

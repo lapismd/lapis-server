@@ -6,6 +6,10 @@
 Specification: <https://lapismd.github.io/lapis-server/>.
 Storybook: <https://lapismd.github.io/lapis-server/storybook/>.
 
+This repository is the UI for operating Notes, backed by this server. It mounts
+`WorkspaceShell` from `@lapis-notes/workspace` through `WebWorkspaceSession` at
+`@lapis-notes/web/session`. Those packages stay in lapis-notes.
+
 The public image is `ghcr.io/lapismd/lapis-server`. It listens on port `8787`,
 stores the profile on `/data`, and reports readiness at
 `http://127.0.0.1:8787/readyz`.

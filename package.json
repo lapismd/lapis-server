@@ -2,7 +2,7 @@
   "name": "@lapismd/lapis-server",
   "version": "0.1.0",
   "private": true,
-  "description": "Hosted Lapis server image",
+  "description": "Hosted Notes UI backed by the Lapis server",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -21,18 +21,33 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "configure": "node scripts/configure.mjs"
+    "build-storybook": "node scripts/prepare-notes-ui.mjs && storybook build",
+    "configure": "node scripts/configure.mjs",
+    "test:hosted-ui": "node scripts/prepare-notes-ui.mjs && vite build --config web/vite.config.ts && playwright test -c web/playwright.hosted-notes.config.ts"
+  },
+  "dependencies": {
+    "@lapis-notes/api": "workspace:*",
+    "@lapis-notes/web": "workspace:*",
+    "@lapis-notes/workspace": "workspace:*",
+    "@lapismd/design-core": "^0.7.0",
+    "@lapismd/jj-history": "~0.1.0",
+    "@lucide/svelte": "^0.523.0",
+    "fflate": "^0.8.3",
+    "@lapis-notes/app-profile": "workspace:*"
   },
   "devDependencies": {
     "@lapismd/spec-validator": "^0.2.0",
+    "@playwright/test": "1.61.1",
     "@storybook/svelte-vite": "^10.6.5",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@testing-library/svelte": "^5.4.2",
+    "jsdom": "^26.1.0",
     "prettier": "3.6.2",
     "prettier-plugin-svelte": "^4.1.1",
     "storybook": "^10.6.5",
     "svelte": "^5.57.3",
     "typescript": "^5.9.3",
-    "vite": "^6.4.5"
+    "vite": "^6.4.5",
+    "vitest": "^5.0.5"
   }
 }

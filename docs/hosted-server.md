@@ -40,8 +40,10 @@ curl --fail --silent http://127.0.0.1:8787/readyz
 Compose reads the bootstrap password from `LAPIS_SERVER_PASSWORD_FILE`. Point
 that variable at a file outside this checkout. The compose secret mounts the
 file at `/run/secrets/lapis_bootstrap_password`. Do not commit the password
-file, and do not pass the password on the command line. The bootstrap username
-is `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
+file, and do not pass the password on the command line. That file is the
+owner password only when the profile has no owner yet. An existing profile
+keeps the password from its first start. The bootstrap username is
+`LAPIS_SERVER_BOOTSTRAP_USERNAME`.
 
 ## Build context
 

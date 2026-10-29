@@ -21,6 +21,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: lapismd/lapis-notes
+          ref: release/public-notes-candidate
+          path: vendor/lapis-notes
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:
@@ -49,6 +54,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: lapismd/lapis-notes
+          ref: release/public-notes-candidate
+          path: vendor/lapis-notes
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v6
         with:

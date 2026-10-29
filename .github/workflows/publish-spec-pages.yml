@@ -27,6 +27,13 @@ jobs:
       - name: Check out the default branch
         uses: actions/checkout@v6
 
+      - name: Check out unpublished Notes packages
+        uses: actions/checkout@v6
+        with:
+          repository: lapismd/lapis-notes
+          ref: release/public-notes-candidate
+          path: vendor/lapis-notes
+
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
 
