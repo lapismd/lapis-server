@@ -33,7 +33,7 @@
     archiveServerImportDirectory,
     canPickServerImportDirectory,
   } from "./server-vault-import";
-  import WebWorkspaceSession from "@lapis-notes/web/session";
+  import ServerWorkspaceSession from "./ServerWorkspaceSession.svelte";
 
   type VaultRow = HostedVault;
   type Prepared = HostedResources & {
@@ -405,17 +405,13 @@
       hidden={hostState !== "workspace" && hostState !== "opening"}
       inert={hostState !== "workspace" && hostState !== "opening"}
     >
-      <WebWorkspaceSession
+      <ServerWorkspaceSession
         bind:this={sessionComponent}
-        adapter={prepared.adapter}
         profile={prepared.profile}
         session={prepared.session}
-        runtime={backend.runtime}
         listProfiles={async () => activeProfiles()}
         pluginAssetServer={prepared.pluginAssetServer}
         pluginDistributionOptions={prepared.pluginDistributionOptions}
-        nativeChat={prepared.nativeChat}
-        repositoryFactory={prepared.repositoryFactory}
         onReady={() => (hostState = "workspace")}
         onOpenRecent={async (profile) => {
           const row = vaults.find((vault) => vault.id === profile.id);

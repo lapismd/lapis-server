@@ -16,11 +16,13 @@ export const HostedNotes: Story = {
     const canvas = within(canvasElement);
     await waitFor(() => {
       expect(canvas.getByTestId("hosted-notes-workspace")).toHaveAttribute(
-        "data-session-export",
+        "data-shell-export",
         "function",
       );
       expect(
-        canvasElement.querySelector('[data-ui-component="lapis-workspace-shell"]'),
+        canvasElement.querySelector(
+          '[data-ui-component="lapis-workspace-shell"]',
+        ),
       ).toBeTruthy();
     });
   },

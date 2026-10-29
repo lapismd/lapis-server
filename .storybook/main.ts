@@ -9,7 +9,11 @@ const config: StorybookConfig = {
     options: { docgen: false },
   },
   async viteFinal(config) {
-    return mergeConfig(config, { plugins: [svelte()] });
+    const base = process.env.STORYBOOK_BASE_PATH;
+    return mergeConfig(config, {
+      plugins: [svelte()],
+      ...(base ? { base } : {}),
+    });
   },
 };
 

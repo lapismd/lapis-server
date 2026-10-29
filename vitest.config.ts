@@ -3,8 +3,11 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [svelte({ hot: false })],
+  resolve: { conditions: ["browser"] },
+  ssr: { noExternal: ["lucide-static"] },
   test: {
     environment: "jsdom",
     include: ["web/src/hosted-notes-ui.test.ts"],
+    setupFiles: ["./vitest.setup.ts"],
   },
 });

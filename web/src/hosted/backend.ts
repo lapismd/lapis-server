@@ -3,12 +3,30 @@ import type { NativeEditingIntents } from "@lapis-notes/api/native-editing-inten
 import type { RepositoryServices } from "../history/services";
 import type { NativeHistoryIndex } from "@lapis-notes/api/native-history-index";
 import type { App, NativeBackgroundIndexing } from "@lapis-notes/api";
-import type { NativeChatHost } from "@lapis-notes/app-profile/native-chat";
+import type {
+  NativeParticipantService,
+  NativeQueueService,
+  NativeTurnService,
+} from "@lapis-notes/api/native-turns";
 import type { AppDatabaseProvider } from "@lapis-notes/api/app-database";
 import type { ServerVaultProfile } from "@lapis-notes/api/server-host";
 import type { VaultAdapter } from "@lapis-notes/api/vault";
 import type { AppPluginDistributionOptions } from "@lapis-notes/api";
 import type { PluginAssetServer } from "@lapis-notes/api/plugin-assets";
+
+export type ServerNativeChatLeave = "detach" | "close" | "disable";
+
+export interface ServerNativeChatHost extends NativeTurnService {
+  queue?: NativeQueueService & {
+    selection(targetId: string): Promise<unknown>;
+  };
+  participants?: NativeParticipantService;
+  allowed(): boolean;
+  activate(): Promise<void>;
+  leave(reason: ServerNativeChatLeave): Promise<void>;
+  readText(path: string): Promise<string>;
+  report?(error: Error): void;
+}
 
 export type HostedVault = {
   id: string;
@@ -20,7 +38,7 @@ export type HostedResources = {
   nativeTasks?: NativeTasks;
   nativeEditingIntents?: NativeEditingIntents;
   repositoryFactory?: (app: App) => RepositoryServices;
-  nativeChat?: (app: App) => NativeChatHost;
+  nativeChat?: (app: App) => ServerNativeChatHost;
   backgroundIndexing?: NativeBackgroundIndexing;
   nativeHistoryIndex?: NativeHistoryIndex;
   adapter: VaultAdapter;

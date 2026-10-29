@@ -1,7 +1,0 @@
-packages:
-  - "vendor/lapis-notes/packages/api"
-  - "vendor/lapis-notes/packages/app-profile"
-  - "vendor/lapis-notes/packages/file-explorer"
-  - "vendor/lapis-notes/packages/ui"
-  - "vendor/lapis-notes/packages/web"
-  - "vendor/lapis-notes/packages/workspace"
