@@ -17,4 +17,4 @@ image build run in this repository.
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check.
 - Notes CI does not run server acceptance.
-- GitHub Pages publishes this specification at `/lapis-server/` and Storybook at `/lapis-server/storybook/`.
+- GitHub Pages publishes this specification at `/lapis-server/` and Storybook at `/lapis-server/storybook/` using Node 24.
