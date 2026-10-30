@@ -7,7 +7,10 @@ export default defineConfig({
   ssr: { noExternal: ["lucide-static"] },
   test: {
     environment: "jsdom",
-    include: ["web/src/hosted-notes-ui.test.ts"],
+    include: [
+      "web/src/hosted-notes-ui.test.ts",
+      ".storybook/requirement-toc.test.ts",
+    ],
     setupFiles: ["./vitest.setup.ts"],
   },
 });

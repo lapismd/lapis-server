@@ -3,6 +3,8 @@
 This book owns the hosted server. Shared Notes product requirements stay in
 the Notes specification at <https://lapismd.github.io/lapis-notes/>.
 
+<!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
+
 ## SRV-SRV-001 — Public image
 
 <a id="srv-srv-001"></a>
@@ -13,7 +15,9 @@ readiness at `http://127.0.0.1:8787/readyz`. It MUST NOT be
 `ghcr.io/lapismd/lapis-notes-ci` or `ghcr.io/lapismd/lapis-ci`.
 A push to `main` MUST publish that image tagged with the 7-character
 `git rev-parse --short` commit hash. A `v*` git tag MUST publish the same
-image with that tag. `lapis-ai-service` stays the git dependency
+image with that tag. The image web stage MUST install this repository with
+the frozen lockfile and build the Vite application in `web/`.
+`lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 
 ### Acceptance details
@@ -21,6 +25,7 @@ image with that tag. `lapis-ai-service` stays the git dependency
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL.
 - Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
 - Main publishes the 7-character commit hash, and a v\* tag publishes that version tag.
+- The image web stage builds `web/` with Vite after a frozen lockfile install.
 
 ## SRV-SRV-002 — jj-store git revision
 

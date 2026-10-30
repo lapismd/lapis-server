@@ -3,6 +3,7 @@ import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { syncCatalogStoryLayout } from "@lapismd/design-core/storybook/catalog-layout";
 import "@lapismd/design-core/storybook.css";
 import "@lapismd/design-core/themes/lapis.css";
+import { requirementTocLabel } from "./requirement-toc";
 
 const preview: Preview = {
   globalTypes: {
@@ -43,7 +44,17 @@ const preview: Preview = {
     layout: "fullscreen",
     backgrounds: { disable: true },
     themes: { disable: true },
-    docs: { toc: true },
+    // Requirement ids come from h2 text, the same headings design-core selects.
+    // h3 is only "Acceptance details", so it stays out of the right-hand nav.
+    docs: {
+      toc: {
+        headingSelector: "h2",
+        title: "On this page",
+        unsafeTocbotOptions: {
+          headingLabelCallback: requirementTocLabel,
+        },
+      },
+    },
     options: {
       storySort: {
         order: [

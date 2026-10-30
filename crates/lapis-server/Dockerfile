@@ -32,16 +32,15 @@ RUN set -eu; \
     rm -rf /work/lapis-server/.image-inputs
 WORKDIR /work/lapis-server
 ENV NODE_OPTIONS=--max-old-space-size=8192 GOMAXPROCS=2 UV_THREADPOOL_SIZE=2
-ENV VITE_LAPIS_NATIVE_METADATA=1 VITE_LAPIS_NATIVE_HISTORY=1 VITE_LAPIS_NATIVE_TASKS=1
-RUN --mount=type=cache,id=lapis-server-rust-pnpm,target=/cache/pnpm node scripts/server-container/install.mjs /work/.qualification
-RUN pnpm exec turbo run build --filter=@lapis-notes/app-profile... --concurrency=2 && pnpm --filter @lapis-notes/web build:rust-server
+RUN --mount=type=cache,id=lapis-server-rust-pnpm,target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
+RUN pnpm exec vite build --config web/vite.config.ts
 
 FROM debian:bookworm-slim AS runtime
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git libstdc++6 libssl3 && rm -rf /var/lib/apt/lists/* \
     && groupadd --gid 1993 lapis && useradd --uid 1993 --gid 1993 --home-dir /data --shell /usr/sbin/nologin lapis \
     && mkdir -p /app /data && chown lapis:lapis /data
 COPY --from=native /lapis-server /app/lapis-server
-COPY --from=web /work/lapis-server/packages/web/dist-rust-server /app/static
+COPY --from=web /work/lapis-server/web/dist /app/static
 RUN chmod -R a-w /app
 ENV LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
 USER lapis
