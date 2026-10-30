@@ -8,6 +8,10 @@ original scope and cannot replace current candidate qualification.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
+Configure preflight rejects a disabled default native projection feature or a
+projection dependency that leaves its pinned owning Git source. Source/core
+checks and original Desktop acceptance remain separate qualification lanes.
+
 ## SRV-GOV-001 — Specification and source limits
 
 <a id="srv-gov-001"></a>

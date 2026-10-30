@@ -59,11 +59,20 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates. Cargo path dependencies MUST stay inside this repository. Shared Notes product requirements MUST stay in the Notes specification. Projection and task fields that only sibling projection code reads MUST be compiled only with `local-sibling-projections`.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
 ### Acceptance details
 
 - The Cargo workspace contains those three crates.
 - The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.
-- The default workspace build compiles sibling-projection fields only with `local-sibling-projections`.
+- Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
+
+## Native engine source intake
+
+Native Markdown/Search algorithms use lapis-plugins commit
+`879581d1549187bdbac2d75b40d02e0df46e721a`, Tasks uses
+`52270c2aa7838811604a20be0861cdbd04027b42`, and Docs uses
+`f772f2bacc20a914cef2f0398f294cefbac4ba3c`. These remain owning-package
+engines. App Core retains admission, scheduling, writer fencing and persistence;
+host/native/provider/distribution qualification remains separate.
