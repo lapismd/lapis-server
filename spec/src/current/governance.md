@@ -37,11 +37,11 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 
 <a id="srv-gov-002"></a>
 
-**Requirement.** Storybook MUST import the published `@lapismd/design-core/storybook.css` and `@lapismd/design-core/themes/lapis.css` styles before rendering `WorkspaceShell`. Shell stories MUST fill the viewport with no root padding. The preview MUST default the brand theme to `lapis` and expose the color-mode and theme toggles. The hosted application entry MUST keep loading the published design-core styles.
+**Requirement.** Storybook MUST import the published `@lapismd/design-core/storybook.css` and `@lapismd/design-core/themes/lapis.css` styles before rendering `WorkspaceShell`. Shell stories MUST fill the viewport with no root padding. The preview MUST default the brand theme to `lapis`, expose the color-mode and theme toggles, and label each specification table-of-contents entry with its requirement id. The hosted application entry MUST keep loading the published design-core styles.
 
 ### Acceptance details
 
 - The Storybook preview imports those published stylesheets and defaults `data-ui-theme` to lapis.
 - The hosted Notes story requires grid layout, a loaded `--background` token, zero root padding, and full viewport height.
 - The credential story renders the sign-in card centered in the workspace shell main region, and that region fills the viewport with no padding.
-- Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents follows those headings.
+- Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents labels each entry with its requirement id.
