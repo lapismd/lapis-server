@@ -14,11 +14,13 @@ Specification and Storybook:
 
 ## Run
 
-The image `ghcr.io/lapismd/lapis-server` is published when a `v*` git tag is
-pushed. That tag is applied to the image. No image tag has been published yet.
-After one exists, replace `<v*>` and run it:
+Every push to `main` publishes `ghcr.io/lapismd/lapis-server` tagged with the
+7-character commit hash from `git rev-parse --short`. A `v*` git tag publishes
+the same image with that tag and `latest`. Replace `<short>` or `<v*>` and run
+it:
 
 ```sh
+docker pull ghcr.io/lapismd/lapis-server:<short>
 docker pull ghcr.io/lapismd/lapis-server:<v*>
 docker run --rm \
   --publish 8787:8787 \
