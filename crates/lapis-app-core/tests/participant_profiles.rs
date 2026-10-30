@@ -1,8 +1,29 @@
 #[path = "support/participant_profiles/mod.rs"]
 mod support;
-use std::{fs, sync::atomic::Ordering};
+use lapis_app_core::services::{Client, ParticipantMessage, ParticipantState};
+use std::{fs, sync::atomic::Ordering, time::Duration};
 use support::{Fixture, input, runtime, shutdown};
 use uuid::Uuid;
+
+async fn published_capture(client: &Client, acceptance: Uuid) -> ParticipantMessage {
+    tokio::time::timeout(Duration::from_secs(8), async {
+        loop {
+            let message = client
+                .participant_message(acceptance)
+                .unwrap()
+                .expect("accepted participant");
+            let published = message.deliveries.iter().all(|delivery| {
+                delivery.state == ParticipantState::Completed && delivery.outcome_published
+            });
+            if published {
+                return message;
+            }
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .expect("participant deliveries publish their outcomes")
+}
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn declared_catalog_bounds_and_opaque_runtime_associations_are_independent_of_message_bounds()
@@ -86,8 +107,10 @@ async fn complete_profile_captures_survive_later_configuration_changes_and_exact
     let captured = input(&f, client.participant_profiles().unwrap());
     client.submit_participant_message(captured.clone()).unwrap();
     f.finished(&runtime, captured.turns[1].request_id).await;
+    let settled = published_capture(&client, captured.acceptance_id).await;
     policy.profiles.lock().unwrap().clear();
     let retained = client.submit_participant_message(captured.clone()).unwrap();
+    assert_eq!(retained, settled);
     assert_eq!(retained.input, captured);
     assert_eq!(
         client
@@ -148,10 +171,7 @@ async fn exact_request_lookup_scans_all_receipts_and_refuses_ambiguity_or_corrup
     let captured = input(&f, client.participant_profiles().unwrap());
     client.submit_participant_message(captured.clone()).unwrap();
     f.finished(&runtime, captured.turns[1].request_id).await;
-    let retained = client
-        .participant_message(captured.acceptance_id)
-        .unwrap()
-        .unwrap();
+    let retained = published_capture(&client, captured.acceptance_id).await;
     let root = f.profile.join("participants").join(f.vault.to_string());
     let path = root.join(format!("{}.json", captured.acceptance_id));
     let original = fs::read(&path).unwrap();

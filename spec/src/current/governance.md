@@ -3,6 +3,8 @@
 The project README documents how to run the image and set the initial owner
 password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
 
+<!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
+
 ## SRV-GOV-001 — Specification and source limits
 
 <a id="srv-gov-001"></a>
