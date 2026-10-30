@@ -13,7 +13,9 @@ readiness at `http://127.0.0.1:8787/readyz`. It MUST NOT be
 `ghcr.io/lapismd/lapis-notes-ci` or `ghcr.io/lapismd/lapis-ci`.
 A push to `main` MUST publish that image tagged with the 7-character
 `git rev-parse --short` commit hash. A `v*` git tag MUST publish the same
-image with that tag. `lapis-ai-service` stays the git dependency
+image with that tag. The image web stage MUST install this repository with
+the frozen lockfile and build the Vite application in `web/`.
+`lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 
 ### Acceptance details
@@ -21,6 +23,7 @@ image with that tag. `lapis-ai-service` stays the git dependency
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL.
 - Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
 - Main publishes the 7-character commit hash, and a v\* tag publishes that version tag.
+- The image web stage builds `web/` with Vite after a frozen lockfile install.
 
 ## SRV-SRV-002 — jj-store git revision
 

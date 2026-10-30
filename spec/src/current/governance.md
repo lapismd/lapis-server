@@ -18,6 +18,7 @@ a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use
 `rg` only when QMD is unavailable. A git tag `v*` MUST publish
 `ghcr.io/lapismd/lapis-server` through the image workflow, and every push to
 `main` MUST publish that image tagged with the 7-character git short hash.
+The image web stage MUST build the Vite application in `web/` after a frozen lockfile install.
 Changesets MUST record the release note and create that version tag and GitHub
 release. This repository MUST NOT publish an npm package. Every pull request MUST run
 `cargo test --workspace --locked` with the ordinary Rust dependency cache, and

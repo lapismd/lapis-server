@@ -45,7 +45,7 @@ builder uses the local validation resource settings and keeps reusable caches.
 An optional `LAPIS_SERVER_ARCHIVES` manifest qualifies unpublished package
 archives by identity and SHA-256 without changing the registry manifest/lock.
 
-The Dockerfile builds from a `lapismd/lapis-notes` checkout. The published
+The Dockerfile builds this repository's Rust server and the Vite application in `web/`. The published
 image is `ghcr.io/lapismd/lapis-server`; run it with the root
 [`docker-compose.yml`](../../docker-compose.yml) and
 [hosted server notes](../../docs/hosted-server.md). It listens on `8787`,
