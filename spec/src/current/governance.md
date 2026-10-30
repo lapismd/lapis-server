@@ -2,6 +2,9 @@
 
 The project README documents how to run the image and set the initial owner
 password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
+Current contracts and verification own behavior/status; the canonical backlog
+owns remaining work and acceptance. Supporting historical receipts retain their
+original scope and cannot replace current candidate qualification.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
@@ -13,7 +16,7 @@ password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
 lines and 32768 UTF-8 bytes. New production Rust and scripts MUST stay within
 300 counted lines. Tests MUST stay within 500 counted lines. A protected change
 MUST update its owning requirement, or record an unchanged-contract
-confirmation with the validation and milestone review, in the same Jujutsu
+confirmation with the validation and acceptance review, in the same Jujutsu
 change. Notes no longer owns this release gate. Server acceptance and the
 image build run in this repository. Agents MUST run `pnpm spec:search` before
 a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use

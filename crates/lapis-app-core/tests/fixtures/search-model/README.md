@@ -6,7 +6,7 @@ the context explicitly; unknown or mismatched profiles fail closed.
 
 - `darwin-arm64-ort-1.30.0` retains the existing API fixture byte-for-byte.
   Its original qualification is recorded in
-  [the encoder receipt](../../../../../spec/records/2026-10-24-rust-core-onnx.md).
+  [the encoder receipt](https://github.com/lapismd/lapis-notes/blob/main/spec/records/2026-10-24-rust-core-onnx.md).
 - `linux-x64-ort-1.30.0-amd-7800x3d` uses the separate unchanged Node output here.
   The provenance JSON pins Node, Transformers, ORT, the library hash, CPU model,
   container image/resources, reference source/script, capture time and all five
