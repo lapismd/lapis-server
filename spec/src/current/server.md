@@ -2,6 +2,8 @@
 
 This book owns the hosted server. Shared Notes product requirements stay in
 the Notes specification at <https://lapismd.github.io/lapis-notes/>.
+The core crate README routes native ownership and commands here; outstanding
+integration and qualification live in the [canonical backlog](../backlog.md).
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
