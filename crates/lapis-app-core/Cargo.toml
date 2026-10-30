@@ -8,10 +8,14 @@ publish.workspace = true
 description = "Transport-independent native application services for Lapis Notes"
 
 [features]
-# Keeps projection tests in the tree without making sibling crates workspace path members.
+# The historical feature name selects pinned Git engines, never sibling paths.
+default = ["local-sibling-projections"]
 local-sibling-projections = []
 
 [dependencies]
+lapis-plugin-services = { git = "https://github.com/lapismd/lapis-plugins", rev = "879581d1549187bdbac2d75b40d02e0df46e721a", version = "0.1.0" }
+lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "52270c2aa7838811604a20be0861cdbd04027b42", version = "0.1.0" }
+lapis-docs-projection = { git = "https://github.com/lapismd/lapis-plugin-docs", rev = "f772f2bacc20a914cef2f0398f294cefbac4ba3c", version = "0.0.0" }
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
 async-trait = "0.1"
