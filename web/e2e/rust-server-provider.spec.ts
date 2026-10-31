@@ -12,7 +12,7 @@ test("actual provider finishes after retained chat signs out and survives a cold
   const configuration = process.env.LAPIS_SERVER_TEST_AGENTS_CONFIG;
   if (!configuration)
     throw new Error("Set LAPIS_SERVER_TEST_AGENTS_CONFIG for host acceptance");
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-provider-screen-"));
   const agents = join(root, "agents.json");
   await writeFile(agents, await readFile(resolve(configuration)), {
@@ -55,7 +55,10 @@ test("actual provider finishes after retained chat signs out and survives a cold
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
   }
   async function openHistory(page: Page) {
@@ -178,7 +181,10 @@ test("actual provider finishes after retained chat signs out and survives a cold
     );
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await turns;
     await expect(

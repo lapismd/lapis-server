@@ -4,6 +4,14 @@
 
 Dependency update PRs from the trusted LapisMD App, Dependabot or Renovate MAY skip specification checks using the PR author rather than the rerun actor. Functional checks remain required. The shared `lapismd/dependency-automation` coordinator proposes published first-party npm updates with Changeset release intent where required; it does not merge, publish, sign or deploy. This CI policy changes no runtime or public contract in this chapter.
 
+The shared session awaits the server-owned Rust attachment/heartbeat close
+after database closure and before its compatibility lease is released.
+Renderer type coverage includes the production catalog and retained browser
+acceptance helpers/configuration. Optional model runtimes load only after their
+existing opt-in gate; the complete retained suite still collects without them.
+The focused real-server regression retains login and workspace screenshots as
+review evidence, independently of visual baseline approval.
+
 The project README documents how to run the image and set the initial owner
 password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
 Current contracts and verification own behavior/status; the canonical backlog
@@ -56,5 +64,30 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 
 - The Storybook preview imports those published stylesheets and defaults `data-ui-theme` to lapis.
 - The hosted Notes story requires grid layout, a loaded `--background` token, zero root padding, and full viewport height.
-- The credential story renders the sign-in card centered in the workspace shell main region, and that region fills the viewport with no padding.
+- The centered branded login and managed-vault chooser retain standalone Deno presentation at narrow widths, with workspace chrome appearing after vault opening.
 - Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents labels each entry with its requirement id.
+
+## SRV-GOV-003 — Production UI parity
+
+<a id="srv-gov-003"></a>
+
+**Requirement.** The hosted application MUST use the built public Notes application-profile workspace session. Its host wrappers and the real workspace shell MUST fill the viewport. Appearance initialization and branding assets MUST work in application and catalog builds. Host authentication and Rust transport MUST remain server-owned.
+
+### Acceptance details
+
+- Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, with exact re-enable commands recorded in the hosted UI parity record.
+- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown.
+- Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
+- Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.
+
+## SRV-GOV-004 — Production catalog acceptance
+
+<a id="srv-gov-004"></a>
+
+**Requirement.** UI stories MUST mount production components with disposable injected backends. Functional and accessibility checks MUST cover login, chooser actions, startup failure/retry and the ready Notes workspace in light/dark and narrow viewports. Bounds assertions MUST measure the real shell. Visual review remains pending without baseline updates.
+
+### Acceptance details
+
+- Vault-button accessible names include their visible name, role and status text.
+- Production-component stories exercise keyboard navigation and the real shell geometry with axe failures enabled.
+- Fixtures remain mounted after their play finishes and release resources when the story unmounts.

@@ -240,7 +240,10 @@ test("installed read-only provider retains exact Stop uncertainty and unstarted 
     ]);
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(
       activeChat(page).getByRole("region", {

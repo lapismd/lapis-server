@@ -1,4 +1,5 @@
 <script lang="ts">
+  import serverLogo from "./assets/lapis-logo.svg?url";
   import Archive from "@lucide/svelte/icons/archive";
   import Download from "@lucide/svelte/icons/download";
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
@@ -33,17 +34,17 @@
     archiveServerImportDirectory,
     canPickServerImportDirectory,
   } from "./server-vault-import";
-  import ServerWorkspaceSession from "./ServerWorkspaceSession.svelte";
+  import {
+    NotesWorkspaceSession,
+    type NotesWorkspaceSessionHandle,
+    type NotesWorkspaceHost,
+  } from "@lapis-notes/app-profile/workspace-session";
 
   type VaultRow = HostedVault;
   type Prepared = HostedResources & {
     profile: ServerVaultProfile;
     session: VaultSession;
-  };
-  type SessionComponent = {
-    dispose(persistLayout: boolean): Promise<void>;
-    canRecoverLeave(): boolean;
-    persistLayout(): Promise<void>;
+    host: NotesWorkspaceHost;
   };
 
   let { backend }: { backend: HostedBackend } = $props();
@@ -63,7 +64,8 @@
   let buildId = $state("");
   let vaults: VaultRow[] = $state.raw([]);
   let prepared: Prepared | null = $state(null);
-  let sessionComponent: SessionComponent | null = $state(null);
+  let sessionComponent: NotesWorkspaceSessionHandle | null = $state(null);
+  let openingFlight: Promise<void> | undefined;
   let importInput: HTMLInputElement | null = $state(null);
   let activeAction = $state<string | null>(null);
   let createDialogOpen = $state(false);
@@ -98,7 +100,7 @@
   onMount(() => {
     void initialize();
     return () => {
-      void disposeWorkspace(false);
+      void dispose();
     };
   });
 
@@ -181,7 +183,19 @@
     }
   }
 
-  async function openVault(row: VaultRow): Promise<void> {
+  function openVault(row: VaultRow): Promise<void> {
+    const flight = (openingFlight ?? Promise.resolve()).then(() =>
+      openSelectedVault(row),
+    );
+    openingFlight = flight;
+    const finish = () => {
+      if (openingFlight === flight) openingFlight = undefined;
+    };
+    void flight.then(finish, finish);
+    return flight;
+  }
+
+  async function openSelectedVault(row: VaultRow): Promise<void> {
     if (row.archivedAt !== undefined) return;
     hostState = "opening";
     errorMessage = "";
@@ -199,7 +213,21 @@
         session.nativeEditingIntents = resources.nativeEditingIntents;
         session.backgroundIndexing = resources.backgroundIndexing;
         session.nativeHistoryIndex = resources.nativeHistoryIndex;
-        prepared = { ...resources, profile, session };
+        prepared = {
+          ...resources,
+          profile,
+          session,
+          host: {
+            ...resources.workspaceHost,
+            dispose: async (app) => {
+              try {
+                await resources.workspaceHost?.dispose?.(app);
+              } finally {
+                await resources.release();
+              }
+            },
+          },
+        };
       } catch (error) {
         await resources.release();
         throw error;
@@ -220,14 +248,15 @@
         if (sessionComponent.canRecoverLeave()) hostState = "workspace";
         throw error;
       }
-    } else if (active) await active.session.close();
-    await active?.release();
+    } else if (active) {
+      await active.session.close();
+      await active.release();
+    }
     sessionComponent = null;
     prepared = null;
   }
 
   async function manageVaults(): Promise<void> {
-    await sessionComponent?.persistLayout();
     await refreshVaults();
     hostState = "vaults";
   }
@@ -396,23 +425,48 @@
       hostState = sessionComponent?.canRecoverLeave() ? "workspace" : "vaults";
     }
   }
+
+  /** Hosts and catalog fixtures await owned teardown before unmounting. */
+  export async function dispose(): Promise<void> {
+    try {
+      await openingFlight;
+    } finally {
+      await disposeWorkspace(false);
+    }
+  }
 </script>
 
-<main class="server-host" data-server-host-state={hostState}>
+<div
+  class="server-host"
+  data-server-host-state={hostState}
+  role={hostState === "workspace" ? undefined : "main"}
+>
   {#if prepared}
     <div
       class="server-workspace"
       hidden={hostState !== "workspace" && hostState !== "opening"}
       inert={hostState !== "workspace" && hostState !== "opening"}
     >
-      <ServerWorkspaceSession
-        bind:this={sessionComponent}
+      <NotesWorkspaceSession
+        bind:this={
+          () => sessionComponent,
+          (component) => {
+            // Owned teardown can outlive Svelte's binding during unmount.
+            if (component) sessionComponent = component;
+          }
+        }
+        runtime={backend.runtime}
         profile={prepared.profile}
         session={prepared.session}
+        host={prepared.host}
         listProfiles={async () => activeProfiles()}
+        nativeChat={prepared.nativeChat}
+        repositoryFactory={prepared.repositoryFactory}
         pluginAssetServer={prepared.pluginAssetServer}
         pluginDistributionOptions={prepared.pluginDistributionOptions}
-        onReady={() => (hostState = "workspace")}
+        onReady={() => {
+          hostState = "workspace";
+        }}
         onOpenRecent={async (profile) => {
           const row = vaults.find((vault) => vault.id === profile.id);
           if (row) await openVault(row);
@@ -463,7 +517,7 @@
         <Card.Root class="server-login-card">
           <Card.Header class="server-login-header">
             <img
-              src="/favicon.svg"
+              src={serverLogo}
               alt=""
               class="server-login-logo"
               data-server-login-logo
@@ -517,7 +571,7 @@
       <div class="web-vault-launcher__content">
         <header class="server-launcher-header">
           <div class="server-brand-heading">
-            <img src="/favicon.svg" alt="" class="server-launcher-logo" />
+            <img src={serverLogo} alt="" class="server-launcher-logo" />
             <div class="server-brand-copy">
               <p class="server-eyebrow">Lapis Notes</p>
               <h1 class="server-launcher-title">Your vaults</h1>
@@ -527,7 +581,11 @@
             </div>
           </div>
           <div class="server-launcher-actions">
-            <Button.Root variant="link" size="sm" onclick={() => void logout()}>
+            <Button.Root
+              variant="ghost"
+              size="sm"
+              onclick={() => void logout()}
+            >
               <LogOut />
               Sign out
             </Button.Root>
@@ -639,7 +697,7 @@
                 </div>
                 {#if searchableVaults.length > 1}
                   <Button.Root
-                    variant="link"
+                    variant="ghost"
                     size="sm"
                     class="server-view-all"
                     onclick={showVaultSearch}
@@ -658,9 +716,9 @@
                       class="web-vault-launcher__recent server-vault-open"
                       disabled={activeAction !== null ||
                         vault.archivedAt !== undefined}
-                      aria-label={vault.archivedAt
-                        ? `${vault.name} is archived`
-                        : `Open ${vault.name}`}
+                      aria-label={vault.archivedAt !== undefined
+                        ? `${vault.name} ${vault.role} · archived`
+                        : `Open ${vault.name} ${vault.role} · server-hosted`}
                       onclick={() => void openVault(vault)}
                     >
                       <FolderOpen />
@@ -739,7 +797,7 @@
       </div>
     </section>
   {/if}
-</main>
+</div>
 
 <Dialog.Root bind:open={vaultDialogOpen}>
   <Dialog.Content class="web-vault-launcher__command" showCloseButton={false}>

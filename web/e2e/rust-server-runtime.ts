@@ -22,6 +22,7 @@ export class RustServerRuntime {
     exit: Promise<number | null>;
   }> = [];
   #logs = "";
+  historyIndexing = false;
   readonly vaultId = "3a65a94f-b875-4143-b1f5-a6a32d861092";
   constructor(
     readonly root: string,
@@ -32,6 +33,7 @@ export class RustServerRuntime {
     readonly operatorTimezone?: string,
     readonly staticRoot: string | undefined = process.env
       .LAPIS_TEST_RUST_STATIC_ROOT,
+    readonly renderer: "preview" | "development" = "preview",
   ) {}
   get logs(): string {
     return this.#logs;
@@ -89,6 +91,8 @@ export class RustServerRuntime {
     };
     if (this.operatorTimezone) environment.TZ = this.operatorTimezone;
     delete environment.LAPIS_SERVER_TOKEN;
+    if (this.historyIndexing) environment.LAPIS_SERVER_NATIVE_HISTORY = "1";
+    else delete environment.LAPIS_SERVER_NATIVE_HISTORY;
     if (this.agentsConfig)
       environment.LAPIS_SERVER_AGENTS_CONFIG = this.agentsConfig;
     else delete environment.LAPIS_SERVER_AGENTS_CONFIG;
@@ -131,7 +135,7 @@ export class RustServerRuntime {
         process.execPath,
         [
           join(this.repository, "node_modules/vite/bin/vite.js"),
-          "preview",
+          ...(this.renderer === "development" ? ["--force"] : ["preview"]),
           "--host",
           "127.0.0.1",
           "--port",

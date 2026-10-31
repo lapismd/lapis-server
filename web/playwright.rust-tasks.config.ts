@@ -9,5 +9,5 @@ export default defineConfig(hosted, {
     "rust-server-tasks-recovery.spec.ts",
     "rust-server-tasks-leave.spec.ts",
   ],
-  outputDir: "../../test-results/rust-hosted-tasks",
+  outputDir: "../test-results/rust-hosted-tasks",
 });

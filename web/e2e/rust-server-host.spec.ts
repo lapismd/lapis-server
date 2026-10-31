@@ -15,7 +15,7 @@ let runtime: RustServerRuntime;
 let origin: string;
 const password = randomBytes(32).toString("base64url");
 test.beforeAll(async () => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   await mkdir(join(repository, ".local"), { recursive: true });
   const root = await mkdtemp(join(repository, ".local/rust-hosted-browser-"));
   origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -51,7 +51,10 @@ test("retained hosted login and Notes workspace read and persist through Rust", 
       page.getByRole("button", { name: "Create New Vault" }),
     ).toBeEnabled();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
     await page.locator('[data-path="Note.md"]').click();
@@ -72,7 +75,10 @@ test("retained hosted login and Notes workspace read and persist through Rust", 
       page.getByRole("heading", { name: "Your vaults", exact: true }),
     ).toBeVisible();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.locator('[data-path="Note.md"]').click();
     await expect(
@@ -148,7 +154,7 @@ test("retained chooser creates, renames, archives and restores a vault across a 
     await page.getByRole("menuitem", { name: "Archive", exact: true }).click();
     await expect(
       page.getByRole("button", {
-        name: "Renamed through Rust is archived",
+        name: "Renamed through Rust owner · archived",
         exact: true,
       }),
     ).toBeDisabled();
@@ -167,7 +173,7 @@ test("retained chooser creates, renames, archives and restores a vault across a 
     await signInHostedOwner(page, password);
     await expect(
       page.getByRole("button", {
-        name: "Renamed through Rust is archived",
+        name: "Renamed through Rust owner · archived",
         exact: true,
       }),
     ).toBeDisabled();
@@ -179,7 +185,10 @@ test("retained chooser creates, renames, archives and restores a vault across a 
       .click();
     await page.getByRole("menuitem", { name: "Restore", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Renamed through Rust", exact: true })
+      .getByRole("button", {
+        name: "Open Renamed through Rust owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.locator('[data-path="Untitled.md"]').click();
     await expect(
@@ -233,8 +242,9 @@ test("retained folder and ZIP controls import and export native content across r
       name: "Imported archive.zip",
       mimeType: "application/zip",
       buffer: await readFile(
-        resolve(
+        new URL(
           "../../crates/lapis-app-core/tests/fixtures/archives/notes.zip",
+          import.meta.url,
         ),
       ),
     });
@@ -242,7 +252,10 @@ test("retained folder and ZIP controls import and export native content across r
     expect(imported.status()).toBe(201);
     const { vault_id: id } = await imported.json();
     await expect(
-      page.getByRole("button", { name: "Open Imported archive", exact: true }),
+      page.getByRole("button", {
+        name: "Open Imported archive owner · server-hosted",
+        exact: true,
+      }),
     ).toBeVisible();
     await page
       .getByRole("button", {
@@ -278,14 +291,20 @@ test("retained folder and ZIP controls import and export native content across r
       .getByRole("button", { name: "Import vault", exact: true })
       .click();
     await expect(
-      page.getByRole("button", { name: "Open Browser folder", exact: true }),
+      page.getByRole("button", {
+        name: "Open Browser folder owner · server-hosted",
+        exact: true,
+      }),
     ).toBeVisible();
     await signOutHostedWorkspace(page);
     await runtime.restart();
     await page.reload();
     await signInHostedOwner(page, password);
     await page
-      .getByRole("button", { name: "Open Browser folder", exact: true })
+      .getByRole("button", {
+        name: "Open Browser folder owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.locator('[data-path="Folder.md"]').click();
     await expect(
@@ -374,7 +393,7 @@ test("authenticated installed modules load through the built Rust browser origin
 test("retained Plugins UI installs and restores an official signed plugin on Rust", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-plugin-install-"));
   const hostOrigin = `http://localhost:${await unusedLoopbackPort()}`;
   const service = new RustServerRuntime(root, repository, hostOrigin, password);
@@ -385,7 +404,10 @@ test("retained Plugins UI installs and restores an official signed plugin on Rus
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
     await page
@@ -421,9 +443,7 @@ test("retained Plugins UI installs and restores an official signed plugin on Rus
     await expect(
       page.getByRole("button", { name: "Installed", exact: true }),
     ).toBeDisabled();
-    await page
-      .getByRole("button", { name: "Open settings", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Settings", exact: true }).click();
     await page
       .getByRole("button", { name: "Plugin registry", exact: true })
       .click();
@@ -452,12 +472,13 @@ test("retained Plugins UI installs and restores an official signed plugin on Rus
         response.request().method() === "GET",
     );
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
-    await page
-      .getByRole("button", { name: "Open settings", exact: true })
-      .click();
+    await page.getByRole("button", { name: "Settings", exact: true }).click();
     await page
       .getByRole("button", { name: "Plugin registry", exact: true })
       .click();

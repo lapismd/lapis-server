@@ -7,5 +7,5 @@ export default defineConfig(hosted, {
     "rust-server-backup.spec.ts",
     "rust-server-original.spec.ts",
   ],
-  outputDir: "../../.local/rust-hosted-history-results",
+  outputDir: "../.local/rust-hosted-history-results",
 });

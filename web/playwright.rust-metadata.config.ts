@@ -6,5 +6,5 @@ export default defineConfig(hosted, {
     "rust-server-metadata.spec.ts",
     "rust-server-search-model.spec.ts",
   ],
-  outputDir: "../../.local/rust-hosted-metadata-results",
+  outputDir: "../.local/rust-hosted-metadata-results",
 });

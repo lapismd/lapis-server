@@ -14,7 +14,7 @@ import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 test("native chat retains sidebar History and opens the same conversation without replay", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-chat-browser-"));
   const password = randomBytes(32).toString("base64url");
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -59,7 +59,10 @@ test("native chat retains sidebar History and opens the same conversation withou
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.getByRole("button", { name: "Open Chat", exact: true }).click();
     const editor = chat.getByRole("textbox", { name: "Message", exact: true });
@@ -117,7 +120,10 @@ test("native chat retains sidebar History and opens the same conversation withou
       .toContain("ai-conversation-history");
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(history).toBeVisible();
     await expect(
@@ -131,7 +137,10 @@ test("native chat retains sidebar History and opens the same conversation withou
     await service.restart();
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(history).toBeVisible();
     await history

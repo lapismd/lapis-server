@@ -9,7 +9,7 @@ const original = "---\nstatus: ready\n---\n# Hosted Properties\n";
 let artifact: string;
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 test.beforeAll(async () => {
-  artifact = await buildTasksArtifact(resolve("../.."));
+  artifact = await buildTasksArtifact(resolve(import.meta.dirname, "../.."));
 });
 
 async function properties(page: Page) {

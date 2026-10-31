@@ -1,0 +1,77 @@
+.web-vault-launcher {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  padding: max(2.5rem, var(--workspace-safe-area-top, 0px)) 1.5rem 2.5rem;
+}
+
+.web-vault-launcher__content {
+  display: grid;
+  width: 100%;
+  max-width: 64rem;
+  min-width: 0;
+  margin: auto;
+  gap: 1.5rem;
+}
+
+.web-vault-launcher__action[data-ui-component="button"] {
+  height: auto;
+  min-height: 4.5rem;
+  justify-content: flex-start;
+  white-space: normal;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.web-vault-launcher__recent {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 0;
+  border-radius: 0.625rem;
+  color: inherit;
+  background: transparent;
+}
+
+.web-vault-launcher__recent:hover:not(:disabled) {
+  background: var(--background-modifier-active-hover);
+}
+
+.web-vault-launcher__settings[data-ui-component="dialog"][data-ui-part="dialog-content"] {
+  top: 50%;
+  left: 50%;
+  width: min(28rem, calc(100% - 2rem));
+  max-width: 28rem;
+  translate: -50% -50%;
+}
+
+.web-vault-launcher__close[data-ui-component="button"] {
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+}
+
+.web-vault-launcher__close[data-ui-component="button"]:hover:not(:disabled) {
+  color: var(--ui-workspace-panel-action-hover-foreground);
+  background: var(--ui-workspace-panel-action-hover-background);
+}
+
+.web-vault-launcher__command[data-ui-component="dialog"][data-ui-part="dialog-content"] {
+  top: 20vh;
+  left: 50%;
+  width: min(34rem, calc(100% - 2rem));
+  max-width: 34rem;
+  max-height: calc(80vh - 1rem);
+  overflow: hidden;
+  translate: -50% 0;
+  gap: 0;
+  padding: 0;
+  --ui-command-view-list-max-height: min(20rem, calc(80vh - 6rem));
+}

@@ -15,7 +15,7 @@ import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 test("native queue controls preserve cancellation and require explicit cold resume in the retained chat screen", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-queue-browser-"));
   const password = randomBytes(32).toString("base64url");
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -80,7 +80,10 @@ test("native queue controls preserve cancellation and require explicit cold resu
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.getByRole("button", { name: "Open Chat", exact: true }).click();
     const chat = page.locator('[data-native-chat="true"]:visible');
@@ -176,14 +179,20 @@ test("native queue controls preserve cancellation and require explicit cold resu
     ).toHaveCount(0);
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(queue).toContainText("After explicit cold resume");
     expect((await frames()).filter((f) => f.type === "prompt")).toHaveLength(1);
     await service.restart();
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(queue).toContainText("After explicit cold resume");
     await expect(

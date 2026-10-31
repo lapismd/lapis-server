@@ -3,6 +3,7 @@ import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import { resolve, join } from "node:path";
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
+import { signOutHostedWorkspace } from "./rust-hosted-session";
 
 async function command(page: Page, name: string) {
   await page
@@ -17,12 +18,13 @@ async function command(page: Page, name: string) {
 test("retained Repository read, Search and blame use admitted native history across cold restart", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   await mkdir(join(repository, ".local"), { recursive: true });
   const root = await mkdtemp(join(repository, ".local/rust-hosted-history-"));
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
   const password = randomBytes(32).toString("base64url");
   const runtime = new RustServerRuntime(root, repository, origin, password);
+  runtime.historyIndexing = true;
   const original =
     "# Hosted Repository note\n\nsaved immutable cobalt phrase\n";
   await mkdir(runtime.vault, { recursive: true });
@@ -30,6 +32,27 @@ test("retained Repository read, Search and blame use admitted native history acr
   const reads: string[] = [];
   const controls: string[] = [];
   const failures: string[] = [];
+  const busyReads: string[] = [];
+  const responseChecks: Promise<void>[] = [];
+  let holdFileHistory = true;
+  await page.route("**/history/read", async (route) => {
+    const query = route.request().postDataJSON()?.data?.query;
+    if (
+      holdFileHistory &&
+      query?.kind === "graph" &&
+      query.query?.[0]?.revset?.includes("root-file:")
+    ) {
+      await route.fulfill({
+        status: 409,
+        contentType: "application/json",
+        body: JSON.stringify({
+          code: "CONFLICT",
+          message: "query cache or worker is busy",
+          history: "busy",
+        }),
+      });
+    } else await route.continue();
+  });
   const restores: Array<{
     kind: string;
     request?: { request_id: string; expected: string };
@@ -47,8 +70,21 @@ test("retained Repository read, Search and blame use admitted native history acr
     if (
       /\/(?:history(?:\/|-index)|repository-restore)/u.test(response.url()) &&
       !response.ok()
-    )
-      failures.push(`${response.status()} ${response.url()}`);
+    ) {
+      responseChecks.push(
+        (async () => {
+          const body = await response.json().catch(() => null);
+          if (
+            response.status() === 409 &&
+            response.url().endsWith("/history/read") &&
+            body?.code === "CONFLICT" &&
+            body?.history === "busy"
+          )
+            busyReads.push(response.url());
+          else failures.push(`${response.status()} ${response.url()}`);
+        })(),
+      );
+    }
   });
   const open = async () => {
     await page.goto(origin);
@@ -61,7 +97,10 @@ test("retained Repository read, Search and blame use admitted native history acr
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
     }
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
   };
@@ -160,6 +199,26 @@ test("retained Repository read, Search and blame use admitted native history acr
     await expect(
       page.locator(".cm-content[contenteditable=true]").last(),
     ).toBeVisible();
+    await command(page, "Open File History");
+    const fileHistory = page.getByRole("region", {
+      name: "Active file history",
+      exact: true,
+    });
+    await expect(
+      fileHistory.getByText(
+        "File history is unavailable. Refresh to try again.",
+      ),
+    ).toBeVisible();
+    holdFileHistory = false;
+    await fileHistory
+      .getByRole("button", { name: "Refresh file history", exact: true })
+      .click();
+    await expect(
+      fileHistory
+        .getByRole("list", { name: "File revision graph", exact: true })
+        .locator("button.repository-graph-select")
+        .first(),
+    ).toBeVisible();
     const blame = page
       .getByRole("button", { name: "Blame file", exact: true })
       .first();
@@ -182,6 +241,7 @@ test("retained Repository read, Search and blame use admitted native history acr
       original,
     );
 
+    await signOutHostedWorkspace(page);
     await page.goto("about:blank");
     await writeFile(
       join(runtime.vault, "Note.md"),
@@ -196,7 +256,10 @@ test("retained Repository read, Search and blame use admitted native history acr
     await expect(
       page.getByRole("treeitem", { name: /Note\.md,/ }),
     ).toBeVisible();
+    await Promise.all(responseChecks);
+    expect(busyReads.length).toBeGreaterThan(0);
     expect(failures).toEqual([]);
+    await signOutHostedWorkspace(page);
     await page.goto("about:blank");
   } catch (error) {
     await testInfo.attach("Rust History host log", {
@@ -216,7 +279,7 @@ test("retained Repository read, Search and blame use admitted native history acr
 test("retained restore recovery retries the original receipt after cold restart without overwriting newer saved files", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   await mkdir(join(repository, ".local"), { recursive: true });
   const root = await mkdtemp(join(repository, ".local/rust-hosted-restore-"));
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -246,7 +309,10 @@ test("retained restore recovery retries the original receipt after cold restart 
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
     }
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
   };

@@ -8,7 +8,7 @@ import { inspectRetainedTaskUpdate } from "./tasks-recovery-controls";
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
 test.beforeAll(async () => {
-  artifact = await buildTasksArtifact(resolve("../.."));
+  artifact = await buildTasksArtifact(resolve(import.meta.dirname, "../.."));
 });
 
 test("another App saving ordinary settings preserves interrupted native Task references", async ({
