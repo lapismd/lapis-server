@@ -76,7 +76,7 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 
 ### Acceptance details
 
-- Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, with exact re-enable commands recorded in the hosted UI parity record.
+- Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
 - The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown.
 - Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
 - Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.

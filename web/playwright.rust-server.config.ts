@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "./e2e",
   testMatch: [
     "rust-server-host.spec.ts",
+    "rust-server-plugin.spec.ts",
     "rust-server-files.spec.ts",
     "rust-server-chat.spec.ts",
     "rust-server-queue.spec.ts",
