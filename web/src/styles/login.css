@@ -86,6 +86,11 @@
   font-weight: 500;
 }
 
+.server-login .server-field [data-ui-component="input"] {
+  background-color: var(--background);
+  --ui-input-focus-ring-color: var(--input);
+}
+
 .server-full-button[data-ui-component="button"] {
   width: 100%;
 }
