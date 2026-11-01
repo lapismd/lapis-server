@@ -60,6 +60,7 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: site
+    if: (true) && !(github.event_name == 'pull_request' && github.event.pull_request.user.type == 'Bot' && (contains(fromJSON('["dependabot[bot]","renovate[bot]","lapismd-dependency-bot[bot]"]'), github.event.pull_request.user.login) || (vars.LAPIS_DEPENDENCY_BOT_LOGIN != '' && github.event.pull_request.user.login == vars.LAPIS_DEPENDENCY_BOT_LOGIN)))
 
   deploy:
     name: Deploy Storybook
@@ -76,3 +77,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+    if: (true) && !(github.event_name == 'pull_request' && github.event.pull_request.user.type == 'Bot' && (contains(fromJSON('["dependabot[bot]","renovate[bot]","lapismd-dependency-bot[bot]"]'), github.event.pull_request.user.login) || (vars.LAPIS_DEPENDENCY_BOT_LOGIN != '' && github.event.pull_request.user.login == vars.LAPIS_DEPENDENCY_BOT_LOGIN)))
