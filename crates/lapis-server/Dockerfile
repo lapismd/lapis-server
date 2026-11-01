@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.7
 FROM rust:1.99.0-bookworm AS native
+ARG TARGETARCH
 RUN apt-get update && apt-get install -y --no-install-recommends cmake clang pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 COPY . /work/lapis-server
 # A lapis-server checkout is the build context. Qualification may stage
@@ -13,12 +14,13 @@ RUN set -eu; \
     rm -rf /work/lapis-server/.image-inputs
 WORKDIR /work/lapis-server
 ENV CARGO_BUILD_JOBS=2
-RUN --mount=type=cache,id=lapis-server-rust-cargo,target=/usr/local/cargo/registry \
-    --mount=type=cache,id=lapis-server-rust-git,target=/usr/local/cargo/git \
-    --mount=type=cache,id=lapis-server-rust-release,target=/work/lapis-server/.local/rust-core-target \
+RUN --mount=type=cache,id=lapis-server-rust-cargo-${TARGETARCH},target=/usr/local/cargo/registry \
+    --mount=type=cache,id=lapis-server-rust-git-${TARGETARCH},target=/usr/local/cargo/git \
+    --mount=type=cache,id=lapis-server-rust-release-${TARGETARCH},target=/work/lapis-server/.local/rust-core-target \
     cargo build --release --locked -p lapis-server && cp .local/rust-core-target/release/lapis-server /lapis-server
 
 FROM node:24.15.0-bookworm-slim AS web
+ARG TARGETARCH
 RUN corepack enable && corepack prepare pnpm@10.34.5 --activate
 COPY . /work/lapis-server
 # A lapis-server checkout is the build context. Qualification may stage
@@ -32,7 +34,7 @@ RUN set -eu; \
     rm -rf /work/lapis-server/.image-inputs
 WORKDIR /work/lapis-server
 ENV NODE_OPTIONS=--max-old-space-size=8192 GOMAXPROCS=2 UV_THREADPOOL_SIZE=2
-RUN --mount=type=cache,id=lapis-server-rust-pnpm,target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
+RUN --mount=type=cache,id=lapis-server-rust-pnpm-${TARGETARCH},target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
 RUN pnpm exec vite build --config web/vite.config.ts
 
 FROM debian:bookworm-slim AS runtime

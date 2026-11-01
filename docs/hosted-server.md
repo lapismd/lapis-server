@@ -1,7 +1,8 @@
 # Hosted Lapis server image
 
-The public server image is `ghcr.io/lapismd/lapis-server`. It is the compiled
-Rust host and the existing Web application. It is not
+The public server image is `ghcr.io/lapismd/lapis-server`. Published tags
+provide `linux/amd64` and `linux/arm64` manifests. It is the compiled Rust host
+and the existing Web application. It is not
 `ghcr.io/lapismd/lapis-notes-ci` or `ghcr.io/lapismd/lapis-ci`.
 
 This page describes how to run a published image. Publishing the image is a

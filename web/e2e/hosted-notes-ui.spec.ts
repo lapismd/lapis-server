@@ -60,6 +60,46 @@ for (const renderer of ["preview", "development"] as const) {
       });
       await page.keyboard.press("Tab");
       await expect(page.getByLabel("Username")).toBeFocused();
+      const loginInputChrome = await page
+        .locator('.server-login .server-field input[data-ui-component="input"]')
+        .evaluateAll((inputs) => {
+          const root = getComputedStyle(document.documentElement);
+          const backgroundProbe = document.createElement("span");
+          backgroundProbe.style.backgroundColor = root
+            .getPropertyValue("--background")
+            .trim();
+          document.body.append(backgroundProbe);
+          const expectedBackground =
+            getComputedStyle(backgroundProbe).backgroundColor;
+          backgroundProbe.remove();
+          const inputProbe = document.createElement("span");
+          inputProbe.style.color = root.getPropertyValue("--input").trim();
+          document.body.append(inputProbe);
+          const expectedFocusRing = getComputedStyle(inputProbe).color;
+          inputProbe.remove();
+          const focusRingProbe = document.createElement("span");
+          focusRingProbe.style.color = getComputedStyle(inputs[0])
+            .getPropertyValue("--ui-input-focus-ring-color")
+            .trim();
+          document.body.append(focusRingProbe);
+          const resolvedFocusRing = getComputedStyle(focusRingProbe).color;
+          focusRingProbe.remove();
+          return {
+            backgrounds: inputs.map(
+              (input) => getComputedStyle(input).backgroundColor,
+            ),
+            expectedBackground,
+            expectedFocusRing,
+            resolvedFocusRing,
+          };
+        });
+      expect(loginInputChrome.backgrounds).toEqual([
+        loginInputChrome.expectedBackground,
+        loginInputChrome.expectedBackground,
+      ]);
+      expect(loginInputChrome.resolvedFocusRing).toBe(
+        loginInputChrome.expectedFocusRing,
+      );
       await expect(page.locator("html")).toHaveAttribute(
         "data-runtime",
         "rust-server",

@@ -37,8 +37,9 @@ change. Notes no longer owns this release gate. Server acceptance and the
 image build run in this repository. Agents MUST run `pnpm spec:search` before
 a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use
 `rg` only when QMD is unavailable. A git tag `v*` MUST publish
-`ghcr.io/lapismd/lapis-server` through the image workflow, and every push to
-`main` MUST publish that image tagged with the 7-character git short hash.
+`ghcr.io/lapismd/lapis-server` through the image workflow, every push to
+`main` MUST publish that image tagged with the 7-character git short hash, and
+the published image MUST provide `linux/amd64` and `linux/arm64` manifests.
 The image web stage MUST build the Vite application in `web/` after a frozen lockfile install.
 Changesets MUST record the release note and create that version tag and GitHub
 release. This repository MUST NOT publish an npm package. Every pull request MUST run
@@ -52,7 +53,7 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
-- The server mounts published `@lapis-notes/workspace`, every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, and runs the workspace Rust tests with the ordinary dependency cache, and `main` publishes the 7-character commit image and requires those Server CI jobs plus a pull request before Changesets creates the version tag and GitHub release without npm.
+- The server mounts published `@lapis-notes/workspace`, every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, and runs the workspace Rust tests with the ordinary dependency cache, and `main` publishes the 7-character multi-architecture commit image and requires those Server CI jobs plus a pull request before Changesets creates the version tag and GitHub release without npm.
 
 ## SRV-GOV-002 — Published shell styles
 
@@ -75,7 +76,7 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 
 ### Acceptance details
 
-- Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, with exact re-enable commands recorded in the hosted UI parity record.
+- Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
 - The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown.
 - Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
 - Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.
