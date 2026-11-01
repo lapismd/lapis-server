@@ -14,13 +14,13 @@
     "node": "^24"
   },
   "scripts": {
-    "spec:build": "spec-validator build",
-    "spec:check": "spec-validator check",
-    "spec:first": "spec-validator first",
+    "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
+    "spec:check": "node scripts/dependency-automation/spec-policy.mjs check",
+    "spec:first": "node scripts/dependency-automation/spec-policy.mjs first",
     "spec:index": "spec-validator index",
     "spec:search": "spec-validator search",
     "spec:serve": "spec-validator serve",
-    "spec:validate": "spec-validator validate",
+    "spec:validate": "node scripts/dependency-automation/spec-policy.mjs validate",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "storybook": "storybook dev -p 6006",
