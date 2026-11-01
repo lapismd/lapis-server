@@ -16,8 +16,8 @@ Specification and Storybook:
 
 Every push to `main` publishes `ghcr.io/lapismd/lapis-server` tagged with the
 7-character commit hash from `git rev-parse --short`. A `v*` git tag publishes
-the same image with that tag and `latest`. Replace `<short>` or `<v*>` and run
-it:
+the same image with that tag and `latest`. Published tags include `linux/amd64`
+and `linux/arm64` manifests. Replace `<short>` or `<v*>` and run it:
 
 ```sh
 docker pull ghcr.io/lapismd/lapis-server:<short>
