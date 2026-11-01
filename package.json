@@ -1,6 +1,6 @@
 {
   "name": "@lapismd/lapis-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Hosted Notes UI backed by the Lapis server",
   "license": "Apache-2.0",
