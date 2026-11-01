@@ -12,7 +12,7 @@ let service: RustServerRuntime;
 let origin: string;
 
 test.beforeEach(async ({ page }) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-files-browser-"));
   const password = randomBytes(32).toString("base64url");
   origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -29,7 +29,10 @@ test.beforeEach(async ({ page }) => {
   await page.goto(origin);
   await signInHostedOwner(page, password);
   await page
-    .getByRole("button", { name: "Open Rust vault", exact: true })
+    .getByRole("button", {
+      name: "Open Rust vault owner · server-hosted",
+      exact: true,
+    })
     .click();
   await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
 });
@@ -118,7 +121,10 @@ test("retained Explorer rename and move preserve collisions, editor identity and
   await page.reload();
   await signInHostedOwner(page, service.password);
   await page
-    .getByRole("button", { name: "Open Rust vault", exact: true })
+    .getByRole("button", {
+      name: "Open Rust vault owner · server-hosted",
+      exact: true,
+    })
     .click();
   await expect(editor).toContainText("Saved after Rust move");
 });

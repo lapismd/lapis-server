@@ -9,5 +9,5 @@ export default defineConfig({
     "rust-server-provider-resume.spec.ts",
   ],
   timeout: 240_000,
-  outputDir: "../../.local/rust-provider-screen-results",
+  outputDir: "../.local/rust-provider-screen-results",
 });

@@ -1,0 +1,232 @@
+.server-vault-launcher {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.server-launcher-header,
+.server-launcher-actions,
+.server-brand-heading,
+.server-card-header-row,
+.server-vault-row,
+.server-vault-open,
+.server-vault-menu-trigger {
+  display: flex;
+}
+
+.server-launcher-header {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.server-launcher-actions {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.server-brand-heading {
+  min-width: 0;
+  align-items: center;
+  gap: 1rem;
+}
+
+.server-launcher-logo {
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 1rem;
+  object-fit: cover;
+  background: var(--card);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.server-brand-copy {
+  min-width: 0;
+}
+
+.server-launcher-title {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.server-launcher-description {
+  margin-top: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.server-launcher-header svg,
+.server-action-list svg,
+.server-vault-row svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+
+.server-alert {
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  font-size: 0.875rem;
+}
+
+.server-alert--error {
+  border-color: color-mix(in srgb, var(--destructive) 40%, transparent);
+  background: color-mix(in srgb, var(--destructive) 10%, transparent);
+}
+
+.server-vault-grid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 26.25rem) minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.server-vault-card {
+  min-width: 0;
+  gap: 0;
+}
+
+.server-card-title {
+  font-size: 1.25rem;
+}
+
+.server-card-header-row {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.server-card-header-row > div {
+  min-width: 0;
+}
+
+.server-view-all[data-ui-component="button"] {
+  flex: 0 0 auto;
+  padding-inline: 0;
+}
+
+.server-action-list {
+  gap: 0.75rem;
+}
+
+.server-action-copy,
+.server-vault-copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.server-action-title,
+.server-vault-name {
+  font-weight: 500;
+}
+
+.server-vault-meta,
+.server-vault-empty,
+.server-import-progress {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.server-action-description {
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.server-managed-content {
+  padding-inline: 1rem;
+  padding-bottom: 1rem;
+}
+
+.server-vault-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.server-vault-row {
+  min-width: 0;
+  align-items: stretch;
+  gap: 0.25rem;
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  border-radius: 0.75rem;
+  padding: 0.25rem;
+}
+
+.server-vault-open {
+  align-items: center;
+}
+
+.server-vault-open:disabled {
+  cursor: default;
+  opacity: 0.68;
+}
+
+.server-vault-name,
+.server-vault-meta {
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.server-vault-menu-trigger {
+  width: 2rem;
+  height: 2rem;
+  align-self: center;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--muted-foreground);
+  background: transparent;
+  cursor: pointer;
+}
+
+.server-vault-menu-trigger:hover:not(:disabled) {
+  color: var(--foreground);
+  background: var(--accent);
+}
+
+.server-vault-menu-trigger:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ring) 50%, transparent);
+  outline-offset: 1px;
+}
+
+.server-vault-empty {
+  border: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1rem;
+}
+
+@media (max-width: 52rem) {
+  .server-vault-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 38rem) {
+  .server-centered-surface {
+    padding: 1rem;
+  }
+
+  .server-launcher-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

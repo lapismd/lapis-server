@@ -33,7 +33,7 @@ export async function providerQueueFixture() {
     },
     target: { id: "codex", agent: "codex" },
   });
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-provider-queue-"));
   const agents = join(root, "agents.json");
   await writeFile(agents, bytes, { mode: 0o600 });
@@ -141,7 +141,10 @@ export async function providerQueueFixture() {
       await page.getByLabel("Password").fill(password);
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
       await page
-        .getByRole("button", { name: "Open Rust vault", exact: true })
+        .getByRole("button", {
+          name: "Open Rust vault owner · server-hosted",
+          exact: true,
+        })
         .click();
       await page
         .getByRole("button", { name: "Open Chat", exact: true })

@@ -40,7 +40,9 @@ export default defineConfig(headingRequirements(), {
       mode: "mapped",
       canonicalPattern:
         "^spec/src/current/(?:server|governance|hosted|delivery)\\.md$",
-      protected: ["^(?:crates/|scripts/|\\.github/|Cargo\\.toml$|Dockerfile$)"],
+      protected: [
+        "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
+      ],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [
         { pattern: "^crates/", chapters: ["spec/src/current/server.md"] },

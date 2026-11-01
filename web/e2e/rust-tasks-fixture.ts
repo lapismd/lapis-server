@@ -9,6 +9,7 @@ import type {
 } from "../../crates/lapis-app-protocol/bindings/protocol";
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 import { installTasksArtifact } from "./tasks-installed-plugin";
+import { signOutHostedWorkspace } from "./rust-hosted-session";
 
 export const hostedTask =
   "---\ntype: task\nid: hosted\ntask:\n  status: open\n  inbox: true\n  start: anytime\n---\n\n# Review the hosted migration\n";
@@ -18,7 +19,7 @@ export async function createHostedTasksFixture(
   artifact: string,
   files: Record<string, string> = { "Hosted.md": hostedTask },
 ) {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   const root = await mkdtemp(join(repository, ".local/rust-tasks-browser-"));
   const password = randomBytes(32).toString("base64url");
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -99,7 +100,10 @@ export async function createHostedTasksFixture(
         response.request().method() === "POST",
     );
     await target
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     const admittedClient: ClientDescriptor = await (await admitted).json();
     if (!ready) return admittedClient;
@@ -201,7 +205,18 @@ export async function createHostedTasksFixture(
         });
       }
       try {
-        if (!page.isClosed()) await page.goto("about:blank");
+        if (!page.isClosed()) {
+          if (
+            (await page
+              .locator('[data-notes-session-ready="true"]')
+              .isVisible()) ||
+            (await page
+              .getByRole("heading", { name: "Your vaults", exact: true })
+              .isVisible())
+          )
+            await signOutHostedWorkspace(page);
+          await page.goto("about:blank");
+        }
       } finally {
         await service.stop();
         expect(runtimeErrors).toEqual([]);

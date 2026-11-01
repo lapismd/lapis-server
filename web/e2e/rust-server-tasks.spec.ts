@@ -8,7 +8,7 @@ import { createHostedTasksFixture, hostedTask } from "./rust-tasks-fixture";
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
 test.beforeAll(async () => {
-  artifact = await buildTasksArtifact(resolve("../.."));
+  artifact = await buildTasksArtifact(resolve(import.meta.dirname, "../.."));
 });
 const complete = (page: import("@playwright/test").Page, title: string) =>
   page
@@ -79,8 +79,9 @@ test("matching operator and browser date materializes and completes the retained
   const today = `${parts.year}-${parts.month}-${parts.day}`;
   const corpus = JSON.parse(
     await readFile(
-      resolve(
+      new URL(
         "../../crates/lapis-app-core/tests/fixtures/task-tracked-today.json",
+        import.meta.url,
       ),
       "utf8",
     ),

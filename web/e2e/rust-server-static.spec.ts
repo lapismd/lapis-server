@@ -8,7 +8,7 @@ import { manageVaults } from "./tasks-editor-controls";
 test("the real Rust binary serves the retained built Web app through login, note persistence and cold restart without Vite", async ({
   page,
 }, testInfo) => {
-  const repository = resolve("../..");
+  const repository = resolve(import.meta.dirname, "../..");
   await mkdir(join(repository, ".local"), { recursive: true });
   const root = await mkdtemp(join(repository, ".local/rust-static-browser-"));
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -20,7 +20,7 @@ test("the real Rust binary serves the retained built Web app through login, note
     password,
     undefined,
     undefined,
-    join(repository, "packages/web/dist-rust-server"),
+    join(repository, "web/dist"),
   );
   const failedAssets: string[] = [];
   page.on("response", (response) => {
@@ -51,7 +51,10 @@ test("the real Rust binary serves the retained built Web app through login, note
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
     await page.locator('[data-path="Note.md"]').click();
@@ -87,7 +90,10 @@ test("the real Rust binary serves the retained built Web app through login, note
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await page
-      .getByRole("button", { name: "Open Rust vault", exact: true })
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
       .click();
     await page.locator('[data-path="Note.md"]').click();
     await expect(

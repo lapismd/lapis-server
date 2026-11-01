@@ -1,0 +1,96 @@
+.server-centered-surface {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  place-items: center;
+  overflow: auto;
+  padding: 2rem;
+}
+
+.server-status-card,
+.server-login form,
+.server-login-card {
+  width: min(100%, 28rem);
+}
+
+.server-status-card,
+.server-login-card,
+.server-vault-card {
+  border-color: color-mix(in srgb, var(--border) 70%, transparent);
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+}
+
+.server-eyebrow,
+.server-status-title,
+.server-login-title,
+.server-launcher-title,
+.server-launcher-description,
+.server-error,
+.server-import-progress {
+  margin: 0;
+}
+
+.server-eyebrow {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.server-status-title,
+.server-login-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.server-login-header {
+  justify-items: center;
+  text-align: center;
+}
+
+.server-login-logo {
+  width: 5.5rem;
+  height: 5.5rem;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 1.5rem;
+  object-fit: cover;
+  background: var(--card);
+  box-shadow: 0 0.25rem 1rem
+    color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.server-login-heading,
+.server-login-fields,
+.server-action-list,
+.server-dialog-form {
+  display: grid;
+}
+
+.server-login-heading {
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.server-login-fields,
+.server-dialog-form {
+  gap: 1rem;
+}
+
+.server-field {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.server-full-button[data-ui-component="button"] {
+  width: 100%;
+}
+
+.server-error,
+.server-alert--error {
+  color: color-mix(in srgb, var(--destructive) 60%, var(--foreground));
+}

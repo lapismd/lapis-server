@@ -12,7 +12,7 @@ import {
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
 test.beforeAll(async () => {
-  artifact = await buildTasksArtifact(resolve("../.."));
+  artifact = await buildTasksArtifact(resolve(import.meta.dirname, "../.."));
 });
 
 test("another browser's real dirty editor fences Tasks and its owner flushes, yields and rearms", async ({

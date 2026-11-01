@@ -14,7 +14,7 @@ import {
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
 test.beforeAll(async () => {
-  artifact = await buildTasksArtifact(resolve("../.."));
+  artifact = await buildTasksArtifact(resolve(import.meta.dirname, "../.."));
 });
 
 for (const action of ["switch", "archive", "logout"] as const) {
@@ -43,7 +43,10 @@ for (const action of ["switch", "archive", "logout"] as const) {
     async function leave() {
       if (action === "switch")
         await page
-          .getByRole("button", { name: "Open Other Tasks vault", exact: true })
+          .getByRole("button", {
+            name: "Open Other Tasks vault owner · server-hosted",
+            exact: true,
+          })
           .click();
       else if (action === "logout")
         await page
@@ -219,7 +222,7 @@ for (const action of ["switch", "archive", "logout"] as const) {
       else
         await expect(
           page.getByRole("button", {
-            name: "Rust vault is archived",
+            name: "Rust vault owner · archived",
             exact: true,
           }),
         ).toBeDisabled();

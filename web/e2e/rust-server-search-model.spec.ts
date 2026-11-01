@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 import { randomBytes } from "node:crypto";
 import { mkdir, mkdtemp, readFile, readdir } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { RustHttpClient } from "../src/hosted/rust/client";
-import { RustDatabaseProvider } from "../src/hosted/rust/database-provider";
+import type { RustHttpClient } from "../src/hosted/rust/client";
+import type { RustDatabaseProvider } from "../src/hosted/rust/database-provider";
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 import {
   assertAssets,
@@ -21,7 +21,11 @@ test("actual hosted ONNX provider retains qualified vectors and ranks across det
   );
   test.setTimeout(240_000);
   const fixture = await qualifiedReference();
-  const repository = resolve("../..");
+  const { RustHttpClient } = await import("../src/hosted/rust/client");
+  const { RustDatabaseProvider } = await import(
+    "../src/hosted/rust/database-provider"
+  );
+  const repository = resolve(import.meta.dirname, "../..");
   await mkdir(join(repository, ".local"), { recursive: true });
   const root = await mkdtemp(join(repository, ".local/rust-hosted-onnx-"));
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
@@ -36,7 +40,10 @@ test("actual hosted ONNX provider retains qualified vectors and ranks across det
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
     await expect(
-      page.getByRole("button", { name: "Open Rust vault", exact: true }),
+      page.getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      }),
     ).toBeVisible();
     const open = async () => {
       const cookies = (await context.cookies(origin))

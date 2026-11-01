@@ -211,3 +211,5 @@ behavior and observation streams stay in the Notes specification.
 
 - Those commands reuse the authenticated vault attachment.
 - A revoked or foreign client cannot supply a filesystem root or caller scope.
+- Bounded History reads may return typed `409`/`CONFLICT`/`history: busy` backpressure.
+- Retained acceptance exercises File History Refresh without replaying mutations and rejects unexpected native, admission, restore and unknown-write errors.
