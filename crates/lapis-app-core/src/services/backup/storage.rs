@@ -1,3 +1,4 @@
+use super::initialization::{Initialization, Stage};
 use super::{Owner, failure, provider, watch};
 use crate::{
     services::{Error, Result, VaultService},
@@ -90,15 +91,25 @@ impl BackupStorage {
             .join(vault.id.to_string()))
     }
     pub(super) fn start(&self, vault: &Arc<VaultService>) -> Result<Owner> {
-        let root = {
-            let state = vault.lock()?;
-            if state.phase == VaultPhase::Closed {
-                return Err(Error::closed());
-            }
-            state.root.verify_physical_root()?;
-            self.validate_vault(&state.root)?;
-            state.root.try_clone()?
-        };
+        self.start_observed(vault, &Initialization::new())
+    }
+    pub(super) fn start_observed(
+        &self,
+        vault: &Arc<VaultService>,
+        diagnostics: &Initialization,
+    ) -> Result<Owner> {
+        let root = diagnostics.service(
+            Stage::Admission,
+            (|| {
+                let state = vault.lock()?;
+                if state.phase == VaultPhase::Closed {
+                    return Err(Error::closed());
+                }
+                state.root.verify_physical_root()?;
+                self.validate_vault(&state.root)?;
+                Ok(state.root.try_clone()?)
+            })(),
+        )?;
         let id = vault.id.to_string();
         let storage = Storage::new(
             Binding {
@@ -108,31 +119,42 @@ impl BackupStorage {
             },
             self.root.path().join(".layouts").join(&id),
         );
-        let executor = tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-            .map_err(|_| failure())?;
-        executor
-            .block_on(storage.recover())
-            .map_err(|_| failure())?;
-        let binding = storage.binding().map_err(|_| failure())?;
-        self.validate_vault(&root)?;
-        root.verify_physical_root()?;
-        let engine = Backup::start_idle(
-            provider::Provider {
-                native: NativeRepository {
-                    binding: binding.clone(),
-                    exclusions: vec![],
+        let executor = diagnostics.io(
+            Stage::Executor,
+            tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build(),
+        )?;
+        diagnostics.native(Stage::RecoverStorage, executor.block_on(storage.recover()))?;
+        let binding = diagnostics.native(Stage::ResolveBinding, storage.binding())?;
+        diagnostics.service(
+            Stage::Revalidate,
+            (|| {
+                self.validate_vault(&root)?;
+                root.verify_physical_root()?;
+                Ok(())
+            })(),
+        )?;
+        let engine = diagnostics.native(
+            Stage::StartWorker,
+            Backup::start_idle(
+                provider::Provider {
+                    native: NativeRepository {
+                        binding: binding.clone(),
+                        exclusions: vec![],
+                    },
+                    vault: Arc::downgrade(vault),
                 },
-                vault: Arc::downgrade(vault),
-            },
-            Timing::default(),
-        )
-        .map_err(|_| failure())?;
-        let watcher = watch::start(root.path(), engine.changes())?;
-        executor.block_on(engine.capture()).map_err(|_| failure())?;
+                Timing::default(),
+            ),
+        )?;
+        let watcher = watch::start(root.path(), engine.changes(), diagnostics)?;
+        diagnostics.native(Stage::InitialCapture, executor.block_on(engine.capture()))?;
         if self.history_indexing {
-            vault.ensure_history_indexing(Some(engine.subscribe()))?;
+            diagnostics.service(
+                Stage::HistoryIndexing,
+                vault.ensure_history_indexing(Some(engine.subscribe())),
+            )?;
         }
         Ok(Owner {
             status: engine.subscribe(),

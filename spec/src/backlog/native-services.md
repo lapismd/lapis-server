@@ -107,3 +107,16 @@ consolidated here by behavior. The
 retains their original identities and receipt pointers. Shared runtime/core
 interfaces must be updated in Notes before or with implementations. Source and
 consumer qualification remain distinct; publication requires its own authority.
+
+## Backup initialization failure diagnosis
+
+Disposition: unresolved Desktop ARM64 Original/Managed reader initialization
+failure. The [diagnostic receipt](../../records/2026-11-02-backup-initialization-diagnostics.md)
+adds opt-in debug stage records in Core; it does not establish a root cause.
+Linux Core backup tests pass without reproducing the original failure. Preserve
+Desktop's original ARM64 quarantine, independent histories, source bytes and
+start/stop assertions. After intake of this Core revision, execute the original
+Desktop case alone and in its integration-test group on ARM64, preserving first
+failures and bounded diagnostic attempts. Diagnose the reported owning stage,
+fix the demonstrated cause and qualify the unchanged scenario before removing
+the quarantine. Never include unrelated ignored subprocess helpers.
