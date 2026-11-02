@@ -97,7 +97,10 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 
 SRV-GOV-001 remains unchanged for the explicit debug backup stage diagnostics:
 source limits, exact Git ownership and public-error privacy remain enforced.
-The [source receipt](../../records/2026-11-02-backup-initialization-diagnostics.md)
-records focused tests, strict Core all-target Clippy and remaining ARM64/hosted
+The [initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md)
+and [shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md)
+record focused tests, strict Core all-target Clippy and remaining ARM64/hosted
 qualification. Diagnostic observability cannot remove the original quarantine,
-replace unchanged native assertions or establish a root-cause repair.
+replace unchanged native assertions or establish a root-cause repair. Fixed
+shutdown categories MUST NOT expose native error text, paths, credentials or
+vault content.

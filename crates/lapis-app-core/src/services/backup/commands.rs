@@ -1,3 +1,4 @@
+use super::initialization::{Shutdown, ShutdownStage};
 use super::{Owner, diagnostics, failure};
 use crate::services::{Client, Error, Result, VaultService};
 use jj_vault::Backup;
@@ -58,38 +59,72 @@ impl Client {
     /// Explicit disable retains failed workers for retry, and removes only a
     /// successfully drained coordinator. A detached observer never calls this.
     pub async fn stop_backup(&self) -> Result<()> {
-        self.vault.lock()?.require_client(self.id)?;
-        let work = self.vault.begin_work()?;
+        let diagnostics = Shutdown::new();
+        diagnostics.service(
+            ShutdownStage::ClientAdmission,
+            (|| self.vault.lock()?.require_client(self.id))(),
+        )?;
+        let work = diagnostics.service(ShutdownStage::WorkReservation, self.vault.begin_work())?;
         let vault = self.vault.clone();
-        let ticket = vault.backup.reserve()?;
-        ticket
+        let ticket =
+            diagnostics.service(ShutdownStage::QueueReservation, vault.backup.reserve())?;
+        let worker_diagnostics = diagnostics.clone();
+        let result = ticket
             .run(work, move || {
-                let storage = vault.backup_storage.as_ref().ok_or_else(|| {
-                    Error::new(
-                        lapis_app_protocol::ErrorCode::Unsupported,
-                        "Automatic backup is not selected",
-                    )
-                })?;
-                storage.validate_vault(&vault.lock()?.root)?;
-                let mut slot = vault.backup.lock().map_err(|_| failure())?;
-                stop(&mut slot)
+                let storage = worker_diagnostics.service(
+                    ShutdownStage::SelectStorage,
+                    vault.backup_storage.as_ref().ok_or_else(|| {
+                        Error::new(
+                            lapis_app_protocol::ErrorCode::Unsupported,
+                            "Automatic backup is not selected",
+                        )
+                    }),
+                )?;
+                worker_diagnostics.service(
+                    ShutdownStage::ValidateStorage,
+                    (|| storage.validate_vault(&vault.lock()?.root))(),
+                )?;
+                let mut slot = worker_diagnostics.service(
+                    ShutdownStage::LockOwner,
+                    vault.backup.lock().map_err(|_| failure()),
+                )?;
+                stop_observed(&mut slot, &worker_diagnostics)
             })
-            .await
+            .await;
+        diagnostics.service(ShutdownStage::QueueCompletion, result)
     }
 }
 
 pub(super) fn stop(slot: &mut Option<Arc<Owner>>) -> Result<()> {
+    stop_inner(slot, None)
+}
+
+fn stop_observed(slot: &mut Option<Arc<Owner>>, diagnostics: &Shutdown) -> Result<()> {
+    stop_inner(slot, Some(diagnostics))
+}
+
+fn stop_inner(slot: &mut Option<Arc<Owner>>, diagnostics: Option<&Shutdown>) -> Result<()> {
     let Some(owner) = slot.clone() else {
         return Ok(());
     };
     let mut engine = owner.engine.blocking_lock();
-    tokio::runtime::Builder::new_current_thread()
+    let result = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .map_err(|_| failure())?
-        .block_on(engine.try_close())
-        .map_err(|_| failure())?;
-    owner.watch.lock().map_err(|_| failure())?.take();
+        .block_on(engine.try_close());
+    match diagnostics {
+        Some(diagnostics) => diagnostics.native(ShutdownStage::FinalCapture, result)?,
+        None => result.map_err(|_| failure())?,
+    }
+    let mut watcher = match diagnostics {
+        Some(diagnostics) => diagnostics.service(
+            ShutdownStage::ReleaseWatcher,
+            owner.watch.lock().map_err(|_| failure()),
+        )?,
+        None => owner.watch.lock().map_err(|_| failure())?,
+    };
+    watcher.take();
     *slot = None;
     Ok(())
 }

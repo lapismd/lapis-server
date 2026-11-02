@@ -8,6 +8,7 @@ use std::{
 };
 
 static NEXT_ATTEMPT: AtomicU64 = AtomicU64::new(1);
+static NEXT_SHUTDOWN_ATTEMPT: AtomicU64 = AtomicU64::new(1);
 
 #[derive(Clone, Copy, Debug)]
 pub(super) enum Stage {
@@ -31,6 +32,26 @@ pub(super) enum Stage {
 }
 
 pub(super) struct Initialization {
+    attempt: u64,
+    started: Instant,
+    enabled: bool,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub(super) enum ShutdownStage {
+    ClientAdmission,
+    WorkReservation,
+    QueueReservation,
+    SelectStorage,
+    ValidateStorage,
+    LockOwner,
+    FinalCapture,
+    ReleaseWatcher,
+    QueueCompletion,
+}
+
+#[derive(Clone)]
+pub(super) struct Shutdown {
     attempt: u64,
     started: Instant,
     enabled: bool,
@@ -92,6 +113,73 @@ impl Initialization {
     }
 }
 
+impl Shutdown {
+    pub(super) fn new() -> Self {
+        Self {
+            attempt: NEXT_SHUTDOWN_ATTEMPT.fetch_add(1, Ordering::Relaxed),
+            started: Instant::now(),
+            enabled: cfg!(debug_assertions)
+                && std::env::var_os("LAPIS_APP_BACKUP_DIAGNOSTICS")
+                    .is_some_and(|value| value == "1"),
+        }
+    }
+    pub(super) fn service<T>(&self, stage: ShutdownStage, result: Result<T>) -> Result<T> {
+        self.emit(stage, result.is_ok(), "service");
+        result
+    }
+    pub(super) fn native<T>(
+        &self,
+        stage: ShutdownStage,
+        result: std::result::Result<T, String>,
+    ) -> Result<T> {
+        let category = result
+            .as_ref()
+            .err()
+            .map_or("native", |error| native_category(error));
+        self.emit(stage, result.is_ok(), category);
+        result.map_err(|_| failure())
+    }
+    fn emit(&self, stage: ShutdownStage, success: bool, category: &str) {
+        if self.enabled {
+            let _ = writeln!(
+                io::stderr().lock(),
+                "{}",
+                self.line(stage, success, category)
+            );
+        }
+    }
+    fn line(&self, stage: ShutdownStage, success: bool, category: &str) -> String {
+        format!(
+            "lapis-backup-stop pid={} attempt={} state=stopping stage={stage:?} outcome={} category={category} elapsed_ms={}",
+            std::process::id(),
+            self.attempt,
+            if success { "ok" } else { "failed" },
+            self.started.elapsed().as_millis(),
+        )
+    }
+}
+
+fn native_category(error: &str) -> &'static str {
+    if error == "Another vault backup command is running"
+        || error == "Vault backup is busy or closed"
+    {
+        "native-busy"
+    } else if error == "The vault backup binding is invalid or changed" {
+        "native-binding"
+    } else if error.starts_with("Vault backup IO:") {
+        "native-io"
+    } else if error.starts_with("Vault backup JJ:") {
+        "native-jj"
+    } else if matches!(
+        error,
+        "Vault backup stopped" | "Vault backup worker is closed" | "Vault backup worker failed"
+    ) {
+        "native-worker"
+    } else {
+        "native-other"
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -100,6 +188,13 @@ mod tests {
     fn diagnostics() -> Initialization {
         Initialization {
             attempt: 7,
+            started: Instant::now(),
+            enabled: false,
+        }
+    }
+    fn shutdown_diagnostics() -> Shutdown {
+        Shutdown {
+            attempt: 9,
             started: Instant::now(),
             enabled: false,
         }
@@ -155,5 +250,28 @@ mod tests {
             .unwrap_err();
         assert_eq!(error.code(), lapis_app_protocol::ErrorCode::Closed);
         assert_eq!(error.to_string(), "Vault service is closed");
+    }
+    #[test]
+    fn shutdown_diagnostics_classify_without_retaining_native_error_text() {
+        let diagnostics = shutdown_diagnostics();
+        let secret = "/private/user-vault/secret-token";
+        let line = diagnostics.line(
+            ShutdownStage::FinalCapture,
+            false,
+            native_category(&format!("Vault backup JJ: {secret}")),
+        );
+        assert!(line.contains(
+            "attempt=9 state=stopping stage=FinalCapture outcome=failed category=native-jj"
+        ));
+        assert!(line.contains("elapsed_ms="));
+        assert!(!line.contains(secret));
+        let error = diagnostics
+            .native::<()>(
+                ShutdownStage::FinalCapture,
+                Err(format!("Vault backup IO: {secret}")),
+            )
+            .unwrap_err();
+        assert_eq!(error.to_string(), "Automatic vault backup is unavailable");
+        assert!(!error.to_string().contains(secret));
     }
 }
