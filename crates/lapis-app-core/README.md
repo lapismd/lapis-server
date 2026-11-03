@@ -33,3 +33,11 @@ not current commands or completion authority.
 Core application policy has no Tauri, HTTP, renderer or browser dependency.
 Consumers use public modules directly instead of copying engines or routing
 through old Desktop implementation paths.
+
+For a debug-only backup initialization investigation, explicitly set
+`LAPIS_APP_BACKUP_DIAGNOSTICS=1`. Each initialization reports a bounded set of
+fixed stage/outcome/category records, process and attempt IDs, elapsed time and
+an OS error code where the owning error type retains it. Paths, error text,
+credentials and vault content are excluded; public errors remain sanitized.
+Release builds do not emit these diagnostics. A stage report identifies where
+initialization failed; it does not establish or repair its cause.

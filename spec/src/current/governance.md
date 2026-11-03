@@ -92,3 +92,15 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 - Vault-button accessible names include their visible name, role and status text.
 - Production-component stories exercise keyboard navigation and the real shell geometry with axe failures enabled.
 - Fixtures remain mounted after their play finishes and release resources when the story unmounts.
+
+## Backup diagnostic unchanged-contract confirmation
+
+SRV-GOV-001 remains unchanged for the explicit debug backup stage diagnostics:
+source limits, exact Git ownership and public-error privacy remain enforced.
+The [initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md)
+and [shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md)
+record focused tests, strict Core all-target Clippy and remaining ARM64/hosted
+qualification. Diagnostic observability cannot remove the original quarantine,
+replace unchanged native assertions or establish a root-cause repair. Fixed
+shutdown categories MUST NOT expose native error text, paths, credentials or
+vault content.

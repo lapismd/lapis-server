@@ -8,6 +8,7 @@ mod dto;
 pub(super) mod history;
 #[cfg(test)]
 mod history_tests;
+mod initialization;
 mod provider;
 mod restore;
 mod slot;
@@ -19,6 +20,7 @@ mod watch;
 
 use super::{Client, Error, Result};
 pub use history::HistoryIndexStatus;
+use initialization::{Initialization, Stage};
 use jj_vault::{Backup, Status};
 use std::sync::{Arc, Mutex};
 pub use storage::BackupStorage;
@@ -39,28 +41,42 @@ impl Client {
     /// Reconciliation is native accepted work; cancellation of this waiter
     /// cannot abandon initialization. Receivers own neither engine nor watch.
     pub async fn start_backup(&self) -> Result<Receiver<Status>> {
-        self.vault.lock()?.require_client(self.id)?;
+        let diagnostics = Initialization::new();
+        diagnostics.service(
+            Stage::ClientAdmission,
+            (|| self.vault.lock()?.require_client(self.id))(),
+        )?;
         let vault = self.vault.clone();
-        let work = vault.begin_work()?;
-        let ticket = vault.backup.reserve()?;
+        let work = diagnostics.service(Stage::WorkReservation, vault.begin_work())?;
+        let ticket = diagnostics.service(Stage::QueueReservation, vault.backup.reserve())?;
         let owner = ticket
             .run(work, move || {
-                let storage = vault.backup_storage.as_ref().ok_or_else(|| {
-                    Error::new(
-                        lapis_app_protocol::ErrorCode::Unsupported,
-                        "Automatic backup is not selected",
-                    )
-                })?;
-                storage.validate_vault(&vault.lock()?.root)?;
-                let mut slot = vault.backup.lock().map_err(|_| failure())?;
-                if !configuration::read(&vault)?.enabled {
+                let storage = diagnostics.service(
+                    Stage::SelectStorage,
+                    vault.backup_storage.as_ref().ok_or_else(|| {
+                        Error::new(
+                            lapis_app_protocol::ErrorCode::Unsupported,
+                            "Automatic backup is not selected",
+                        )
+                    }),
+                )?;
+                diagnostics.service(
+                    Stage::ValidateStorage,
+                    (|| storage.validate_vault(&vault.lock()?.root))(),
+                )?;
+                let mut slot = diagnostics
+                    .service(Stage::LockOwner, vault.backup.lock().map_err(|_| failure()))?;
+                if !diagnostics
+                    .service(Stage::ReadConfiguration, configuration::read(&vault))?
+                    .enabled
+                {
                     commands::stop(&mut slot)?;
                     return Ok(None);
                 }
                 if let Some(owner) = slot.as_ref() {
                     return Ok(Some(owner.clone()));
                 }
-                let owner = Arc::new(storage.start(&vault)?);
+                let owner = Arc::new(storage.start_observed(&vault, &diagnostics)?);
                 *slot = Some(owner.clone());
                 Ok::<_, Error>(Some(owner))
             })

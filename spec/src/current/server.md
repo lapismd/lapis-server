@@ -77,3 +77,18 @@ Native Markdown/Search algorithms use lapis-plugins commit
 `f772f2bacc20a914cef2f0398f294cefbac4ba3c`. These remain owning-package
 engines. App Core retains admission, scheduling, writer fencing and persistence;
 host/native/provider/distribution qualification remains separate.
+
+## Backup initialization diagnostic review
+
+Unchanged-contract confirmation for SRV-SRV-004: debug-only, explicitly selected
+backup initialization and shutdown diagnostics retain Core ownership,
+admission, storage selection, capture ordering and accepted-work drain. Public
+errors remain sanitized; records contain only fixed stages/categories,
+process/attempt IDs, elapsed time and retained OS error codes where available.
+They exclude paths, native error text, credentials and vault content. Release
+builds emit none. This observability change neither repairs nor qualifies the
+intermittent Desktop failure; its original quarantine and assertions remain
+unchanged. Initial coverage is recorded in the
+[initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md);
+the demonstrated shutdown boundary and its extension are recorded in the
+[shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md).

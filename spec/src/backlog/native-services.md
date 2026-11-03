@@ -107,3 +107,19 @@ consolidated here by behavior. The
 retains their original identities and receipt pointers. Shared runtime/core
 interfaces must be updated in Notes before or with implementations. Source and
 consumer qualification remain distinct; publication requires its own authority.
+
+## Backup initialization failure diagnosis
+
+Disposition: unresolved Desktop Original/Managed reader failure. The
+[initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md)
+added opt-in debug initialization stages. A fresh hosted Linux execution then
+completed every initialization stage but failed the explicit stop at final
+capture; the [shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md)
+adds safe stop-stage categories for the next original execution. Local Linux
+exact and scoped consumer cases pass and are non-reproductions, not proof of a
+fix. Preserve Desktop's original ARM64 quarantine, independent histories,
+source bytes and start/stop assertions. Execute the original Desktop case alone
+and in its integration-test group on ARM64, preserving first failures and
+bounded diagnostics. Diagnose the reported owning stage, fix the demonstrated
+cause and qualify the unchanged scenario before removing the quarantine. Never
+include unrelated ignored subprocess helpers.
