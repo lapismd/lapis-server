@@ -48,7 +48,7 @@
     "@lapis-notes/source-editor": "^0.1.3",
     "@lapis-notes/ui": "^0.1.6",
     "@lapis-notes/workspace": "^0.3.2",
-    "@lapismd/design-core": "^0.9.0",
+    "@lapismd/design-core": "^0.10.1",
     "@lapismd/jj-history": "~0.1.0",
     "@lapismd/mira": "~0.1.4",
     "@lucide/svelte": "^0.523.0",
