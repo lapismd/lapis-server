@@ -1,5 +1,15 @@
 # @lapismd/lapis-server
 
+## 1.0.2
+
+### Patch Changes
+
+- [#16](https://github.com/lapismd/lapis-server/pull/16) [`fd92fb5`](https://github.com/lapismd/lapis-server/commit/fd92fb521f9ac49a20bb97293c32f50c5e31cbaa) Thanks [@stevejuma](https://github.com/stevejuma)! - Extend the opt-in debug backup diagnostics across shutdown and final capture
+  with fixed safe categories while preserving public errors and backup behavior.
+
+- [#14](https://github.com/lapismd/lapis-server/pull/14) [`73c7709`](https://github.com/lapismd/lapis-server/commit/73c7709eb36cfed6f286635a3fe726fb916b0a10) Thanks [@stevejuma](https://github.com/stevejuma)! - Publish multi-architecture server images and align the hosted login inputs with
+  Design Core's neutral form chrome.
+
 ## 1.0.1
 
 ### Patch Changes
