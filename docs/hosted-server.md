@@ -20,7 +20,9 @@ docker compose up -d
 
 `docker-compose.yml` pulls `ghcr.io/lapismd/lapis-server`. It publishes port
 `8787`, keeps application files read-only, and stores the profile in the
-`lapis_data` volume mounted at `/data`.
+`lapis_data` volume mounted at `/data`. Homebrew and its installed packages use
+the independent `lapis_homebrew` volume mounted at
+`/home/linuxbrew/.linuxbrew`.
 
 Set `LAPIS_SERVER_ORIGIN` to the exact browser origin. Leave
 `LAPIS_SERVER_INSECURE_COOKIE=1` only for local HTTP. Behind HTTPS, set the
@@ -45,6 +47,30 @@ file, and do not pass the password on the command line. That file is the
 owner password only when the profile has no owner yet. An existing profile
 keeps the password from its first start. The bootstrap username is
 `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
+
+## Homebrew and agent CLIs
+
+The image includes `brew`, `codex`, `cursor-agent`, `claude`, and `opencode` on
+both published architectures. Run Cursor as an ACP server with
+`cursor-agent acp`. Provider authentication and
+`LAPIS_SERVER_AGENTS_CONFIG` remain operator inputs; the image does not create
+agent targets or embed credentials.
+
+The named Homebrew volume is seeded from a new image and subsequently keeps
+its own installed versions. Do not replace it with an empty bind mount. Set
+`LAPIS_SERVER_HOMEBREW_PACKAGES` to a whitespace- or newline-separated list of
+additional formulae and `LAPIS_SERVER_HOMEBREW_CASKS` to the equivalent cask
+list. Startup validates every name and fails on installation errors. Formulae
+must have compatible bottles because the runtime intentionally omits build
+tools.
+
+Homebrew's implicit updates are disabled. Operators can update the retained
+state explicitly:
+
+```sh
+docker compose exec lapis-server brew update
+docker compose exec lapis-server brew upgrade
+```
 
 ## Build context
 

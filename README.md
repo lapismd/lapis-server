@@ -25,6 +25,7 @@ docker pull ghcr.io/lapismd/lapis-server:<v*>
 docker run --rm \
   --publish 8787:8787 \
   --volume lapis-data:/data \
+  --volume lapis-homebrew:/home/linuxbrew/.linuxbrew \
   --volume "$LAPIS_SERVER_CONFIG_FILE":/run/lapis/config.json:ro \
   --volume "$LAPIS_SERVER_PASSWORD_FILE":/run/secrets/lapis_bootstrap_password:ro \
   --env LAPIS_SERVER_ORIGIN=http://127.0.0.1:8787 \
@@ -35,11 +36,38 @@ docker run --rm \
 ```
 
 The container listens on port `8787`, stores the profile on the `/data` volume,
-and reports readiness at <http://127.0.0.1:8787/readyz>.
+keeps Homebrew state in `/home/linuxbrew/.linuxbrew`, and reports readiness at
+<http://127.0.0.1:8787/readyz>.
 
 ```sh
 curl --fail --silent http://127.0.0.1:8787/readyz
 ```
+
+## Agent tooling
+
+The image includes Homebrew plus native `codex`, `cursor-agent`, `claude`, and
+`opencode` executables. Cursor's ACP server is `cursor-agent acp`. The tools do
+not add agent targets or credentials automatically; mount an operator-owned
+`LAPIS_SERVER_AGENTS_CONFIG` and provide each provider's authentication through
+its normal environment or files under the persistent `/data` home directory.
+
+The `lapis-homebrew` named volume is populated from the image when first
+created, then retains installed packages and versions across container and
+image updates. An empty bind mount masks the bundled installation and is
+rejected. To add packages at startup, use whitespace- or newline-separated
+values:
+
+```sh
+export LAPIS_SERVER_HOMEBREW_PACKAGES="jq yq"
+export LAPIS_SERVER_HOMEBREW_CASKS="codex"
+```
+
+Formula installs are bottle-only because the runtime image intentionally omits
+a compiler toolchain. An unavailable bottle, invalid package name, or failed
+install prevents the server from starting. Homebrew does not update
+automatically; update the persistent installation explicitly with
+`docker compose exec lapis-server brew update` and
+`docker compose exec lapis-server brew upgrade`.
 
 `LAPIS_SERVER_CONFIG_FILE` is a JSON config on the host, mounted read-only at
 `/run/lapis/config.json`. `{"vaults":[]}` is enough for the first start. For
