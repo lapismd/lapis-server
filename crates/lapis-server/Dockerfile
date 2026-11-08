@@ -1,7 +1,14 @@
 # syntax=docker/dockerfile:1.7
-FROM rust:1.99.0-bookworm AS native
+FROM --platform=$BUILDPLATFORM rust:1.99.0-bookworm AS native
+ARG BUILDARCH
 ARG TARGETARCH
-RUN apt-get update && apt-get install -y --no-install-recommends cmake clang pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends cmake clang pkg-config libssl-dev \
+    && if [ "$BUILDARCH" = amd64 ] && [ "$TARGETARCH" = arm64 ]; then \
+         apt-get install -y --no-install-recommends gcc-aarch64-linux-gnu g++-aarch64-linux-gnu; \
+         rustup target add aarch64-unknown-linux-gnu; \
+       fi \
+    && rm -rf /var/lib/apt/lists/*
 COPY . /work/lapis-server
 # A lapis-server checkout is the build context. Qualification may stage
 # path-pinned sibling crates and the archive manifest inside .image-inputs;
@@ -14,12 +21,21 @@ RUN set -eu; \
     rm -rf /work/lapis-server/.image-inputs
 WORKDIR /work/lapis-server
 ENV CARGO_BUILD_JOBS=2
+ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc \
+    CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc \
+    CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
 RUN --mount=type=cache,id=lapis-server-rust-cargo-${TARGETARCH},target=/usr/local/cargo/registry \
     --mount=type=cache,id=lapis-server-rust-git-${TARGETARCH},target=/usr/local/cargo/git \
     --mount=type=cache,id=lapis-server-rust-release-${TARGETARCH},target=/work/lapis-server/.local/rust-core-target \
-    cargo build --release --locked -p lapis-server && cp .local/rust-core-target/release/lapis-server /lapis-server
+    case "$TARGETARCH" in \
+      amd64) target=x86_64-unknown-linux-gnu ;; \
+      arm64) target=aarch64-unknown-linux-gnu ;; \
+      *) echo "Unsupported target architecture: $TARGETARCH" >&2; exit 1 ;; \
+    esac \
+    && cargo build --release --locked -p lapis-server --target "$target" \
+    && cp ".local/rust-core-target/$target/release/lapis-server" /lapis-server
 
-FROM node:24.15.0-bookworm-slim AS web
+FROM --platform=$BUILDPLATFORM node:24.15.0-bookworm-slim AS web
 ARG TARGETARCH
 RUN corepack enable && corepack prepare pnpm@10.34.5 --activate
 COPY . /work/lapis-server

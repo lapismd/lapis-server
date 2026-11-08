@@ -43,7 +43,9 @@ the published image MUST provide `linux/amd64` and `linux/arm64` manifests.
 The image web stage MUST build the Vite application in `web/` after a frozen lockfile install.
 Every pull request MUST build and smoke-test the Homebrew tooling stage for
 `linux/amd64` and `linux/arm64`; the amd64 lane MUST also verify persistent
-package installation through a named volume.
+package installation through a named volume. Those lanes MUST build the native
+server stage for both target architectures without running the ARM64 Rust
+compiler through QEMU.
 Changesets MUST record the release note and create that version tag and GitHub
 release. This repository MUST NOT publish an npm package. Every pull request MUST run
 `cargo test --workspace --locked` with the ordinary Rust dependency cache, and
@@ -56,7 +58,7 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
-- The server mounts published `@lapis-notes/workspace`; every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, runs workspace Rust tests with the ordinary dependency cache, and smoke-tests Homebrew tooling on both architectures; and `main` publishes the 7-character multi-architecture commit image and requires those Server CI jobs plus a pull request before Changesets creates the version tag and GitHub release without npm.
+- The server mounts published `@lapis-notes/workspace`; every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, runs workspace Rust tests with the ordinary dependency cache, cross-builds the native server and smoke-tests Homebrew tooling on both architectures; and `main` publishes the 7-character multi-architecture commit image and requires those Server CI jobs plus a pull request before Changesets creates the version tag and GitHub release without npm.
 
 ## SRV-GOV-002 — Published shell styles
 

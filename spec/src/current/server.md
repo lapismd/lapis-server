@@ -20,6 +20,9 @@ A push to `main` MUST publish that image tagged with the 7-character
 image with that tag. Published tags MUST provide `linux/amd64` and `linux/arm64`
 manifests. The image web stage MUST install this repository with the frozen
 lockfile and build the Vite application in `web/`.
+The Rust and Web build stages MUST execute on the native build platform; the
+Rust stage MUST cross-compile the requested target architecture rather than
+compile the ARM64 dependency graph through QEMU.
 The runtime image MUST provide Homebrew at `/home/linuxbrew/.linuxbrew` on a
 separate persistent volume and MUST include native Codex, Cursor CLI, Claude
 Code, and OpenCode executables on both published architectures. Operators MAY
@@ -35,7 +38,7 @@ installation error.
 
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL, while Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
 - Main publishes the 7-character commit hash and both supported architecture manifests, and a v\* tag publishes that version tag with both manifests.
-- The image web stage builds `web/` with Vite after a frozen lockfile install.
+- The image cross-compiles each target Rust executable and builds `web/` with Vite on the native build platform after a frozen lockfile install.
 - The runtime exposes `brew`, `codex`, `cursor-agent`, `claude`, and `opencode` as the non-root user, persists the Homebrew prefix independently from `/data`, and accepts bounded startup package names while requiring bottles for formulae and rejecting invalid or failed requests before starting the server.
 
 ## SRV-SRV-002 — jj-store git revision
