@@ -11,10 +11,13 @@ services:
       LAPIS_SERVER_BOOTSTRAP_USERNAME: ${LAPIS_SERVER_BOOTSTRAP_USERNAME:-owner}
       LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE: /run/secrets/lapis_bootstrap_password
       LAPIS_SERVER_BUILD_ID: ${LAPIS_SERVER_BUILD_ID:-local-rust-container}
+      LAPIS_SERVER_HOMEBREW_PACKAGES: ${LAPIS_SERVER_HOMEBREW_PACKAGES:-}
+      LAPIS_SERVER_HOMEBREW_CASKS: ${LAPIS_SERVER_HOMEBREW_CASKS:-}
     secrets:
       - lapis_bootstrap_password
     volumes:
       - lapis_data:/data
+      - lapis_homebrew:/home/linuxbrew/.linuxbrew
       - ${LAPIS_SERVER_CONFIG_FILE:?Set LAPIS_SERVER_CONFIG_FILE}:/run/lapis/config.json:ro
     read_only: true
     tmpfs:
@@ -28,3 +31,4 @@ secrets:
 
 volumes:
   lapis_data:
+  lapis_homebrew:

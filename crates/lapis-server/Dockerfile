@@ -37,18 +37,60 @@ ENV NODE_OPTIONS=--max-old-space-size=8192 GOMAXPROCS=2 UV_THREADPOOL_SIZE=2
 RUN --mount=type=cache,id=lapis-server-rust-pnpm-${TARGETARCH},target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
 RUN pnpm exec vite build --config web/vite.config.ts
 
-FROM debian:bookworm-slim AS runtime
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git libstdc++6 libssl3 && rm -rf /var/lib/apt/lists/* \
-    && groupadd --gid 1993 lapis && useradd --uid 1993 --gid 1993 --home-dir /data --shell /usr/sbin/nologin lapis \
-    && mkdir -p /app /data && chown lapis:lapis /data
+FROM ubuntu:24.04 AS homebrew-builder
+RUN apt-get update && apt-get install -y --no-install-recommends bash build-essential ca-certificates curl file git procps unzip xz-utils \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1993 lapis \
+    && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/bash lapis \
+    && mkdir -p /data /home/linuxbrew/.linuxbrew \
+    && chown -R lapis:lapis /data /home/linuxbrew
+ENV HOME=/data
+USER lapis
+RUN NONINTERACTIVE=1 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
+    HOMEBREW_CACHE=/home/linuxbrew/.linuxbrew/var/cache/Homebrew \
+    HOMEBREW_LOGS=/home/linuxbrew/.linuxbrew/var/log/Homebrew \
+    HOMEBREW_NO_SANDBOX=1 \
+    HOMEBREW_TEMP=/home/linuxbrew/.linuxbrew/var/tmp
+RUN mkdir -p "$HOMEBREW_CACHE" "$HOMEBREW_LOGS" "$HOMEBREW_TEMP" \
+    && brew install --cask codex \
+    && brew install --cask cursor-cli \
+    && brew install --cask claude-code \
+    && brew install --force-bottle opencode \
+    && brew cleanup --prune=all \
+    && rm -rf "$HOMEBREW_CACHE"/* "$HOMEBREW_LOGS"/* "$HOMEBREW_TEMP"/*
+
+FROM ubuntu:24.04 AS tooling
+RUN apt-get update && apt-get install -y --no-install-recommends bash ca-certificates curl file git libstdc++6 libssl3 procps unzip xz-utils \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1993 lapis \
+    && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/bash lapis \
+    && mkdir -p /app /data /home/linuxbrew \
+    && chown -R lapis:lapis /data /home/linuxbrew
+COPY --from=homebrew-builder --chown=1993:1993 /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
+COPY --chmod=0555 crates/lapis-server/install-homebrew-packages.sh /app/install-homebrew-packages
+ENV HOME=/data \
+    PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
+    HOMEBREW_CACHE=/home/linuxbrew/.linuxbrew/var/cache/Homebrew \
+    HOMEBREW_LOGS=/home/linuxbrew/.linuxbrew/var/log/Homebrew \
+    HOMEBREW_NO_AUTO_UPDATE=1 \
+    HOMEBREW_NO_SANDBOX=1 \
+    HOMEBREW_TEMP=/home/linuxbrew/.linuxbrew/var/tmp
+USER lapis
+WORKDIR /app
+VOLUME ["/home/linuxbrew/.linuxbrew"]
+
+FROM tooling AS runtime
+USER root
 COPY --from=native /lapis-server /app/lapis-server
 COPY --from=web /work/lapis-server/web/dist /app/static
+COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
 RUN chmod -R a-w /app
 ENV LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
 USER lapis
 WORKDIR /app
 EXPOSE 8787
-VOLUME ["/data"]
+VOLUME ["/data", "/home/linuxbrew/.linuxbrew"]
 HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
-ENTRYPOINT ["/app/lapis-server"]
+ENTRYPOINT ["/app/container-entrypoint"]
 CMD ["/run/lapis/config.json", "0.0.0.0:8787"]

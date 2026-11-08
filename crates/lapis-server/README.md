@@ -28,8 +28,10 @@ Set these explicit operator inputs before starting:
 Bootstrap is idempotent: an existing owner/profile is retained. Configuration,
 credentials and writable data must remain outside the public Web build. Optional
 `LAPIS_SERVER_AGENTS_CONFIG` selects trusted native agent targets and their
-declared default modes. Provider executables/credentials are operator-owned;
-starting or restoring the server does not submit prompts or replay uncertain work.
+declared default modes. The container image supplies Homebrew-backed Codex,
+Cursor CLI, Claude Code and OpenCode executables; target declarations and
+provider credentials remain operator-owned. Starting or restoring the server
+does not submit prompts or replay uncertain work.
 
 `LAPIS_SERVER_LISTEN` defaults to `127.0.0.1:8787`. Relocated compiled startup can
 supply `LAPIS_SERVER_BINARY` and `LAPIS_SERVER_STATIC_ROOT`; it still validates the
@@ -58,9 +60,20 @@ then run `docker compose up -d` for that public image, or
 local `lapis-server:rust-local` image.
 The example uses local HTTP by default. Set its public Origin and cookie setting
 appropriately for an HTTPS reverse proxy. It mounts config/secrets read-only,
-retains `/data` in a named volume, and supplies temporary `/tmp`. The application
-runs as UID/GID1993 with read-only application files. Keep existing volume and
-Compose project identities when restarting an established instance.
+retains `/data` and `/home/linuxbrew/.linuxbrew` in separate named volumes, and
+supplies temporary `/tmp`. The application runs as UID/GID1993 with read-only
+application files. The Homebrew volume starts with `codex`, `cursor-agent`,
+`claude`, and `opencode`; Cursor ACP is `cursor-agent acp`. Keep existing volume
+and Compose project identities when restarting an established instance.
+
+`LAPIS_SERVER_HOMEBREW_PACKAGES` installs additional bottled formulae and
+`LAPIS_SERVER_HOMEBREW_CASKS` installs additional casks before the server
+starts. Both accept whitespace- or newline-separated names. Invalid names,
+missing bottles and install failures stop startup. Homebrew state persists and
+does not update implicitly; use `docker compose exec lapis-server brew update`
+and `docker compose exec lapis-server brew upgrade` when an explicit update is
+intended. An empty bind mount at the Homebrew prefix is unsupported because it
+hides the installation seeded by the image.
 
 `pnpm test:server:container` exercises the built runtime image using disposable
 owned data and secret volumes: actual identity/runtime checks, authenticated
