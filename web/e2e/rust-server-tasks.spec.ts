@@ -4,6 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { buildTasksArtifact } from "./tasks-installed-plugin";
 import { createHostedTasksFixture, hostedTask } from "./rust-tasks-fixture";
+import { signOutHostedWorkspace } from "./rust-hosted-session";
 
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
@@ -356,6 +357,7 @@ test("tampered installed Tasks never selects native scheduling and restored byte
         await text(join(f.service.vault, ".lapis/community-plugins.json")),
       ),
     ).toContain("tasks");
+    await signOutHostedWorkspace(page);
     await f.open();
     await expect(
       page.getByRole("region", { name: "Task planner", exact: true }),

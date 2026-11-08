@@ -111,6 +111,14 @@ jobs:
         with:
           platforms: arm64
       - uses: docker/setup-buildx-action@v3
+      - name: Build the native server for the target architecture
+        run: >-
+          docker buildx build
+          --platform linux/${{ matrix.architecture }}
+          --target native
+          --output type=cacheonly
+          --file crates/lapis-server/Dockerfile
+          .
       - name: Build the persistent Homebrew tooling layer
         run: >-
           docker buildx build
