@@ -7,5 +7,6 @@
 - [Governance](current/governance.md)
 - [Backlog](backlog.md)
   - [Native application services](backlog/native-services.md)
+  - [Content API, MCP and CLI](backlog/content-automation.md)
   - [Hosted qualification and delivery](backlog/qualification.md)
 - [Verification](verification.md)

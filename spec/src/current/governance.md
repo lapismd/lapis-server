@@ -18,6 +18,12 @@ Current contracts and verification own behavior/status; the canonical backlog
 owns remaining work and acceptance. Supporting historical receipts retain their
 original scope and cannot replace current candidate qualification.
 
+The [content API, MCP and CLI work](../backlog/content-automation.md) adds
+portable contracts and a generated-protocol gate to Configure CI. SRV-GOV-001/002
+retain their source limits, documentation navigation and host qualification
+boundaries. Source contract checks grant no runtime or consumer qualification;
+SRV-SRV-005/006 own the additive contract and drift-check acceptance.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

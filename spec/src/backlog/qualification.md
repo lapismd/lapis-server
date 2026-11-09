@@ -110,11 +110,14 @@ server runbook; no wave/status register is maintained outside this specification
 
 ## Extracted protocol and architecture tooling
 
-Disposition: tooling integration pending. Notes retained obsolete spec-check
+Disposition: generated schema/TypeScript drift and client-type checks are now
+owned here by `pnpm protocol:check` and Configure CI (SRV-SRV-006). Source/core
+architecture reconciliation and Notes public-package adoption remain pending.
+Notes retained obsolete spec-check
 commands after its crates moved here: its check:protocol alias is absent and its
 source audit addresses a removed local Cargo workspace. Notes no longer runs
-those native lanes. Reconcile protocol-export drift and core dependency/source
-checks in this owning repository, preserving generated API/schema conformance,
+those native lanes. Reconcile core dependency/source checks in this owning
+repository, preserving generated API/schema conformance,
 transport independence and source limits. The old audit also rejects three
 current feature-selected local module path declarations in indexing_closed,
 tasks_closed and services/mod. Resolve that source-layout contract explicitly;

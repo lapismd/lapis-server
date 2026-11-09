@@ -6,6 +6,7 @@ use ts_rs::TS;
 use uuid::Uuid;
 
 pub mod browser;
+pub mod content;
 pub mod database;
 pub mod editing_intents;
 pub mod files;

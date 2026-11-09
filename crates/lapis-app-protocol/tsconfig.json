@@ -8,5 +8,9 @@
     "types": [],
     "skipLibCheck": true
   },
-  "include": ["bindings/protocol.ts", "tests/client.ts"]
+  "include": [
+    "bindings/protocol.ts",
+    "tests/client.ts",
+    "tests/content-client.ts"
+  ]
 }

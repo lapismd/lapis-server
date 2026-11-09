@@ -101,3 +101,10 @@ pnpm storybook
 
 `pnpm spec:check` and `pnpm format:check` check the specification.
 `pnpm configure` checks the package manifests.
+
+`pnpm protocol:generate` exports the native Rust contracts to committed JSON
+Schema and TypeScript. `pnpm protocol:check` verifies those artifacts without
+rewriting them and checks representative clients; CI runs the same gate.
+The [content automation plan](spec/src/backlog/content-automation.md) tracks
+the shared content API, MCP and CLI work. Its portable contract foundation
+does not yet enable external endpoints or a CLI executable.

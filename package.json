@@ -29,6 +29,8 @@
     }
   },
   "scripts": {
+    "protocol:generate": "node scripts/protocol.mjs --write",
+    "protocol:check": "node scripts/protocol.mjs --check && tsc -p crates/lapis-app-protocol/tsconfig.json",
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
     "spec:check": "node scripts/dependency-automation/spec-policy.mjs check && pnpm check:app-ownership",
     "spec:first": "node scripts/dependency-automation/spec-policy.mjs first",
