@@ -29,6 +29,12 @@ browser UI, package ownership or release gates. Validation includes focused
 native cases, the Rust workspace/Clippy lanes, protocol drift, formatting and
 specification checks. Source qualification does not enable external grants.
 
+SRV-SRV-008 adds bounded ephemeral test credentials in shared Core, preserving
+the SRV-GOV-001/002 source limits and separate hosted/Desktop acceptance gates.
+Focused credential, budget and concurrent drain tests join the existing Rust,
+Clippy, protocol, formatting and specification checks. No route or release
+automation changes accompany this native credential policy.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

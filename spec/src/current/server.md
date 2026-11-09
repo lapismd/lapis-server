@@ -200,3 +200,41 @@ by this native-library slice; host and transport qualification remain pending.
 - Revocation fences a reader waiting on the vault lock and drains its original attachment; expired or closed-vault access fails.
 - Pagination rejects cross-session, cross-query, evicted and changed-snapshot cursors without skipping results silently.
 - Reads reject unsafe paths, symlink escapes, replaced physical roots, invalid UTF-8 and content beyond 1 MiB.
+
+## SRV-SRV-008 — Ephemeral content test grants
+
+<a id="srv-srv-008"></a>
+
+**Requirement.** App Core MUST offer a host-owned, bounded registry of read-only
+test credentials over SRV-SRV-007 sessions. Only a trusted native host may issue,
+revoke, expire or shut down grants; request data MUST NOT select authority.
+The registry MUST retain only SHA-256 token verifiers and admitted sessions,
+never bearer plaintext. Credentials MUST contain 256 bits of OS randomness and
+have a distinct `lc1_` prefix. Issued tokens require explicit secret access;
+Debug output MUST redact them and no serialization implementation is provided.
+
+At most 128 grants, including revoking grants until their drain finishes, may
+occupy one registry. Session vault/name/lifetime limits still apply. Invalid,
+foreign, expired or revoked credentials return the same unauthenticated error
+before content validation. Verification uses constant-time digest comparison.
+Valid credentials dispatch only through their original session, preserving
+scope, cursor isolation, lock-wait revalidation and mutation refusal.
+
+Revocation and shutdown fence sessions while holding the registry lock, then
+drain outside that lock. Independent grants remain usable during another grant's
+drain. Shutdown fences every grant before draining any and permanently refuses
+issuance. Hosts must call blocking cleanup outside async executors and schedule
+`prune_expired`; elapsed grants cannot execute even before cleanup. Successful
+cleanup releases dedicated attachments and capacity. Final registry drop also
+retires attachments. Restart creates a fresh registry and accepts no old token.
+
+These credentials qualify controlled native tests only. No hosted route,
+persistent grant, token rotation, owner consent, OS credential custody or OAuth
+integration is implemented by this increment; those gates remain in the backlog.
+
+### Acceptance details
+
+- Issued credentials expose only their admitted read operations and reject foreign vaults, malformed or foreign credentials and mutations.
+- The registry stores verifiers, redacts issued-token diagnostics and refuses issuance at its 128-grant limit until drain releases capacity.
+- Revocation fences native-lock waiters while independent grants remain usable; expiry cleanup releases attachments without extending authority.
+- Shutdown fences all queued readers before draining, rejects later issuance and releases attachments; fresh registries reject previous tokens.

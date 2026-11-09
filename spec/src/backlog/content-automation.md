@@ -1,6 +1,6 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts and scoped native reads implemented under SRV-SRV-005/006/007;
+Disposition: portable contracts, scoped native reads and ephemeral test credentials implemented under SRV-SRV-005/006/007/008;
 no new endpoint, executable command or host capability is enabled. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
@@ -10,8 +10,10 @@ and a first-party `lapis` CLI for interactive use, scripts and agents.
 The first implementation increment adds strict content DTOs, request validation,
 an operation/scope/effect catalog and generated bindings with a CI drift gate.
 The next increment adds a read-only Core session with admitted native clients,
-revocation/expiry, bounded reads and snapshot-bound pagination. External grant
-credentials, write dispatch, durable operation receipts, HTTP/CLI/MCP adapters
+revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
+test-grant registry now issues random read-only credentials, retains only
+verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
+rotation, owner consent, write dispatch, durable operation receipts, HTTP/CLI/MCP adapters
 and Desktop intake remain unimplemented. OAuth/SDK selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
 

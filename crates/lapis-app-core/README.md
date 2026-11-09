@@ -34,6 +34,12 @@ Core application policy has no Tauri, HTTP, renderer or browser dependency.
 Consumers use public modules directly instead of copying engines or routing
 through old Desktop implementation paths.
 
+`services::content::ContentGrants` provides bounded, ephemeral read-only test
+credentials over dedicated admitted clients. Native hosts authorize issuance,
+schedule `prune_expired` and call `shutdown` on blocking workers. This library
+does not mount endpoints or implement persistent consent/credential custody;
+those integration gates remain in the content automation backlog.
+
 For a debug-only backup initialization investigation, explicitly set
 `LAPIS_APP_BACKUP_DIAGNOSTICS=1`. Each initialization reports a bounded set of
 fixed stage/outcome/category records, process and attempt IDs, elapsed time and
