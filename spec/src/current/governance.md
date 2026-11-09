@@ -47,6 +47,12 @@ no binary/image packaging or npm/crate publication is enabled. CLI build, focuse
 process cases, workspace tests/Clippy, protocol and documentation checks validate
 this slice; consumer installation and real host qualification remain pending.
 
+SRV-SRV-011 adds shared MCP reads using the pinned official Rust SDK and shared
+HTTP admission. SRV-GOV-001/002 limits, package ownership and release gates remain
+unchanged. Official-client and raw HTTP acceptance, revocation during body intake,
+capacity/cancellation tests and the workspace/Clippy/protocol/specification lanes
+qualify the source adapter only; production host and OAuth gates remain pending.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

@@ -8,7 +8,7 @@ use lapis_app_protocol::content::*;
 use uuid::Uuid;
 
 #[derive(Debug)]
-pub(crate) struct Failure {
+pub struct Failure {
     status: StatusCode,
     error: ContentError,
 }
@@ -36,7 +36,7 @@ impl From<ContentError> for Failure {
     }
 }
 impl Failure {
-    pub(crate) fn new(code: ContentErrorCode, message: &str) -> Self {
+    pub fn new(code: ContentErrorCode, message: &str) -> Self {
         ContentError {
             code,
             message: message.into(),
@@ -52,7 +52,10 @@ impl Failure {
         failure.status = StatusCode::METHOD_NOT_ALLOWED;
         failure
     }
-    pub(crate) fn response(self, id: Uuid) -> Response {
+    pub fn into_error(self) -> ContentError {
+        self.error
+    }
+    pub fn response(self, id: Uuid) -> Response {
         let mut response = (
             self.status,
             Json(ContentReply {

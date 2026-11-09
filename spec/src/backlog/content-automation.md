@@ -1,6 +1,6 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts, native reads, test grants, shared HTTP reads and initial CLI reads are implemented under SRV-SRV-005/006/007/008/009/010;
+Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads and initial CLI reads are implemented under SRV-SRV-005/006/007/008/009/010/011;
 production host endpoints and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
@@ -13,8 +13,8 @@ The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
 verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
-rotation, owner consent, write dispatch, durable operation receipts, MCP adapters
-and Desktop intake remain unimplemented. OAuth/SDK selection and consumer contracts remain part of
+rotation, owner consent, write dispatch, durable operation receipts, MCP stdio
+and Desktop intake remain unimplemented. OAuth selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
 grants, strict Host/Origin checks, typed control responses and direct note bytes.
@@ -25,6 +25,10 @@ note reads against the HTTP adapter, with explicit origin/UUID selection,
 protected file/stdin credentials, JSON output and stable exit codes. It has
 subprocess acceptance; profiles/login, writes, MCP stdio and distribution remain
 pending alongside actual host mounting and consent.
+The shared MCP read adapter now uses pinned `rmcp 3.9.0` with official-client
+acceptance for stateless `2026-07-28` discovery, tools and note resources. Legacy
+clients, public client products, OAuth and host lifecycle qualification remain
+pending. HTTP/MCP can share origin policy and one native worker budget.
 
 The server already exposes authenticated `/api/v3` commands and direct file-byte
 routes. `LAPIS_SERVER_TOKEN` admits a single owner-level bearer principal;
@@ -91,7 +95,7 @@ never opens a vault as a second writer behind a running host.
 | Server-owned `lapis-app-protocol`            | Content DTOs, schemas, stable operation IDs, errors, capability descriptors and portable results. Extend the existing crate.                                                                  |
 | Server-owned `lapis-app-core`                | Content orchestration, authorization context, shared operation catalog, conditional mutations and existing service admission/drain. No HTTP, MCP or Tauri dependencies.                       |
 | Server-owned `lapis-content-http`            | Reusable content HTTP router and mapping over shared Core test grants; production authentication/admission integration remains pending in Server and Desktop. No server bootstrap dependency. |
-| Proposed `lapis-content-mcp`                 | One shared tool/resource catalog and handlers calling the content service; protocol transport wiring remains outside Core.                                                                    |
+| Server-owned `lapis-content-mcp`             | Shared read-only tools/resources and stateless HTTP via the official SDK and shared HTTP admission; production OAuth and host wiring remain pending.                                          |
 | Server-owned `lapis-cli` (`lapis` binary)    | Initial read parsing, explicit targets, credential input, content HTTP client and output. Profiles/login and stdio MCP remain pending. No native vault writes.                                |
 | `lapis-server`                               | Remote listening, owner/grant persistence, managed-vault admission, TLS/proxy configuration and hosted acceptance.                                                                            |
 | `lapis-desktop`                              | Local listening/discovery, consent, credential custody, selected vault/window admission, UI actions, installation and native acceptance.                                                      |
@@ -206,8 +210,8 @@ and safe relative-path encoding. Resources enforce the same scopes as tools.
 Tool annotations describe effects but never authorize them. Prompts are optional
 and outside the first release.
 
-Use the official Rust SDK if the compatibility spike proves it fits; pin its
-version and explicitly list supported MCP revisions/client versions. Target
+The source read adapter pins official `rmcp 3.9.0` and qualifies its Rust client
+with protocol `2026-07-28`; expand the client matrix before release. Target
 Streamable HTTP and provide `lapis mcp serve --stdio` for subprocess clients,
 delegating to the selected host rather than opening another vault runtime.
 Test modern per-request and any selected legacy initialization paths separately;
@@ -313,7 +317,7 @@ verification rows; this plan contributes no passing product evidence.
 
 Before slice 2, settle whether an existing authorization service can satisfy
 remote OAuth or a bounded first-party authorization component is needed; prove
-the chosen Rust SDK/client compatibility; locate any renderer-only transform
+additional MCP clients and OAuth compatibility; locate any renderer-only transform
 and settings ownership; define trash retention/restore collision behavior and
 operation-receipt crash recovery. Confirm `lapis` executable naming and initial
 packaged platforms. These are bounded design decisions, not permission to omit
