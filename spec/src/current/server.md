@@ -71,11 +71,11 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http` and `lapis-cli` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http`, `lapis-content-mcp` and `lapis-cli` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
 ### Acceptance details
 
-- The workspace contains those five crates; the HTTP adapter depends on Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.
+- The workspace contains those six crates; HTTP/MCP adapters share Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.
 - The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
@@ -333,3 +333,40 @@ binary/image distribution. Those remain in the content backlog.
 - Invalid targets, missing credentials, revoked or foreign-vault access and malformed responses produce deterministic errors without exposing credentials or opening vaults.
 - Credential files enforce their Unix ownership/permission/type boundary; stdin is bounded and neither path uses token argv values.
 - Redirects, protocol/correlation mismatch, oversized replies and timeouts fail without credential forwarding or implicit retries.
+
+## SRV-SRV-011 — Shared MCP reads
+
+<a id="srv-srv-011"></a>
+
+**Requirement.** The private `lapis-content-mcp` crate MUST expose an explicitly
+mounted `/mcp` Streamable HTTP adapter over SRV-SRV-008 test grants. The qualified
+matrix is official Rust SDK `rmcp = 3.9.0`, protocol `2026-07-28` and its official
+Rust client's discovery lifecycle. Legacy initialized sessions, stdio, OAuth
+discovery, public client products and production host mounting remain pending.
+
+The adapter MUST authenticate every request before SDK body parsing and recheck
+the credential at content dispatch. HTTP and MCP MAY share a `Boundary` clone
+to enforce one 64-worker native budget with SRV-SRV-009 Host/Origin policy.
+MCP MUST bound active HTTP handlers to 64, bodies to 64 KiB while streaming and
+request handling to 15 seconds. Cancellation MUST retain native worker capacity
+until blocking work finishes. Hosts own listener limits, cancellation and grant
+shutdown/drain. Session IDs MUST NOT confer authority and MUST be rejected.
+
+Discovery MUST advertise only `capabilities`, `list_vaults`, `list_notes` and
+`read_note`, with input/output schemas derived from Protocol and advisory read
+annotations. Tool dispatch MUST decode strict Protocol arguments and call Core;
+typed content failures retain code/effect with `isError`. Note resources use
+`lapis://notes/{vault_id}/{path}`, decode the relative path exactly once and use
+the same read operation, preserving saved text/version. Resource lists remain
+empty; templates and `list_notes` provide discovery without unbounded traversal.
+Catalog/resource cache hints MUST be private with zero freshness; HTTP replies
+MUST be no-store. Core's scope, path, payload and cursor limits remain in force.
+SDK protocol/body/header checks MUST reject missing or mismatched metadata,
+unsupported revisions, batches and unimplemented methods before content access.
+
+### Acceptance details
+
+- The official SDK client discovers the four read tools and reads notes/resources through real HTTP with the same bytes and versions as the HTTP adapter.
+- Native scope and cursor isolation, strict arguments, unsafe paths and oversized requests are refused without enabling writes or exposing credentials.
+- Revocation between HTTP preflight and body completion prevents MCP dispatch; saturated and cancelled requests release transport capacity while native workers retain their drain guarantees.
+- Missing, conflicting or legacy protocol metadata, foreign Host/Origin and session headers fail; cancellation and slow bodies are bounded.

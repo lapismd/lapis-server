@@ -19,6 +19,8 @@ the matching Host header through its trusted proxy, and own TLS, listener and
 connection limits. The router rejects foreign Origin/Host values, never trusts
 forwarding headers and never authorizes browser cookies or owner-wide tokens.
 It limits native concurrency and retains permits after request cancellation.
+`Boundary::new(grants, origin)` and `router_with_boundary(boundary.clone())`
+allow HTTP and MCP to share that policy and one native worker pool.
 
 Native hosts authorize test-grant issuance, schedule expiry cleanup and shut
 down/drain grants on blocking workers. Persistent consent, credential custody,
