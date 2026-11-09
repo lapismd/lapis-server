@@ -1,6 +1,6 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads and stdio bridging are implemented under SRV-SRV-005/006/007/008/009/010/011/012;
+Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging and native host controls are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013;
 production host endpoints and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
@@ -98,7 +98,7 @@ never opens a vault as a second writer behind a running host.
 | Server-owned `lapis-app-core`                | Content orchestration, authorization context, shared operation catalog, conditional mutations and existing service admission/drain. No HTTP, MCP or Tauri dependencies.                       |
 | Server-owned `lapis-content-http`            | Reusable content HTTP router and mapping over shared Core test grants; production authentication/admission integration remains pending in Server and Desktop. No server bootstrap dependency. |
 | Server-owned `lapis-content-mcp`             | Shared read-only tools/resources and stateless HTTP via the official SDK and shared HTTP admission; production OAuth and host wiring remain pending.                                          |
-| Server-owned `lapis-cli` (`lapis` binary)    | Initial read parsing, explicit targets, credential input, content HTTP client and output. Profiles/login and stdio MCP remain pending. No native vault writes.                                |
+| Server-owned `lapis-cli` (`lapis` binary)    | Initial read parsing, explicit targets, credential input, content HTTP client and output. Profiles/login and distribution remain pending. No native vault writes.                             |
 | `lapis-server`                               | Remote listening, owner/grant persistence, managed-vault admission, TLS/proxy configuration and hosted acceptance.                                                                            |
 | `lapis-desktop`                              | Local listening/discovery, consent, credential custody, selected vault/window admission, UI actions, installation and native acceptance.                                                      |
 | `lapis-notes` and owning plugin repositories | Public TypeScript App/API contracts and generated bindings; reusable Markdown, Search, Tasks and template semantics in their existing owners.                                                 |
@@ -225,6 +225,10 @@ general remote MCP connection flows. Keep the existing private agent bridge
 until its original approval/cancellation/provider cases pass through shared code.
 
 ## Host mounting and plugin settings
+
+Shared native controls now provide disabled startup, enable/disable with drain,
+named read-only credentials, secret-free scope/expiry summaries and vault
+retirement. They do not mount an endpoint, persist consent or register a screen.
 
 The next host slice MUST make the shared API and `/mcp` endpoint optionally
 available inside the running hosted server. Server and Desktop MUST each expose

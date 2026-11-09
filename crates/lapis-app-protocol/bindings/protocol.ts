@@ -101,6 +101,21 @@ export type ContentReply = {
   request_id: string;
   outcome: ContentOutcome;
 };
+export type ContentAccessStatus = {
+  enabled: boolean;
+  grants: Array<ContentGrantSummary>;
+};
+export type ContentGrantSummary = {
+  grant_id: string;
+  label: string;
+  vault_ids: Array<string>;
+  scope: ContentScope;
+  active: boolean;
+  /**
+   * Rounded up from the native monotonic deadline, never more than 86400.
+   */
+  expires_in_seconds: number;
+};
 export type HistoryExpression =
   | { type: "term"; field: string | null; value: string }
   | { type: "and"; clauses: Array<HistoryExpression> }

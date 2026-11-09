@@ -37,9 +37,16 @@ impl ContentGrants {
 
     /// Permanently stop issuance, fence every grant, then drain all accepted reads.
     pub fn shutdown(&self) -> Result<()> {
+        let _transition = self.transition()?;
+        self.suspend(true)
+    }
+
+    pub(super) fn suspend(&self, permanently: bool) -> Result<()> {
         let retired = {
             let mut registry = self.lock()?;
-            registry.closed = true;
+            registry.closed |= permanently;
+            registry.paused = true;
+            registry.epoch = Arc::new(());
             registry
                 .entries
                 .iter()
@@ -52,7 +59,7 @@ impl ContentGrants {
         self.drain(retired).map(|_| ())
     }
 
-    fn drain(&self, retired: Vec<(Uuid, Arc<Entry>)>) -> Result<usize> {
+    pub(super) fn drain(&self, retired: Vec<(Uuid, Arc<Entry>)>) -> Result<usize> {
         let mut count = 0;
         let mut failure = None;
         for (id, entry) in retired {

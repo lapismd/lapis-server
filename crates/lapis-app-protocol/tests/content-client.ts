@@ -1,6 +1,7 @@
 import {
   CONTENT_API_MAJOR,
   type ContentCommand,
+  type ContentAccessStatus,
   type ContentRequest,
   type ContentReply,
   type ContentCapabilities,
@@ -44,3 +45,14 @@ function result(reply: ContentReply) {
   return value;
 }
 void [request, unsafe, foreign, shell, unavailable, result];
+
+function controlStatus(status: ContentAccessStatus) {
+  return status.grants.map((grant) => {
+    // @ts-expect-error Owner listings never include credential material.
+    const secret = grant.token;
+    return { label: grant.label, vaults: grant.vault_ids, expiry: grant.expires_in_seconds, secret };
+  });
+}
+// @ts-expect-error Content bearers cannot invoke owner controls.
+const enable: ContentCommand = { operation: "set_enabled", enabled: true };
+void [controlStatus, enable];

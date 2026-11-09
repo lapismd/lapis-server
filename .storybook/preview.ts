@@ -82,6 +82,7 @@ const preview: Preview = {
           [
             "Current specification",
             "Hosted server",
+            "Content automation",
             "Hosted contract",
             "Static delivery",
             "Governance",

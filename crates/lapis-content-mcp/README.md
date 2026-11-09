@@ -2,7 +2,7 @@
 
 This private crate explicitly mounts `/mcp` for Server/Desktop integration. It
 does not start a listener, choose vault roots, issue credentials or enable either
-production host. [SRV-SRV-011](../../spec/src/current/server.md#srv-srv-011) owns the
+production host. [SRV-SRV-011](../../spec/src/current/content.md#srv-srv-011) owns the
 contract; remaining consent, OAuth, host and write work lives in the
 [content backlog](../../spec/src/backlog/content-automation.md).
 
@@ -21,7 +21,8 @@ and listeners. Hosts still own TLS/proxies, connection limits and consent.
 | Authentication | Controlled native test grants, per-request bearer       |
 
 Older initialized clients, public MCP client applications, OAuth protected-resource
-discovery/authorization servers and CLI stdio bridging are not qualified yet.
+discovery/authorization servers remain unqualified. The source CLI stdio bridge
+is separately qualified under [SRV-SRV-012](../../spec/src/current/content.md#srv-srv-012).
 The endpoint requires current MCP metadata and matching version/method/name
 headers as specified by the SDK. It creates no sessions and rejects session IDs.
 The shared boundary authenticates before body decoding and again at dispatch.

@@ -1,6 +1,11 @@
 use super::*;
 use crate::services::Runtime;
-use std::{fs, sync::atomic::Ordering, thread, time::Instant};
+use std::{
+    fs,
+    sync::atomic::Ordering,
+    thread,
+    time::{Duration, Instant},
+};
 
 fn request(command: ContentCommand) -> ContentRequest {
     ContentRequest {

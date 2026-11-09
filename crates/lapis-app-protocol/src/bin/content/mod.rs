@@ -19,6 +19,8 @@ pub fn declarations(config: &Config) -> Vec<String> {
         ContentError::decl(config),
         ContentOutcome::decl(config),
         ContentReply::decl(config),
+        ContentAccessStatus::decl(config),
+        ContentGrantSummary::decl(config),
     ]
 }
 
