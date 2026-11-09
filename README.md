@@ -106,5 +106,5 @@ pnpm storybook
 Schema and TypeScript. `pnpm protocol:check` verifies those artifacts without
 rewriting them and checks representative clients; CI runs the same gate.
 The [content automation plan](spec/src/backlog/content-automation.md) tracks
-the shared content API, MCP and CLI work. Its portable contract foundation
-does not yet enable external endpoints or a CLI executable.
+the shared content API, MCP and CLI work. Its contracts and read-only native
+sessions do not yet enable external endpoints or a CLI executable.

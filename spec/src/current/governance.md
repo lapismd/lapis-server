@@ -24,6 +24,11 @@ retain their source limits, documentation navigation and host qualification
 boundaries. Source contract checks grant no runtime or consumer qualification;
 SRV-SRV-005/006 own the additive contract and drift-check acceptance.
 
+SRV-SRV-007 adds scoped read-only native sessions without changing hosted routes,
+browser UI, package ownership or release gates. Validation includes focused
+native cases, the Rust workspace/Clippy lanes, protocol drift, formatting and
+specification checks. Source qualification does not enable external grants.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

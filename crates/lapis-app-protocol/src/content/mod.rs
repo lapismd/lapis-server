@@ -9,6 +9,7 @@ mod validation;
 pub use catalog::*;
 pub use request::*;
 pub use response::*;
+pub use validation::validate_content_path;
 
 pub const CONTENT_API_MAJOR: u32 = 1;
 pub const MAX_CONTENT_PAGE_SIZE: u16 = 100;

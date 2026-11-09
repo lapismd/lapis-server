@@ -16,7 +16,8 @@ fn id(value: Uuid) -> Result<(), ContentError> {
     Ok(())
 }
 
-fn path(value: &str) -> Result<(), ContentError> {
+/// Check a public content path lexically. Native physical checks remain required.
+pub fn validate_content_path(value: &str) -> Result<(), ContentError> {
     if value.is_empty()
         || value.len() > MAX_CONTENT_PATH_BYTES
         || value.contains(['\\', ':'])
@@ -82,7 +83,7 @@ impl ContentRequest {
             } => {
                 id(*vault_id)?;
                 if let Some(directory) = directory {
-                    path(directory)?;
+                    validate_content_path(directory)?;
                 }
                 page(query)
             }
@@ -91,7 +92,7 @@ impl ContentRequest {
                 path: note,
             } => {
                 id(*vault_id)?;
-                path(note)
+                validate_content_path(note)
             }
             ContentCommand::CreateNote {
                 vault_id,
@@ -99,7 +100,7 @@ impl ContentRequest {
                 text: body,
             } => {
                 id(*vault_id)?;
-                path(note)?;
+                validate_content_path(note)?;
                 text(body)
             }
             ContentCommand::ReplaceNote {
@@ -109,7 +110,7 @@ impl ContentRequest {
                 expected_version,
             } => {
                 id(*vault_id)?;
-                path(note)?;
+                validate_content_path(note)?;
                 text(body)?;
                 if expected_version.is_empty()
                     || expected_version == "*"
