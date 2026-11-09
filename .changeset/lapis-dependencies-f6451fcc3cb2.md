@@ -2,4 +2,5 @@
 "@lapismd/lapis-server": patch
 ---
 
-Refresh first-party Lapis dependencies to the published versions recorded in this pull request.
+Adopt Design Core 0.12.2 and align the published Notes application cohort with
+the dependency ranges verified by the coordinated Notes source update.

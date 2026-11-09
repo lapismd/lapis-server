@@ -13,6 +13,21 @@
   "engines": {
     "node": "^24"
   },
+  "pnpm": {
+    "overrides": {
+      "@lapis-notes/api>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/app-profile>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/file-explorer>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/ui>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/workspace>@lapismd/design-core": "0.12.2"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@lapis-notes/api>@lapismd/design-core": "0.12.2",
+        "@lapis-notes/ui>@lapismd/design-core": "0.12.2"
+      }
+    }
+  },
   "scripts": {
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
     "spec:check": "node scripts/dependency-automation/spec-policy.mjs check && pnpm check:app-ownership",

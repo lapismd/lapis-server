@@ -56,6 +56,15 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
             type=raw,value=${{ steps.short.outputs.tag }},enable=${{ github.ref == 'refs/heads/main' }}
 
+      - name: Prime the ARM64 Homebrew tooling layer
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: crates/lapis-server/Dockerfile
+          platforms: linux/arm64
+          target: tooling
+          outputs: type=cacheonly
+
       - name: Build and publish the server image
         uses: docker/build-push-action@v7
         with:

@@ -37,7 +37,7 @@ installation error.
 ### Acceptance details
 
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL, while Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
-- Main publishes the 7-character commit hash and both supported architecture manifests, and a v\* tag publishes that version tag with both manifests.
+- Main primes the ARM64 Homebrew tooling layer with serialized bottle downloads before publishing the 7-character commit hash and both architecture manifests, and a v\* tag publishes that version tag with both manifests.
 - The image cross-compiles each target Rust executable and builds `web/` with Vite on the native build platform after a frozen lockfile install.
 - The runtime exposes `brew`, `codex`, `cursor-agent`, `claude`, and `opencode` as the non-root user, persists the Homebrew prefix independently from `/data`, and accepts bounded startup package names while requiring bottles for formulae and rejecting invalid or failed requests before starting the server.
 
