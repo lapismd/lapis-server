@@ -41,6 +41,12 @@ includes the adapter's focused transport/admission cases, Rust workspace tests,
 Clippy, protocol drift, configuration and specification/formatting checks;
 production Server/Desktop integration remains separately gated.
 
+SRV-SRV-010 adds the source CLI executable and subprocess acceptance against the
+shared HTTP adapter. SRV-GOV-001/002 ownership and release rules remain unchanged:
+no binary/image packaging or npm/crate publication is enabled. CLI build, focused
+process cases, workspace tests/Clippy, protocol and documentation checks validate
+this slice; consumer installation and real host qualification remain pending.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

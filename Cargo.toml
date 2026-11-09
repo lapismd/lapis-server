@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/lapis-app-core", "crates/lapis-app-protocol", "crates/lapis-content-http", "crates/lapis-server"]
+members = ["crates/lapis-app-core", "crates/lapis-app-protocol", "crates/lapis-content-http", "crates/lapis-cli", "crates/lapis-server"]
 resolver = "3"
 
 [workspace.package]
