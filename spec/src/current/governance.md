@@ -53,6 +53,12 @@ unchanged. Official-client and raw HTTP acceptance, revocation during body intak
 capacity/cancellation tests and the workspace/Clippy/protocol/specification lanes
 qualify the source adapter only; production host and OAuth gates remain pending.
 
+SRV-SRV-012 adds the source CLI stdio bridge with subprocess interoperability and
+shutdown acceptance. SRV-GOV-001/002 source limits, ownership and release gates
+remain unchanged. The normal CLI dependency graph remains free of native Core
+and host adapters; native MCP/HTTP crates appear only in tests. Both production
+host mounts and their plugin settings screens remain separate acceptance gates.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

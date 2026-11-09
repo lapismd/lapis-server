@@ -31,7 +31,29 @@ Exit codes: 0 success; 2 invalid input; 3 unauthenticated; 4 conflict; 5 not fou
 6 permission denied; 7 busy/unavailable; 8 protocol mismatch; 9 too large;
 10 unsupported; 11 unknown effect. Parser syntax errors use help/stderr and 2.
 
-Production host mounting, named profiles, login/custody, Desktop discovery,
-writes, MCP stdio, completions and distribution are still pending. See
+For a subprocess MCP client on Unix, use:
+
+```sh
+lapis --target https://notes.example --token-file "$LAPIS_TOKEN_FILE" mcp serve --stdio
+```
+
+This connects to the host's `/mcp` endpoint. Stdin/stdout carry only MCP frames;
+`--token-stdin` and `--json` are invalid in this mode. It relays the host's
+tool/resource catalog and scoped reads, without a local vault runtime. The
+qualified SDK is `rmcp 3.9.0`: upstream HTTP uses `2026-07-28` discovery, while
+stdio clients can use that revision or `2025-11-25` initialization. Public MCP
+client products and non-Unix credential custody are not yet qualified.
+
+Upstream requests use the same explicit target rules and timeout flag, no
+redirects/proxies/retries, and no response cache. Calls forward once; interactive
+continuations are unsupported. There are at most 64 active forwards. Stdio input
+lines are limited to 64 KiB; an oversized line is discarded and the following
+request can proceed. EOF or a failed stdout closes the bridge and drains its
+async services without hanging on a blocking stdin reader. Transport diagnostics
+are sanitized and use stderr.
+
+Production host mounting, plugin settings in Server/Desktop, named profiles,
+login/custody, Desktop discovery, writes, completions and distribution remain pending. See
 [SRV-SRV-010](../../spec/src/current/server.md#srv-srv-010) and the
+[stdio contract](../../spec/src/current/server.md#srv-srv-012), plus the
 [content backlog](../../spec/src/backlog/content-automation.md).
