@@ -105,6 +105,11 @@ that command MUST resolve without a Cargo path dependency outside this repositor
 The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 `cargo clippy --workspace --all-targets --locked -- -D warnings`, before those tests.
 
+Pages deployments MUST finish before newer runs deploy. One failed deployment
+attempt MUST retry the same artifact once within a 25-minute job budget; a second
+failure MUST fail the job. Each attempt retains the upstream ten-minute limit
+and cancellation handling.
+
 ### Acceptance details
 
 - Spec-validator enforces the line and byte limits.

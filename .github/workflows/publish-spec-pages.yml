@@ -16,7 +16,8 @@ defaults:
 
 concurrency:
   group: github-pages
-  cancel-in-progress: true
+  # Finish the active deployment; newer pushes can replace the pending run.
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -71,10 +72,17 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    timeout-minutes: 10
+      url: ${{ steps.retry.outputs.page_url || steps.deployment.outputs.page_url }}
+    # Each Pages attempt has a ten-minute limit. Leave time to cancel and retry.
+    timeout-minutes: 25
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Retry GitHub Pages deployment once
+        id: retry
+        if: ${{ !cancelled() && steps.deployment.outcome == 'failure' }}
         uses: actions/deploy-pages@v5
     if: (true) && !(github.event_name == 'pull_request' && github.event.pull_request.user.type == 'Bot' && (contains(fromJSON('["dependabot[bot]","renovate[bot]","lapismd-dependency-bot[bot]"]'), github.event.pull_request.user.login) || (vars.LAPIS_DEPENDENCY_BOT_LOGIN != '' && github.event.pull_request.user.login == vars.LAPIS_DEPENDENCY_BOT_LOGIN)))
