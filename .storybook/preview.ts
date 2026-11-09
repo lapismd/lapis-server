@@ -87,6 +87,7 @@ const preview: Preview = {
             "Governance",
             "Backlog",
             "Native application services",
+            "Content API, MCP and CLI",
             "Hosted qualification and delivery",
             "Verification",
           ],

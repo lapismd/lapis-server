@@ -5,6 +5,7 @@ verification remain in the feature chapters and requirement verification table.
 A source-only proof does not qualify an application, provider or release input.
 
 - [Native application services](backlog/native-services.md)
+- [Content API, MCP and CLI](backlog/content-automation.md)
 - [Hosted qualification and delivery](backlog/qualification.md)
 
 Shared public App/API contracts stay in the Notes specification. Tauri integration
