@@ -18,10 +18,11 @@ Current contracts and verification own behavior/status; the canonical backlog
 owns remaining work and acceptance. Supporting historical receipts retain their
 original scope and cannot replace current candidate qualification.
 
-The proposed [content API, MCP and CLI plan](../backlog/content-automation.md)
-adds a backlog topic and its Storybook navigation/mirror only. SRV-GOV-001/002
-and all runtime contracts remain unchanged. Validation is specification checking
-and formatting; the plan grants no product or host qualification.
+The [content API, MCP and CLI work](../backlog/content-automation.md) adds
+portable contracts and a generated-protocol gate to Configure CI. SRV-GOV-001/002
+retain their source limits, documentation navigation and host qualification
+boundaries. Source contract checks grant no runtime or consumer qualification;
+SRV-SRV-005/006 own the additive contract and drift-check acceptance.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 

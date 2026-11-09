@@ -64,6 +64,289 @@
       "required": ["client_id", "vault_id", "generation"],
       "type": "object"
     },
+    "ContentCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "api_version": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "operations": {
+          "items": { "$ref": "#/$defs/ContentOperationDescriptor" },
+          "type": "array"
+        }
+      },
+      "required": ["api_version", "operations"],
+      "type": "object"
+    },
+    "ContentCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "capabilities", "type": "string" }
+          },
+          "required": ["operation"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "list_vaults", "type": "string" },
+            "page": { "$ref": "#/$defs/ContentPageQuery" }
+          },
+          "required": ["operation", "page"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "directory": {
+              "description": "Omitted means the vault root. Listings are immediate children only.",
+              "type": ["string", "null"]
+            },
+            "operation": { "const": "list_notes", "type": "string" },
+            "page": { "$ref": "#/$defs/ContentPageQuery" },
+            "vault_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["operation", "vault_id", "page"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "operation": { "const": "read_note", "type": "string" },
+            "path": { "type": "string" },
+            "vault_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["operation", "vault_id", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "description": "Absent-only publication: an existing destination is never overwritten.",
+          "properties": {
+            "operation": { "const": "create_note", "type": "string" },
+            "path": { "type": "string" },
+            "text": { "type": "string" },
+            "vault_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["operation", "vault_id", "path", "text"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_version": {
+              "description": "Strong opaque version returned by a read; never a wildcard or timestamp.",
+              "type": "string"
+            },
+            "operation": { "const": "replace_note", "type": "string" },
+            "path": { "type": "string" },
+            "text": { "type": "string" },
+            "vault_id": { "format": "uuid", "type": "string" }
+          },
+          "required": [
+            "operation",
+            "vault_id",
+            "path",
+            "text",
+            "expected_version"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ContentEffect": { "enum": ["read_only", "write"], "type": "string" },
+    "ContentEffectStatus": {
+      "enum": ["not_started", "committed", "unknown"],
+      "type": "string"
+    },
+    "ContentError": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "$ref": "#/$defs/ContentErrorCode" },
+        "effect": { "$ref": "#/$defs/ContentEffectStatus" },
+        "message": { "type": "string" }
+      },
+      "required": ["code", "message", "effect"],
+      "type": "object"
+    },
+    "ContentErrorCode": {
+      "enum": [
+        "INVALID_REQUEST",
+        "PROTOCOL_MISMATCH",
+        "UNAUTHENTICATED",
+        "PERMISSION_DENIED",
+        "NOT_FOUND",
+        "CONFLICT",
+        "ALREADY_EXISTS",
+        "BUSY",
+        "UNSUPPORTED",
+        "TOO_LARGE",
+        "UNAVAILABLE",
+        "OUTCOME_UNKNOWN"
+      ],
+      "type": "string"
+    },
+    "ContentNoteSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "size_bytes": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["path", "size_bytes"],
+      "type": "object"
+    },
+    "ContentOperation": {
+      "enum": [
+        "capabilities",
+        "list_vaults",
+        "list_notes",
+        "read_note",
+        "create_note",
+        "replace_note"
+      ],
+      "type": "string"
+    },
+    "ContentOperationDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "effect": { "$ref": "#/$defs/ContentEffect" },
+        "operation": { "$ref": "#/$defs/ContentOperation" },
+        "scope": { "$ref": "#/$defs/ContentScope" }
+      },
+      "required": ["operation", "scope", "effect"],
+      "type": "object"
+    },
+    "ContentOutcome": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "status": { "const": "ok", "type": "string" },
+            "value": { "$ref": "#/$defs/ContentValue" }
+          },
+          "required": ["status", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "error": { "$ref": "#/$defs/ContentError" },
+            "status": { "const": "error", "type": "string" }
+          },
+          "required": ["status", "error"],
+          "type": "object"
+        }
+      ]
+    },
+    "ContentPageQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "cursor": { "type": ["string", "null"] },
+        "limit": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": ["limit"],
+      "type": "object"
+    },
+    "ContentReply": {
+      "additionalProperties": false,
+      "properties": {
+        "api_version": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "outcome": { "$ref": "#/$defs/ContentOutcome" },
+        "request_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["api_version", "request_id", "outcome"],
+      "type": "object"
+    },
+    "ContentRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "api_version": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "command": { "$ref": "#/$defs/ContentCommand" },
+        "request_id": {
+          "description": "Correlation identity; for a mutation this also identifies its durable receipt.\nReceipt storage and duplicate suppression belong to the executing service.",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": ["api_version", "request_id", "command"],
+      "type": "object"
+    },
+    "ContentScope": { "enum": ["read", "write"], "type": "string" },
+    "ContentValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "capabilities": { "$ref": "#/$defs/ContentCapabilities" },
+            "kind": { "const": "capabilities", "type": "string" }
+          },
+          "required": ["kind", "capabilities"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "items": { "$ref": "#/$defs/ContentVaultSummary" },
+              "type": "array"
+            },
+            "kind": { "const": "vaults", "type": "string" },
+            "next_cursor": { "type": ["string", "null"] }
+          },
+          "required": ["kind", "items"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "items": { "$ref": "#/$defs/ContentNoteSummary" },
+              "type": "array"
+            },
+            "kind": { "const": "notes", "type": "string" },
+            "next_cursor": { "type": ["string", "null"] }
+          },
+          "required": ["kind", "items"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "note", "type": "string" },
+            "path": { "type": "string" },
+            "text": { "type": "string" },
+            "version": { "type": "string" }
+          },
+          "required": ["kind", "path", "text", "version"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "description": "Committed file version, not an assertion of indexed-search freshness.",
+          "properties": {
+            "kind": { "const": "written", "type": "string" },
+            "path": { "type": "string" },
+            "version": { "type": "string" }
+          },
+          "required": ["kind", "path", "version"],
+          "type": "object"
+        }
+      ]
+    },
+    "ContentVaultSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "vault_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["vault_id", "name"],
+      "type": "object"
+    },
     "ContributionPlacement": {
       "enum": ["native", "client_dependent"],
       "type": "string"
@@ -4956,6 +5239,8 @@
   "properties": {
     "attach": { "$ref": "#/$defs/AttachClient" },
     "client": { "$ref": "#/$defs/ClientDescriptor" },
+    "content_reply": { "$ref": "#/$defs/ContentReply" },
+    "content_request": { "$ref": "#/$defs/ContentRequest" },
     "core_indexed_file": { "$ref": "#/$defs/CoreIndexedFile" },
     "database_call": { "$ref": "#/$defs/DatabaseCall" },
     "database_change": { "$ref": "#/$defs/ChangeSet" },
@@ -5047,6 +5332,8 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "content_request",
+    "content_reply",
     "participant_command",
     "participant_value",
     "repository_sources_command",

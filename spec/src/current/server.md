@@ -103,3 +103,58 @@ unchanged. Initial coverage is recorded in the
 [initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md);
 the demonstrated shutdown boundary and its extension are recorded in the
 [shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md).
+
+## SRV-SRV-005 — Portable content automation contract
+
+<a id="srv-srv-005"></a>
+
+**Requirement.** `lapis-app-protocol::content` MUST own transport-independent
+content requests, replies, operation descriptors and input validation. Content
+API major 1 MUST remain separate from browser attachment protocol major 3.
+The initial operation inventory MUST cover capabilities, admitted vault and
+note listing, note reads, absent-only creation and conditional replacement.
+Contract inventory MUST NOT advertise runtime support or confer authority.
+
+Requests carry a nonnil correlation UUID; mutations reuse it as their future
+receipt identity. DTO validation provides no persistence or duplicate-execution
+guarantee. Adapters bound transport decoding and call
+`ContentRequest::validate` before admission. Limits are 1 MiB UTF-8 text,
+4096-byte paths/printable-ASCII cursors, 256-byte printable-ASCII versions and
+1–100 items per page. Empty, wildcard and weak versions are refused.
+
+Paths use slash-separated relative components. Empty/dot/traversal components,
+backslashes, colons, controls, trailing dots/spaces and case-insensitive `.lapis`,
+`.git` and `.jj` components are refused. Physical/symlink checks, grant revocation,
+editor fences and serialized publication remain Core/host duties.
+
+Listings describe immediate children; omitted directory selects the admitted
+vault root. Cursor validity and result bounds remain service duties. Text reads
+include a file version; committed writes do not assert indexed-search freshness.
+Attachments remain on direct byte transports. Runtime discovery filters qualified
+operations through current admission. This contract mounts no endpoint.
+
+### Acceptance details
+
+- Strict DTOs reject fabricated root/caller/generation/scope authority and unknown fields.
+- Replace requires a strong version; create has no overwrite switch; semantic validation enforces the documented bounds and paths.
+- Replies retain correlation and distinguish pre-dispatch refusal, committed effects and unknown effects on errors.
+- Operation descriptors declare scope/effects without enabling or authorizing runtime capabilities.
+
+## SRV-SRV-006 — Generated protocol drift gate
+
+<a id="srv-srv-006"></a>
+
+**Requirement.** This repository MUST generate and check its committed Rust
+protocol JSON Schema and TypeScript bindings. `pnpm protocol:check` MUST fail
+without rewriting files when either artifact is stale, and MUST type-check
+representative clients. CI MUST run the gate for ordinary pull requests.
+
+Both browser/native and additive content contracts are exported. Notes owns
+adoption into its public API package; generation never edits sibling repositories
+or publishes packages.
+
+### Acceptance details
+
+- `pnpm protocol:generate` writes only this repository's protocol artifacts.
+- `pnpm protocol:check` rejects stale artifacts and checks strict TypeScript clients.
+- Rust fixtures retain wire/schema agreement, required preconditions and semantic bounds.

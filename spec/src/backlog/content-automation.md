@@ -1,11 +1,18 @@
 # Content API, MCP and CLI
 
-Disposition: proposed implementation plan; no new endpoint, command or capability
-is implemented or qualified by this document. The end goal is one content API
+Disposition: portable contract foundation implemented under SRV-SRV-005/006;
+no new endpoint, executable command or host capability is enabled. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
 
 ## Existing foundations and gaps
+
+The first implementation increment adds strict content DTOs, request validation,
+an operation/scope/effect catalog and generated bindings with a CI drift gate.
+It covers discovery/list/read/create/replace contract shapes only. Core dispatch,
+grant enforcement, operation receipts, HTTP/CLI/MCP adapters and Desktop intake
+remain unimplemented. OAuth/SDK selection and consumer contracts remain part of
+the first contract slice below; do not mark that whole slice or either host done.
 
 The server already exposes authenticated `/api/v3` commands and direct file-byte
 routes. `LAPIS_SERVER_TOKEN` admits a single owner-level bearer principal;
@@ -181,7 +188,7 @@ approval may survive app restart; live connection authority never does.
 
 Both hosts mount `/mcp` with the same content tool implementation. Start with
 small task-oriented tools such as `list_vaults`, `list_notes`, `read_note`,
-`create_note`, `update_note` and `search_notes`; add later families with their
+`create_note`, `replace_note` and `search_notes`; add later families with their
 service slice. Expose bounded read-only note resources using opaque vault IDs
 and safe relative-path encoding. Resources enforce the same scopes as tools.
 Tool annotations describe effects but never authorize them. Prompts are optional
@@ -244,7 +251,7 @@ or npm publication from this repository.
    public Notes contracts and private MCP helpers. Select crates, auth flow,
    protocol/client matrix, budgets, receipt retention, trash semantics and CLI
    grammar. Add owning requirements/verification in Server, Notes and Desktop
-   before implementation; restore protocol-export drift checking here. Exit:
+   before implementation; protocol-export drift checking is now restored here. Exit:
    schema/catalog fixtures and a dependency review, with host gaps explicit.
 2. **Prove one shared vertical slice.** Implement list/read/create/conditional
    replace, scoped test grants and minimal HTTP/MCP/CLI adapters. Run the same
