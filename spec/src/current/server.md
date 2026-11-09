@@ -71,11 +71,11 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, and `lapis-app-protocol` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol` and `lapis-content-http` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
 ### Acceptance details
 
-- The Cargo workspace contains those three crates.
+- The Cargo workspace contains those four crates; the shared content HTTP adapter depends on Core/Protocol without a server bootstrap or Tauri dependency.
 - The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
@@ -238,3 +238,49 @@ integration is implemented by this increment; those gates remain in the backlog.
 - The registry stores verifiers, redacts issued-token diagnostics and refuses issuance at its 128-grant limit until drain releases capacity.
 - Revocation fences native-lock waiters while independent grants remain usable; expiry cleanup releases attachments without extending authority.
 - Shutdown fences all queued readers before draining, rejects later issuance and releases attachments; fresh registries reject previous tokens.
+
+## SRV-SRV-009 — Shared content HTTP reads
+
+<a id="srv-srv-009"></a>
+
+**Requirement.** `lapis-content-http` MUST supply one explicitly mounted read-only
+router for Server and Desktop integrations using SRV-SRV-008 test grants.
+It MUST dispatch through Core, with no independent filesystem access or
+host-bootstrap dependency. Adding the crate MUST NOT enable a production host
+listener, consent flow or persistent credential.
+
+The router exposes GET `/api/content/v1/capabilities`, `/vaults`,
+`/vaults/{vault_id}/notes` and `/vaults/{vault_id}/note`. Those suffixes all live
+under `/api/content/v1`. Lists accept optional `limit` (default 50) and `cursor`;
+note lists also accept `directory`. Note reads require `path`. Duplicate/unknown
+query fields, malformed percent/UTF-8 encoding and Core-invalid input are
+refused. URI length is limited to 16 KiB and aggregate headers to 8 KiB.
+
+Clients MUST supply one bearer credential and `x-lapis-content-api: 1`.
+Credentials are checked before query/version validation and rechecked at native
+dispatch. Cookies and the owner-wide server token confer no content authority.
+The host configures an exact HTTPS origin, or HTTP on loopback only. Requests
+MUST match its Host and any supplied Origin; duplicate authority/authentication
+headers and conflicting absolute request targets are refused. Forwarded headers
+do not override this policy. No CORS permission or grant-management route exists.
+
+`x-lapis-request-id` MAY supply a nonnil correlation UUID; omission creates one,
+and invalid values fail. Replies carry that ID and API major in headers. Control
+results/errors use `ContentReply`; note content uses direct UTF-8 bytes and a
+strong quoted ETag. Every adapter response is `no-store` and `nosniff`. Errors
+use sanitized messages: invalid input 400, credentials 401, scope/origin 403,
+missing content 404, protocol/conflict 409, size 413 and busy/unavailable 503.
+Unsupported methods return 405. GET bodies are refused; attachments and mutations
+remain unavailable. SRV-HST-007 direct-byte transport remains unchanged.
+
+At most 64 native jobs may run per router; excess work fails busy without an
+unbounded queue. Blocking credential/dispatch work runs outside async executors.
+Cancellation MUST retain its permit until the native worker finishes. Hosts own
+listener/connection limits, TLS, credential cleanup and shutdown/drain orchestration.
+
+### Acceptance details
+
+- Real HTTP tests match Core capability/catalog coverage, vault/note pagination, UTF-8 bytes, strong versions and cursor invalidation.
+- Missing, foreign or revoked credentials fail before query validation; Host/Origin, protocol, scope and unimplemented routes cannot extend authority.
+- Strict query/path validation, body and size limits retain typed sanitized errors with correlation and non-cacheable responses.
+- Native admission rejects saturation and retains capacity after caller cancellation until the worker drains.

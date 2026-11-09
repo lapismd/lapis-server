@@ -3412,6 +3412,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "lapis-content-http"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "lapis-app-core",
+ "lapis-app-protocol",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
 name = "lapis-docs-projection"
 version = "0.0.0"
 source = "git+https://github.com/lapismd/lapis-plugin-docs?rev=f772f2bacc20a914cef2f0398f294cefbac4ba3c#f772f2bacc20a914cef2f0398f294cefbac4ba3c"

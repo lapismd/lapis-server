@@ -102,6 +102,12 @@ impl ContentGrants {
         Ok(Arc::clone(entry))
     }
 
+    /// Credential preflight for adapters before decoding operation input.
+    /// This returns no authority handle; `execute` always authenticates again.
+    pub fn check_credential(&self, bearer: &str) -> Result<()> {
+        self.authenticate(bearer).map(|_| ())
+    }
+
     /// Verify a credential and dispatch through its original scoped session.
     /// Authorization is rechecked by that session after every native wait.
     pub fn execute(&self, bearer: &str, request: ContentRequest) -> ContentReply {

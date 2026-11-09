@@ -35,6 +35,12 @@ Focused credential, budget and concurrent drain tests join the existing Rust,
 Clippy, protocol, formatting and specification checks. No route or release
 automation changes accompany this native credential policy.
 
+SRV-SRV-009 adds the shared content HTTP crate and real-socket adapter tests.
+SRV-GOV-001/002 limits and documentation ownership are unchanged. Verification
+includes the adapter's focused transport/admission cases, Rust workspace tests,
+Clippy, protocol drift, configuration and specification/formatting checks;
+production Server/Desktop integration remains separately gated.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a
