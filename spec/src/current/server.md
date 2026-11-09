@@ -158,3 +158,45 @@ or publishes packages.
 - `pnpm protocol:generate` writes only this repository's protocol artifacts.
 - `pnpm protocol:check` rejects stale artifacts and checks strict TypeScript clients.
 - Rust fixtures retain wire/schema agreement, required preconditions and semantic bounds.
+
+## SRV-SRV-007 — Scoped native content reads
+
+<a id="srv-srv-007"></a>
+
+**Requirement.** App Core content sessions MUST execute reads only through
+host-supplied dedicated admitted vault clients. They MUST support explicit
+revocation, monotonic expiry and bounded authoritative reads/listings without
+granting writes, new filesystem roots or external credential authority.
+
+`ContentSession::read_only` consumes up to 32 distinct vault attachments with
+nonempty display names of at most 256 UTF-8 bytes and a positive lifetime of at
+most 24 hours. It accepts no caller-selected path or generation. Hosts own
+authentication, consent, token verification, session-count limits and idle/expired
+session cleanup. Dropping or revoking a session retires its dedicated clients.
+
+Capabilities advertise only discovery, vault listing, note listing and note
+read. Note reads return saved UTF-8 content and its existing SHA-256 version,
+with a 1 MiB bounded read. Listings include only immediate regular `.md` and
+`.markdown` children, case-insensitively, under the existing 2,000 directory-entry
+budget. Unaddressable public paths and symlinks are excluded. Cursors retain
+the query, session and listing fingerprint, covering ordered paths/sizes or
+vault identities/names. The latest 128 distinct continuations are retained;
+evicted, foreign or changed-listing cursors return an explicit conflict and
+require a first-page refresh. Content changes with identical size do not change
+the listing's path/size snapshot; a fresh note read obtains the current version.
+
+Revocation fences new calls before waiting for admitted readers to finish.
+Execution rechecks revocation/expiry after session and vault lock waits, and
+revalidates the client and physical root. An already admitted read may complete
+while revocation drains; the response grants no subsequent access. Native reads
+use the vault lock, so close waits for active reads through existing lifetime
+ownership. Async adapters must run blocking dispatch/revocation on native workers.
+Errors are sanitized and report no mutation effects. No network route is mounted
+by this native-library slice; host and transport qualification remain pending.
+
+### Acceptance details
+
+- Read grants reject foreign vaults and all content mutations and advertise only the four implemented read operations.
+- Revocation fences a reader waiting on the vault lock and drains its original attachment; expired or closed-vault access fails.
+- Pagination rejects cross-session, cross-query, evicted and changed-snapshot cursors without skipping results silently.
+- Reads reject unsafe paths, symlink escapes, replaced physical roots, invalid UTF-8 and content beyond 1 MiB.

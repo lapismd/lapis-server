@@ -5,6 +5,7 @@ mod agent_skills;
 mod backup;
 mod byte_writes;
 mod client;
+pub mod content;
 pub mod daily;
 mod database;
 mod editing_intents;
