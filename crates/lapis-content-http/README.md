@@ -3,7 +3,7 @@
 This private workspace crate provides `router(Arc<ContentGrants>, public_origin)`
 for controlled Server/Desktop integration. It does not start a listener, issue
 credentials, select vault roots or mount itself in either production host.
-Read [SRV-SRV-009](../../spec/src/current/server.md#srv-srv-009) and the
+Read [SRV-SRV-009](../../spec/src/current/content.md#srv-srv-009) and the
 [content backlog](../../spec/src/backlog/content-automation.md) for the contract
 and remaining host, CLI, MCP and mutation work.
 

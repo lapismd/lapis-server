@@ -59,11 +59,11 @@ remain unchanged. The normal CLI dependency graph remains free of native Core
 and host adapters; native MCP/HTTP crates appear only in tests. Both production
 host mounts and their plugin settings screens remain separate acceptance gates.
 
-Content requirements SRV-SRV-005 through SRV-SRV-012 move into their own chapter
-within SRV-GOV-001 file limits. Their contracts and verification remain unchanged;
-legacy anchors retain navigation to the new chapter. SUMMARY, Storybook mirrors
-and canonical matching move together. Specification/format checks validate this
-documentation split; it changes no runtime, host qualification or release gate.
+SRV-SRV-013 adds shared native host controls and secret-free status contracts.
+Content requirements move to their own chapter within SRV-GOV-001 file limits;
+legacy anchors remain as navigation links. Native lifecycle/epoch regressions,
+workspace tests/Clippy and generated protocol/specification checks qualify this
+source slice. Server/Desktop endpoint and plugin settings acceptance remain open.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 

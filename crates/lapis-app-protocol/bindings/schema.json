@@ -64,6 +64,18 @@
       "required": ["client_id", "vault_id", "generation"],
       "type": "object"
     },
+    "ContentAccessStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "grants": {
+          "items": { "$ref": "#/$defs/ContentGrantSummary" },
+          "type": "array"
+        }
+      },
+      "required": ["enabled", "grants"],
+      "type": "object"
+    },
     "ContentCapabilities": {
       "additionalProperties": false,
       "properties": {
@@ -185,6 +197,34 @@
         "OUTCOME_UNKNOWN"
       ],
       "type": "string"
+    },
+    "ContentGrantSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "expires_in_seconds": {
+          "description": "Rounded up from the native monotonic deadline, never more than 86400.",
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "grant_id": { "format": "uuid", "type": "string" },
+        "label": { "type": "string" },
+        "scope": { "$ref": "#/$defs/ContentScope" },
+        "vault_ids": {
+          "items": { "format": "uuid", "type": "string" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "grant_id",
+        "label",
+        "vault_ids",
+        "scope",
+        "active",
+        "expires_in_seconds"
+      ],
+      "type": "object"
     },
     "ContentNoteSummary": {
       "additionalProperties": false,
@@ -5239,6 +5279,7 @@
   "properties": {
     "attach": { "$ref": "#/$defs/AttachClient" },
     "client": { "$ref": "#/$defs/ClientDescriptor" },
+    "content_access": { "$ref": "#/$defs/ContentAccessStatus" },
     "content_reply": { "$ref": "#/$defs/ContentReply" },
     "content_request": { "$ref": "#/$defs/ContentRequest" },
     "core_indexed_file": { "$ref": "#/$defs/CoreIndexedFile" },
@@ -5332,6 +5373,7 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "content_access",
     "content_request",
     "content_reply",
     "participant_command",

@@ -1,11 +1,13 @@
 //! Portable content automation contracts. This catalog does not enable host capabilities.
 //! Adapters must validate requests before admission; Core retains authorization,
 //! physical path checks, writer fencing and execution. Browser protocol v3 is unchanged.
+mod access;
 mod catalog;
 mod request;
 mod response;
 mod validation;
 
+pub use access::*;
 pub use catalog::*;
 pub use request::*;
 pub use response::*;

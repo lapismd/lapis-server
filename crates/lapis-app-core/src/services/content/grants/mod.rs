@@ -1,5 +1,9 @@
-//! Ephemeral native test grants. Hosts own consent and all management calls;
+//! Process-local native content grants. Hosts own consent and all management calls;
 //! transports receive only bearer dispatch, never issuance or filesystem authority.
+mod access;
+#[cfg(test)]
+mod access_tests;
+mod issuance;
 mod lifecycle;
 #[cfg(test)]
 mod tests;
@@ -10,7 +14,6 @@ use lapis_app_protocol::content::*;
 use std::{
     collections::BTreeMap,
     sync::{Arc, Mutex, MutexGuard},
-    time::Duration,
 };
 use subtle::ConstantTimeEq;
 pub use token::{ContentToken, IssuedContentGrant};
@@ -23,17 +26,23 @@ pub const MAX_CONTENT_GRANTS: usize = 128;
 #[derive(Default)]
 pub struct ContentGrants {
     registry: Mutex<Registry>,
+    transition: Mutex<()>,
 }
 
 #[derive(Default)]
 struct Registry {
     entries: BTreeMap<Uuid, Arc<Entry>>,
     closed: bool,
+    paused: bool,
+    // Held by in-flight issuance: replacing this identity prevents stale publication.
+    epoch: Arc<()>,
 }
 
 struct Entry {
     verifier: [u8; 32],
     session: ContentSession,
+    label: String,
+    vault_ids: Vec<Uuid>,
 }
 
 fn unauthenticated() -> ContentError {
@@ -50,44 +59,11 @@ impl ContentGrants {
             .map_err(|_| failure(ContentErrorCode::Unavailable, "Content grants unavailable"))
     }
 
-    /// Issue a read-only credential from dedicated host-admitted clients.
-    /// The caller must already have authorized this exact scope and lifetime.
-    /// Expired entries occupy capacity until the host calls `prune_expired`.
-    pub fn issue_read_only(
-        &self,
-        vaults: Vec<ContentVault>,
-        lifetime: Duration,
-    ) -> Result<IssuedContentGrant> {
-        self.lock()?.require_capacity()?;
-        let session = ContentSession::read_only(vaults, lifetime)?;
-        let token = ContentToken::generate()?;
-        let verifier = token::verifier(token.expose_secret()).ok_or_else(unauthenticated)?;
-        let grant_id = Uuid::new_v4();
-        let mut registry = self.lock()?;
-        registry.require_capacity()?;
-        session.require_live()?;
-        if registry.entries.contains_key(&grant_id)
-            || registry
-                .entries
-                .values()
-                .any(|entry| bool::from(entry.verifier.ct_eq(&verifier)))
-        {
-            return Err(failure(
-                ContentErrorCode::Unavailable,
-                "Content credential collision",
-            ));
-        }
-        registry
-            .entries
-            .insert(grant_id, Arc::new(Entry { verifier, session }));
-        Ok(IssuedContentGrant { grant_id, token })
-    }
-
     // Do not expose the Arc/session: every call must verify the original token.
     fn authenticate(&self, bearer: &str) -> Result<Arc<Entry>> {
         let verifier = token::verifier(bearer).ok_or_else(unauthenticated)?;
         let registry = self.lock()?;
-        if registry.closed {
+        if registry.closed || registry.paused {
             return Err(unauthenticated());
         }
         let entry = registry
@@ -132,10 +108,10 @@ impl ContentGrants {
 
 impl Registry {
     fn require_capacity(&self) -> Result<()> {
-        if self.closed {
+        if self.closed || self.paused {
             return Err(failure(
                 ContentErrorCode::Unavailable,
-                "Content grants shut down",
+                "Content access is disabled",
             ));
         }
         if self.entries.len() >= MAX_CONTENT_GRANTS {

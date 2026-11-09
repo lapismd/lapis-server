@@ -296,3 +296,41 @@ without waiting indefinitely for Tokio's blocking stdin reader.
 - Foreign vaults, revoked grants, malformed replies and startup failures retain safe errors without serving cached data or exposing bearer credentials.
 - Timeouts and redirects do not replay or forward credentials, and subsequent independent calls remain usable.
 - Protocol-only stdout, oversized-line recovery, EOF and closed-stdout shutdown pass subprocess acceptance alongside the existing CLI reads.
+
+## SRV-SRV-013 — Shared host access controls
+
+<a id="srv-srv-013"></a>
+
+**Requirement.** Core MUST provide an explicitly disabled grant registry for
+production host startup, reversible enable/disable controls and owner-only
+credential summaries. Hosts MUST authenticate owner control independently from
+content bearer access and keep listener/persistence policy outside Core. This
+source slice MUST NOT claim either host mount or plugin settings qualification.
+
+Disabling MUST fence every grant before draining any accepted native read;
+re-enabling MUST NOT revive old tokens or an issuance started before disable.
+Enable, disable and shutdown MUST serialize; shutdown is permanent. Admission
+MUST recheck the current enable epoch before publishing a credential. Registry
+locks MUST NOT span native attachment validation, reads or drain.
+
+Named issuance MUST validate a nonempty trimmed display label of at most
+128 UTF-8 bytes, reject control characters and consume 1–32 dedicated
+host-admitted clients into the existing read-only grant.
+Summaries MUST expose only the grant UUID, label, admitted vault IDs, read scope,
+active flag and bounded remaining lifetime; never tokens or verifiers. They
+MUST derive expiry from the original monotonic session deadline and remain
+bounded by the existing 128-grant capacity. Failed drains remain fenced and
+retain capacity until cleanup succeeds.
+
+Vault retirement MUST fence every grant containing that vault before draining
+any of them, leaving unrelated grants usable. The host MUST serialize native
+vault admission against retirement and fence pending issuance before closing
+the runtime. Whole-grant revocation cannot silently broaden or replace scope.
+Credentials remain process-local and require a new issuance after restart.
+
+### Acceptance details
+
+- A disabled registry refuses issuance and bearer access; enable permits scoped read-only credentials; disable drains them and re-enable never restores old authority.
+- Owner summaries contain validated labels, exact admitted scope and monotonic expiry, without secrets; expired grants still refuse calls before cleanup.
+- Concurrent tests hold native readers/issuance, proving all-grant fencing before drain and stale-admission refusal across disable/re-enable or vault retirement.
+- Vault retirement preserves unrelated credentials; permanent shutdown cannot re-enable and retains the existing capacity, cleanup and cancellation guarantees.

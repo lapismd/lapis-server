@@ -34,11 +34,25 @@ Core application policy has no Tauri, HTTP, renderer or browser dependency.
 Consumers use public modules directly instead of copying engines or routing
 through old Desktop implementation paths.
 
-`services::content::ContentGrants` provides bounded, ephemeral read-only test
-credentials over dedicated admitted clients. Native hosts authorize issuance,
-schedule `prune_expired` and call `shutdown` on blocking workers. This library
-does not mount endpoints or implement persistent consent/credential custody;
-those integration gates remain in the content automation backlog.
+`services::content::ContentGrants` provides bounded, process-local read-only
+credentials over dedicated admitted clients. Production hosts construct
+`ContentGrants::disabled()`, authorize owner consent, then call `set_enabled(true)`.
+`Default` retains the enabled low-level fixture mode. Hosts issue named credentials
+with `issue_named_read_only`, display secret-free `status()` summaries, revoke by
+grant ID, and schedule `prune_expired` on blocking workers. Tokens are revealed
+only by the issuance result; a restart requires new credentials.
+
+`set_enabled(false)` fences every grant before drain; re-enable cannot restore
+old tokens or an issuance started before disabling. `revoke_vault` revokes whole
+grants containing a retiring vault and invalidates pending issuance. Hosts must
+serialize native vault admission against this retirement. `shutdown` permanently
+closes issuance and drains accepted reads. All native control calls can block;
+hosts retain accepted-work ownership after client cancellation.
+
+[SRV-SRV-013](../../spec/src/current/content.md#srv-srv-013) owns these native
+controls. This library does not mount endpoints, persist settings/consent or
+register plugin screens. Both hosts' integration gates remain in the
+[content backlog](../../spec/src/backlog/content-automation.md).
 
 For a debug-only backup initialization investigation, explicitly set
 `LAPIS_APP_BACKUP_DIAGNOSTICS=1`. Each initialization reports a bounded set of

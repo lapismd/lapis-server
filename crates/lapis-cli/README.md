@@ -54,6 +54,6 @@ are sanitized and use stderr.
 
 Production host mounting, plugin settings in Server/Desktop, named profiles,
 login/custody, Desktop discovery, writes, completions and distribution remain pending. See
-[SRV-SRV-010](../../spec/src/current/server.md#srv-srv-010) and the
-[stdio contract](../../spec/src/current/server.md#srv-srv-012), plus the
+[SRV-SRV-010](../../spec/src/current/content.md#srv-srv-010) and the
+[stdio contract](../../spec/src/current/content.md#srv-srv-012), plus the
 [content backlog](../../spec/src/backlog/content-automation.md).
