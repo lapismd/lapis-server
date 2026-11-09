@@ -39,7 +39,7 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|governance|hosted|delivery)\\.md$",
+        "^spec/src/current/(?:server|content|governance|hosted|delivery)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
