@@ -324,7 +324,7 @@ exists, 5 not found, 6 permission denied, 7 busy/unavailable, 8 protocol mismatc
 a closed stdout pipe is normal completion.
 
 Source CLI acceptance does not qualify production host mounting, named profiles,
-owner login, OS custody, Desktop discovery, writes, MCP stdio, completions or
+owner login, OS custody, Desktop discovery, writes, completions or
 binary/image distribution. Those remain in the content backlog.
 
 ### Acceptance details
@@ -341,7 +341,7 @@ binary/image distribution. Those remain in the content backlog.
 **Requirement.** The private `lapis-content-mcp` crate MUST expose an explicitly
 mounted `/mcp` Streamable HTTP adapter over SRV-SRV-008 test grants. The qualified
 matrix is official Rust SDK `rmcp = 3.9.0`, protocol `2026-07-28` and its official
-Rust client's discovery lifecycle. Legacy initialized sessions, stdio, OAuth
+Rust client's discovery lifecycle. Legacy HTTP sessions, OAuth
 discovery, public client products and production host mounting remain pending.
 
 The adapter MUST authenticate every request before SDK body parsing and recheck
@@ -370,3 +370,29 @@ unsupported revisions, batches and unimplemented methods before content access.
 - Native scope and cursor isolation, strict arguments, unsafe paths and oversized requests are refused without enabling writes or exposing credentials.
 - Revocation between HTTP preflight and body completion prevents MCP dispatch; saturated and cancelled requests release transport capacity while native workers retain their drain guarantees.
 - Missing, conflicting or legacy protocol metadata, foreign Host/Origin and session headers fail; cancellation and slow bodies are bounded.
+
+## SRV-SRV-012 — CLI MCP stdio bridge
+
+<a id="srv-srv-012"></a>
+
+**Requirement.** `lapis mcp serve --stdio` MUST bridge to the explicit host's
+`/mcp` endpoint without opening native vaults. It MUST use a protected token file;
+`--token-stdin` and `--json` are invalid because stdin/stdout carry MCP frames.
+The source matrix is `rmcp 3.9.0`, upstream HTTP `2026-07-28` discovery and stdio
+`2026-07-28` discovery or `2025-11-25` initialization. Non-Unix credential custody,
+public client products, production host mounting and distribution remain pending.
+Tools/resources and their schemas MUST come from the host. The bridge MUST strip
+caller transport metadata, disable upstream response caching, retain private/zero
+freshness hints and use one upstream call without interactive continuation replay.
+It MUST preserve scoped results, sanitize transport errors, refuse redirects and
+proxies, and bound each upstream request by `--timeout-ms` and 64 active forwards.
+Stdio lines MUST be bounded to 64 KiB; oversized lines are discarded before the
+next request. EOF or failed stdout MUST terminate/drain async transport services
+without waiting indefinitely for Tokio's blocking stdin reader.
+
+### Acceptance details
+
+- Official SDK clients negotiate both qualified stdio revisions and read the shared host's tool/resource catalogs and exact saved notes through the compiled CLI.
+- Foreign vaults, revoked grants, malformed replies and startup failures retain safe errors without serving cached data or exposing bearer credentials.
+- Timeouts and redirects do not replay or forward credentials, and subsequent independent calls remain usable.
+- Protocol-only stdout, oversized-line recovery, EOF and closed-stdout shutdown pass subprocess acceptance alongside the existing CLI reads.

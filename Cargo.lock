@@ -3523,11 +3523,15 @@ dependencies = [
  "lapis-app-core",
  "lapis-app-protocol",
  "lapis-content-http",
+ "lapis-content-mcp",
  "reqwest 0.12.28",
+ "reqwest 0.13.5",
+ "rmcp",
  "rustix 1.1.5",
  "serde_json",
  "tempfile",
  "tokio",
+ "tokio-util",
  "uuid",
 ]
 

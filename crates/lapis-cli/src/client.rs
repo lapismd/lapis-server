@@ -114,7 +114,7 @@ pub(crate) async fn execute(
     Ok(reply)
 }
 
-fn target(input: Option<&str>) -> Result<Url, ContentError> {
+pub(crate) fn target(input: Option<&str>) -> Result<Url, ContentError> {
     let invalid = || failure(ContentErrorCode::InvalidRequest);
     let url = Url::parse(input.ok_or_else(invalid)?).map_err(|_| invalid())?;
     let loopback = url.host_str().is_some_and(|host| {

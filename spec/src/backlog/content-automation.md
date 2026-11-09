@@ -1,6 +1,6 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads and initial CLI reads are implemented under SRV-SRV-005/006/007/008/009/010/011;
+Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads and stdio bridging are implemented under SRV-SRV-005/006/007/008/009/010/011/012;
 production host endpoints and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
@@ -13,7 +13,7 @@ The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
 verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
-rotation, owner consent, write dispatch, durable operation receipts, MCP stdio
+rotation, owner consent, write dispatch, durable operation receipts
 and Desktop intake remain unimplemented. OAuth selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
@@ -23,11 +23,13 @@ integration remain pending.
 The source `lapis` executable now supports capabilities, vault/note lists and
 note reads against the HTTP adapter, with explicit origin/UUID selection,
 protected file/stdin credentials, JSON output and stable exit codes. It has
-subprocess acceptance; profiles/login, writes, MCP stdio and distribution remain
-pending alongside actual host mounting and consent.
+subprocess acceptance; profiles/login, writes and distribution remain pending
+alongside actual host mounting and consent. The source CLI also bridges stdio
+MCP clients to an explicit host using a protected credential file; SRV-SRV-012
+qualifies current discovery and 2025-11-25 initialized clients.
 The shared MCP read adapter now uses pinned `rmcp 3.9.0` with official-client
 acceptance for stateless `2026-07-28` discovery, tools and note resources. Legacy
-clients, public client products, OAuth and host lifecycle qualification remain
+HTTP clients, public client products, OAuth and host lifecycle qualification remain
 pending. HTTP/MCP can share origin policy and one native worker budget.
 
 The server already exposes authenticated `/api/v3` commands and direct file-byte
@@ -222,6 +224,19 @@ Static scoped tokens may serve initial controlled CLI tests, but do not qualify
 general remote MCP connection flows. Keep the existing private agent bridge
 until its original approval/cancellation/provider cases pass through shared code.
 
+## Host mounting and plugin settings
+
+The next host slice MUST make the shared API and `/mcp` endpoint optionally
+available inside the running hosted server. Server and Desktop MUST each expose
+this through plugin settings: enable/disable API and MCP access, endpoint and
+listener status, admitted vault permissions, credential creation/expiry and
+revocation. Environment configuration alone does not complete this requirement.
+Use the existing Notes plugin/settings contracts and keep reusable UI in its
+owning package; hosts own consent, native listener lifecycle, vault admission
+and secure secret custody. Browser storage MUST NOT become credential custody.
+Qualification includes both real settings screens: enable access, connect a
+client, refuse a foreign vault, revoke access and disable/drain the endpoint.
+
 ## CLI behavior and distribution
 
 Use conventional subcommands and flags; Obsidian syntax compatibility is not
@@ -280,7 +295,7 @@ or npm publication from this repository.
    writers and interrupted publication/restart tests; no blind retries.
 4. **Qualify external connections.** Deliver owner consent/revoke settings,
    Desktop discovery and credential storage, remote OAuth discovery, expiry,
-   scope enforcement, stdio bridge and real MCP-client acceptance. Exit:
+   scope enforcement and real MCP-client acceptance beyond the source stdio bridge. Exit:
    packaged Desktop and actual hosted process tests for revocation, stale
    handles, cancellation, closed windows/vaults and shutdown drain.
 5. **Expand knowledge workflows.** Add metadata, links, daily/templates and

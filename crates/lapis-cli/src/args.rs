@@ -42,6 +42,19 @@ pub(crate) enum Command {
         #[command(subcommand)]
         command: Note,
     },
+    /// Bridge an MCP subprocess client to the selected content host.
+    Mcp {
+        #[command(subcommand)]
+        command: Mcp,
+    },
+}
+#[derive(Subcommand)]
+pub(crate) enum Mcp {
+    Serve {
+        /// Reserve stdin/stdout for MCP; requires --token-file.
+        #[arg(long, required = true)]
+        stdio: bool,
+    },
 }
 #[derive(Subcommand)]
 pub(crate) enum Vault {
@@ -80,8 +93,9 @@ impl Page {
     }
 }
 impl Command {
-    pub(crate) fn content(&self) -> ContentCommand {
-        match self {
+    pub(crate) fn content(&self) -> Option<ContentCommand> {
+        Some(match self {
+            Self::Mcp { .. } => return None,
             Self::Capabilities => ContentCommand::Capabilities {},
             Self::Vault {
                 command: Vault::List(page),
@@ -104,6 +118,6 @@ impl Command {
                 vault_id: *vault,
                 path: path.clone(),
             },
-        }
+        })
     }
 }
