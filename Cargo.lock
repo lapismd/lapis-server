@@ -3368,6 +3368,7 @@ dependencies = [
  "cap-std",
  "cap-tempfile",
  "chrono",
+ "getrandom 0.4.3",
  "icu_collator",
  "jj-history-service",
  "jj-store-jj",
@@ -3389,6 +3390,7 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "sha2 0.10.9",
+ "subtle",
  "tempfile",
  "tokenizers",
  "tokio",
@@ -3406,6 +3408,21 @@ dependencies = [
  "serde",
  "serde_json",
  "ts-rs",
+ "uuid",
+]
+
+[[package]]
+name = "lapis-content-http"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "lapis-app-core",
+ "lapis-app-protocol",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
  "uuid",
 ]
 

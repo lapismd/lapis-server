@@ -1,7 +1,7 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts and scoped native reads implemented under SRV-SRV-005/006/007;
-no new endpoint, executable command or host capability is enabled. The end goal is one content API
+Disposition: portable contracts, scoped native reads, ephemeral test credentials and a shared HTTP read adapter implemented under SRV-SRV-005/006/007/008/009;
+no production host endpoint, executable command or host capability is enabled. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
 
@@ -10,10 +10,16 @@ and a first-party `lapis` CLI for interactive use, scripts and agents.
 The first implementation increment adds strict content DTOs, request validation,
 an operation/scope/effect catalog and generated bindings with a CI drift gate.
 The next increment adds a read-only Core session with admitted native clients,
-revocation/expiry, bounded reads and snapshot-bound pagination. External grant
-credentials, write dispatch, durable operation receipts, HTTP/CLI/MCP adapters
+revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
+test-grant registry now issues random read-only credentials, retains only
+verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
+rotation, owner consent, write dispatch, durable operation receipts, CLI/MCP adapters
 and Desktop intake remain unimplemented. OAuth/SDK selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
+The shared `lapis-content-http` read adapter has real-socket coverage using test
+grants, strict Host/Origin checks, typed control responses and direct note bytes.
+It is not yet mounted by either production host; HTTP writes and host lifecycle
+integration remain pending.
 
 The server already exposes authenticated `/api/v3` commands and direct file-byte
 routes. `LAPIS_SERVER_TOKEN` admits a single owner-level bearer principal;
@@ -75,16 +81,16 @@ existing Core services → authoritative Markdown and disposable projections.
 The desktop UI reaches those same services through its native adapter. The CLI
 never opens a vault as a second writer behind a running host.
 
-| Owner                                        | Planned responsibility                                                                                                                                                      |
-| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Server-owned `lapis-app-protocol`            | Content DTOs, schemas, stable operation IDs, errors, capability descriptors and portable results. Extend the existing crate.                                                |
-| Server-owned `lapis-app-core`                | Content orchestration, authorization context, shared operation catalog, conditional mutations and existing service admission/drain. No HTTP, MCP or Tauri dependencies.     |
-| Proposed `lapis-content-http`                | Reusable content HTTP router and mapping, with a host-supplied authentication/admission port; mount in Server and Desktop. No server bootstrap/control database dependency. |
-| Proposed `lapis-content-mcp`                 | One shared tool/resource catalog and handlers calling the content service; protocol transport wiring remains outside Core.                                                  |
-| Proposed `lapis-cli` (`lapis` binary)        | Parsing, target selection, credentials, content HTTP client, output and a stdio MCP bridge. No independent content algorithms or native vault writes.                       |
-| `lapis-server`                               | Remote listening, owner/grant persistence, managed-vault admission, TLS/proxy configuration and hosted acceptance.                                                          |
-| `lapis-desktop`                              | Local listening/discovery, consent, credential custody, selected vault/window admission, UI actions, installation and native acceptance.                                    |
-| `lapis-notes` and owning plugin repositories | Public TypeScript App/API contracts and generated bindings; reusable Markdown, Search, Tasks and template semantics in their existing owners.                               |
+| Owner                                        | Planned responsibility                                                                                                                                                                        |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Server-owned `lapis-app-protocol`            | Content DTOs, schemas, stable operation IDs, errors, capability descriptors and portable results. Extend the existing crate.                                                                  |
+| Server-owned `lapis-app-core`                | Content orchestration, authorization context, shared operation catalog, conditional mutations and existing service admission/drain. No HTTP, MCP or Tauri dependencies.                       |
+| Server-owned `lapis-content-http`            | Reusable content HTTP router and mapping over shared Core test grants; production authentication/admission integration remains pending in Server and Desktop. No server bootstrap dependency. |
+| Proposed `lapis-content-mcp`                 | One shared tool/resource catalog and handlers calling the content service; protocol transport wiring remains outside Core.                                                                    |
+| Proposed `lapis-cli` (`lapis` binary)        | Parsing, target selection, credentials, content HTTP client, output and a stdio MCP bridge. No independent content algorithms or native vault writes.                                         |
+| `lapis-server`                               | Remote listening, owner/grant persistence, managed-vault admission, TLS/proxy configuration and hosted acceptance.                                                                            |
+| `lapis-desktop`                              | Local listening/discovery, consent, credential custody, selected vault/window admission, UI actions, installation and native acceptance.                                                      |
+| `lapis-notes` and owning plugin repositories | Public TypeScript App/API contracts and generated bindings; reusable Markdown, Search, Tasks and template semantics in their existing owners.                                                 |
 
 Crate names are proposed. Confirm dependency direction in the first slice and
 update SRV-SRV-004 when adding workspace members. Share crates through pinned

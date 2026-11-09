@@ -1,7 +1,9 @@
 //! Native read-only content sessions. Hosts authenticate before constructing one
 //! from dedicated admitted clients; no HTTP credential or caller-selected root enters here.
+mod grants;
 mod pagination;
 mod reads;
+pub use grants::{ContentGrants, ContentToken, IssuedContentGrant, MAX_CONTENT_GRANTS};
 #[cfg(test)]
 mod tests;
 
