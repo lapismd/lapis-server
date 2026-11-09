@@ -62,9 +62,15 @@ export class RustHttpClient {
     return response;
   }
 
-  async json<T>(path: string, method = "GET", value?: unknown): Promise<T> {
+  async json<T>(
+    path: string,
+    method = "GET",
+    value?: unknown,
+    signal?: AbortSignal,
+  ): Promise<T> {
     const response = await this.response(path, {
       method,
+      ...(signal ? { signal } : {}),
       ...(value === undefined
         ? {}
         : {

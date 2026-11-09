@@ -70,6 +70,22 @@ impl Catalogue {
         }
         Ok(Admission { _registry: guard })
     }
+    pub fn content_admission(&self, ids: &[Uuid]) -> Result<(Admission<'_>, Vec<ManagedVault>)> {
+        let guard = self.0.lock().map_err(|_| failed())?;
+        let vaults = ids
+            .iter()
+            .map(|id| {
+                let entry = guard
+                    .get(id)
+                    .ok_or_else(|| error(ErrorCode::PermissionDenied, "Vault is unavailable"))?;
+                if entry.vault.archived_at.is_some() || !entry.available {
+                    return Err(error(ErrorCode::PermissionDenied, "Vault is unavailable"));
+                }
+                Ok(entry.vault.clone())
+            })
+            .collect::<Result<Vec<_>>>()?;
+        Ok((Admission { _registry: guard }, vaults))
+    }
     pub fn available(&self, id: Uuid, value: bool) -> Result<()> {
         self.0
             .lock()

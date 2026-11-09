@@ -1,5 +1,6 @@
 mod attachments;
 mod backup;
+pub(crate) mod content;
 mod database;
 mod history_index;
 mod history_reader;
@@ -36,6 +37,7 @@ pub enum Principal {
 
 pub struct Host {
     ready: AtomicBool,
+    pub(crate) content: Arc<content::Access>,
     runtime: Runtime,
     vaults: Vec<ManagedVault>,
     clients: attachments::Attachments,
@@ -76,6 +78,7 @@ impl Host {
         }
         Ok(Self {
             ready: AtomicBool::new(true),
+            content: Arc::new(content::Access::default()),
             runtime,
             vaults,
             clients: attachments::Attachments::default(),
@@ -126,7 +129,12 @@ impl Host {
     }
 
     pub fn expire_idle(&self, now: Instant) -> Result<usize> {
-        self.clients.expire(now)
+        let count = self.clients.expire(now)?;
+        self.content
+            .grants
+            .prune_expired()
+            .map_err(content::native)?;
+        Ok(count)
     }
 
     pub(super) fn client(&self, id: Uuid, principal: Principal) -> Result<Arc<Client>> {
@@ -138,6 +146,11 @@ impl Host {
     }
 
     pub fn close(&self, vault: Uuid) -> Result<()> {
+        let _admission = self.content.admission()?;
+        self.content
+            .grants
+            .revoke_vault(vault)
+            .map_err(content::native)?;
         self.runtime.close_vault(vault).map_err(|e| e.0)?;
         self.clients.retire(Some(vault))?;
         Ok(())
@@ -160,6 +173,10 @@ impl Host {
         if let Some(manager) = self.management.get() {
             manager.pause_and_drain()?;
         }
+        self.content.stop_and_drain()?;
+        let _admission = self.content.admission()?;
+        self.content.cancellation.cancel();
+        self.content.grants.shutdown().map_err(content::native)?;
         if let Err(error) = self.runtime.shutdown() {
             if let Some(manager) = self.management.get() {
                 manager.resume();

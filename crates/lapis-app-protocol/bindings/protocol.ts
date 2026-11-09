@@ -105,6 +105,20 @@ export type ContentAccessStatus = {
   enabled: boolean;
   grants: Array<ContentGrantSummary>;
 };
+export type ContentHostStatus = {
+  access: ContentAccessStatus;
+  available: boolean;
+  persistent: boolean;
+  api_url: string | null;
+  mcp_url: string | null;
+};
+export type ContentAccessSetting = { enabled: boolean };
+export type ContentGrantRequest = {
+  label: string;
+  vault_ids: Array<string>;
+  lifetime_seconds: number;
+};
+export type CreatedContentGrant = { grant_id: string; token: string };
 export type ContentGrantSummary = {
   grant_id: string;
   label: string;

@@ -3,7 +3,9 @@
 This private crate explicitly mounts `/mcp` for Server/Desktop integration. It
 does not start a listener, choose vault roots, issue credentials or enable either
 production host. [SRV-SRV-011](../../spec/src/current/content.md#srv-srv-011) owns the
-contract; remaining consent, OAuth, host and write work lives in the
+contract; the hosted mount/settings are qualified under
+[SRV-SRV-014](../../spec/src/current/content.md#srv-srv-014). Remaining Desktop,
+OAuth, client approval and write work lives in the
 [content backlog](../../spec/src/backlog/content-automation.md).
 
 `router(grants, public_origin)` serves controlled ephemeral read grants.
@@ -18,7 +20,7 @@ and listeners. Hosts still own TLS/proxies, connection limits and consent.
 | Server SDK     | Official Rust `rmcp = 3.9.0`                            |
 | MCP protocol   | `2026-07-28`, stateless Streamable HTTP                 |
 | Client         | Same official Rust SDK, `ClientLifecycleMode::Discover` |
-| Authentication | Controlled native test grants, per-request bearer       |
+| Authentication | Native scoped read-only grants, per-request bearer       |
 
 Older initialized clients, public MCP client applications, OAuth protected-resource
 discovery/authorization servers remain unqualified. The source CLI stdio bridge

@@ -64,6 +64,12 @@
       "required": ["client_id", "vault_id", "generation"],
       "type": "object"
     },
+    "ContentAccessSetting": {
+      "additionalProperties": false,
+      "properties": { "enabled": { "type": "boolean" } },
+      "required": ["enabled"],
+      "type": "object"
+    },
     "ContentAccessStatus": {
       "additionalProperties": false,
       "properties": {
@@ -198,6 +204,23 @@
       ],
       "type": "string"
     },
+    "ContentGrantRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "lifetime_seconds": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vault_ids": {
+          "items": { "format": "uuid", "type": "string" },
+          "type": "array"
+        }
+      },
+      "required": ["label", "vault_ids", "lifetime_seconds"],
+      "type": "object"
+    },
     "ContentGrantSummary": {
       "additionalProperties": false,
       "properties": {
@@ -224,6 +247,18 @@
         "active",
         "expires_in_seconds"
       ],
+      "type": "object"
+    },
+    "ContentHostStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "access": { "$ref": "#/$defs/ContentAccessStatus" },
+        "api_url": { "type": ["string", "null"] },
+        "available": { "type": "boolean" },
+        "mcp_url": { "type": ["string", "null"] },
+        "persistent": { "type": "boolean" }
+      },
+      "required": ["access", "available", "persistent"],
       "type": "object"
     },
     "ContentNoteSummary": {
@@ -415,6 +450,16 @@
         "tags": { "items": { "$ref": "#/$defs/TagRecord" }, "type": "array" }
       },
       "required": ["file", "metadata", "links", "tags", "properties"],
+      "type": "object"
+    },
+    "CreatedContentGrant": {
+      "additionalProperties": false,
+      "description": "One-time owner response. Deliberately not Debug or Clone.",
+      "properties": {
+        "grant_id": { "format": "uuid", "type": "string" },
+        "token": { "type": "string" }
+      },
+      "required": ["grant_id", "token"],
       "type": "object"
     },
     "DatabaseCall": {
@@ -5280,9 +5325,13 @@
     "attach": { "$ref": "#/$defs/AttachClient" },
     "client": { "$ref": "#/$defs/ClientDescriptor" },
     "content_access": { "$ref": "#/$defs/ContentAccessStatus" },
+    "content_access_setting": { "$ref": "#/$defs/ContentAccessSetting" },
+    "content_grant_request": { "$ref": "#/$defs/ContentGrantRequest" },
+    "content_host_status": { "$ref": "#/$defs/ContentHostStatus" },
     "content_reply": { "$ref": "#/$defs/ContentReply" },
     "content_request": { "$ref": "#/$defs/ContentRequest" },
     "core_indexed_file": { "$ref": "#/$defs/CoreIndexedFile" },
+    "created_content_grant": { "$ref": "#/$defs/CreatedContentGrant" },
     "database_call": { "$ref": "#/$defs/DatabaseCall" },
     "database_change": { "$ref": "#/$defs/ChangeSet" },
     "database_value": { "$ref": "#/$defs/DatabaseValue" },
@@ -5373,6 +5422,10 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "content_host_status",
+    "content_access_setting",
+    "content_grant_request",
+    "created_content_grant",
     "content_access",
     "content_request",
     "content_reply",

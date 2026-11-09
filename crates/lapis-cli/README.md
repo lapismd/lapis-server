@@ -52,8 +52,12 @@ request can proceed. EOF or a failed stdout closes the bridge and drains its
 async services without hanging on a blocking stdin reader. Transport diagnostics
 are sanitized and use stderr.
 
-Production host mounting, plugin settings in Server/Desktop, named profiles,
-login/custody, Desktop discovery, writes, completions and distribution remain pending. See
+The hosted server now mounts these endpoints when enabled in **Settings → Plugins
+→ Content API and MCP**. Create a read-only credential there, copy it into your
+protected token file, and use the public origin shown in settings. Credentials
+expire within 24 hours and never survive server restart. Desktop mounting and
+plugin settings, named profiles, login/custody, Desktop discovery, writes,
+completions and distribution remain pending. See
 [SRV-SRV-010](../../spec/src/current/content.md#srv-srv-010) and the
 [stdio contract](../../spec/src/current/content.md#srv-srv-012), plus the
 [content backlog](../../spec/src/backlog/content-automation.md).

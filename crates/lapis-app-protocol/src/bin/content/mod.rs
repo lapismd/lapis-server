@@ -20,6 +20,10 @@ pub fn declarations(config: &Config) -> Vec<String> {
         ContentOutcome::decl(config),
         ContentReply::decl(config),
         ContentAccessStatus::decl(config),
+        ContentHostStatus::decl(config),
+        ContentAccessSetting::decl(config),
+        ContentGrantRequest::decl(config),
+        CreatedContentGrant::decl(config),
         ContentGrantSummary::decl(config),
     ]
 }

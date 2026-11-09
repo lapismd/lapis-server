@@ -48,6 +48,12 @@ impl ContentGrants {
         Ok(())
     }
 
+    /// Cheap host transport gate; does not authenticate a content operation.
+    pub fn is_enabled(&self) -> Result<bool> {
+        let registry = self.lock()?;
+        Ok(!registry.closed && !registry.paused)
+    }
+
     /// Owner-only snapshot; does not clean up expired entries or expose secrets.
     /// No native IO/lock wait occurs while holding the registry lock.
     pub fn status(&self) -> Result<ContentAccessStatus> {

@@ -5,7 +5,9 @@ for controlled Server/Desktop integration. It does not start a listener, issue
 credentials, select vault roots or mount itself in either production host.
 Read [SRV-SRV-009](../../spec/src/current/content.md#srv-srv-009) and the
 [content backlog](../../spec/src/backlog/content-automation.md) for the contract
-and remaining host, CLI, MCP and mutation work.
+and remaining Desktop, connection and mutation work. The hosted server mounts
+this adapter under [SRV-SRV-014](../../spec/src/current/content.md#srv-srv-014)
+when enabled in its Content API and MCP plugin settings.
 
 The router nests four GET routes under `/api/content/v1`: `capabilities`,
 `vaults`, `vaults/{vault_id}/notes` and `vaults/{vault_id}/note?path=...`.
@@ -22,9 +24,10 @@ It limits native concurrency and retains permits after request cancellation.
 `Boundary::new(grants, origin)` and `router_with_boundary(boundary.clone())`
 allow HTTP and MCP to share that policy and one native worker pool.
 
-Native hosts authorize test-grant issuance, schedule expiry cleanup and shut
-down/drain grants on blocking workers. Persistent consent, credential custody,
-OAuth, general external access and real host acceptance remain unqualified.
+Native hosts authorize named grant issuance, schedule expiry cleanup and shut
+down/drain grants on blocking workers. The hosted server persists its enable
+preference, while credentials remain process-local. Desktop qualification,
+persistent client grants, OAuth and general client compatibility remain pending.
 
 Run `cargo test -p lapis-content-http --locked` for real-socket read/error cases
 and native-admission/cancellation tests. Workspace tests and Clippy remain the

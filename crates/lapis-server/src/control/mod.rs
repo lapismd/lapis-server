@@ -1,5 +1,6 @@
 mod attempts;
 pub mod bootstrap;
+mod content;
 mod login;
 mod owner;
 pub mod passwords;

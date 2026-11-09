@@ -14,6 +14,8 @@ import {
 const api = process.env.LAPIS_RUST_SERVER_URL ?? "http://127.0.0.1:4810";
 const proxy = {
   "/api/v3": { target: api, changeOrigin: false },
+  "/api/content/v1": { target: api, changeOrigin: false },
+  "/mcp": { target: api, changeOrigin: false },
   "/__lapis/plugins": { target: api, changeOrigin: false },
 };
 

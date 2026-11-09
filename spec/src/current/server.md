@@ -107,7 +107,7 @@ the demonstrated shutdown boundary and its extension are recorded in the
 ## Shared content automation
 
 The [content automation contract](content.md) owns SRV-SRV-005 through
-SRV-SRV-013, including shared host controls. Hosts still own authentication,
+SRV-SRV-014, including shared host controls and hosted plugin settings. Hosts still own authentication,
 consent, persistence, admission and listener qualification under SRV-SRV-004.
 
 <a id="srv-srv-005"></a>
