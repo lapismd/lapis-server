@@ -71,11 +71,11 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol` and `lapis-content-http` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http` and `lapis-cli` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
 ### Acceptance details
 
-- The Cargo workspace contains those four crates; the shared content HTTP adapter depends on Core/Protocol without a server bootstrap or Tauri dependency.
+- The workspace contains those five crates; the HTTP adapter depends on Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.
 - The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
@@ -284,3 +284,52 @@ listener/connection limits, TLS, credential cleanup and shutdown/drain orchestra
 - Missing, foreign or revoked credentials fail before query validation; Host/Origin, protocol, scope and unimplemented routes cannot extend authority.
 - Strict query/path validation, body and size limits retain typed sanitized errors with correlation and non-cacheable responses.
 - Native admission rejects saturation and retains capacity after caller cancellation until the worker drains.
+
+## SRV-SRV-010 — Initial content CLI reads
+
+<a id="srv-srv-010"></a>
+
+**Requirement.** The private `lapis-cli` crate MUST build the `lapis` executable
+as a content HTTP client, without opening vault roots or importing Core in its
+production dependencies. Initial commands MUST include `capabilities`, `vault
+list`, `note list --vault <UUID>` and `note read --vault <UUID> --path <path>`.
+Lists accept `--limit` (default 50) and `--cursor`; note lists accept `--directory`.
+All commands reuse Protocol validation and the SRV-SRV-009 HTTP contract.
+
+This increment requires an explicit `--target <origin>`; HTTPS is required
+except for HTTP loopback. URL userinfo, non-root paths, queries and fragments
+are refused. The client MUST NOT follow redirects, use environment proxies,
+infer a target/vault from cwd or fall back to local disk. Requests have a bounded
+`--timeout-ms` of 1–120000, default 15000, and retain correlation/API identity.
+There is no implicit pagination or retry loop.
+
+Credentials MUST enter through `--token-stdin` or `--token-file <path>`, never
+a bearer argument. Input is bounded to 4096 printable ASCII token bytes with
+an optional final LF/CRLF. Unix files MUST be regular, owned by the effective
+user, have no group/other permissions and be opened without following the final
+symlink or blocking on a FIFO. Other platforms use stdin pending an equivalent
+permission check. Credential values and raw transport errors MUST NOT be printed.
+
+JSON mode emits exactly one Protocol `ContentReply` to stdout, reconstructing
+note results from direct bytes and strong ETags. Human note reads preserve exact
+saved UTF-8 bytes without adding a newline; other human output is tabular.
+Diagnostics and continuation hints use stderr. JSON errors retain stable codes
+and effects with local sanitized messages. Command-line syntax errors use the
+parser's stderr/help contract. Responses MUST match request/API identity and
+result kind, with at most 1 MiB of note bytes or 2 MiB of control JSON.
+
+Exit codes are 0 success, 2 invalid input, 3 unauthenticated, 4 conflict/already
+exists, 5 not found, 6 permission denied, 7 busy/unavailable, 8 protocol mismatch,
+9 too large, 10 unsupported and 11 unknown effect. Output failure returns 7;
+a closed stdout pipe is normal completion.
+
+Source CLI acceptance does not qualify production host mounting, named profiles,
+owner login, OS custody, Desktop discovery, writes, MCP stdio, completions or
+binary/image distribution. Those remain in the content backlog.
+
+### Acceptance details
+
+- The compiled CLI reads real shared HTTP fixtures with catalog/list/cursor parity and byte-identical notes in human and JSON modes.
+- Invalid targets, missing credentials, revoked or foreign-vault access and malformed responses produce deterministic errors without exposing credentials or opening vaults.
+- Credential files enforce their Unix ownership/permission/type boundary; stdin is bounded and neither path uses token argv values.
+- Redirects, protocol/correlation mismatch, oversized replies and timeouts fail without credential forwarding or implicit retries.
