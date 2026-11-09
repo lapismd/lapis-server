@@ -257,3 +257,48 @@ export const SettingsDark: Story = {
   ...Settings,
   globals: { colorMode: "dark" },
 };
+
+export const ContentAccess: Story = {
+  name: "Content API and MCP",
+  render: renderScenario("vaults"),
+  play: async ({ canvasElement }) => {
+    await openWorkspace(canvasElement);
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      await page.findByRole("button", { name: "Content API and MCP" }),
+    );
+    const enabled = await page.findByRole("switch", {
+      name: "Enable API and MCP access",
+    });
+    await userEvent.click(enabled);
+    await page.findByText("Enabled · read-only");
+    const label = page.getByRole("textbox", { name: "Credential label" });
+    await userEvent.clear(label);
+    await userEvent.type(label, "Story client");
+    await userEvent.click(
+      page.getByRole("button", { name: "Create a read-only credential" }),
+    );
+    await page.findByRole("button", { name: /^Copy full credential:/ });
+    await page.findByText("Story client", { exact: true });
+    await userEvent.click(
+      page.getByRole("button", { name: "Hide the one-time credential" }),
+    );
+    await page.findByText("No credential to display");
+    await userEvent.click(page.getByRole("button", { name: "Revoke" }));
+    await waitFor(() =>
+      expect(
+        page.queryByText("Story client", { exact: true }),
+      ).not.toBeInTheDocument(),
+    );
+    await userEvent.click(enabled);
+    await page.findByText("Disabled", { exact: true });
+  },
+};
+
+export const ContentAccessDark: Story = {
+  ...ContentAccess,
+  name: "Content API and MCP dark",
+  globals: { colorMode: "dark" },
+};

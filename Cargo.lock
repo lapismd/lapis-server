@@ -3606,6 +3606,8 @@ dependencies = [
  "lapis-ai-service",
  "lapis-app-core",
  "lapis-app-protocol",
+ "lapis-content-http",
+ "lapis-content-mcp",
  "mime_guess",
  "reqwest 0.12.28",
  "scrypt",

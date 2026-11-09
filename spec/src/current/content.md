@@ -334,3 +334,40 @@ Credentials remain process-local and require a new issuance after restart.
 - Owner summaries contain validated labels, exact admitted scope and monotonic expiry, without secrets; expired grants still refuse calls before cleanup.
 - Concurrent tests hold native readers/issuance, proving all-grant fencing before drain and stale-admission refusal across disable/re-enable or vault retirement.
 - Vault retirement preserves unrelated credentials; permanent shutdown cannot re-enable and retains the existing capacity, cleanup and cancellation guarantees.
+
+## SRV-SRV-014 — Hosted content access and plugin settings
+
+<a id="srv-srv-014"></a>
+
+**Requirement.** The hosted process MUST optionally serve the shared content
+HTTP API at `/api/content/v1` and stateless MCP at `/mcp`, using one native worker
+budget and scoped Core credentials. Access MUST start disabled for a new profile.
+The public origin MUST satisfy the shared HTTPS/loopback policy; an incompatible
+origin leaves content unavailable without breaking existing owner routes.
+
+Owner controls under `/api/v3/content-access` MUST use existing owner/session,
+protocol and CSRF checks; content tokens MUST NOT authorize those controls.
+Controls MUST bound request bodies, admission and native work, retain accepted
+work after disconnect, and drain before host shutdown. Vault close/archive MUST
+retire affected whole grants while excluding concurrent native admission.
+
+The control database MUST persist only the enable preference, never content
+tokens. Grants remain process-local, read-only, named, explicitly scoped to
+1–20 active managed/configured vault IDs, and valid for at most 24 hours. Only
+issuance reveals the secret; list/status never do. Disable MUST fence/drain even
+if saving the preference fails. Enabling MUST save consent before admitting
+credentials. Token-only installations MAY use process-local preferences.
+
+The hosted Notes workspace MUST register a Content API and MCP plugin settings
+section using the public declarative settings API. It MUST show enablement,
+endpoint availability/addresses, selected vaults, read permission, expiry,
+creation and revocation. One-time tokens MUST stay in transient memory, clear on
+teardown/dismissal, and never enter browser/vault settings storage. Desktop
+integration, OAuth and write operations remain independently gated.
+
+### Acceptance details
+
+- Real HTTP and subprocess tests cover disabled startup, owner authorization/CSRF, enable, scoped HTTP/MCP reads, foreign-vault refusal, revocation and disable/re-enable.
+- Cold restart preserves the enable preference but refuses old tokens; vault close/archive and shutdown retire native grants, while unsupported origins preserve owner access.
+- Accepted control work and bounded native permits survive response cancellation; shutdown drains controls and content readers without reviving authority after a failed native leave.
+- The real hosted plugin settings screen creates/revokes credentials and disables access; production catalog interaction/axe and cold built-server acceptance pass without browser credential persistence.

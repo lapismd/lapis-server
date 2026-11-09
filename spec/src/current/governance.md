@@ -65,6 +65,11 @@ legacy anchors remain as navigation links. Native lifecycle/epoch regressions,
 workspace tests/Clippy and generated protocol/specification checks qualify this
 source slice. Server/Desktop endpoint and plugin settings acceptance remain open.
 
+SRV-SRV-014 mounts optional content HTTP/MCP in the hosted process with owner
+controls and plugin settings through the existing public Notes API. Source,
+real-host/cold-process and production UI interaction/accessibility acceptance
+remain distinct; Desktop and OAuth are not qualified by hosted evidence.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

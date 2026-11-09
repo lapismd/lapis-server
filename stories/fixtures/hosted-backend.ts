@@ -1,3 +1,5 @@
+import { contentAccessPlugin } from "../../web/src/content-access/plugin";
+import { contentFixture } from "./content-access";
 import { MemoryAppDatabase, MemoryVaultAdapter } from "@lapis-notes/api";
 import type { NotesWorkspaceHost } from "@lapis-notes/app-profile/workspace-session";
 import type { HostedBackend, HostedVault } from "../../web/src/hosted/backend";
@@ -25,6 +27,7 @@ export function createHostedFixture(scenario: HostedScenario) {
           { id: "notes", name: "Notes", role: "owner" },
           { id: "archive", name: "Archive", role: "owner", archivedAt: 1 },
         ];
+  const content = contentFixture(() => vaults);
   let releaseGate!: () => void;
   const gate = new Promise<void>((done) => {
     releaseGate = done;
@@ -88,17 +91,21 @@ export function createHostedFixture(scenario: HostedScenario) {
         adapters.set(profile.id, adapter);
       }
       const database = new MemoryAppDatabase(adapter.getVaultId());
-      const workspaceHost: NotesWorkspaceHost | undefined =
-        scenario === "startup-failure"
-          ? {
-              configure: async () => {
-                if (!failed) {
-                  failed = true;
-                  throw new Error("Catalog workspace configuration failed");
-                }
-              },
-            }
-          : undefined;
+      const workspaceHost: NotesWorkspaceHost = {
+        configure: async (app) => {
+          if (scenario === "startup-failure" && !failed) {
+            failed = true;
+            throw new Error("Catalog workspace configuration failed");
+          }
+          app.plugins.registerStaticPlugins([
+            {
+              plugin: contentAccessPlugin(content, profile.id),
+              required: true,
+              enabledByDefault: true,
+            },
+          ]);
+        },
+      };
       return {
         adapter,
         database: {

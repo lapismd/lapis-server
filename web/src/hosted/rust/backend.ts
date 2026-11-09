@@ -1,3 +1,4 @@
+import { contentAccessPlugin } from "../../content-access/plugin";
 import { createRustNativeEditingIntents } from "./native-editing-intents";
 import { HistoryClient } from "@lapismd/jj-history";
 import { createHostedRepository } from "../../history/services";
@@ -73,6 +74,17 @@ export function createRustHostedBackend(
       const client = await host.attach(profile.id);
       const adapter = new RustVaultAdapter(client, profile.name);
       return {
+        workspaceHost: {
+          configure: async (app) => {
+            app.plugins.registerStaticPlugins([
+              {
+                plugin: contentAccessPlugin(host, profile.id),
+                required: true,
+                enabledByDefault: true,
+              },
+            ]);
+          },
+        },
         adapter,
         nativeTasks: nativeTasks
           ? { call: (command) => client.tasks(command) }

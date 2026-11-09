@@ -1,7 +1,7 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging and native host controls are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013;
-production host endpoints and binary distribution remain gated. The end goal is one content API
+Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging, native host controls and the hosted read-only endpoints/settings are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013/014;
+Desktop endpoints/settings and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
 
@@ -13,23 +13,24 @@ The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
 verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
-rotation, owner consent, write dispatch, durable operation receipts
-and Desktop intake remain unimplemented. OAuth selection and consumer contracts remain part of
+rotation, durable client approvals, write dispatch, durable operation receipts
+and Desktop intake remain unimplemented. Hosted owner consent now controls the
+optional read-only API/MCP endpoints and transient named credentials. OAuth selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
 grants, strict Host/Origin checks, typed control responses and direct note bytes.
-It is not yet mounted by either production host; HTTP writes and host lifecycle
-integration remain pending.
+It is now mounted by the hosted server under SRV-SRV-014; HTTP writes and Desktop
+mounting/lifecycle integration remain pending.
 The source `lapis` executable now supports capabilities, vault/note lists and
 note reads against the HTTP adapter, with explicit origin/UUID selection,
 protected file/stdin credentials, JSON output and stable exit codes. It has
 subprocess acceptance; profiles/login, writes and distribution remain pending
-alongside actual host mounting and consent. The source CLI also bridges stdio
+alongside Desktop mounting and consent. The source CLI also bridges stdio
 MCP clients to an explicit host using a protected credential file; SRV-SRV-012
 qualifies current discovery and 2025-11-25 initialized clients.
 The shared MCP read adapter now uses pinned `rmcp 3.9.0` with official-client
 acceptance for stateless `2026-07-28` discovery, tools and note resources. Legacy
-HTTP clients, public client products, OAuth and host lifecycle qualification remain
+HTTP clients, public client products, OAuth and Desktop lifecycle qualification remain
 pending. HTTP/MCP can share origin policy and one native worker budget.
 
 The server already exposes authenticated `/api/v3` commands and direct file-byte
@@ -228,10 +229,14 @@ until its original approval/cancellation/provider cases pass through shared code
 
 Shared native controls now provide disabled startup, enable/disable with drain,
 named read-only credentials, secret-free scope/expiry summaries and vault
-retirement. They do not mount an endpoint, persist consent or register a screen.
+retirement. SRV-SRV-014 now mounts both adapters inside the actual hosted process,
+persists its enable preference, and registers the production Notes plugin settings
+screen. Cold static/preview/development browser acceptance creates and revokes
+credentials, reads HTTP/MCP, refuses foreign vaults, disables access and restarts
+the process. Hosted authority remains read-only and credentials process-local.
 
-The next host slice MUST make the shared API and `/mcp` endpoint optionally
-available inside the running hosted server. Server and Desktop MUST each expose
+The next host slice MUST integrate the shared controls/adapters into Desktop's
+native listener and real plugin settings screen. Server and Desktop MUST each expose
 this through plugin settings: enable/disable API and MCP access, endpoint and
 listener status, admitted vault permissions, credential creation/expiry and
 revocation. Environment configuration alone does not complete this requirement.

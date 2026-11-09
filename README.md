@@ -92,6 +92,62 @@ That password is used only when the profile has no owner yet. An existing
 profile keeps the password from its first start. The bootstrap username is
 `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
 
+## Content API, MCP and CLI preview
+
+Open a vault, then choose **Settings → Plugins → Content API and MCP**. Enable
+access, select the vaults a client may read, choose a label and lifetime, and
+create a credential. Copy it immediately into your client's protected credential
+file; the screen clears it after one minute or when dismissed. It cannot be
+retrieved again. Each credential is read-only and expires within 24 hours.
+
+The same server process exposes `/api/content/v1` and `/mcp` at the addresses
+shown in settings. A new profile starts with access disabled. The enable
+preference is saved in the server profile, but credentials become invalid on
+restart. Revocation, disabling access, and closing/archiving a selected vault
+also invalidate credentials. A token-only server keeps its enable preference
+only until restart. Use the owner controls at `/api/v3/content-access` in that
+mode; content credentials cannot authorize owner controls.
+
+Set `LAPIS_SERVER_ORIGIN` to the exact public HTTPS origin, or HTTP on loopback.
+A reverse proxy must preserve that public Host and forward `/api/content/v1`
+and `/mcp`. Other HTTP origins leave content access unavailable. Existing owner
+login and CSRF checks protect the settings controls; owner passwords, cookies
+and owner-wide bearer tokens cannot substitute for a scoped content credential.
+
+Build the source CLI with `cargo build -p lapis-cli --locked`, then use the
+resulting `lapis` executable:
+
+```sh
+lapis --target https://notes.example --token-file "$LAPIS_TOKEN_FILE" vault list --json
+lapis --target https://notes.example --token-file "$LAPIS_TOKEN_FILE" note read --vault <UUID> --path Note.md
+lapis --target https://notes.example --token-file "$LAPIS_TOKEN_FILE" mcp serve --stdio
+```
+
+The token file must be owned by your user and readable only by that user on
+Unix. Direct HTTP clients send `Authorization: Bearer …` and
+`x-lapis-content-api: 1`. Direct MCP uses stateless Streamable HTTP revision
+`2026-07-28`; the CLI bridge also accepts initialized `2025-11-25` stdio clients.
+OAuth, general MCP client-product compatibility, content writes and packaged CLI
+installation remain pending. See the [CLI guide](crates/lapis-cli/README.md),
+[HTTP routes](crates/lapis-content-http/README.md) and
+[MCP protocol guide](crates/lapis-content-mcp/README.md).
+
+Owner control requests use `x-lapis-protocol: 3` plus the existing owner bearer
+or browser session/CSRF credentials:
+
+| Method and path                                   | Request                                                          | Result                                                       |
+| ------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| `GET /api/v3/content-access`                      | None                                                             | Availability, addresses, enablement and credential summaries |
+| `POST /api/v3/content-access`                     | `{"enabled":true}` or `{"enabled":false}`                        | Updated status; disabling revokes all grants                 |
+| `POST /api/v3/content-access/grants`              | `{"label":"CLI","vault_ids":["<UUID>"],"lifetime_seconds":3600}` | One-time `grant_id` and `token`                              |
+| `DELETE /api/v3/content-access/grants/<grant_id>` | None                                                             | Revocation, with no response body                            |
+
+Issuance accepts 1–20 distinct active vault UUIDs and 1–86400 seconds. Labels
+must be nonempty after trimming, contain no control characters and fit in
+128 UTF-8 bytes. A lost issuance response requires checking the summaries and
+revoking the inaccessible grant before deliberately issuing another; do not
+blindly retry.
+
 ## Develop
 
 ```sh
@@ -107,4 +163,5 @@ Schema and TypeScript. `pnpm protocol:check` verifies those artifacts without
 rewriting them and checks representative clients; CI runs the same gate.
 The [content automation plan](spec/src/backlog/content-automation.md) tracks
 the shared content API, MCP and CLI work. Its contracts and read-only native
-sessions do not yet enable external endpoints or a CLI executable.
+sessions power the optional hosted endpoints described above. Desktop integration,
+content writes, OAuth and CLI packaging remain separate delivery gates.

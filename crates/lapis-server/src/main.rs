@@ -97,6 +97,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         origin
     };
+    if let Some(control) = &control {
+        http::restore_content_settings(host.clone(), control.clone(), &origin).await?;
+    }
     let router = match web {
         Some(web) => http::router_with_web(host.clone(), authentication, &origin, web)?,
         None => http::router(host.clone(), authentication, &origin)?,

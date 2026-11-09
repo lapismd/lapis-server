@@ -1,4 +1,6 @@
 mod auth;
+mod content;
+pub use content::restore_settings as restore_content_settings;
 mod static_web;
 pub use static_web::StaticWeb;
 mod browser;
@@ -96,7 +98,9 @@ fn configured_router(
             .collect(),
         origin: origin.into(),
     };
+    let transport = content::transport(&state)?;
     let mut router = Router::new()
+        .merge(content::routes())
         .route(
             "/__lapis/plugins/{client}/{plugin}/{version}/{fingerprint}/{*path}",
             get(plugins::serve),
@@ -190,7 +194,8 @@ fn configured_router(
             auth::authorize,
         ))
         .route("/api/v3/system/info", get(browser::info))
-        .route("/api/v3/auth/login", post(browser::login));
+        .route("/api/v3/auth/login", post(browser::login))
+        .merge(transport);
     if selected_web {
         router = router
             .route("/healthz", axum::routing::any(static_web::health))

@@ -3,6 +3,10 @@ use schemars::JsonSchema;
 
 #[derive(JsonSchema)]
 pub struct Contracts {
+    pub content_host_status: lapis_app_protocol::content::ContentHostStatus,
+    pub content_access_setting: lapis_app_protocol::content::ContentAccessSetting,
+    pub content_grant_request: lapis_app_protocol::content::ContentGrantRequest,
+    pub created_content_grant: lapis_app_protocol::content::CreatedContentGrant,
     pub content_access: lapis_app_protocol::content::ContentAccessStatus,
     pub content_request: lapis_app_protocol::content::ContentRequest,
     pub content_reply: lapis_app_protocol::content::ContentReply,

@@ -31,3 +31,8 @@ CREATE TABLE IF NOT EXISTS hosted_vaults (
   physical_inode TEXT NOT NULL,
   archived_at INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS content_access_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  enabled INTEGER NOT NULL CHECK (enabled IN (0,1))
+);
