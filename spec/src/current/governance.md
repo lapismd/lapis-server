@@ -58,7 +58,7 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
-- The server mounts published `@lapis-notes/workspace`; every pull request installs checksum-verified upstream jj 0.45.1, denies Rust warnings with workspace clippy, runs workspace Rust tests with the ordinary dependency cache, cross-builds the native server and smoke-tests Homebrew tooling on both architectures; and `main` publishes the 7-character multi-architecture commit image and requires those Server CI jobs plus a pull request before Changesets creates the version tag and GitHub release without npm.
+- The server mounts published `@lapis-notes/workspace`; pull requests install checksum-verified jj 0.45.1, deny Rust warnings, run cached workspace tests, cross-build the server and smoke-test Homebrew on both architectures; `main` publishes the multi-architecture image through Changesets without npm; and retained Tasks restarts drain guarded sign-out before host shutdown without weakening lost-response recovery.
 
 ## SRV-GOV-002 — Published shell styles
 
@@ -78,11 +78,13 @@ The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
 <a id="srv-gov-003"></a>
 
 **Requirement.** The hosted application MUST use the built public Notes application-profile workspace session. Its host wrappers and the real workspace shell MUST fill the viewport. Appearance initialization and branding assets MUST work in application and catalog builds. Host authentication and Rust transport MUST remain server-owned.
+The installed dependency graph MUST provide one `@lapis-notes/api` peer context
+to the root host and the shared application profile.
 
 ### Acceptance details
 
 - Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
-- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown.
+- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package temporarily pins Design Core 0.12.2 only for the source-verified API, application profile, File Explorer, UI and Workspace manifests so the frozen lock resolves one API peer context until Notes publishes its coordinated package cohort.
 - Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
 - Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.
 

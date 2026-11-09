@@ -134,6 +134,10 @@ export async function createHostedTasksFixture(
       return openPage(target);
     },
     async restart() {
+      // A browser navigation cannot await Svelte's asynchronous onMount cleanup.
+      // Cross the guarded host boundary first so debounced layout writes and the
+      // retained session finish before the owned Rust and Vite processes stop.
+      await signOutHostedWorkspace(page);
       await page.goto("about:blank");
       await service.restart();
     },

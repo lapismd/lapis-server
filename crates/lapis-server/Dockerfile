@@ -65,6 +65,7 @@ USER lapis
 RUN NONINTERACTIVE=1 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
     HOMEBREW_CACHE=/home/linuxbrew/.linuxbrew/var/cache/Homebrew \
+    HOMEBREW_DOWNLOAD_CONCURRENCY=1 \
     HOMEBREW_LOGS=/home/linuxbrew/.linuxbrew/var/log/Homebrew \
     HOMEBREW_NO_SANDBOX=1 \
     HOMEBREW_TEMP=/home/linuxbrew/.linuxbrew/var/tmp

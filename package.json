@@ -13,6 +13,21 @@
   "engines": {
     "node": "^24"
   },
+  "pnpm": {
+    "overrides": {
+      "@lapis-notes/api>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/app-profile>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/file-explorer>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/ui>@lapismd/design-core": "0.12.2",
+      "@lapis-notes/workspace>@lapismd/design-core": "0.12.2"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@lapis-notes/api>@lapismd/design-core": "0.12.2",
+        "@lapis-notes/ui>@lapismd/design-core": "0.12.2"
+      }
+    }
+  },
   "scripts": {
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
     "spec:check": "node scripts/dependency-automation/spec-policy.mjs check && pnpm check:app-ownership",
@@ -48,7 +63,7 @@
     "@lapis-notes/source-editor": "^0.1.3",
     "@lapis-notes/ui": "^0.1.6",
     "@lapis-notes/workspace": "^0.3.2",
-    "@lapismd/design-core": "^0.9.0",
+    "@lapismd/design-core": "^0.12.2",
     "@lapismd/jj-history": "~0.1.0",
     "@lapismd/mira": "~0.1.4",
     "@lucide/svelte": "^0.523.0",
