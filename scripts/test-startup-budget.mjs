@@ -91,6 +91,10 @@ const metrics = {
   pluginAssets: 600,
 };
 const consoleErrors = [];
+const networkErrors = [];
+const retain = (items, value) => {
+  if (items.length < 32) items.push(value);
+};
 let overflow;
 const exceeded = new Promise((_, reject) => {
   overflow = reject;
@@ -158,7 +162,24 @@ try {
     );
   browser = await chromium.launch({ headless: true });
   page = await browser.newPage({ serviceWorkers: "block" });
-  page.on("pageerror", (error) => consoleErrors.push(error.message));
+  page.on("pageerror", (error) => retain(consoleErrors, error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error")
+      retain(consoleErrors, message.text().slice(0, 4096));
+  });
+  page.on("requestfailed", (request) =>
+    retain(networkErrors, {
+      path: new URL(request.url()).pathname,
+      error: request.failure()?.errorText,
+    }),
+  );
+  page.on("response", (response) => {
+    if (response.status() >= 400)
+      retain(networkErrors, {
+        path: new URL(response.url()).pathname,
+        status: response.status(),
+      });
+  });
   page.on("request", (request) => {
     if (request.method() !== "POST") return;
     if (request.url().includes("/commands")) {
@@ -210,24 +231,20 @@ try {
       `Startup request budget exceeded; receipt: ${root}/metrics.json`,
     );
 } catch (error) {
-  await writeFile(
-    join(root, "failure.json"),
-    JSON.stringify(
-      {
-        metrics,
-        consoleErrors,
-        text: await page
-          ?.locator("body")
-          .innerText()
-          .catch(() => "unavailable"),
-      },
-      null,
-      2,
-    ),
-  );
-  console.error(
-    JSON.stringify({ metrics, receipt: root, error: error.message }),
-  );
+  const failure = {
+    metrics,
+    consoleErrors,
+    networkErrors,
+    error: error.message,
+    url: page?.url(),
+    text: await page
+      ?.locator("body")
+      .innerText()
+      .then((text) => text.slice(0, 8192))
+      .catch(() => "unavailable"),
+  };
+  await writeFile(join(root, "failure.json"), JSON.stringify(failure, null, 2));
+  console.error(JSON.stringify({ ...failure, receipt: root }));
   throw error;
 } finally {
   await browser?.close();

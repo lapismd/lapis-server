@@ -47,3 +47,18 @@ Hosted CI, actual public image identity and request-budget acceptance remain
 separate release gates; this test's old backend does not qualify a fresh source
 server executable or prove deployment. The official plugin-install release-asset
 acceptance opt-in remains governed by its existing record.
+
+The first hosted renderer run on ca8569b failed before login with zero command
+and database requests: the Username field never appeared. Its diagnostics
+artifact was incorrectly excluded by the upload action's default hidden-file
+filter, despite an explicit `.local` glob. Browser/network errors and bounded
+page text are now emitted directly in the job log as well as failure.json; the
+JSON-only artifact upload explicitly includes hidden paths. Request limits,
+assertions and readiness deadlines are unchanged. The browser-startup failure
+remains a merge gate until the rerun yields its underlying cause or passes.
+
+The unchanged cold request-budget target passes again on remote `omarchy`
+(112 commands and 97 database calls). A temporary test-owned fixture with a
+controlled JavaScript exception before login exits unsuccessfully as expected;
+its exception and page text are verified in both failure.json and the job log.
+That probe is not shipped, and the hosted Linux startup remains unqualified.
