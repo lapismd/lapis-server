@@ -18,6 +18,7 @@ pub mod queues;
 pub mod repository_backup;
 pub mod repository_restore;
 pub mod repository_sources;
+pub mod terminal;
 pub mod turns;
 
 pub const PROTOCOL_MAJOR: u32 = 3;

@@ -34,6 +34,18 @@ installation error.
 `lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 
+The repository root Compose file MUST build the runtime image from this
+checkout and bind the demo port to loopback. `scripts/demo.sh` MUST default to
+the `default` Docker context, prepare `.env` from `.env.example`, an empty-vault
+config and a random mounted bootstrap password without overwriting existing
+files, reject a Docker memory allocation below 5 GiB with a 6 GiB build
+allocation diagnostic, build Web and Rust stages serially, then wait for
+container readiness. Local demo configuration and secrets
+MUST be ignored by version control and excluded from the image build context.
+The demo script's `image IMAGE` mode MUST pull the explicit published image and
+start Compose with `--no-build`, retaining local configuration and data volumes
+without requiring source-build memory.
+
 ### Acceptance details
 
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL, while Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
@@ -143,3 +155,9 @@ this documentation correction changes no CLI or native service behavior.
 <a id="srv-srv-012"></a>
 
 [SRV-SRV-012](content.md#srv-srv-012) moved to the content chapter.
+
+Core owns client-scoped Terminal Host PTY attachments. Client retirement and successful vault close drain shells outside the vault state lock; dirty-editor refusal leaves sessions live. Portable Terminal commands and bounded output types are generated with the other protocol contracts. The private engine is pinned to its reviewed Terminal Host Git revision.
+
+Terminal HTTP observations release their connection after a bounded response
+lease, even when the shell remains alive. Byte cursors preserve replay across
+reconnections; the browser yields connection capacity to editor commands.

@@ -31,6 +31,9 @@ use ts_rs::{Config, TS};
 fn main() {
     let config = Config::default();
     let declarations = [
+        lapis_app_protocol::terminal::TerminalCommand::decl(&config),
+        lapis_app_protocol::terminal::TerminalValue::decl(&config),
+        lapis_app_protocol::terminal::TerminalOutput::decl(&config),
         DatabaseMethod::decl(&config),
         DatabaseValue::decl(&config),
         DatabaseCall::decl(&config),

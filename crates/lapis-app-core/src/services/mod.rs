@@ -30,6 +30,7 @@ mod tasks;
 #[cfg(not(feature = "local-sibling-projections"))]
 #[path = "tasks_closed.rs"]
 mod tasks;
+mod terminal;
 mod turns;
 mod work;
 

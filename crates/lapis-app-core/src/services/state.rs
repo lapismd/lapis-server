@@ -9,6 +9,7 @@ use std::{
 use uuid::Uuid;
 
 pub struct VaultService {
+    pub(super) terminals: Mutex<super::terminal::Owners>,
     pub(super) skills: Mutex<super::agent_skills::State>,
     pub(super) id: Uuid,
     pub(super) generation: Uuid,
@@ -103,6 +104,7 @@ impl State {
 impl VaultService {
     pub(super) fn new(id: Uuid, root: VaultRoot, storage: Option<Arc<DatabaseStorage>>) -> Self {
         Self {
+            terminals: Mutex::new(HashMap::new()),
             skills: Mutex::new(super::agent_skills::State::default()),
             id,
             generation: Uuid::new_v4(),
@@ -193,6 +195,7 @@ impl VaultService {
         }
         let database_error = state.database_error.clone();
         drop(state);
+        self.revoke_terminals(None)?;
         self.retire_turns()?;
         self.retire_tasks()?;
         match database_error {

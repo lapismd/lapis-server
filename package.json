@@ -42,6 +42,8 @@
     "format:check": "prettier --check .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "demo": "sh scripts/demo.sh",
+    "test:demo": "node --test scripts/demo.test.mjs",
     "configure": "node scripts/configure.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
     "release:github": "node scripts/release-github.mjs",

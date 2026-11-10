@@ -10,6 +10,7 @@ mod repository_backup;
 mod repository_restore;
 mod repository_sources;
 mod tasks;
+mod terminal;
 pub mod turns;
 pub(crate) use management::Command as ManagementCommand;
 

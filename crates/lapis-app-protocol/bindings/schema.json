@@ -4838,6 +4838,116 @@
       ],
       "type": "string"
     },
+    "TerminalCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "cols": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "cwd": { "type": ["string", "null"] },
+            "kind": { "const": "create", "type": "string" },
+            "rows": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": ["kind", "cols", "rows"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": { "type": "string" },
+            "kind": { "const": "write", "type": "string" },
+            "session_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "session_id", "data"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "cols": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resize", "type": "string" },
+            "rows": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "session_id", "cols", "rows"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "stop", "type": "string" },
+            "session_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "session_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "close_all", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "TerminalOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "items": {
+            "format": "uint8",
+            "maximum": 255,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "cursor": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "exit_code": { "format": "int32", "type": ["integer", "null"] },
+        "running": { "type": "boolean" },
+        "truncated": { "type": "boolean" }
+      },
+      "required": ["cursor", "bytes", "truncated", "running"],
+      "type": "object"
+    },
+    "TerminalValue": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "created", "type": "string" },
+            "session_id": { "format": "uuid", "type": "string" }
+          },
+          "required": ["kind", "session_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "done", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
     "TextSnapshot": {
       "additionalProperties": false,
       "properties": {
@@ -5416,12 +5526,18 @@
     "task_lookup": { "$ref": "#/$defs/TaskLookup" },
     "task_query": { "$ref": "#/$defs/TaskQuery" },
     "task_record": { "$ref": "#/$defs/TaskRecord" },
+    "terminal_command": { "$ref": "#/$defs/TerminalCommand" },
+    "terminal_output": { "$ref": "#/$defs/TerminalOutput" },
+    "terminal_value": { "$ref": "#/$defs/TerminalValue" },
     "turn_command": { "$ref": "#/$defs/TurnCommand" },
     "turn_value": { "$ref": "#/$defs/TurnValue" },
     "vault": { "$ref": "#/$defs/ManagedVault" },
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "terminal_command",
+    "terminal_value",
+    "terminal_output",
     "content_host_status",
     "content_access_setting",
     "content_grant_request",

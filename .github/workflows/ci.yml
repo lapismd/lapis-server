@@ -75,8 +75,9 @@ jobs:
           cache-on-failure: "false"
       - run: pnpm install --frozen-lockfile
       - run: pnpm configure
+      - run: pnpm test:demo
       - run: pnpm protocol:check
-      - name: Validate published and local Compose profiles
+      - name: Validate root demo and example Compose profiles
         env:
           LAPIS_SERVER_CONFIG_FILE: /tmp/lapis-server-config.json
           LAPIS_SERVER_PASSWORD_FILE: /tmp/lapis-server-password.txt

@@ -23,6 +23,7 @@ mod repository_restore;
 mod repository_sources;
 mod routes;
 mod tasks;
+mod terminal;
 mod transfers;
 mod turns;
 
@@ -174,6 +175,14 @@ fn configured_router(
         .route(
             "/api/v3/clients/{client}/heartbeat",
             post(routes::heartbeat),
+        )
+        .route(
+            "/api/v3/clients/{client}/terminal",
+            post(terminal::call).layer(DefaultBodyLimit::max(512 * 1024)),
+        )
+        .route(
+            "/api/v3/clients/{client}/terminal/{session}/events",
+            get(terminal::observe),
         )
         .route("/api/v3/clients/{client}", delete(routes::detach))
         .route(

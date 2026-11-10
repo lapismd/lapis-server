@@ -713,6 +713,22 @@ export type ParticipantValue =
   | { kind: "message"; message: ParticipantMessage | null }
   | { kind: "stop_requested"; accepted: boolean }
   | { kind: "cancel_requested"; accepted: boolean };
+export type TerminalCommand =
+  | { kind: "create"; cwd: string | null; cols: number; rows: number }
+  | { kind: "write"; session_id: string; data: string }
+  | { kind: "resize"; session_id: string; cols: number; rows: number }
+  | { kind: "stop"; session_id: string }
+  | { kind: "close_all" };
+export type TerminalValue =
+  | { kind: "created"; session_id: string }
+  | { kind: "done" };
+export type TerminalOutput = {
+  cursor: number;
+  bytes: Array<number>;
+  truncated: boolean;
+  running: boolean;
+  exit_code: number | null;
+};
 export type DatabaseMethod =
   | "migrate"
   | "beginSearchIndexingBatch"

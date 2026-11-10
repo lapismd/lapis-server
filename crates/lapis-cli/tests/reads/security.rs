@@ -5,7 +5,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 #[cfg(unix)]
 #[tokio::test]
 async fn token_files_require_private_regular_owned_files_and_refuse_symlinks_and_fifos() {
-    use std::os::unix::fs::{PermissionsExt, symlink};
+    use std::os::unix::fs::{FileTypeExt, PermissionsExt, symlink};
     let f = Fixture::start().await;
     let credentials = tempfile::tempdir().unwrap();
     let path = credentials.path().join("token");
@@ -34,12 +34,17 @@ async fn token_files_require_private_regular_owned_files_and_refuse_symlinks_and
     symlink(&path, &alias).unwrap();
     assert_eq!(file(&f.base, &alias).await.status.code(), Some(3));
     let fifo = credentials.path().join("fifo");
-    rustix::fs::mkfifoat(
-        rustix::fs::CWD,
-        &fifo,
-        rustix::fs::Mode::RUSR | rustix::fs::Mode::WUSR,
-    )
-    .unwrap();
+    // POSIX mkfifo is available on both macOS and Linux; rustix::mkfifoat
+    // is intentionally not exported for Apple targets.
+    assert!(
+        std::process::Command::new("mkfifo")
+            .args(["-m", "600"])
+            .arg(&fifo)
+            .status()
+            .unwrap()
+            .success()
+    );
+    assert!(fs::symlink_metadata(&fifo).unwrap().file_type().is_fifo());
     assert_eq!(file(&f.base, &fifo).await.status.code(), Some(3));
 }
 
