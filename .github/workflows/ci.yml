@@ -121,6 +121,14 @@ jobs:
           --output type=cacheonly
           --file crates/lapis-server/Dockerfile
           .
+      - name: Build and smoke-test the slim runtime
+        run: |
+          docker buildx build \
+            --platform linux/${{ matrix.architecture }} \
+            --target runtime-slim \
+            --file crates/lapis-server/Dockerfile \
+            --load --tag lapis-server-slim:${{ matrix.architecture }} .
+          sh scripts/test-image-slim.sh lapis-server-slim:${{ matrix.architecture }}
       - name: Build the persistent Homebrew tooling layer
         run: >-
           docker buildx build

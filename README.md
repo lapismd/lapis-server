@@ -96,6 +96,20 @@ keeps Homebrew state in `/home/linuxbrew/.linuxbrew`, and reports readiness at
 curl --fail --silent http://127.0.0.1:8787/readyz
 ```
 
+## Smaller server-only image
+
+Append `-slim` to the same release or commit tag, for example
+`ghcr.io/lapismd/lapis-server:<short>-slim`. It serves the same UI and native
+server on AMD64 and ARM64, with the same `/data`, credentials and port settings.
+Omit the Homebrew volume. Source builds select `--target runtime-slim`.
+
+The default image includes Homebrew and four agent CLI distributions, which
+account for most of its size. Slim omits them and rejects non-empty Homebrew
+startup package requests; provider CLI targets need the full image. Both images
+use Ubuntu's glibc ABI, matching the Rust executable and supported Linux tools.
+Alpine's musl ABI requires a separate native build and cannot run the bundled
+Homebrew toolchain as a drop-in replacement.
+
 ## Agent tooling
 
 The image includes Homebrew plus native `codex`, `cursor-agent`, `claude`, and

@@ -107,7 +107,9 @@ Every pull request MUST build and smoke-test the Homebrew tooling stage for
 `linux/amd64` and `linux/arm64`; the amd64 lane MUST also verify persistent
 package installation through a named volume. Those lanes MUST build the native
 server stage for both target architectures without running the ARM64 Rust
-compiler through QEMU.
+compiler through QEMU. Both lanes also build and smoke-test the slim runtime,
+including its size limit, read-only application, writable data and unsupported
+Homebrew request rejection.
 Changesets MUST record the release note and create that version tag and GitHub
 release. This repository MUST NOT publish an npm package. Every pull request MUST run
 `cargo test --workspace --locked` with the ordinary Rust dependency cache, and
