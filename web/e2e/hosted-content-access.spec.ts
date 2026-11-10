@@ -17,6 +17,11 @@ async function settings(page: Page) {
     .click();
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page
+    .getByRole("navigation", { name: "Settings", exact: true })
+    .locator("section")
+    .filter({
+      has: page.getByRole("heading", { name: "Core plugins", exact: true }),
+    })
     .getByRole("button", { name: "Content API and MCP", exact: true })
     .click();
   await expect(

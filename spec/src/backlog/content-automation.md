@@ -237,7 +237,8 @@ the process. Hosted authority remains read-only and credentials process-local.
 
 The next host slice MUST integrate the shared controls/adapters into Desktop's
 native listener and real plugin settings screen. Server and Desktop MUST each expose
-this through plugin settings: enable/disable API and MCP access, endpoint and
+this under **Settings → Core plugins → Content API and MCP**, using the shared
+`core-plugins` navigation group: enable/disable API and MCP access, endpoint and
 listener status, admitted vault permissions, credential creation/expiry and
 revocation. Environment configuration alone does not complete this requirement.
 Use the existing Notes plugin/settings contracts and keep reusable UI in its

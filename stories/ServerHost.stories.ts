@@ -266,8 +266,11 @@ export const ContentAccess: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
     const page = within(canvasElement.ownerDocument.body);
+    const corePlugins = (
+      await page.findByRole("heading", { name: /^Core plugins$/ })
+    ).closest("section")!;
     await userEvent.click(
-      await page.findByRole("button", { name: "Content API and MCP" }),
+      within(corePlugins).getByRole("button", { name: "Content API and MCP" }),
     );
     const enabled = await page.findByRole("switch", {
       name: "Enable API and MCP access",

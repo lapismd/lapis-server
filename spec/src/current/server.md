@@ -109,6 +109,8 @@ the demonstrated shutdown boundary and its extension are recorded in the
 The [content automation contract](content.md) owns SRV-SRV-005 through
 SRV-SRV-014, including shared host controls and hosted plugin settings. Hosts still own authentication,
 consent, persistence, admission and listener qualification under SRV-SRV-004.
+CLI connection instructions locate hosted content settings under Core plugins;
+this documentation correction changes no CLI or native service behavior.
 
 <a id="srv-srv-005"></a>
 

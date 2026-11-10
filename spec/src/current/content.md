@@ -359,7 +359,8 @@ if saving the preference fails. Enabling MUST save consent before admitting
 credentials. Token-only installations MAY use process-local preferences.
 
 The hosted Notes workspace MUST register a Content API and MCP plugin settings
-section using the public declarative settings API. It MUST show enablement,
+section under **Core plugins** using the public declarative settings API and
+`navigationGroupId: "core-plugins"`. It MUST show enablement,
 endpoint availability/addresses, selected vaults, read permission, expiry,
 creation and revocation. One-time tokens MUST stay in transient memory, clear on
 teardown/dismissal, and never enter browser/vault settings storage. Desktop

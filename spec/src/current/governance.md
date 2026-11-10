@@ -69,6 +69,9 @@ SRV-SRV-014 mounts optional content HTTP/MCP in the hosted process with owner
 controls and plugin settings through the existing public Notes API. Source,
 real-host/cold-process and production UI interaction/accessibility acceptance
 remain distinct; Desktop and OAuth are not qualified by hosted evidence.
+The hosted Content API/MCP settings use the public Core plugins navigation group;
+production stories and cold hosted acceptance verify placement without changing
+credential authority or qualifying the pending Desktop host integration.
 
 The [CLI delivery refinement](../../records/2026-11-10-cli-delivery-plan.md)
 adds planned Changesets version agreement, Markdown agent help and separate
