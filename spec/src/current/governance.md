@@ -156,7 +156,7 @@ to the root host and the shared application profile.
 
 - Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
 - The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package temporarily pins Design Core 0.12.2 only for the source-verified API, application profile, File Explorer, UI and Workspace manifests so the frozen lock resolves one API peer context until Notes publishes its coordinated package cohort.
-- Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
+- Cold registry-consumer startup acceptance seeds 600 dormant plugin assets and bounds native command/database calls before readiness and over 20 seconds, while chooser navigation retains the live session and final leave owns guarded persistence and teardown.
 - Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.
 
 ## SRV-GOV-004 — Production catalog acceptance

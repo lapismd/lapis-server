@@ -236,6 +236,16 @@ jobs:
       - run: pnpm check
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm test:startup-budget
+      - name: Retain startup budget failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: startup-budget-diagnostics
+          path: |
+            .local/startup-budget-*/failure.json
+            .local/startup-budget-*/metrics.json
+          if-no-files-found: ignore
       - run: pnpm test:storybook
       - run: pnpm build-storybook
       - run: pnpm test:storybook:static
