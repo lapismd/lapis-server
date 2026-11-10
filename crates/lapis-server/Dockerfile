@@ -1,4 +1,6 @@
 # syntax=docker/dockerfile:1.7
+ARG MOD_LOADER_IMAGE=ghcr.io/lapismd/mod-loader:latest
+FROM ${MOD_LOADER_IMAGE} AS mod-loader
 FROM --platform=$BUILDPLATFORM rust:1.99.0-bookworm AS native
 ARG BUILDARCH
 ARG TARGETARCH
@@ -97,17 +99,38 @@ USER lapis
 WORKDIR /app
 VOLUME ["/home/linuxbrew/.linuxbrew"]
 
+# Server-only variant: Ubuntu keeps the glibc ABI of the native executable.
+# Homebrew and agent distributions remain available in the default runtime.
+FROM ubuntu:24.04 AS runtime-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl libgcc-s1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 1993 lapis \
+    && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/sh lapis \
+    && mkdir -p /app /data && chown lapis:lapis /data
+COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
+COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
+COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
+COPY --chmod=0555 crates/lapis-server/container-entrypoint-slim.sh /app/container-entrypoint
+ENV HOME=/data LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
+USER lapis
+WORKDIR /app
+EXPOSE 8787
+VOLUME ["/data"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
+ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
+CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
+
 FROM tooling AS runtime
 USER root
-COPY --from=native /lapis-server /app/lapis-server
-COPY --from=web /work/lapis-server/web/dist /app/static
+COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
+COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
+COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
 COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
-RUN chmod -R a-w /app
 ENV LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
 USER lapis
 WORKDIR /app
 EXPOSE 8787
 VOLUME ["/data", "/home/linuxbrew/.linuxbrew"]
 HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
-ENTRYPOINT ["/app/container-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
 CMD ["/run/lapis/config.json", "0.0.0.0:8787"]

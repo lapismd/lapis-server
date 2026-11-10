@@ -1,0 +1,26 @@
+services:
+  app:
+    image: ghcr.io/lapismd/lapis-server:${LAPIS_SERVER_TAG:?Set a qualified server tag}-slim
+    user: "0:0"
+    environment:
+      DOCKER_MODS: ${DOCKER_MODS:?Set agent Mod references, preferably with immutable digests}
+      DOCKER_MODS_STRICT: "true"
+      DOCKER_MODS_CACHE: /var/cache/container-mods
+      LAPIS_SERVER_ORIGIN: http://localhost:8787
+      LAPIS_SERVER_INSECURE_COOKIE: "1"
+      LAPIS_SERVER_BOOTSTRAP_USERNAME: owner
+      LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE: /run/secrets/password
+    ports: ["127.0.0.1:8787:8787"]
+    # Requested Mods need a writable container layer during initialization.
+    # The original application still starts as UID/GID 1993.
+    volumes:
+      - profile:/data
+      - mod-cache:/var/cache/container-mods
+      - ${LAPIS_SERVER_CONFIG_FILE:?Set config path}:/run/lapis/config.json:ro
+    secrets: [password]
+secrets:
+  password:
+    file: ${LAPIS_SERVER_PASSWORD_FILE:?Set bootstrap password path}
+volumes:
+  profile:
+  mod-cache:

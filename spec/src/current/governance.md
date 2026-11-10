@@ -107,7 +107,11 @@ Every pull request MUST build and smoke-test the Homebrew tooling stage for
 `linux/amd64` and `linux/arm64`; the amd64 lane MUST also verify persistent
 package installation through a named volume. Those lanes MUST build the native
 server stage for both target architectures without running the ARM64 Rust
-compiler through QEMU.
+compiler through QEMU. Both lanes also build and smoke-test the slim runtime,
+including its size limit, read-only application, writable data and unsupported
+Homebrew request rejection. The reusable OCI Mods crate has isolated registry,
+archive and lifecycle regressions; container acceptance proves Mod execution
+and unchanged entrypoint signal delivery without Docker socket access.
 Changesets MUST record the release note and create that version tag and GitHub
 release. This repository MUST NOT publish an npm package. Every pull request MUST run
 `cargo test --workspace --locked` with the ordinary Rust dependency cache, and
@@ -188,3 +192,6 @@ The hosted Vite renderer compiles Terminal public Svelte output directly and pre
 Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
 turn engine. Other failures retain uncertain-cleanup semantics and propagate.
 This keeps default-enabled AI compatible with startup Retry on unconfigured hosts.
+
+The reusable Mod qualification caller grants read-only package access explicitly;
+its artifact publication remains in the separate image release workflow.

@@ -22,6 +22,12 @@ env:
   LAPIS_DEPENDENCY_BOT_LOGIN: ${{ vars.LAPIS_DEPENDENCY_BOT_LOGIN }}
 
 jobs:
+  mod-loader:
+    permissions:
+      contents: read
+      packages: read
+    uses: ./.github/workflows/container-mods.yml
+
   governance:
     name: Specification
     runs-on: ubuntu-latest
@@ -100,6 +106,7 @@ jobs:
           "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/cancel"
 
   image-tooling:
+    needs: mod-loader
     name: Image tooling (${{ matrix.architecture }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -113,6 +120,14 @@ jobs:
         with:
           platforms: arm64
       - uses: docker/setup-buildx-action@v3
+      - uses: actions/download-artifact@v8
+        with:
+          name: mod-loader-${{ matrix.architecture }}
+          path: .local/mod-loader-artifact
+      - name: Prepare the qualified loader build context
+        run: |
+          mkdir -p .local/mod-loader-layout
+          tar -xf .local/mod-loader-artifact/mod-loader-${{ matrix.architecture }}.oci.tar -C .local/mod-loader-layout
       - name: Build the native server for the target architecture
         run: >-
           docker buildx build
@@ -121,6 +136,15 @@ jobs:
           --output type=cacheonly
           --file crates/lapis-server/Dockerfile
           .
+      - name: Build and smoke-test the slim runtime
+        run: |
+          docker buildx build \
+            --platform linux/${{ matrix.architecture }} \
+            --target runtime-slim \
+            --build-context mod-loader=oci-layout://${{ github.workspace }}/.local/mod-loader-layout \
+            --file crates/lapis-server/Dockerfile \
+            --load --tag lapis-server-slim:${{ matrix.architecture }} .
+          sh scripts/test-image-slim.sh lapis-server-slim:${{ matrix.architecture }}
       - name: Build the persistent Homebrew tooling layer
         run: >-
           docker buildx build

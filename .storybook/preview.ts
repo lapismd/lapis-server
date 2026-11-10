@@ -82,6 +82,7 @@ const preview: Preview = {
           [
             "Current specification",
             "Hosted server",
+            "OCI runtime Mods",
             "Content automation",
             "Hosted contract",
             "Static delivery",
@@ -91,6 +92,7 @@ const preview: Preview = {
             "Content API, MCP and CLI",
             "Hosted qualification and delivery",
             "Verification",
+            "OCI Mods verification",
           ],
           "Shell",
           "*",

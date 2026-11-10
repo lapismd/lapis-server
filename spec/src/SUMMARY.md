@@ -2,6 +2,7 @@
 
 - [Current specification](current/index.md)
 - [Hosted server](current/server.md)
+- [OCI runtime Mods](current/mods.md)
 - [Content automation](current/content.md)
 - [Hosted contract](current/hosted.md)
 - [Static delivery](current/delivery.md)
@@ -11,3 +12,4 @@
   - [Content API, MCP and CLI](backlog/content-automation.md)
   - [Hosted qualification and delivery](backlog/qualification.md)
 - [Verification](verification.md)
+  - [OCI Mods verification](verification/mods.md)

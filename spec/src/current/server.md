@@ -23,7 +23,7 @@ lockfile and build the Vite application in `web/`.
 The Rust and Web build stages MUST execute on the native build platform; the
 Rust stage MUST cross-compile the requested target architecture rather than
 compile the ARM64 dependency graph through QEMU.
-The runtime image MUST provide Homebrew at `/home/linuxbrew/.linuxbrew` on a
+The default runtime image MUST provide Homebrew at `/home/linuxbrew/.linuxbrew` on a
 separate persistent volume and MUST include native Codex, Cursor CLI, Claude
 Code, and OpenCode executables on both published architectures. Operators MAY
 request additional Homebrew formulae through
@@ -31,6 +31,12 @@ request additional Homebrew formulae through
 `LAPIS_SERVER_HOMEBREW_CASKS`; formula installation MUST use a published
 bottle and startup MUST fail rather than build from source or ignore an
 installation error.
+A companion `-slim` image MUST retain the same server, static UI, unprivileged
+application, readiness and `/data` contract on both architectures, omit Homebrew,
+and load optional agent runtimes through OCI Mods. The base runtime MUST stay
+below 500 MiB unpacked. Both variants MUST copy application files read-only
+without duplicating their contents in a later permissions layer.
+Mods follow the [reusable container extension contract](./mods.md).
 `lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 
