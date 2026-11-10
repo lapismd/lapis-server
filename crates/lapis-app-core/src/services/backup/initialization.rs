@@ -75,12 +75,16 @@ impl Initialization {
         self.emit(stage, result.is_ok(), "io", os_code);
         result.map_err(|_| failure())
     }
-    pub(super) fn native<T, E>(
+    pub(super) fn native<T, E: std::fmt::Display>(
         &self,
         stage: Stage,
         result: std::result::Result<T, E>,
     ) -> Result<T> {
-        self.emit(stage, result.is_ok(), "native", None);
+        let category = result
+            .as_ref()
+            .err()
+            .map_or("native", |error| native_category(&error.to_string()));
+        self.emit(stage, result.is_ok(), category, None);
         result.map_err(|_| failure())
     }
     pub(super) fn watcher<T>(&self, stage: Stage, result: notify::Result<T>) -> Result<T> {
@@ -231,13 +235,22 @@ mod tests {
         let line = diagnostic.line(Stage::WatchRoot, false, "watcher", None);
         assert!(!line.contains(secret));
         assert!(line.contains("stage=WatchRoot outcome=failed category=watcher os_code=none"));
+        let line = diagnostic.line(
+            Stage::InitialCapture,
+            false,
+            native_category("Another vault backup command is running"),
+            None,
+        );
+        assert!(
+            line.contains("stage=InitialCapture outcome=failed category=native-busy os_code=none")
+        );
     }
     #[test]
     fn diagnostics_preserve_success_values_and_existing_service_errors() {
         let diagnostic = diagnostics();
         assert_eq!(
             diagnostic
-                .native::<_, ()>(Stage::StartWorker, Ok(42))
+                .native::<_, std::convert::Infallible>(Stage::StartWorker, Ok(42))
                 .unwrap(),
             42
         );

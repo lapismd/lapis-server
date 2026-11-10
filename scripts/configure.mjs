@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const forbidden = "35356e655765143b29a6c9b1518ef3b91d04837d";
-const revision = "7a98bd89d2bc77fb6ec41f91186992abb19ba161";
+const revision = "076e418cecbe204925aea874bef8aa8a680269a9";
 const git = 'git = "https://github.com/stevejuma/jj-store"';
 const server = await readFile("crates/lapis-server/Cargo.toml", "utf8");
 const core = await readFile("crates/lapis-app-core/Cargo.toml", "utf8");
