@@ -23,7 +23,9 @@ export default defineConfig(headingRequirements(), {
     summary: true,
     governance: { extras: ["AGENTS.md", "README.md"] },
     fileLimits: { maxLines: 400, maxBytes: 32768 },
-    verification: singleIdVerification(),
+    verification: singleIdVerification({
+      files: ["^verification(?:/.*)?\\.md$"],
+    }),
     book: true,
     qmd: { collection: "lapis-server", configPath: ".qmd/index.yml" },
     storybookMirrors: {
@@ -39,12 +41,16 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|content|governance|hosted|delivery)\\.md$",
+        "^spec/src/current/(?:server|content|governance|hosted|delivery|mods)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [
+        {
+          pattern: "^crates/lapis-container-mods/",
+          chapters: ["spec/src/current/mods.md"],
+        },
         { pattern: "^crates/", chapters: ["spec/src/current/server.md"] },
         { pattern: ".*", chapters: ["spec/src/current/governance.md"] },
       ],

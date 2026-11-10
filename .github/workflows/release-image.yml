@@ -17,7 +17,72 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  qualify-mod-loader:
+    uses: ./.github/workflows/container-mods.yml
+  publish-mod-loader:
+    needs: qualify-mod-loader
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.publish.outputs.image }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: mod-loader-*
+          merge-multiple: true
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: publish
+        name: Publish already qualified loader binaries
+        run: |
+          set -eu
+          repository=ghcr.io/lapismd/mod-loader
+          version=$(git rev-parse --short=7 HEAD)
+          for architecture in amd64 arm64; do
+            docker load < mod-loader-$architecture.docker.tar.gz
+            docker tag lapis-mod-loader:qualification "$repository:$version-$architecture"
+            docker push "$repository:$version-$architecture"
+          done
+          docker buildx imagetools create --tag "$repository:$version" --tag "$repository:latest" "$repository:$version-amd64" "$repository:$version-arm64"
+          digest=$(docker buildx imagetools inspect "$repository:$version" --format '{{json .Manifest}}' | jq -r .digest)
+          echo "image=$repository@$digest" >> "$GITHUB_OUTPUT"
+  publish-agent-mods:
+    needs: qualify-mod-loader
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: mod-loader-*
+          merge-multiple: true
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the qualified agent Mod artifacts
+        run: |
+          set -eu
+          repository=ghcr.io/lapismd/mods
+          revision=$(git rev-parse --short=7 HEAD)
+          for architecture in amd64 arm64; do
+            docker load < agent-mods-$architecture.docker.tar.gz
+            for agent in codex cursor claude opencode; do
+              docker tag "lapis-agent-mod:$agent" "$repository:$agent-$revision-$architecture"
+              docker push "$repository:$agent-$revision-$architecture"
+            done
+          done
+          for agent in codex cursor claude opencode; do
+            version=$(jq -r --arg agent "$agent" '.[$agent].version' docker/mods/agents.json)
+            docker buildx imagetools create --tag "$repository:$agent-$revision" --tag "$repository:$agent-$version-$revision" "$repository:$agent-$revision-amd64" "$repository:$agent-$revision-arm64"
+          done
   image:
+    needs: [publish-mod-loader, publish-agent-mods]
     name: Publish ghcr.io/lapismd/lapis-server
     if: github.repository == 'lapismd/lapis-server'
     runs-on: ubuntu-latest
@@ -73,6 +138,7 @@ jobs:
           context: .
           file: crates/lapis-server/Dockerfile
           target: runtime-slim
+          build-args: MOD_LOADER_IMAGE=${{ needs.publish-mod-loader.outputs.image }}
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.slim-meta.outputs.tags }}
@@ -94,5 +160,7 @@ jobs:
           file: crates/lapis-server/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
+          target: runtime
+          build-args: MOD_LOADER_IMAGE=${{ needs.publish-mod-loader.outputs.image }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

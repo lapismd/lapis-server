@@ -31,11 +31,12 @@ request additional Homebrew formulae through
 `LAPIS_SERVER_HOMEBREW_CASKS`; formula installation MUST use a published
 bottle and startup MUST fail rather than build from source or ignore an
 installation error.
-A companion `-slim` image MUST retain the same server, static UI, non-root user,
-readiness and `/data` contract on both architectures, omit Homebrew and bundled
-agent CLIs, and reject requested Homebrew installs clearly. Its runtime MUST stay
+A companion `-slim` image MUST retain the same server, static UI, unprivileged
+application, readiness and `/data` contract on both architectures, omit Homebrew,
+and load optional agent runtimes through OCI Mods. The base runtime MUST stay
 below 500 MiB unpacked. Both variants MUST copy application files read-only
 without duplicating their contents in a later permissions layer.
+Mods follow the [reusable container extension contract](./mods.md).
 `lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 

@@ -102,10 +102,14 @@ Append `-slim` to the same release or commit tag, for example
 `ghcr.io/lapismd/lapis-server:<short>-slim`. It serves the same UI and native
 server on AMD64 and ARM64, with the same `/data`, credentials and port settings.
 Omit the Homebrew volume. Source builds select `--target runtime-slim`.
+Select individual agent runtimes with the [shared OCI Mod loader](docker/mod-loader/README.md)
+and the [Mod Compose example](docker/mods/compose.example.yml). Mods require
+explicit root initialization and a writable container layer; the loader drops
+to UID/GID 1993 before the original Lapis entrypoint.
 
 The default image includes Homebrew and four agent CLI distributions, which
-account for most of its size. Slim omits them and rejects non-empty Homebrew
-startup package requests; provider CLI targets need the full image. Both images
+account for most of its size. Slim loads selected agent runtimes through `DOCKER_MODS`; Homebrew startup
+package requests still require the full image. Both images
 use Ubuntu's glibc ABI, matching the Rust executable and supported Linux tools.
 Alpine's musl ABI requires a separate native build and cannot run the bundled
 Homebrew toolchain as a drop-in replacement.

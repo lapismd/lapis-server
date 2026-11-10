@@ -1,0 +1,11 @@
+# OCI Mods verification
+
+| ID          | Status      | Evidence                                                                                                                                                                                                                         |
+| ----------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SRV-MOD-001 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-002 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-003 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-004 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-005 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-006 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |
+| SRV-MOD-007 | In progress | [Source and remote receipt](../../records/2026-11-10-oci-mods-qualification.md): 17 isolated cases, static artifact, Alpine/Ubuntu lifecycle and four AMD64 agent Mods pass; native ARM64/source-image/publication gates remain. |

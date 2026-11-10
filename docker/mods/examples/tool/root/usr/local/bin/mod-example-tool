@@ -1,0 +1,2 @@
+#!/bin/sh
+printf 'OCI Mod executable is available\n'

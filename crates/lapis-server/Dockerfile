@@ -1,4 +1,6 @@
 # syntax=docker/dockerfile:1.7
+ARG MOD_LOADER_IMAGE=ghcr.io/lapismd/mod-loader:latest
+FROM ${MOD_LOADER_IMAGE} AS mod-loader
 FROM --platform=$BUILDPLATFORM rust:1.99.0-bookworm AS native
 ARG BUILDARCH
 ARG TARGETARCH
@@ -105,6 +107,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     && groupadd --gid 1993 lapis \
     && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/sh lapis \
     && mkdir -p /app /data && chown lapis:lapis /data
+COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
 COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
 COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
 COPY --chmod=0555 crates/lapis-server/container-entrypoint-slim.sh /app/container-entrypoint
@@ -114,11 +117,12 @@ WORKDIR /app
 EXPOSE 8787
 VOLUME ["/data"]
 HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
-ENTRYPOINT ["/app/container-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
 CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
 
 FROM tooling AS runtime
 USER root
+COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
 COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
 COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
 COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
@@ -128,5 +132,5 @@ WORKDIR /app
 EXPOSE 8787
 VOLUME ["/data", "/home/linuxbrew/.linuxbrew"]
 HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
-ENTRYPOINT ["/app/container-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
 CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
