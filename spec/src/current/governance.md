@@ -184,3 +184,7 @@ Terminal admission is implemented in Core and HTTP transport, with the UI import
 Native CLI security fixtures create a real POSIX FIFO on macOS and Linux, retaining the same private-token and non-regular-file rejection assertions.
 
 The hosted Vite renderer compiles Terminal public Svelte output directly and prepares Ghostty before first terminal activation, avoiding optimizer-triggered startup reloads.
+
+Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
+turn engine. Other failures retain uncertain-cleanup semantics and propagate.
+This keeps default-enabled AI compatible with startup Retry on unconfigured hosts.

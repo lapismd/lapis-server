@@ -39,6 +39,37 @@ async function fixture() {
   return { resources, fetch, app, chat: resources.nativeChat!(app as never) };
 }
 describe("Rust hosted native chat adapter", () => {
+  it("can disable bundled AI when this server has no native turns service", async () => {
+    const f = await fixture();
+    f.fetch.mockResolvedValueOnce(
+      Response.json(
+        { code: "UNSUPPORTED", message: "Native turns are not selected" },
+        { status: 501 },
+      ),
+    );
+    try {
+      await expect(f.chat.leave("disable")).resolves.toBeUndefined();
+    } finally {
+      await f.resources.release();
+    }
+  });
+  it("preserves uncertain native AI cleanup failures", async () => {
+    const f = await fixture();
+    f.fetch.mockResolvedValueOnce(
+      Response.json(
+        { code: "IO", message: "Cleanup uncertain" },
+        { status: 503 },
+      ),
+    );
+    try {
+      await expect(f.chat.leave("disable")).rejects.toThrow(
+        "Cleanup uncertain",
+      );
+    } finally {
+      await f.resources.release();
+    }
+  });
+
   it("uses one admitted transport and leaves native work running on client detach", async () => {
     const f = await fixture();
     try {

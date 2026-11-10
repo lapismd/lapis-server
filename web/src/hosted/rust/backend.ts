@@ -5,7 +5,7 @@ import { createHostedRepository } from "../../history/services";
 import { createHostedRestore } from "../../history/restore";
 import { createHostedBackup } from "../../history/backup";
 import type { HostedBackend } from "../backend";
-import { RustHttpClient } from "./client";
+import { RustHostError, RustHttpClient } from "./client";
 import { RustDatabaseProvider } from "./database-provider";
 import { RustVaultAdapter } from "./vault-adapter";
 import { createRustPluginAssetServer } from "./plugin-assets";
@@ -146,7 +146,19 @@ export function createRustHostedBackend(
           readText: (path) => adapter.read(path),
           leave: async (reason) => {
             if (reason === "detach") return;
-            await client.turns({ kind: "set_enabled", enabled: false });
+            try {
+              await client.turns({ kind: "set_enabled", enabled: false });
+            } catch (error) {
+              // An unselected engine has no work to fence or drain.
+              if (
+                !(
+                  error instanceof RustHostError &&
+                  error.status === 501 &&
+                  error.code === "UNSUPPORTED"
+                )
+              )
+                throw error;
+            }
           },
           report: (error) =>
             app.notifications.notify({
