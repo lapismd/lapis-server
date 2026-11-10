@@ -111,16 +111,31 @@ try {
   const endpoint = JSON.parse(docker("context", "inspect", context))[0]
     .Endpoints.docker.Host;
   const remote = endpoint.startsWith("ssh://");
+  // On a local Linux engine, a new Docker veth can invalidate Chromium's
+  // in-flight module downloads with ERR_NETWORK_CHANGED. Bind only loopback
+  // in the existing host network namespace; SSH/Desktop keep port forwarding.
+  const hostNetwork =
+    process.platform === "linux" && endpoint === "unix:///var/run/docker.sock";
+  console.log(
+    `Startup budget transport: ${hostNetwork ? "host-loopback" : remote ? "ssh-forward" : "published-port"}`,
+  );
   docker(
     "run",
     "--detach",
     "--name",
     name,
-    "--publish",
-    remote ? "127.0.0.1::8787" : `127.0.0.1:${localPort}:8787`,
+    ...(hostNetwork
+      ? ["--network", "host"]
+      : [
+          "--publish",
+          remote ? "127.0.0.1::8787" : `127.0.0.1:${localPort}:8787`,
+        ]),
     "--env",
     `LAPIS_SERVER_ORIGIN=${origin}`,
     image,
+    ...(hostNetwork
+      ? ["/run/lapis/config.json", `127.0.0.1:${localPort}`]
+      : []),
   );
   if (remote) {
     const remotePort = docker("port", name, "8787/tcp")

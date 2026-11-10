@@ -62,3 +62,25 @@ The unchanged cold request-budget target passes again on remote `omarchy`
 controlled JavaScript exception before login exits unsuccessfully as expected;
 its exception and page text are verified in both failure.json and the job log.
 That probe is not shipped, and the hosted Linux startup remains unqualified.
+
+The diagnostic Linux rerun identifies the pre-login failure as repeated
+`net::ERR_NETWORK_CHANGED` while loading JavaScript modules, with an empty body
+and zero command/database requests. Local Linux system-Docker-socket fixtures now use
+the existing host network namespace and bind the server only to a reserved
+loopback port, avoiding new Docker virtual interfaces during Chromium startup.
+SSH contexts and Docker Desktop retain their published-port transport. This
+changes the test fixture only: there are no document/request retries, browser
+feature-disable flags, assertion changes, larger budgets or longer deadlines.
+The GitHub Linux rerun remains required to confirm the repair there.
+
+Native remote Linux x86_64 acceptance with its system Chromium passes on both
+the original bridge transport and the repaired host-loopback path (122 commands,
+96 database calls each); the transport is printed in the receipt log. That
+independently exercises the Linux-only branch without a Docker socket mount or
+changes to any existing containers. It does not reproduce GitHub's specific
+network timing, so the exact pinned-browser CI lane remains the delivery gate.
+
+The unchanged SSH-forwarded remote acceptance also passes afterward (113 commands,
+97 database calls), with the original 200/100 limits and 20-second sample. The
+host-network branch is restricted to Linux's standard local system Docker
+socket; Desktop, SSH and nonstandard/rootless sockets keep port forwarding.
