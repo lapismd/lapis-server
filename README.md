@@ -94,7 +94,7 @@ profile keeps the password from its first start. The bootstrap username is
 
 ## Content API, MCP and CLI preview
 
-Open a vault, then choose **Settings → Plugins → Content API and MCP**. Enable
+Open a vault, then choose **Settings → Core plugins → Content API and MCP**. Enable
 access, select the vaults a client may read, choose a label and lifetime, and
 create a credential. Copy it immediately into your client's protected credential
 file; the screen clears it after one minute or when dismissed. It cannot be

@@ -12,7 +12,7 @@ export function definition(
       title: "Content API and MCP",
       icon: "plug",
       sourcePluginId: "content-access",
-      navigationGroupId: "plugins",
+      navigationGroupId: "core-plugins",
       description:
         "Allow external clients to read selected vaults through this server.",
       fields: [

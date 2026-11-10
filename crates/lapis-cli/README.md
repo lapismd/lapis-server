@@ -52,7 +52,7 @@ request can proceed. EOF or a failed stdout closes the bridge and drains its
 async services without hanging on a blocking stdin reader. Transport diagnostics
 are sanitized and use stderr.
 
-The hosted server now mounts these endpoints when enabled in **Settings → Plugins
+The hosted server now mounts these endpoints when enabled in **Settings → Core plugins
 → Content API and MCP**. Create a read-only credential there, copy it into your
 protected token file, and use the public origin shown in settings. Credentials
 expire within 24 hours and never survive server restart. Desktop mounting and
