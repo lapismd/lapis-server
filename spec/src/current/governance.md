@@ -155,9 +155,9 @@ to the root host and the shared application profile.
 ### Acceptance details
 
 - Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
-- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package temporarily pins Design Core 0.12.2 only for the source-verified API, application profile, File Explorer, UI and Workspace manifests so the frozen lock resolves one API peer context until Notes publishes its coordinated package cohort.
-- Opening the chooser retains the live session; final leave owns guarded persistence and teardown.
-- Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount.
+- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package retains its Design Core 0.12.3 compatibility pins for API, application profile, File Explorer, UI and Workspace so the released Notes cohort resolves one API peer context in the frozen registry lock.
+- Cold registry-consumer startup acceptance seeds 600 dormant plugin assets and bounds native command/database calls before readiness and over 20 seconds with retained browser/network failure diagnostics and loopback-only host networking for local Linux system-socket fixtures, while chooser navigation retains the live session and final leave owns guarded persistence and teardown.
+- Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount; concurrent browser acceptance awaits guarded departure before destroying each owned App frame.
 
 ## SRV-GOV-004 — Production catalog acceptance
 
