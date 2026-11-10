@@ -26,8 +26,23 @@ The fixture does not qualify all real plugins enabled together.
 
 Frozen install, source check, 107 unit tests, frontend build, specification and
 50 cold Storybook interaction/accessibility cases, static catalog build and four
-static browser cases pass. Full retained hosted acceptance is recorded after its
-current run completes.
+static browser cases pass. The broader retained hosted run passed the login,
+workspace, file/chat/participant, history and Properties families, with five
+existing delivery opt-ins skipped. It found one failure among 15 Tasks cases:
+the concurrent recovery assertions completed, but native shutdown refused a
+retained editor claim after the second browser frame was destroyed. The exact
+cold target (`pnpm exec playwright test -c web/playwright.rust-tasks.config.ts
+web/e2e/rust-server-tasks-recovery.spec.ts --grep 'another App saving ordinary
+settings'`) passed before editing, confirming timing-dependent teardown.
+
+That test now awaits the second App's existing guarded Manage Vaults path before
+closing its frame, just as the main fixture crosses the guarded host boundary.
+Browser navigation cannot await asynchronous Svelte cleanup; this change retains
+all product assertions and shutdown deadlines. The exact cold target passes
+afterward; the complete 15-case Tasks family and the remaining real-server static
+delivery case pass, bringing retained hosted acceptance to 35 passes with five
+existing opt-ins skipped and zero unresolved functional failures. No source/runtime workaround or quarantine
+was added.
 Hosted CI, actual public image identity and request-budget acceptance remain
 separate release gates; this test's old backend does not qualify a fresh source
 server executable or prove deployment. The official plugin-install release-asset

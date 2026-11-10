@@ -182,7 +182,7 @@ try {
         (metrics.databaseMethods[method] ?? 0) + 1;
     }
     if (metrics.commands >= 200 || metrics.database >= 100)
-      overflow(new Error("Startup request budget exceeded before readiness"));
+      overflow(new Error("Startup request budget exceeded"));
   });
   await page.goto(origin);
   await page.getByLabel("Username").fill("owner");

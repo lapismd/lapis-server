@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { buildTasksArtifact } from "./tasks-installed-plugin";
 import { createHostedTasksFixture } from "./rust-tasks-fixture";
 import { inspectRetainedTaskUpdate } from "./tasks-recovery-controls";
+import { manageVaults } from "./tasks-editor-controls";
 
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
@@ -87,6 +88,15 @@ test("another App saving ordinary settings preserves interrupted native Task ref
     });
     throw error;
   } finally {
+    // Await this App's guarded departure before destroying its browser frame.
+    // Navigation alone cannot await Svelte's asynchronous session disposal.
+    if (
+      !other.isClosed() &&
+      (await other
+        .getByRole("button", { name: /Current workspace:/ })
+        .isVisible())
+    )
+      await manageVaults(other);
     await other.goto("about:blank");
     await other.close();
     await f.stop(info);
