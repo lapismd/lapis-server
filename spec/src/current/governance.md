@@ -70,6 +70,11 @@ controls and plugin settings through the existing public Notes API. Source,
 real-host/cold-process and production UI interaction/accessibility acceptance
 remain distinct; Desktop and OAuth are not qualified by hosted evidence.
 
+The [CLI delivery refinement](../../records/2026-11-10-cli-delivery-plan.md)
+adds planned Changesets version agreement, Markdown agent help and separate
+downloads to the owning backlog. SRV-SRV-010/012 and SRV-GOV-001 implemented
+behavior remains unchanged; documentation checks do not qualify CLI distribution.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 Configure preflight rejects a disabled default native projection feature or a

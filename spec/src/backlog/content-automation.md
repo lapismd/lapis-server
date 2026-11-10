@@ -278,12 +278,45 @@ Noninteractive writes require all preconditions and never prompt/retry silently.
 Implement read-modify-write convenience only with a retained baseline and
 conflict reporting. Keep operation IDs available after a lost response.
 
-Ship a Rust binary through release artifacts and optional Desktop installation;
-bundle it in the server image for explicit use. The remote target needs no GUI.
-Test clean installation and version mismatch on supported OS/architectures;
-document CLI/API/MCP compatibility separately from image tags. Release automation
-changes, signing and publication are later explicit release work, with no crate
-or npm publication from this repository.
+### Versioning, Markdown help and separate downloads
+
+These are required delivery gates, not implemented CLI capabilities. Use the
+existing Changesets release version as the CLI SemVer: versioning MUST synchronize
+the CLI Cargo manifest/lock entry with the release version from one source.
+`lapis --version` and offline `lapis version --json` MUST agree with the release
+tag and archive manifest. Structured build information includes the CLI version,
+source revision, target and supported content API/MCP versions; protocol versions
+remain independent of the binary version. CI MUST reject version drift before
+uploading assets. Changesets MUST record CLI changes and drive the version PR,
+changelog, tag and GitHub release; no hand-maintained parallel version counter.
+
+Use the custom Rust `jj` CLI in `jj-store` as a reference for authored Markdown
+long help, short help, keyword guides, recovery hints and structured build info
+([help sources](https://github.com/stevejuma/jj-store/tree/main/crates/jj-store-cli/help)).
+Default help and human summaries MUST be Markdown-first, with raw Markdown
+available offline and undecorated in pipes; retain exact note bytes, explicit
+JSON output and MCP-only stdout in their existing modes. Support command-path
+help and keyword guides such as `lapis help -k agents`, credentials and errors.
+Agent guidance MUST include copyable discovery/read/write examples, required
+scope and preconditions, JSON shapes, pagination, exit codes and exact recovery
+commands for conflicts or unknown outcomes; it MUST never suggest blind retries.
+Help/version MUST need no host, credentials, network, interactive prompt or
+state mutation. Keep command/flag/schema examples checked against the parser
+and shared catalog, clearly distinguishing unsupported or host-only features.
+
+Each qualified GitHub release MUST include separate CLI-only downloads per
+supported OS/architecture, named with the CLI version and target, plus SHA-256
+checksums and a version/source/compatibility manifest. A CLI archive MUST contain
+the executable, license and offline usage/agent documentation and work without
+installing Desktop or extracting a server image. Validate the actual extracted
+assets on each supported target, including help/version, a real host read and
+stdio interoperability where advertised; do not advertise unqualified targets.
+Also bundle the CLI in the server image and offer optional Desktop installation.
+Release automation MUST attach assets to the matching Changesets-created tag,
+handle workflow-token event suppression explicitly, and safely resume incomplete
+uploads without replacing an existing different asset or republishing packages.
+Test clean installation, upgrades and version mismatch; no crate or npm
+publication is needed. Signing and platform qualification remain release gates.
 
 ## Implementation sequence and exit gates
 
@@ -312,10 +345,12 @@ or npm publication from this repository.
    Move shared renderer-only policy to its owning engine when required.
    Exit: each capability passes UI/CLI/HTTP/MCP parity and cold recovery before
    discovery advertises it; disabled plugins/indexes remain explicitly absent.
-6. **Ship and document.** Complete CLI help/completions/profiles and installation,
+6. **Ship and document.** Complete Changesets-driven CLI versioning, Markdown-first
+   command/agent help, completions/profiles and separate CLI release downloads,
    public API reference/examples and MCP client setup. Validate a coherent
-   source/dependency/image/binary cohort. Exit: fresh install, upgrades, old-client
-   refusal, credential cleanup and supported-platform acceptance receipts.
+   source/dependency/image/binary cohort. Exit: embedded version/tag agreement,
+   checked offline help, verified extracted archives, fresh install, upgrades,
+   old-client refusal, credential cleanup and supported-platform acceptance.
 
 Slices 2–3 can be an internal preview. The initial external release requires
 slice 4 as well as content acceptance; broad automation is not enabled merely
