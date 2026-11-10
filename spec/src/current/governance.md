@@ -192,6 +192,12 @@ The hosted Vite renderer compiles Terminal public Svelte output directly and pre
 Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
 turn engine. Other failures retain uncertain-cleanup semantics and propagate.
 This keeps default-enabled AI compatible with startup Retry on unconfigured hosts.
-
 The reusable Mod qualification caller grants read-only package access explicitly;
 its artifact publication remains in the separate image release workflow.
+
+The [command-lease repair](../../records/2026-11-10-vault-backup-lease-release.md)
+updates the exact owning Git revision without changing SRV-GOV-001 release,
+source-limit or qualification policy. The reproduced Linux failure and owning
+regression qualify the dependency intake only; a complete Desktop workflow and
+the original macOS ARM64 boundary remain separate requirements. No retry,
+deadline, assertion or quarantine is weakened.

@@ -65,7 +65,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`7a98bd89d2bc77fb6ec41f91186992abb19ba161`. This repository MUST NOT use a
+`076e418cecbe204925aea874bef8aa8a680269a9`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 
@@ -121,6 +121,8 @@ unchanged. Initial coverage is recorded in the
 [initialization receipt](../../records/2026-11-02-backup-initialization-diagnostics.md);
 the demonstrated shutdown boundary and its extension are recorded in the
 [shutdown receipt](../../records/2026-11-03-backup-stop-diagnostics.md).
+The demonstrated command-lease repair and its unchanged admission boundary are
+recorded in the [lease release receipt](../../records/2026-11-10-vault-backup-lease-release.md).
 
 ## Shared content automation
 

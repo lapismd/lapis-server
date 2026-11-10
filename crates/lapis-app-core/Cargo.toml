@@ -20,13 +20,13 @@ lapis-docs-projection = { git = "https://github.com/lapismd/lapis-plugin-docs", 
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
 async-trait = "0.1"
-jj-history-service = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
-jj-store-model = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
+jj-history-service = { git = "https://github.com/stevejuma/jj-store", rev = "076e418cecbe204925aea874bef8aa8a680269a9", version = "0.2.0" }
+jj-store-model = { git = "https://github.com/stevejuma/jj-store", rev = "076e418cecbe204925aea874bef8aa8a680269a9", version = "0.2.0" }
 cap-std = "=4.0.3"
 cap-tempfile = "=4.0.3"
 libc = "0.2"
 md5 = "=0.8.0"
-rustix = { version = "=1.1.5", features = ["fs"] }
+rustix = { version = "=1.1.6", features = ["fs"] }
 serde = { version = "1", features = ["derive"] }
 sha2 = "=0.10.9"
 getrandom = "=0.4.3"
@@ -44,8 +44,8 @@ regress = { version = "=0.12.0", features = ["utf16", "prohibit-unsafe"] }
 ort = { version = "=2.0.0-rc.15", default-features = false, features = ["std", "load-dynamic", "api-30"] }
 tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
 reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "rustls-tls"] }
-jj-vault = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0" }
-jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "7a98bd89d2bc77fb6ec41f91186992abb19ba161", version = "0.1.0", default-features = false, features = ["vault-backup"] }
+jj-vault = { git = "https://github.com/stevejuma/jj-store", rev = "076e418cecbe204925aea874bef8aa8a680269a9", version = "0.2.0" }
+jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "076e418cecbe204925aea874bef8aa8a680269a9", version = "0.2.0", default-features = false, features = ["vault-backup"] }
 notify = "=8.2.0"
 zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 

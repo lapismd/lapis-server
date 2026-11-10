@@ -76,6 +76,6 @@ docker compose exec lapis-server brew upgrade
 
 `crates/lapis-server/Dockerfile` builds from this `lapismd/lapis-server`
 checkout. The repository root is the Docker context. jj-store crates come from
-git revision `7a98bd89d2bc77fb6ec41f91186992abb19ba161`. `lapis-ai-service` is
+git revision `076e418cecbe204925aea874bef8aa8a680269a9`. `lapis-ai-service` is
 fetched from lapis-ai tag `v0.2.0`. Publishing the image is a separate
 authorization and is not part of this pull request.

@@ -570,7 +570,7 @@ dependencies = [
  "io-lifetimes 3.0.1",
  "ipnet",
  "maybe-owned",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "rustix-linux-procfs",
  "windows-sys 0.61.2",
  "winx",
@@ -585,7 +585,7 @@ dependencies = [
  "cap-primitives",
  "io-extras",
  "io-lifetimes 3.0.1",
- "rustix 1.1.5",
+ "rustix 1.1.6",
 ]
 
 [[package]]
@@ -596,7 +596,7 @@ checksum = "038b3f6a5d4b5641b1bb99d638eb7a22013de84f81c528d8930de06d7383fbd5"
 dependencies = [
  "cap-std",
  "rand 0.9.5",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "rustix-linux-procfs",
  "uuid",
  "windows-sys 0.61.2",
@@ -1075,6 +1075,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c286de4e81ea2590afc24d754e0f83810c566f50a1388fa75ebd57928c0d9745"
 
 [[package]]
+name = "datasketches"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11c0bd7d22989969a619bae09147b992a6aa7f31dd4f9d9af6345f533744781f"
+
+[[package]]
 name = "defmt"
 version = "0.3.101"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1440,7 +1446,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94e7099f6313ecacbe1256e8ff9d617b75d1bcb16a6fddef94866d225a01a14a"
 dependencies = [
  "io-lifetimes 2.0.4",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "windows-sys 0.59.0",
 ]
 
@@ -1450,7 +1456,7 @@ version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8640e34b88f7652208ce9e88b1a37a2ae95227d84abec377ccd3c5cfeb141ed4"
 dependencies = [
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "windows-sys 0.59.0",
 ]
 
@@ -2013,7 +2019,7 @@ dependencies = [
  "itoa",
  "libc",
  "memmap2",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "smallvec",
 ]
 
@@ -3093,8 +3099,8 @@ dependencies = [
 
 [[package]]
 name = "jj-agent"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "hex",
  "jj-store-model",
@@ -3107,8 +3113,8 @@ dependencies = [
 
 [[package]]
 name = "jj-collab"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "async-trait",
  "emojis",
@@ -3170,8 +3176,8 @@ dependencies = [
 
 [[package]]
 name = "jj-history-service"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "async-trait",
  "jj-store-jj",
@@ -3217,7 +3223,7 @@ dependencies = [
  "rayon",
  "ref-cast",
  "regex",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "serde",
  "smallvec",
  "strsim",
@@ -3230,8 +3236,8 @@ dependencies = [
 
 [[package]]
 name = "jj-review"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "hex",
  "jj-agent",
@@ -3245,8 +3251,8 @@ dependencies = [
 
 [[package]]
 name = "jj-store-core"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "async-trait",
  "futures",
@@ -3257,17 +3263,17 @@ dependencies = [
  "jj-work",
  "serde",
  "serde_json",
- "sha2 0.10.9",
+ "sha2 0.11.1",
  "thiserror 2.0.21",
 ]
 
 [[package]]
 name = "jj-store-git"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "async-trait",
- "base64 0.22.1",
+ "base64 0.23.1",
  "getrandom 0.4.3",
  "gix",
  "jj-agent",
@@ -3279,14 +3285,14 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "sha2 0.10.9",
+ "sha2 0.11.1",
  "thiserror 2.0.21",
 ]
 
 [[package]]
 name = "jj-store-jj"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "async-trait",
  "base64 0.23.1",
@@ -3303,7 +3309,7 @@ dependencies = [
  "jj-store-model",
  "prost",
  "redb",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "schemars",
  "serde",
  "serde_json",
@@ -3319,8 +3325,8 @@ dependencies = [
 
 [[package]]
 name = "jj-store-model"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "hex",
  "schemars",
@@ -3331,23 +3337,23 @@ dependencies = [
 
 [[package]]
 name = "jj-vault"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "jj-store-jj",
  "regex",
  "serde",
  "serde_json",
- "sha2 0.10.9",
- "tantivy",
+ "sha2 0.11.1",
+ "tantivy 0.27.0",
  "tempfile",
  "tokio",
 ]
 
 [[package]]
 name = "jj-work"
-version = "0.1.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=7a98bd89d2bc77fb6ec41f91186992abb19ba161#7a98bd89d2bc77fb6ec41f91186992abb19ba161"
+version = "0.2.0"
+source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
 dependencies = [
  "hex",
  "jj-store-model",
@@ -3511,7 +3517,7 @@ dependencies = [
  "ort",
  "regress",
  "reqwest 0.12.28",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -3551,7 +3557,7 @@ dependencies = [
  "reqwest 0.12.28",
  "reqwest 0.13.5",
  "rmcp",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "serde_json",
  "tempfile",
  "tokio",
@@ -3843,6 +3849,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "lru"
+version = "0.18.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef9ac18847474e638e3702b76c65d4eb93428471a74778ef0f1be711717f89b5"
+dependencies = [
+ "hashbrown 0.17.1",
+]
+
+[[package]]
 name = "lru-slab"
 version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3853,6 +3868,12 @@ name = "lz4_flex"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7ef0d4ed8669f8f8826eb00dc878084aa8f253506c4fd5e8f58f5bce72ddb97e"
+
+[[package]]
+name = "lz4_flex"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ecbdfe44b1bd960b68170b417450a628c43f7cf56bb3c5317e61cb230ee7f226"
 
 [[package]]
 name = "macro_rules_attribute"
@@ -4065,6 +4086,12 @@ name = "murmurhash32"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2195bf6aa996a481483b29d62a7663eed3fe39600c460e323f8ff41e90bdd89b"
+
+[[package]]
+name = "murmurhash32"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a8afc6df942f4c022d70c5725e18df1a705773870e5b7f96fde94ca0334ce77a"
 
 [[package]]
 name = "ndarray"
@@ -4486,7 +4513,7 @@ dependencies = [
  "concurrent-queue",
  "hermit-abi",
  "pin-project-lite",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "windows-sys 0.61.2",
 ]
 
@@ -5182,9 +5209,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "1.1.5"
+version = "1.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "891efababe418670775f199f0d233d84843c227a0949a883ce15b37c78d6629d"
+checksum = "e5e76742e5294153d4dde1207dbec5bdd81eef6fabdc0d2118babadabfd858aa"
 dependencies = [
  "bitflags 2.13.2",
  "errno",
@@ -5200,7 +5227,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fc84bf7e9aa16c4f2c758f27412dc9841341e16aa682d9c7ac308fe3ee12056"
 dependencies = [
  "once_cell",
- "rustix 1.1.5",
+ "rustix 1.1.6",
 ]
 
 [[package]]
@@ -5436,6 +5463,15 @@ checksum = "4148590afebada386688f18773da617792bf2ef03ffc1e4cbd2b1d45b023e0ba"
 dependencies = [
  "serde_core",
  "serde_derive",
+]
+
+[[package]]
+name = "serde-tuple-vec-map"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a04d0ebe0de77d7d445bb729a895dcb0a288854b267ca85f030ce51cdc578c82"
+dependencies = [
+ "serde",
 ]
 
 [[package]]
@@ -5865,7 +5901,7 @@ dependencies = [
  "census",
  "crc32fast",
  "crossbeam-channel",
- "datasketches",
+ "datasketches 0.2.0",
  "downcast-rs 2.0.2",
  "fastdivide",
  "fnv",
@@ -5874,8 +5910,8 @@ dependencies = [
  "itertools 0.14.0",
  "levenshtein_automata",
  "log",
- "lru",
- "lz4_flex",
+ "lru 0.16.4",
+ "lz4_flex 0.13.1",
  "measure_time",
  "memmap2",
  "once_cell",
@@ -5888,17 +5924,71 @@ dependencies = [
  "serde_json",
  "sketches-ddsketch",
  "smallvec",
- "tantivy-bitpacker",
- "tantivy-columnar",
- "tantivy-common",
+ "tantivy-bitpacker 0.10.0",
+ "tantivy-columnar 0.7.0",
+ "tantivy-common 0.11.0",
  "tantivy-fst",
- "tantivy-query-grammar",
- "tantivy-stacker",
+ "tantivy-query-grammar 0.26.0",
+ "tantivy-stacker 0.7.0",
  "tantivy-tokenizer-api",
  "tempfile",
  "thiserror 2.0.21",
  "time",
  "typetag",
+ "uuid",
+ "winapi",
+]
+
+[[package]]
+name = "tantivy"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad1ebacf6bc124b741ffbfb088f9835cb55e1e2ff57e182e9219e3efa1377b97"
+dependencies = [
+ "aho-corasick",
+ "arc-swap",
+ "base64 0.23.1",
+ "bitpacking",
+ "bon",
+ "byteorder",
+ "census",
+ "crc32fast",
+ "crossbeam-channel",
+ "datasketches 0.5.0",
+ "downcast-rs 2.0.2",
+ "fastdivide",
+ "fnv",
+ "fs4",
+ "htmlescape",
+ "itertools 0.14.0",
+ "levenshtein_automata",
+ "log",
+ "lru 0.18.5",
+ "lz4_flex 0.14.0",
+ "measure_time",
+ "memmap2",
+ "once_cell",
+ "oneshot",
+ "rayon",
+ "regex",
+ "rustc-hash 2.1.3",
+ "serde",
+ "serde-tuple-vec-map",
+ "serde_json",
+ "sketches-ddsketch",
+ "smallvec",
+ "tantivy-bitpacker 0.27.0",
+ "tantivy-columnar 0.27.0",
+ "tantivy-common 0.27.0",
+ "tantivy-fst",
+ "tantivy-query-grammar 0.27.0",
+ "tantivy-stacker 0.27.0",
+ "tantivy-tokenizer-api",
+ "tempfile",
+ "thiserror 2.0.21",
+ "time",
+ "typetag",
+ "unwrap-infallible",
  "uuid",
  "winapi",
 ]
@@ -5913,6 +6003,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "tantivy-bitpacker"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c803ac72b3356f48fe4a399a03e058addd5c94e793e0bb7c6bcc224b238fcd7"
+dependencies = [
+ "bitpacking",
+]
+
+[[package]]
 name = "tantivy-columnar"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5922,10 +6021,27 @@ dependencies = [
  "fastdivide",
  "itertools 0.14.0",
  "serde",
- "tantivy-bitpacker",
- "tantivy-common",
- "tantivy-sstable",
- "tantivy-stacker",
+ "tantivy-bitpacker 0.10.0",
+ "tantivy-common 0.11.0",
+ "tantivy-sstable 0.7.0",
+ "tantivy-stacker 0.7.0",
+]
+
+[[package]]
+name = "tantivy-columnar"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95101fe3dd4a76156bdeff8d14ad41c547f2c1bce7ee0d23fdb6f95599f312ec"
+dependencies = [
+ "downcast-rs 2.0.2",
+ "fastdivide",
+ "itertools 0.14.0",
+ "rand 0.9.5",
+ "serde",
+ "tantivy-bitpacker 0.27.0",
+ "tantivy-common 0.27.0",
+ "tantivy-sstable 0.27.0",
+ "tantivy-stacker 0.27.0",
 ]
 
 [[package]]
@@ -5933,6 +6049,19 @@ name = "tantivy-common"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbf10915aa75da3c3b0d58b58853d2e889efbaf32d4982a4c3715dde6bba23e5"
+dependencies = [
+ "async-trait",
+ "byteorder",
+ "ownedbytes",
+ "serde",
+ "time",
+]
+
+[[package]]
+name = "tantivy-common"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66d062ce97f2a26f2a7b2ed5d926a62241f762e4395ac110eb5c18f3b4a13b71"
 dependencies = [
  "async-trait",
  "byteorder",
@@ -5966,6 +6095,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "tantivy-query-grammar"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ef6729a14fc5c5a662ee549a176640743577ef35c70ae7e86f0ca07fa83d161"
+dependencies = [
+ "fnv",
+ "nom",
+ "ordered-float",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "tantivy-sstable"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5973,10 +6115,23 @@ checksum = "8a2cfc3ac5164cbadc28965ffb145a8f47582a60ae5897859ad8d4316596c606"
 dependencies = [
  "futures-util",
  "itertools 0.14.0",
- "tantivy-bitpacker",
- "tantivy-common",
+ "tantivy-bitpacker 0.10.0",
+ "tantivy-common 0.11.0",
  "tantivy-fst",
  "zstd",
+]
+
+[[package]]
+name = "tantivy-sstable"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d6b3567417750e8aeb6e7c9c5ae8701376c07c06d51991050825832c2f8c431"
+dependencies = [
+ "futures-util",
+ "itertools 0.14.0",
+ "tantivy-bitpacker 0.27.0",
+ "tantivy-common 0.27.0",
+ "tantivy-fst",
 ]
 
 [[package]]
@@ -5985,8 +6140,18 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6cbb051742da9d53ca9e8fff43a9b10e319338b24e2c0e15d0372df19ffeb951"
 dependencies = [
- "murmurhash32",
- "tantivy-common",
+ "murmurhash32 0.3.1",
+ "tantivy-common 0.11.0",
+]
+
+[[package]]
+name = "tantivy-stacker"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4213e34acf53de44ab4778aafec3c6800a781be6a7c1906579acdc23c114d94"
+dependencies = [
+ "murmurhash32 0.4.0",
+ "tantivy-common 0.27.0",
 ]
 
 [[package]]
@@ -6013,7 +6178,7 @@ dependencies = [
  "fastrand",
  "getrandom 0.4.3",
  "once_cell",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "windows-sys 0.61.2",
 ]
 
@@ -6483,7 +6648,7 @@ dependencies = [
  "regex-syntax",
  "roaring",
  "rustc-hash 2.1.3",
- "rustix 1.1.5",
+ "rustix 1.1.6",
  "ryu",
  "serde_json",
  "shuttle",
@@ -6491,7 +6656,7 @@ dependencies = [
  "smallvec",
  "strum",
  "strum_macros",
- "tantivy",
+ "tantivy 0.26.2",
  "tempfile",
  "thiserror 2.0.21",
  "tracing",
@@ -6762,6 +6927,12 @@ name = "untrusted"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ecb6da28b8a351d773b68d5825ac39017e680750f980f3a1a85cd8dd28a47c1"
+
+[[package]]
+name = "unwrap-infallible"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e497bb1f828cc9fb236722c2eaa100dcf201563f38f4da6252357a59037adf31"
 
 [[package]]
 name = "url"
