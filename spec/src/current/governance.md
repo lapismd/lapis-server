@@ -201,3 +201,11 @@ source-limit or qualification policy. The reproduced Linux failure and owning
 regression qualify the dependency intake only; a complete Desktop workflow and
 the original macOS ARM64 boundary remain separate requirements. No retry,
 deadline, assertion or quarantine is weakened.
+
+Hosted run 42895553521 reached the Specification job and then failed
+`pnpm format:check` on `spec/src/verification.md`; its workflow correctly
+cancelled downstream jobs after that required failure. The repair compacts
+duplicated receipt detail while preserving every requirement id, status,
+evidence link and pending qualification. `pnpm format:check` and native
+`pnpm spec:check` review this unchanged SRV-GOV-001 contract; product acceptance
+remains the separately recorded command-lease evidence.
