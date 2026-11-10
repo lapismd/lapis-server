@@ -13,7 +13,9 @@ The focused real-server regression retains login and workspace screenshots as
 review evidence, independently of visual baseline approval.
 
 The project README documents how to run the image and set the initial owner
-password. That documentation does not change SRV-SRV-001 or SRV-SRV-003.
+password. The checkout demo is governed by SRV-SRV-001 and retains the mounted initial
+password behavior in SRV-SRV-003. Demo script regression checks cover preparation,
+file preservation, Docker context selection, memory preflight, serial build stages, published image startup and failed-start propagation.
 Current contracts and verification own behavior/status; the canonical backlog
 owns remaining work and acceptance. Supporting historical receipts retain their
 original scope and cannot replace current candidate qualification.
@@ -176,3 +178,13 @@ qualification. Diagnostic observability cannot remove the original quarantine,
 replace unchanged native assertions or establish a root-cause repair. Fixed
 shutdown categories MUST NOT expose native error text, paths, credentials or
 vault content.
+
+Terminal admission is implemented in Core and HTTP transport, with the UI imported from the first-party Terminal package. Local qualification may use verified packed UI archives; registry publication and ARM64 image acceptance remain separate release gates.
+
+Native CLI security fixtures create a real POSIX FIFO on macOS and Linux, retaining the same private-token and non-regular-file rejection assertions.
+
+The hosted Vite renderer compiles Terminal public Svelte output directly and prepares Ghostty before first terminal activation, avoiding optimizer-triggered startup reloads.
+
+Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
+turn engine. Other failures retain uncertain-cleanup semantics and propagate.
+This keeps default-enabled AI compatible with startup Retry on unconfigured hosts.

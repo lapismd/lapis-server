@@ -372,3 +372,7 @@ integration, OAuth and write operations remain independently gated.
 - Cold restart preserves the enable preference but refuses old tokens; vault close/archive and shutdown retire native grants, while unsupported origins preserve owner access.
 - Accepted control work and bounded native permits survive response cancellation; shutdown drains controls and content readers without reviving authority after a failed native leave.
 - The real hosted plugin settings screen creates/revokes credentials and disables access; production catalog interaction/axe and cold built-server acceptance pass without browser credential persistence.
+
+## Native token fixture
+
+CLI token-file acceptance creates an actual private FIFO with POSIX `mkfifo` on macOS and Linux before proving non-regular credentials are refused.

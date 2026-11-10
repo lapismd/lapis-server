@@ -7,3 +7,8 @@ spec/book
 .qmd/index.sqlite*
 storybook-static
 dist
+
+# Local demo configuration and credentials
+.env
+.env.*
+!.env.example

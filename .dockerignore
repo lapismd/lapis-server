@@ -1,0 +1,14 @@
+.git
+.jj
+node_modules
+.local
+target
+web/dist
+storybook-static
+test-results
+playwright-report
+spec/book
+.qmd/index.sqlite*
+.env
+.env.*
+!.env.example

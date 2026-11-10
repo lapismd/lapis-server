@@ -106,9 +106,10 @@ pub(super) async fn validate_stream(
     Ok(())
 }
 pub(super) fn origin(headers: &HeaderMap, allowed: &str, required: bool) -> Result<(), Failure> {
-    if headers
-        .get("origin")
-        .is_some_and(|value| value.as_bytes() != allowed.as_bytes())
+    if headers.get_all("origin").iter().count() > 1
+        || headers
+            .get("origin")
+            .is_some_and(|value| value.as_bytes() != allowed.as_bytes())
         || (required && !headers.contains_key("origin"))
     {
         return Err(Failure::new(

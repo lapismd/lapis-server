@@ -12,7 +12,60 @@ install from the npm registry.
 Specification and Storybook:
 <https://lapismd.github.io/lapis-server/storybook/>.
 
-## Run
+## Local demo from this checkout
+
+From the repository root, run:
+
+```sh
+./scripts/demo.sh
+```
+
+This uses the local `default` Docker context, copies `.env.example` to `.env`,
+and creates an empty-vault config and a random initial owner password under
+`.local/demo`. Existing files are preserved. Docker with Compose and OpenSSL
+are required, with at least 6 GiB RAM allocated to Docker for the source
+build. The script checks available Docker memory before building. Node and Rust
+are built inside Docker. The first build also
+installs the bundled agent tools and can take several minutes. The script
+builds Web and Rust stages serially to reduce peak memory use in local Docker.
+
+Open <http://localhost:8787>, sign in as `owner`, and read the password with
+`cat .local/demo/bootstrap-password`. Create a vault from the vault chooser.
+The port is bound to loopback. Both `.env` and `.local` are ignored by version
+control and excluded from the Docker build context.
+
+To edit settings before the first build, run `./scripts/demo.sh prepare` and
+edit `.env`. If you change the port, update `LAPIS_SERVER_PORT` and
+`LAPIS_SERVER_ORIGIN` together. Custom config/password paths must point to
+existing files; the script only creates the default `.local/demo` files.
+The initial password only applies to a new data volume.
+
+Once configured, the root Compose file can also be used directly:
+
+```sh
+docker --context default compose up --build --detach --wait
+docker --context default compose logs --follow
+docker --context default compose down
+```
+
+Stopping preserves the profile and Homebrew named volumes. On Docker Desktop,
+enable “Allow the default Docker socket to be used” if `/var/run/docker.sock`
+is missing. To explicitly choose another local context, set
+`LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux` when running the script.
+
+## Run a published image
+
+The same local configuration and volumes can run a published image without
+compiling the checkout:
+
+```sh
+LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:45f4c1b
+```
+
+Omit the context override when the local `default` context is available.
+Image mode pulls the requested tag, skips the build-memory preflight, and
+starts Compose with `--no-build`. For direct Compose use, set
+`LAPIS_SERVER_IMAGE` to the desired published tag and pass `--no-build`.
 
 Every push to `main` publishes `ghcr.io/lapismd/lapis-server` tagged with the
 7-character commit hash from `git rev-parse --short`. A `v*` git tag publishes

@@ -46,17 +46,19 @@ behavior and observation streams stay in the Notes specification.
 
 - Password hashes use bounded scrypt and do not persist the plaintext password.
 - Session cookies and Origin checks follow the configured browser origin.
+- Multiple Origin headers are ambiguous and rejected.
 
 ## SRV-HST-005 — Typed control plane
 
 <a id="srv-hst-005"></a>
 
-**Requirement.** Native HTTP routes MUST own the typed JSON control plane for system, authentication, vault, filesystem metadata, AppDatabase, and service commands. Browser clients MUST use generated portable contracts and MUST NOT import the native server or obtain SQL or native paths.
+**Requirement.** Native HTTP routes MUST own the typed JSON control plane for system, authentication, vault, filesystem metadata, AppDatabase, and service commands. Browser clients MUST use generated portable contracts and MUST NOT import the native server or obtain SQL or native paths through metadata commands.
 
 ### Acceptance details
 
 - `lapis-app-protocol` defines the portable commands and replies.
-- Browser clients do not receive raw SQL or native filesystem paths.
+- Browser clients do not receive raw SQL or native filesystem paths through metadata commands.
+- Authenticated terminal output is user-command output and may include native paths.
 
 ## SRV-HST-006 — Protocol identity
 
@@ -139,7 +141,7 @@ behavior and observation streams stay in the Notes specification.
 
 <a id="srv-hst-013"></a>
 
-**Requirement.** The hosted server MUST admit AI only through trusted operator-declared native targets and existing turn, participant, and queue authorities. It MUST NOT offer terminals, collaborative editing, arbitrary filesystem roots, invitations, public registration, or multi-instance coordination.
+**Requirement.** The hosted server MUST admit AI only through trusted operator-declared native targets and existing turn, participant, and queue authorities. It MUST NOT offer collaborative editing, arbitrary filesystem roots, invitations, public registration, or multi-instance coordination.
 
 ### Acceptance details
 
@@ -213,3 +215,16 @@ behavior and observation streams stay in the Notes specification.
 - A revoked or foreign client cannot supply a filesystem root or caller scope.
 - Bounded History reads may return typed `409`/`CONFLICT`/`history: busy` backpressure.
 - Retained acceptance exercises File History Refresh without replaying mutations and rejects unexpected native, admission, restore and unknown-write errors.
+
+## SRV-HST-020 — Authenticated vault terminals
+
+<a id="srv-hst-020"></a>
+
+**Requirement.** Terminal commands and bounded output streams MUST authenticate the owning vault client. The Deno-free native PTY engine MUST use the admitted physical vault as cwd authority. Detach, expiry, logout, successful vault close and shutdown MUST stop owned shells, while dirty-editor close refusal MUST preserve them. The bundled UI MUST require trust and optional-plugin admission.
+
+### Acceptance details
+
+- Create accepts relative cwd and dimensions, never roots or arbitrary shells.
+- Inputs, session counts, replay and observers are bounded; output revalidates authentication and has a finite response lifetime.
+- Browser input writes preserve per-session order across pending HTTP requests.
+- Plugin disable and trust revocation close sessions; output may contain native paths from user commands.

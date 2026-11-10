@@ -2,9 +2,12 @@ name: lapis-server
 
 services:
   lapis-server:
-    image: ghcr.io/lapismd/lapis-server
+    image: ${LAPIS_SERVER_IMAGE:-lapis-server:demo}
+    build:
+      context: .
+      dockerfile: crates/lapis-server/Dockerfile
     ports:
-      - "8787:8787"
+      - "127.0.0.1:${LAPIS_SERVER_PORT:-8787}:8787"
     environment:
       LAPIS_SERVER_ORIGIN: ${LAPIS_SERVER_ORIGIN:-http://localhost:8787}
       LAPIS_SERVER_INSECURE_COOKIE: ${LAPIS_SERVER_INSECURE_COOKIE:-1}

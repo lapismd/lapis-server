@@ -13,6 +13,7 @@ default = ["local-sibling-projections"]
 local-sibling-projections = []
 
 [dependencies]
+lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "e240ad5f8e891a3b30336aca49926992a08bde42", version = "0.1.0" }
 lapis-plugin-services = { git = "https://github.com/lapismd/lapis-plugins", rev = "879581d1549187bdbac2d75b40d02e0df46e721a", version = "0.1.0" }
 lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "52270c2aa7838811604a20be0861cdbd04027b42", version = "0.1.0" }
 lapis-docs-projection = { git = "https://github.com/lapismd/lapis-plugin-docs", rev = "f772f2bacc20a914cef2f0398f294cefbac4ba3c", version = "0.0.0" }

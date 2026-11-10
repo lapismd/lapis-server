@@ -58,7 +58,9 @@ impl Client {
             .retired_editor_intents
             .retain(|_, client| *client != self.id);
         drop(state);
-        self.vault.revoke_history_reader(self.id)
+        let terminals = self.vault.revoke_terminals(Some(self.id));
+        let history = self.vault.revoke_history_reader(self.id);
+        terminals.and(history)
     }
 }
 impl Drop for Client {
