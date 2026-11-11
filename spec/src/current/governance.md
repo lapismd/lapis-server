@@ -236,3 +236,5 @@ adds a CLI-version alias to the same qualified Mod index without changing
 payloads or image build inputs. README configuration retains explicit root
 initialization, writable Mod application, independent cache and application
 privilege drop. Registry publication remains a post-merge verification gate.
+
+SRV-HST-021 requires native watcher/replay/overflow tests, real authenticated HTTP acceptance, browser registration/reconnect/retirement tests, and cold enabled-plugin plus steady-idle acceptance. Existing startup budgets and public-image identity checks remain unchanged.

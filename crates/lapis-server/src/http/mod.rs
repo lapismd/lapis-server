@@ -13,6 +13,7 @@ mod identity;
 mod indexing;
 pub use identity::Authentication;
 mod errors;
+mod file_events;
 mod files;
 mod management;
 mod participants;
@@ -123,6 +124,10 @@ fn configured_router(
         .route(
             "/api/v3/clients/{client}/database",
             post(database::call).layer(DefaultBodyLimit::max(database::JSON_LIMIT)),
+        )
+        .route(
+            "/api/v3/clients/{client}/file-events",
+            get(file_events::observe),
         )
         .route(
             "/api/v3/clients/{client}/database/events",

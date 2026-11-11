@@ -713,6 +713,16 @@ export type ParticipantValue =
   | { kind: "message"; message: ParticipantMessage | null }
   | { kind: "stop_requested"; accepted: boolean }
   | { kind: "cancel_requested"; accepted: boolean };
+export type FileChange =
+  | { type: "create"; path: string }
+  | { type: "modify"; path: string }
+  | { type: "delete"; path: string }
+  | { type: "rename"; path: string; previous_path: string };
+export type FileChangeSet = {
+  revision: number;
+  reset: boolean;
+  changes: Array<FileChange>;
+};
 export type TerminalCommand =
   | { kind: "create"; cwd: string | null; cols: number; rows: number }
   | { kind: "write"; session_id: string; data: string }

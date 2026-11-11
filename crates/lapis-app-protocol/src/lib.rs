@@ -9,6 +9,7 @@ pub mod browser;
 pub mod content;
 pub mod database;
 pub mod editing_intents;
+pub mod file_changes;
 pub mod files;
 pub mod history_index;
 pub mod indexing;

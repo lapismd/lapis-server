@@ -11,7 +11,9 @@ mod database;
 mod editing_intents;
 mod editors;
 mod error;
+mod file_changes;
 mod files;
+pub use file_changes::FileObservation;
 mod guards;
 mod history;
 #[cfg(feature = "local-sibling-projections")]

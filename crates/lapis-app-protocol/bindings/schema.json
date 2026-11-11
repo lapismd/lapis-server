@@ -849,6 +849,60 @@
       "required": ["value", "valueType", "count"],
       "type": "object"
     },
+    "FileChange": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "path": { "type": "string" },
+            "type": { "const": "create", "type": "string" }
+          },
+          "required": ["type", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "path": { "type": "string" },
+            "type": { "const": "modify", "type": "string" }
+          },
+          "required": ["type", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "path": { "type": "string" },
+            "type": { "const": "delete", "type": "string" }
+          },
+          "required": ["type", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "path": { "type": "string" },
+            "previous_path": { "type": "string" },
+            "type": { "const": "rename", "type": "string" }
+          },
+          "required": ["type", "path", "previous_path"],
+          "type": "object"
+        }
+      ]
+    },
+    "FileChangeSet": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": { "$ref": "#/$defs/FileChange" },
+          "type": "array"
+        },
+        "reset": { "type": "boolean" },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["revision", "reset", "changes"],
+      "type": "object"
+    },
     "FileCommand": {
       "oneOf": [
         {
@@ -5447,6 +5501,7 @@
     "database_value": { "$ref": "#/$defs/DatabaseValue" },
     "editing_intent_command": { "$ref": "#/$defs/EditingIntentCommand" },
     "editing_intent_value": { "$ref": "#/$defs/EditingIntentValue" },
+    "file_change": { "$ref": "#/$defs/FileChangeSet" },
     "file_history": { "$ref": "#/$defs/FileHistory" },
     "history_index_command": { "$ref": "#/$defs/HistoryIndexCommand" },
     "history_index_value": { "$ref": "#/$defs/HistoryIndexValue" },
@@ -5535,6 +5590,7 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "file_change",
     "terminal_command",
     "terminal_value",
     "terminal_output",

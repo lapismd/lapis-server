@@ -44,7 +44,7 @@
     "build-storybook": "storybook build",
     "demo": "sh scripts/demo.sh",
     "test:demo": "node --test scripts/demo.test.mjs",
-    "test:startup-budget": "node scripts/test-startup-budget.mjs",
+    "test:startup-budget": "cargo build -p lapis-server --locked && node scripts/test-startup-budget.mjs",
     "configure": "node scripts/configure.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
     "release:github": "node scripts/release-github.mjs",
