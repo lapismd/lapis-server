@@ -2,9 +2,8 @@
 
 Mods change the live container filesystem, not immutable OCI image layers. They
 are operator-trusted executable extensions with the container's initialization
-privileges, not sandboxed application plugins. The existing full Homebrew image
-remains available. The minimal image plus selected agent Mods is the intended
-optional-agent deployment. Debian/Ubuntu and Alpine acceptance are independent;
+privileges, not sandboxed application plugins. The default image includes jj without Homebrew; selected agent Mods extend
+that minimal runtime. Debian/Ubuntu and Alpine acceptance are independent;
 no Alpine application compatibility is implied by a portable loader design.
 
 ## SRV-MOD-001 — Registry transport and admission

@@ -12,6 +12,15 @@ docker_slim run --rm --entrypoint /bin/sh "$image" -c '
   test "$(id -u)" = 1993
   test -s /app/static/index.html
   test -x /app/lapis-server
+  test ! -e /home/linuxbrew/.linuxbrew
+  test ! -e /app/install-homebrew-packages
+  jj --version | grep -E "^jj 0\.45\.1(-|$)"
+  directory=$(mktemp -d)
+  jj git init "$directory/repo"
+  jj --repository "$directory/repo" status
+  jj git clone "$directory/repo" "$directory/clone"
+  jj --repository "$directory/clone" status
+  rm -rf "$directory"
   ! test -w /app/lapis-server
   ! test -w /app/static/index.html
   for tool in brew codex cursor-agent claude opencode node deno cc; do
@@ -21,7 +30,7 @@ docker_slim run --rm --entrypoint /bin/sh "$image" -c '
 output=$(docker_slim run --rm --env LAPIS_SERVER_HOMEBREW_PACKAGES=jq "$image" 2>&1) && {
   echo 'Slim image ignored a requested Homebrew install' >&2; exit 1;
 }
-case "$output" in *'use the full image'*) ;; *) echo "$output" >&2; exit 1 ;; esac
+case "$output" in *'configure tools with DOCKER_MODS instead.'*) ;; *) echo "$output" >&2; exit 1 ;; esac
 prefix="lapis-slim-test-$$"
 cleanup() {
   docker_slim rm --force "$prefix-app" "$prefix-registry" >/dev/null 2>&1 || true
