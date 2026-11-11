@@ -69,3 +69,6 @@ no Alpine application compatibility is implied by a portable loader design.
 
 - Run the owning isolated registry, filesystem or lifecycle regression for this boundary.
 - Run cold container acceptance on each claimed architecture and base image; retain failures as release gates.
+
+- Publish catalog-derived CLI-version, version-plus-commit and commit tags for the same already qualified multiarchitecture index.
+- Document root/writable initialization and tag/digest selection in a runnable Mod Compose example.

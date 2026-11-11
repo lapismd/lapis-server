@@ -103,8 +103,12 @@ the original application starts. `docker/mods/compose.example.yml` shows Lapis
 with a separate Mod cache. Set `DOCKER_MODS` to a pipe-separated selection of
 versioned or digest-pinned agent Mods: `ghcr.io/lapismd/mods:codex-<commit>`,
 `ghcr.io/lapismd/mods:cursor-<commit>`, `ghcr.io/lapismd/mods:claude-<commit>`
-and `ghcr.io/lapismd/mods:opencode-<commit>`. Each also has an
-`<agent>-<upstream-version>-<commit>` tag. Each native architecture test injects
+and `ghcr.io/lapismd/mods:opencode-<commit>`. Each also has
+`<agent>-<upstream-version>` and `<agent>-<upstream-version>-<commit>` tags,
+using the hash-pinned CLI version in `docker/mods/agents.json`. All three tags
+reference the same qualified AMD64/ARM64 index. The version-only alias can move
+when packaging changes; digest references pin exact bytes. See the root
+[configuration example](../../README.md#configure-agent-mods). Each native architecture test injects
 the complete hash-pinned upstream distribution and runs its version command as
 the application user before those exact artifacts are published.
 

@@ -59,7 +59,7 @@ The same local configuration and volumes can run a published image without
 compiling the checkout:
 
 ```sh
-LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:45f4c1b
+LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:4a40488-slim
 ```
 
 Omit the context override when the local `default` context is available.
@@ -113,6 +113,70 @@ package requests still require the full image. Both images
 use Ubuntu's glibc ABI, matching the Rust executable and supported Linux tools.
 Alpine's musl ABI requires a separate native build and cannot run the bundled
 Homebrew toolchain as a drop-in replacement.
+
+## Configure agent Mods
+
+Use the slim image to install only the agent CLIs you need, without Homebrew.
+Set `DOCKER_MODS` to OCI references separated by `|`; they are applied from left
+to right before the original server starts. Each Mod includes the complete
+hash-pinned upstream distribution for Linux AMD64 and ARM64. The version examples
+below come from the [pinned agent catalog](docker/mods/agents.json).
+
+| CLI                   | CLI-version Mod tag                              |
+| --------------------- | ------------------------------------------------ |
+| Codex `codex`         | `ghcr.io/lapismd/mods:codex-0.167.0`             |
+| Cursor `cursor-agent` | `ghcr.io/lapismd/mods:cursor-2026.11.05-86047df` |
+| Claude Code `claude`  | `ghcr.io/lapismd/mods:claude-2.1.311`            |
+| OpenCode `opencode`   | `ghcr.io/lapismd/mods:opencode-2.2.6`            |
+
+The release workflow reads the CLI version from `docker/mods/agents.json` and
+publishes three tags for the same qualified multiarchitecture index:
+`<agent>-<cli-version>`, `<agent>-<cli-version>-<server-commit>` and
+`<agent>-<server-commit>`. The shorter CLI-version tag follows the latest
+packaging of that tool version. Use the version-and-commit tag to select a
+specific source build, or `ghcr.io/lapismd/mods@sha256:<digest>` to pin exact bytes.
+Mod and server commit tags do not have to match; choose compatible tool payloads.
+
+Use the dedicated [Mod Compose example](docker/mods/compose.example.yml):
+
+```sh
+./scripts/demo.sh prepare
+export LAPIS_SERVER_TAG=4a40488
+export LAPIS_SERVER_CONFIG_FILE="$PWD/.local/demo/config.json"
+export LAPIS_SERVER_PASSWORD_FILE="$PWD/.local/demo/bootstrap-password"
+export DOCKER_MODS='ghcr.io/lapismd/mods:codex-0.167.0|ghcr.io/lapismd/mods:claude-2.1.311'
+
+docker --context desktop-linux compose --env-file .env \
+  --file docker/mods/compose.example.yml up --detach --wait
+```
+
+Choose the context that owns your deployment. Config and secret bind paths must
+exist on the Docker daemon's host; `prepare` creates local files and does not
+copy them to a remote daemon. The example uses separate profile and Mod-cache
+named volumes, so container recreation reuses verified downloads. For an
+existing deployment, keep its existing `/data` volume when adapting the example.
+
+When adding Mods to your own service, use `user: "0:0"`, a writable container
+layer (`read_only: false`), and a separate cache volume mounted at
+`/var/cache/container-mods`. Mods run trusted initialization code as root; the
+loader then drops to UID/GID 1993 and executes the original Lapis entrypoint.
+The root no-Mod Compose profile is read-only; use the Mod example rather than
+adding only `DOCKER_MODS` to that profile.
+
+| Variable              | Default                     | Purpose                                                                                      |
+| --------------------- | --------------------------- | -------------------------------------------------------------------------------------------- |
+| `DOCKER_MODS`         | empty                       | Pipe-separated Mod references; empty leaves normal startup unchanged                         |
+| `DOCKER_MODS_CACHE`   | `/var/cache/container-mods` | Download cache, independent of application data                                              |
+| `DOCKER_MODS_STRICT`  | `true`                      | Stop startup if a requested Mod or hook fails                                                |
+| `DOCKER_MODS_DEBUG`   | `false`                     | Verbose startup diagnostics                                                                  |
+| `DOCKER_MODS_OFFLINE` | `false`                     | Require previously resolved and verified cached artifacts instead of contacting the registry |
+
+Online starts resolve tags again and download only missing content. To change
+the selected tools or versions, change `DOCKER_MODS` and recreate the service
+with the same Compose command. Agent targets and provider authentication are
+configured separately as described below. Private-registry credentials, hook
+layout, extraction rules and custom Mods are documented in the
+[loader guide](docker/mod-loader/README.md).
 
 ## Agent tooling
 
