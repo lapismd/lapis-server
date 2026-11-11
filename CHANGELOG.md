@@ -1,5 +1,29 @@
 # @lapismd/lapis-server
 
+## 1.1.0
+
+### Minor Changes
+
+- [#38](https://github.com/lapismd/lapis-server/pull/38) [`78354bb`](https://github.com/lapismd/lapis-server/commit/78354bb8197115ba83e621fab4be35bc5a6f6422) Thanks [@stevejuma](https://github.com/stevejuma)! - Add a reusable static OCI Mod loader and optional per-agent Mod images for Codex, Cursor, Claude Code and OpenCode. Publish a smaller server image alongside the existing Homebrew image, with digest-verified runtime extensions, safe file publication, ordered initialization hooks, independent caching and preserved application startup and signals.
+
+- [#35](https://github.com/lapismd/lapis-server/pull/35) [`e55e7af`](https://github.com/lapismd/lapis-server/commit/e55e7afc2bf32528c737a6ddb660154ad67b67ad) Thanks [@stevejuma](https://github.com/stevejuma)! - Add authenticated, client-owned native terminals with bounded output streams and ordered cleanup, backed by the Deno-free Terminal Host engine.
+
+### Patch Changes
+
+- [#36](https://github.com/lapismd/lapis-server/pull/36) [`f7ca048`](https://github.com/lapismd/lapis-server/commit/f7ca048e743dc34d2a185d35d704a2f037d6f3a6) Thanks [@stevejuma](https://github.com/stevejuma)! - Place Content API and MCP settings under Core plugins and document the same
+  navigation location for the pending Desktop integration.
+
+- [#42](https://github.com/lapismd/lapis-server/pull/42) [`43d6657`](https://github.com/lapismd/lapis-server/commit/43d66573cb278f7e89c8c3e013e2e629c19f9810) Thanks [@lapismd-dependency-bot](https://github.com/apps/lapismd-dependency-bot)! - Refresh first-party Lapis dependencies to the published versions recorded in this pull request.
+
+- [#39](https://github.com/lapismd/lapis-server/pull/39) [`530a6c4`](https://github.com/lapismd/lapis-server/commit/530a6c425e9183f93ee74c0b16bb4111fdc838f0) Thanks [@stevejuma](https://github.com/stevejuma)! - Adopt the repaired jj-store command lease so completed backup sessions and
+  relink operations cannot leave the next native command spuriously busy.
+
+- [#41](https://github.com/lapismd/lapis-server/pull/41) [`7563116`](https://github.com/lapismd/lapis-server/commit/75631165c25a0b6cb5e464d93c8314a471ef5160) Thanks [@stevejuma](https://github.com/stevejuma)! - Adopt released History 0.2.4 to avoid persistent notification clears during healthy status polling.
+
+- [#40](https://github.com/lapismd/lapis-server/pull/40) [`0d04a69`](https://github.com/lapismd/lapis-server/commit/0d04a690ab61a91f8dfa84101fbde29eec47b5ab) Thanks [@stevejuma](https://github.com/stevejuma)! - Consume the released Notes API, Workspace, UI and File Explorer packages that exclude plugin runtime assets from vault indexing and serialize plugin installations through progress operations. Add cold registry-consumer request-budget acceptance to renderer CI.
+
+- [#35](https://github.com/lapismd/lapis-server/pull/35) [`e55e7af`](https://github.com/lapismd/lapis-server/commit/e55e7afc2bf32528c737a6ddb660154ad67b67ad) Thanks [@stevejuma](https://github.com/stevejuma)! - Add a checkout-built root Docker Compose demo with sample environment, generated bootstrap credentials, and a local-context startup script.
+
 ## 1.0.2
 
 ### Patch Changes
