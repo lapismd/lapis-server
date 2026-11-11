@@ -121,6 +121,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "@lapis-notes/lapis-plugin-tasks": "^0.1.1",
-    "@lapis-notes/history": "^0.2.0"
+    "@lapis-notes/history": "^0.2.4"
   }
 }
