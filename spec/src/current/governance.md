@@ -216,3 +216,10 @@ History 0.2.4 dismisses transient recovery feedback without persistent database
 writes. Source-consumer acceptance and verified npm/archive provenance do not
 qualify the next public Server frontend; actual-image identity and acceptance
 remain post-merge delivery gates.
+
+The [public-image receipt](../../records/2026-11-11-public-image-acceptance.md)
+qualifies the immutable 7563116 slim frontend and original runtime on remote
+AMD64 with the unchanged startup request budgets, original lifecycle and public
+agent Mods online/offline. Full/slim AMD64/ARM64 publication and exact-main CI
+are verified separately from post-publication ARM64 execution, all-active-plugin,
+provider and Desktop acceptance. Earlier source-only receipts retain their scope.
