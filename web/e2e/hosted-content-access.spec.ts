@@ -151,6 +151,9 @@ for (const renderer of ["static", "preview", "development"] as const) {
       const second = await issue(page);
       await signOutHostedWorkspace(page);
       expect((await read(second)).status).toBe(200);
+      // Dispose the old development document before Vite restarts: its HMR
+      // reconnect handler reloads the page and can race the next navigation.
+      await page.goto("about:blank");
       await runtime.restart();
       await page.goto(origin);
       await signInHostedOwner(page, password);
@@ -169,6 +172,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
       await enabled.click();
       await expect(page.getByText("Disabled", { exact: true })).toBeVisible();
       await signOutHostedWorkspace(page);
+      await page.goto("about:blank");
       await runtime.restart();
       expect((await read(third)).status).toBe(404);
       expect(

@@ -155,7 +155,7 @@ to the root host and the shared application profile.
 ### Acceptance details
 
 - Real Rust login, chooser and workspace acceptance verifies viewport bounds, theme and loaded branding; metadata/Search, backup recovery and original-source recovery screens are temporary delivery opt-ins after repeated retained-editor shutdown deadline failures, and the official plugin-install journey is an opt-in while its signed release asset returns 404 in hosted CI, with exact re-enable commands recorded in the hosted UI parity record.
-- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package retains its Design Core 0.12.3 compatibility pins for API, application profile, File Explorer, UI and Workspace so the released Notes cohort resolves one API peer context in the frozen registry lock.
+- The shared session retains Settings, configured plugins, guarded persistence and ordered host teardown, while the root package retains its Design Core 0.12.4 compatibility pins for API, application profile, File Explorer, UI and Workspace so the released Notes cohort resolves one API peer context in the frozen registry lock.
 - Cold registry-consumer startup acceptance seeds 600 dormant plugin assets and bounds native command/database calls before readiness and over 20 seconds with retained browser/network failure diagnostics and loopback-only host networking for local Linux system-socket fixtures, while chooser navigation retains the live session and final leave owns guarded persistence and teardown.
 - Host-owned session handles remain available until asynchronous disposal completes, including Svelte unmount; concurrent browser acceptance awaits guarded departure before destroying each owned App frame.
 
@@ -216,3 +216,17 @@ History 0.2.4 dismisses transient recovery feedback without persistent database
 writes. Source-consumer acceptance and verified npm/archive provenance do not
 qualify the next public Server frontend; actual-image identity and acceptance
 remain post-merge delivery gates.
+
+The [Core dependency/restart receipt](../../records/2026-11-11-core-update-development-restart.md)
+retains SRV-GOV-003 guarded workspace departure and persistent content-access
+assertions across restart. Browser fixtures retire the old document after
+sign-out and before restarting Vite, so its HMR reconnect reload cannot compete
+with the fixture's next cold navigation. Dependency and fixture qualification
+do not transfer prior public-image acceptance to a new package cohort.
+
+The [public-image receipt](../../records/2026-11-11-public-image-acceptance.md)
+qualifies the immutable 7563116 slim frontend and original runtime on remote
+AMD64 with the unchanged startup request budgets, original lifecycle and public
+agent Mods online/offline. Full/slim AMD64/ARM64 publication and exact-main CI
+are verified separately from post-publication ARM64 execution, all-active-plugin,
+provider and Desktop acceptance. Earlier source-only receipts retain their scope.
