@@ -209,3 +209,10 @@ duplicated receipt detail while preserving every requirement id, status,
 evidence link and pending qualification. `pnpm format:check` and native
 `pnpm spec:check` review this unchanged SRV-GOV-001 contract; product acceptance
 remains the separately recorded command-lease evidence.
+
+The [released History intake](../../records/2026-11-11-released-history-startup-intake.md)
+retains SRV-GOV-003 registry dependency ownership and cold startup budgets.
+History 0.2.4 dismisses transient recovery feedback without persistent database
+writes. Source-consumer acceptance and verified npm/archive provenance do not
+qualify the next public Server frontend; actual-image identity and acceptance
+remain post-merge delivery gates.
