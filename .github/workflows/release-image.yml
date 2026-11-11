@@ -79,7 +79,7 @@ jobs:
           done
           for agent in codex cursor claude opencode; do
             version=$(jq -r --arg agent "$agent" '.[$agent].version' docker/mods/agents.json)
-            docker buildx imagetools create --tag "$repository:$agent-$revision" --tag "$repository:$agent-$version-$revision" "$repository:$agent-$revision-amd64" "$repository:$agent-$revision-arm64"
+            docker buildx imagetools create --tag "$repository:$agent-$revision" --tag "$repository:$agent-$version" --tag "$repository:$agent-$version-$revision" "$repository:$agent-$revision-amd64" "$repository:$agent-$revision-arm64"
           done
   image:
     needs: [publish-mod-loader, publish-agent-mods]

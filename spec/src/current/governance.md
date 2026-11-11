@@ -223,3 +223,9 @@ AMD64 with the unchanged startup request budgets, original lifecycle and public
 agent Mods online/offline. Full/slim AMD64/ARM64 publication and exact-main CI
 are verified separately from post-publication ARM64 execution, all-active-plugin,
 provider and Desktop acceptance. Earlier source-only receipts retain their scope.
+
+The [agent version-tag receipt](../../records/2026-11-11-agent-mod-version-tags.md)
+adds a CLI-version alias to the same qualified Mod index without changing
+payloads or image build inputs. README configuration retains explicit root
+initialization, writable Mod application, independent cache and application
+privilege drop. Registry publication remains a post-merge verification gate.
