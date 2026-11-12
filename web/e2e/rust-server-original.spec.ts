@@ -104,22 +104,22 @@ test("retained independent original tabs preserve pins, dirty bytes and metadata
     )
       failures.push(`${response.status()} ${response.url()}`);
   });
-  const open = async () => {
+  const open = async (initial = false) => {
     await page.goto(origin);
-    await expect(
-      page.getByRole("heading", { name: /^(Sign in|Your vaults)$/u }),
-    ).toBeVisible();
-    if (await page.getByLabel("Username").count()) {
+    if (initial) {
       await page.getByLabel("Username").fill("owner");
       await page.getByLabel("Password").fill(password);
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
+      await page
+        .getByRole("button", {
+          name: "Open Rust vault owner · server-hosted",
+          exact: true,
+        })
+        .click();
     }
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
   };
   const history = page.getByRole("region", {
@@ -145,7 +145,7 @@ test("retained independent original tabs preserve pins, dirty bytes and metadata
   };
   try {
     await runtime.start();
-    await open();
+    await open(true);
     await command(page, "Open Repository History");
     await expect(history).toContainText("No repository operations available.");
     await selectSource("Backup", "Original repository");

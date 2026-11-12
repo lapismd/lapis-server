@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { buildTasksArtifact } from "./tasks-installed-plugin";
 import { createHostedTasksFixture, hostedTask } from "./rust-tasks-fixture";
 import { signOutHostedWorkspace } from "./rust-hosted-session";
+import { manageVaults } from "./tasks-editor-controls";
 
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
@@ -435,7 +436,19 @@ test("switching vaults releases the observer without disabling native Tasks", as
         )
       ).status(),
     ).toBe(403);
-    await f.open();
+    // Switch through the guarded host UI: a reload would restore the new vault
+    // and cannot await its pending layout writes during browser teardown.
+    await manageVaults(page);
+    await page
+      .getByRole("button", {
+        name: "Open Rust vault owner · server-hosted",
+        exact: true,
+      })
+      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Open Tasks", exact: true }).click();
     await page.getByRole("button", { name: "Inbox", exact: true }).click();
     await expect(complete(page, "Review the hosted migration")).toBeVisible();
   } finally {

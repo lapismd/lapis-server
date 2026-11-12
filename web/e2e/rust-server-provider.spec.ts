@@ -180,12 +180,9 @@ test("actual provider finishes after retained chat signs out and survives a cold
         r.request().postDataJSON()?.kind === "list",
     );
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await turns;
     await expect(
       activeChat(page).getByText(witness, { exact: true }),

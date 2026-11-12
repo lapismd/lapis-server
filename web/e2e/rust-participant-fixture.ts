@@ -102,13 +102,16 @@ export async function participantBrowser(page: Page) {
       await page.getByLabel("Username").fill("owner");
       await page.getByLabel("Password").fill(password);
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
+      await page
+        .getByRole("button", {
+          name: "Open Rust vault owner · server-hosted",
+          exact: true,
+        })
+        .click();
     }
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     if (initial)
       await page
         .getByRole("button", { name: "Open Chat", exact: true })

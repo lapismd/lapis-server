@@ -119,12 +119,9 @@ test("native chat retains sidebar History and opens the same conversation withou
       )
       .toContain("ai-conversation-history");
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(history).toBeVisible();
     await expect(
       page
@@ -136,12 +133,9 @@ test("native chat retains sidebar History and opens the same conversation withou
     ).toContainText("reply café 📝");
     await service.restart();
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(history).toBeVisible();
     await history
       .getByRole("button", { name: /^A native browser conversation\b/ })

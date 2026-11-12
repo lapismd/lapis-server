@@ -252,3 +252,16 @@ SRV-GOV-003 ownership. Public integrity and exact-source workflow provenance
 are checked before consumer refresh. The narrow cache-discovery regression is
 retained unchanged before and after the dependency update; source/archive,
 registry consumer, hosted CI and public-image qualification remain distinct.
+
+The [native file-events public acceptance](../../records/2026-11-12-native-file-events-public-image-acceptance.md)
+qualifies the exact merged source through main CI, both public image platforms
+and actual AMD64 runtime/browser execution. The original core startup budget
+and default-plus-Tasks idle fixture remain separate; production deployment,
+all-active-plugin and post-publication ARM64 execution are not inferred.
+
+SRV-HST-022 keeps workspace restoration in the Server browser host, with an
+owner-scoped vault ID as optional preference and fresh server admission as
+authority. Qualification covers real reload, readiness, saved layout, explicit
+chooser/logout intent, authentication expiry, storage failure and retired-host
+fencing. Lost-browser editing claims retain their existing explicit recovery;
+source qualification and postmerge public-image acceptance remain separate.

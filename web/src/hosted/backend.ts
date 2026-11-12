@@ -36,7 +36,7 @@ export interface HostedBackend {
   readonly protocolMajor: number;
   readonly capabilities: { manageVaults: boolean; transferVaults: boolean };
   info(): Promise<{ buildId: string; protocolMajor: number }>;
-  current(): Promise<unknown>;
+  current(): Promise<{ username: string }>;
   login(username: string, password: string): Promise<void>;
   logout(): Promise<void>;
   vaults(): Promise<HostedVault[]>;

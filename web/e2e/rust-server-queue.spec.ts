@@ -178,22 +178,16 @@ test("native queue controls preserve cancellation and require explicit cold resu
       chat.getByRole("button", { name: "Stop agent", exact: true }),
     ).toHaveCount(0);
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(queue).toContainText("After explicit cold resume");
     expect((await frames()).filter((f) => f.type === "prompt")).toHaveLength(1);
     await service.restart();
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(queue).toContainText("After explicit cold resume");
     await expect(
       chat.getByRole("button", { name: "Resume queue", exact: true }),

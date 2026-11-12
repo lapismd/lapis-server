@@ -39,15 +39,25 @@
     type NotesWorkspaceSessionHandle,
     type NotesWorkspaceHost,
   } from "@lapis-notes/app-profile/workspace-session";
+  import {
+    createVaultRestoration,
+    type VaultRestoration,
+  } from "./vault-restoration";
 
   type VaultRow = HostedVault;
   type Prepared = HostedResources & {
     profile: ServerVaultProfile;
     session: VaultSession;
     host: NotesWorkspaceHost;
+    token: symbol;
+    ready: boolean;
+    onReady(): void;
   };
 
-  let { backend }: { backend: HostedBackend } = $props();
+  let {
+    backend,
+    restoration = createVaultRestoration(),
+  }: { backend: HostedBackend; restoration?: VaultRestoration } = $props();
   type HostState =
     | "loading"
     | "login"
@@ -57,6 +67,8 @@
     | "protocol";
   let hostState: HostState = $state("loading");
   let username = $state("");
+  let authenticatedUsername: string | null = null;
+  let disposed = false;
   let password = $state("");
   let newVaultName = $state("");
   let errorMessage = $state("");
@@ -121,15 +133,14 @@
     errorMessage = "";
     try {
       const info = await backend.info();
+      if (disposed) return;
       buildId = info.buildId;
       if (info.protocolMajor !== backend.protocolMajor) {
         hostState = "protocol";
         return;
       }
       try {
-        await backend.current();
-        await refreshVaults();
-        hostState = "vaults";
+        await enterAuthenticatedHost();
       } catch {
         hostState = "login";
       }
@@ -145,8 +156,7 @@
     try {
       await backend.login(username, password);
       password = "";
-      await refreshVaults();
-      hostState = "vaults";
+      await enterAuthenticatedHost();
     } catch (error) {
       password = "";
       errorMessage = error instanceof Error ? error.message : String(error);
@@ -155,6 +165,26 @@
 
   async function refreshVaults(): Promise<void> {
     vaults = await backend.vaults();
+  }
+
+  async function enterAuthenticatedHost(): Promise<void> {
+    const identity = await backend.current();
+    if (disposed) return;
+    authenticatedUsername = identity.username;
+    await refreshVaults();
+    if (disposed) return;
+    hostState = "vaults";
+    const vaultId = restoration.take(identity.username);
+    if (!vaultId) return;
+    const vault = vaults.find(
+      (row) => row.id === vaultId && row.archivedAt === undefined,
+    );
+    if (!vault) {
+      errorMessage =
+        "Your previously selected vault is unavailable. Choose a vault.";
+      return;
+    }
+    await openVault(vault);
   }
 
   function activeProfiles() {
@@ -184,9 +214,9 @@
   }
 
   function openVault(row: VaultRow): Promise<void> {
-    const flight = (openingFlight ?? Promise.resolve()).then(() =>
-      openSelectedVault(row),
-    );
+    const flight = (openingFlight ?? Promise.resolve()).then(() => {
+      if (!disposed) return openSelectedVault(row);
+    });
     openingFlight = flight;
     const finish = () => {
       if (openingFlight === flight) openingFlight = undefined;
@@ -213,10 +243,25 @@
         session.nativeEditingIntents = resources.nativeEditingIntents;
         session.backgroundIndexing = resources.backgroundIndexing;
         session.nativeHistoryIndex = resources.nativeHistoryIndex;
+        const token = Symbol("vault workspace");
+        const owner = authenticatedUsername;
         prepared = {
           ...resources,
           profile,
           session,
+          token,
+          ready: false,
+          onReady: () => {
+            if (
+              disposed ||
+              prepared?.token !== token ||
+              hostState !== "opening"
+            )
+              return;
+            prepared.ready = true;
+            if (owner) restoration.remember(owner, profile.id);
+            hostState = "workspace";
+          },
           host: {
             ...resources.workspaceHost,
             dispose: async (app) => {
@@ -258,13 +303,16 @@
 
   async function manageVaults(): Promise<void> {
     await refreshVaults();
+    if (authenticatedUsername) restoration.forget(authenticatedUsername);
     hostState = "vaults";
   }
 
   function returnToWorkspace(): void {
     if (!prepared) return;
     errorMessage = "";
-    hostState = "workspace";
+    if (prepared.ready && authenticatedUsername)
+      restoration.remember(authenticatedUsername, prepared.profile.id);
+    hostState = prepared.ready ? "workspace" : "opening";
   }
 
   function showVaultSearch(): void {
@@ -417,6 +465,8 @@
     try {
       await disposeWorkspace(true);
       await backend.logout();
+      if (authenticatedUsername) restoration.forget(authenticatedUsername);
+      authenticatedUsername = null;
       vaults = [];
       username = "";
       hostState = "login";
@@ -428,6 +478,7 @@
 
   /** Hosts and catalog fixtures await owned teardown before unmounting. */
   export async function dispose(): Promise<void> {
+    disposed = true;
     try {
       await openingFlight;
     } finally {
@@ -464,9 +515,7 @@
         repositoryFactory={prepared.repositoryFactory}
         pluginAssetServer={prepared.pluginAssetServer}
         pluginDistributionOptions={prepared.pluginDistributionOptions}
-        onReady={() => {
-          hostState = "workspace";
-        }}
+        onReady={prepared.onReady}
         onOpenRecent={async (profile) => {
           const row = vaults.find((vault) => vault.id === profile.id);
           if (row) await openVault(row);
