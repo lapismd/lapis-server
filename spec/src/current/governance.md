@@ -266,3 +266,11 @@ authority. Qualification covers real reload, readiness, saved layout, explicit
 chooser/logout intent, authentication expiry, storage failure and retired-host
 fencing. Lost-browser editing claims retain their existing explicit recovery;
 source qualification and postmerge public-image acceptance remain separate.
+
+SRV-HST-023 qualification covers native invalidation, bounded coalescing and
+retirement, authenticated HTTP scope/revocation, and the released API observer's
+existing Problems and leave guards. Browser wiring requires registry intake of
+that optional port, followed by idle/reconnect/cross-client recovery acceptance
+with the original startup budgets. Native source tests alone do not qualify
+the bundled frontend or public image; no polling fallback may conceal a failed
+observation on a host advertising the port.

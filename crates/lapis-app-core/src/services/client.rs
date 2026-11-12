@@ -47,6 +47,10 @@ impl Client {
     pub fn detach(&self) -> Result<()> {
         let mut state = self.vault.state.lock().unwrap_or_else(|e| e.into_inner());
         state.clients.remove(&self.id);
+        let intents_changed = state
+            .editors
+            .values()
+            .any(|editor| editor.client == self.id && editor.intent.is_some() && !editor.detached);
         state.editors.retain(|_, editor| {
             if editor.client != self.id {
                 return true;
@@ -57,6 +61,9 @@ impl Client {
         state
             .retired_editor_intents
             .retain(|_, client| *client != self.id);
+        if intents_changed {
+            state.invalidate_editing_intents();
+        }
         let watcher = if state.clients.is_empty() {
             self.vault
                 .file_changes

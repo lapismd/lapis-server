@@ -1,5 +1,13 @@
 # Native application services
 
+## Editing-intent observation
+
+The user approved SRV-HST-023 and the optional Notes API observation port.
+Replace the hosted recovery controller's one-second List polling with native
+metadata invalidations. Core/HTTP, API source/package qualification, released
+registry intake and actual packaged-browser idle/recovery acceptance remain
+separate gates. No production deployment or user-vault changes are included.
+
 These are retained feature gaps from the shared Rust and hosted-parity plans.
 They are not permission to enable staged services or revive the retired Node
 server/companion architecture. lapis-server owns portable application policy and

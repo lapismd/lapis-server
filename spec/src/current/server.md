@@ -169,3 +169,10 @@ lease, even when the shell remains alive. Byte cursors preserve replay across
 reconnections; the browser yields connection capacity to editor commands.
 
 [SRV-HST-021](hosted.md#srv-hst-021) owns native file-change observation, replacing recursive browser filesystem polling without changing file-byte routes, admission or durable writers.
+
+[SRV-HST-023](hosted.md#srv-hst-023) adds a separate editing-intent invalidation
+stream. Core publishes a coalesced revision from the existing state lock on
+managed claim changes and client retirement. Server frames that revision without
+claim paths or file bytes; registration and reconnect require a current List.
+The Notes API recovery controller retains ownership of Problems actions and
+their captured-state and leave-preflight guards.

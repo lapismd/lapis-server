@@ -36,6 +36,7 @@ pub struct VaultService {
     pub(super) turn_storage: Option<Arc<super::TurnStorage>>,
     pub(super) turns: Mutex<Option<Arc<super::turns::Owner>>>,
 }
+#[derive(Clone, PartialEq, Eq)]
 pub(super) struct Editor {
     pub client: Uuid,
     pub path: String,
@@ -44,6 +45,7 @@ pub(super) struct Editor {
     pub detached: bool,
     pub intent: Option<EditingIntent>,
 }
+#[derive(Clone, PartialEq, Eq)]
 pub(super) struct EditingIntent {
     pub generation: u32,
     pub active: bool,
@@ -60,6 +62,7 @@ pub(super) struct State {
     pub work: usize,
     pub editors: HashMap<Uuid, Editor>,
     pub retired_editor_intents: HashMap<Uuid, Uuid>,
+    pub editing_intent_changes: tokio::sync::watch::Sender<u64>,
     pub database: Option<Database>,
     pub database_starting: bool,
     pub database_error: Option<lapis_app_protocol::ServiceError>,
@@ -117,6 +120,7 @@ impl VaultService {
                 work: 0,
                 editors: HashMap::new(),
                 retired_editor_intents: HashMap::new(),
+                editing_intent_changes: tokio::sync::watch::channel(0).0,
                 database: None,
                 database_starting: false,
                 database_error: None,

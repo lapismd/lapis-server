@@ -12,6 +12,7 @@ mod history_reader;
 mod identity;
 mod indexing;
 pub use identity::Authentication;
+mod editing_intent_events;
 mod errors;
 mod file_events;
 mod files;
@@ -128,6 +129,10 @@ fn configured_router(
         .route(
             "/api/v3/clients/{client}/file-events",
             get(file_events::observe),
+        )
+        .route(
+            "/api/v3/clients/{client}/editing-intent-events",
+            get(editing_intent_events::observe),
         )
         .route(
             "/api/v3/clients/{client}/database/events",

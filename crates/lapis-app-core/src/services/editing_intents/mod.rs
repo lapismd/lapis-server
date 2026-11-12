@@ -10,6 +10,7 @@ use lapis_app_protocol::{
 };
 use uuid::Uuid;
 
+mod observation;
 mod recovery;
 
 const MAX_CLIENT_IDENTITIES: usize = 16_384;
@@ -79,148 +80,166 @@ impl Client {
         let mut state = self.vault.lock()?;
         state.require_client(self.id)?;
         state.root.verify_physical_root()?;
-        match command {
-            EditingIntentCommand::Acquire { editor_id, path } => {
-                if editor_id.is_nil() {
-                    return Err(Error::new(
-                        ErrorCode::InvalidRequest,
-                        "Editor identity is required",
-                    ));
-                }
-                state.root.validate_path(&path, false)?;
-                if state.retired_editor_intents.contains_key(&editor_id) {
-                    return Err(Error::closed());
-                }
-                if state.editors.contains_key(&editor_id) {
-                    let editor = owned(&mut state, self.id, editor_id)?;
-                    if editor.path != path {
-                        return Err(Error::denied());
+        let id = match &command {
+            EditingIntentCommand::Acquire { editor_id, .. }
+            | EditingIntentCommand::Changed { editor_id, .. }
+            | EditingIntentCommand::Yield { editor_id, .. }
+            | EditingIntentCommand::Resume { editor_id, .. }
+            | EditingIntentCommand::Retire { editor_id, .. }
+            | EditingIntentCommand::Recover { editor_id, .. }
+            | EditingIntentCommand::Discard { editor_id, .. } => Some(*editor_id),
+            _ => None,
+        };
+        let before = id.and_then(|id| state.editors.get(&id).cloned());
+        let result = (|| {
+            match command {
+                EditingIntentCommand::Acquire { editor_id, path } => {
+                    if editor_id.is_nil() {
+                        return Err(Error::new(
+                            ErrorCode::InvalidRequest,
+                            "Editor identity is required",
+                        ));
                     }
-                    return state_value(editor_id, editor);
+                    state.root.validate_path(&path, false)?;
+                    if state.retired_editor_intents.contains_key(&editor_id) {
+                        return Err(Error::closed());
+                    }
+                    if state.editors.contains_key(&editor_id) {
+                        let editor = owned(&mut state, self.id, editor_id)?;
+                        if editor.path != path {
+                            return Err(Error::denied());
+                        }
+                        return state_value(editor_id, editor);
+                    }
+                    if state.editors.len() >= 4096 || !can_admit(&state, self.id) {
+                        return Err(Error::busy());
+                    }
+                    state.editors.insert(
+                        editor_id,
+                        Editor {
+                            client: self.id,
+                            path,
+                            dirty: false,
+                            revision: 0,
+                            detached: false,
+                            intent: Some(EditingIntent {
+                                generation: 1,
+                                active: true,
+                            }),
+                        },
+                    );
+                    state_value(editor_id, &state.editors[&editor_id])
                 }
-                if state.editors.len() >= 4096 || !can_admit(&state, self.id) {
-                    return Err(Error::busy());
-                }
-                state.editors.insert(
+                EditingIntentCommand::Changed {
                     editor_id,
-                    Editor {
-                        client: self.id,
-                        path,
-                        dirty: false,
-                        revision: 0,
-                        detached: false,
-                        intent: Some(EditingIntent {
-                            generation: 1,
-                            active: true,
-                        }),
-                    },
-                );
-                state_value(editor_id, &state.editors[&editor_id])
-            }
-            EditingIntentCommand::Changed {
-                editor_id,
-                generation: requested,
-                revision,
-            } => {
-                let editor = owned(&mut state, self.id, editor_id)?;
-                generation(editor, requested)?;
-                if !editor.intent.as_ref().ok_or_else(Error::denied)?.active
-                    || revision == 0
-                    || revision < editor.revision
-                    || (revision == editor.revision && !editor.dirty)
-                {
-                    return Err(conflict());
+                    generation: requested,
+                    revision,
+                } => {
+                    let editor = owned(&mut state, self.id, editor_id)?;
+                    generation(editor, requested)?;
+                    if !editor.intent.as_ref().ok_or_else(Error::denied)?.active
+                        || revision == 0
+                        || revision < editor.revision
+                        || (revision == editor.revision && !editor.dirty)
+                    {
+                        return Err(conflict());
+                    }
+                    editor.revision = revision;
+                    editor.dirty = true;
+                    state_value(editor_id, editor)
                 }
-                editor.revision = revision;
-                editor.dirty = true;
-                state_value(editor_id, editor)
-            }
-            EditingIntentCommand::Yield {
-                editor_id,
-                generation: requested,
-                revision,
-                expected,
-            } => {
-                let editor = owned(&mut state, self.id, editor_id)?;
-                generation(editor, requested)?;
-                if revision != editor.revision {
-                    return Err(conflict());
+                EditingIntentCommand::Yield {
+                    editor_id,
+                    generation: requested,
+                    revision,
+                    expected,
+                } => {
+                    let editor = owned(&mut state, self.id, editor_id)?;
+                    generation(editor, requested)?;
+                    if revision != editor.revision {
+                        return Err(conflict());
+                    }
+                    // A repeat observes the prior handoff without revalidating bytes
+                    // that another admitted writer may already have replaced.
+                    if !editor.intent.as_ref().ok_or_else(Error::denied)?.active && !editor.dirty {
+                        return state_value(editor_id, editor);
+                    }
+                    let path = editor.path.clone();
+                    verify_saved(&state, &path, &expected)?;
+                    let editor = owned(&mut state, self.id, editor_id)?;
+                    editor.intent.as_mut().ok_or_else(Error::denied)?.active = false;
+                    editor.dirty = false;
+                    state_value(editor_id, editor)
                 }
-                // A repeat observes the prior handoff without revalidating bytes
-                // that another admitted writer may already have replaced.
-                if !editor.intent.as_ref().ok_or_else(Error::denied)?.active && !editor.dirty {
-                    return state_value(editor_id, editor);
+                EditingIntentCommand::Resume {
+                    editor_id,
+                    generation: requested,
+                } => {
+                    let editor = owned(&mut state, self.id, editor_id)?;
+                    let dirty = editor.dirty;
+                    let intent = editor.intent.as_mut().ok_or_else(Error::denied)?;
+                    if requested == intent.generation && intent.active {
+                        return state_value(editor_id, editor);
+                    }
+                    if intent.active || dirty || intent.generation.checked_add(1) != Some(requested)
+                    {
+                        return Err(conflict());
+                    }
+                    intent.generation = requested;
+                    intent.active = true;
+                    state_value(editor_id, editor)
                 }
-                let path = editor.path.clone();
-                verify_saved(&state, &path, &expected)?;
-                let editor = owned(&mut state, self.id, editor_id)?;
-                editor.intent.as_mut().ok_or_else(Error::denied)?.active = false;
-                editor.dirty = false;
-                state_value(editor_id, editor)
-            }
-            EditingIntentCommand::Resume {
-                editor_id,
-                generation: requested,
-            } => {
-                let editor = owned(&mut state, self.id, editor_id)?;
-                let dirty = editor.dirty;
-                let intent = editor.intent.as_mut().ok_or_else(Error::denied)?;
-                if requested == intent.generation && intent.active {
-                    return state_value(editor_id, editor);
+                EditingIntentCommand::Retire {
+                    editor_id,
+                    generation: requested,
+                } => {
+                    if state.retired_editor_intents.get(&editor_id) == Some(&self.id) {
+                        return Ok(EditingIntentValue::Retired {});
+                    }
+                    let editor = owned(&mut state, self.id, editor_id)?;
+                    generation(editor, requested)?;
+                    if editor.blocked() {
+                        return Err(Error::busy());
+                    }
+                    state.editors.remove(&editor_id);
+                    state.retired_editor_intents.insert(editor_id, self.id);
+                    Ok(EditingIntentValue::Retired {})
                 }
-                if intent.active || dirty || intent.generation.checked_add(1) != Some(requested) {
-                    return Err(conflict());
+                EditingIntentCommand::Recover {
+                    editor_id,
+                    generation,
+                    revision,
+                } => recovery::recover(&mut state, self.id, editor_id, generation, revision),
+                EditingIntentCommand::Discard {
+                    editor_id,
+                    generation,
+                    revision,
+                } => recovery::discard(&mut state, self.id, editor_id, generation, revision),
+                EditingIntentCommand::Inspect { editor_id } => {
+                    if state.editors.contains_key(&editor_id) {
+                        return state_value(editor_id, owned(&mut state, self.id, editor_id)?);
+                    }
+                    match state.retired_editor_intents.get(&editor_id) {
+                        Some(client) if *client == self.id => Ok(EditingIntentValue::Retired {}),
+                        Some(_) => Err(Error::denied()),
+                        None => Ok(EditingIntentValue::Missing {}),
+                    }
                 }
-                intent.generation = requested;
-                intent.active = true;
-                state_value(editor_id, editor)
-            }
-            EditingIntentCommand::Retire {
-                editor_id,
-                generation: requested,
-            } => {
-                if state.retired_editor_intents.get(&editor_id) == Some(&self.id) {
-                    return Ok(EditingIntentValue::Retired {});
-                }
-                let editor = owned(&mut state, self.id, editor_id)?;
-                generation(editor, requested)?;
-                if editor.blocked() {
-                    return Err(Error::busy());
-                }
-                state.editors.remove(&editor_id);
-                state.retired_editor_intents.insert(editor_id, self.id);
-                Ok(EditingIntentValue::Retired {})
-            }
-            EditingIntentCommand::Recover {
-                editor_id,
-                generation,
-                revision,
-            } => recovery::recover(&mut state, self.id, editor_id, generation, revision),
-            EditingIntentCommand::Discard {
-                editor_id,
-                generation,
-                revision,
-            } => recovery::discard(&mut state, self.id, editor_id, generation, revision),
-            EditingIntentCommand::Inspect { editor_id } => {
-                if state.editors.contains_key(&editor_id) {
-                    return state_value(editor_id, owned(&mut state, self.id, editor_id)?);
-                }
-                match state.retired_editor_intents.get(&editor_id) {
-                    Some(client) if *client == self.id => Ok(EditingIntentValue::Retired {}),
-                    Some(_) => Err(Error::denied()),
-                    None => Ok(EditingIntentValue::Missing {}),
+                EditingIntentCommand::List {} => {
+                    let mut states = state
+                        .editors
+                        .iter()
+                        .filter(|(_, editor)| editor.intent.is_some() && editor.blocked())
+                        .map(|(id, editor)| snapshot(*id, editor))
+                        .collect::<Result<Vec<_>>>()?;
+                    states.sort_by(|a, b| (&a.path, a.editor_id).cmp(&(&b.path, b.editor_id)));
+                    Ok(EditingIntentValue::States { states })
                 }
             }
-            EditingIntentCommand::List {} => {
-                let mut states = state
-                    .editors
-                    .iter()
-                    .filter(|(_, editor)| editor.intent.is_some() && editor.blocked())
-                    .map(|(id, editor)| snapshot(*id, editor))
-                    .collect::<Result<Vec<_>>>()?;
-                states.sort_by(|a, b| (&a.path, a.editor_id).cmp(&(&b.path, b.editor_id)));
-                Ok(EditingIntentValue::States { states })
-            }
+        })();
+        if result.is_ok() && id.is_some_and(|id| state.editors.get(&id) != before.as_ref()) {
+            state.invalidate_editing_intents();
         }
+        result
     }
 }

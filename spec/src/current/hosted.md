@@ -259,3 +259,22 @@ reload without mirroring external observations back into compatibility files.
 - Missing, archived, malformed or unavailable choices recover through the chooser.
 - Blocked browser storage does not prevent ordinary login and selection.
 - Consume the remembered attempt before opening and rearm it only on readiness.
+
+## SRV-HST-023 — Editing-intent invalidation stream
+
+<a id="srv-hst-023"></a>
+
+**Requirement.** Authenticated clients MAY observe editing-intent invalidations
+through GET `/api/v3/clients/{client}/editing-intent-events`. Observation MUST
+use the admitted owner, vault, generation and physical root, with bounded reader
+and response lifetimes. Core MUST emit invalidations for relevant intent changes
+and retirement without content bytes. The browser MUST refresh the existing API
+recovery controller through its optional observation port instead of idle List
+polling.
+
+### Acceptance details
+
+- Registration and coalesced notifications reconcile current metadata after reconnect without claim history or content replay.
+- Authentication, revocation, foreign scope, replaced root and client retirement remain fenced throughout observation.
+- Captured recovery/discard, Problems visibility, uncertainty and destructive leave preflight retain their existing owners and byte-preservation behavior.
+- Browser acceptance covers idle keep-alives without claim refresh, cross-client detach and recovery, reconnect and disposal without weakening original startup budgets.

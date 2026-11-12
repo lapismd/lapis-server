@@ -64,6 +64,9 @@ impl Client {
         }
         editor.revision = revision;
         editor.dirty = true;
+        if editor.intent.is_some() {
+            state.invalidate_editing_intents();
+        }
         Ok(())
     }
     pub fn mark_saved(&self, id: Uuid, revision: u32, version: &str) -> Result<bool> {
@@ -76,7 +79,12 @@ impl Client {
         if operations::read(&state, &path)?.version != version {
             return Err(Error::new(ErrorCode::Conflict, "Saved file changed"));
         }
-        owned(&mut state, self.id, id)?.dirty = false;
+        let editor = owned(&mut state, self.id, id)?;
+        let changed = editor.dirty && editor.intent.is_some();
+        editor.dirty = false;
+        if changed {
+            state.invalidate_editing_intents();
+        }
         Ok(true)
     }
     pub fn close_editor(&self, id: Uuid) -> Result<()> {
@@ -90,6 +98,7 @@ impl Client {
             .is_some_and(|editor| editor.intent.is_some())
         {
             state.retired_editor_intents.insert(id, self.id);
+            state.invalidate_editing_intents();
         }
         Ok(())
     }
