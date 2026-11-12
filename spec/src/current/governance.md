@@ -252,3 +252,9 @@ SRV-GOV-003 ownership. Public integrity and exact-source workflow provenance
 are checked before consumer refresh. The narrow cache-discovery regression is
 retained unchanged before and after the dependency update; source/archive,
 registry consumer, hosted CI and public-image qualification remain distinct.
+
+The [native file-events public acceptance](../../records/2026-11-12-native-file-events-public-image-acceptance.md)
+qualifies the exact merged source through main CI, both public image platforms
+and actual AMD64 runtime/browser execution. The original core startup budget
+and default-plus-Tasks idle fixture remain separate; production deployment,
+all-active-plugin and post-publication ARM64 execution are not inferred.

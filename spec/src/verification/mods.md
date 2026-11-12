@@ -1,10 +1,13 @@
 # OCI Mods verification
 
-The [Homebrew-free public image receipt](../../records/2026-11-12-minimal-public-image-acceptance.md)
-qualifies the published `e69c10d` Server with all four public digest-pinned
-agent Mods online and in a recreated offline-cache container on AMD64.
+The [native file-events public receipt](../../records/2026-11-12-native-file-events-public-image-acceptance.md)
+qualifies the published `ad7cdd1` Server with all four public digest-pinned agent
+Mods online and in a fresh offline-cache container on AMD64, including their
+CLI-version aliases, original application identity and graceful shutdown.
 Native AMD64/ARM64 CI and anonymous public multiarchitecture identity pass;
-post-publication ARM64 execution remains unclaimed.
+post-publication ARM64 execution remains unclaimed. The earlier
+[Homebrew-free receipt](../../records/2026-11-12-minimal-public-image-acceptance.md)
+retains its independently qualified `e69c10d` cohort.
 
 | ID          | Status      | Evidence                                                                                                                                                                                                                                                                                                                                                                      |
 | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
