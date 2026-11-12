@@ -1,5 +1,20 @@
 # @lapismd/lapis-server
 
+## 2.0.0
+
+### Major Changes
+
+- [#45](https://github.com/lapismd/lapis-server/pull/45) [`089e4c8`](https://github.com/lapismd/lapis-server/commit/089e4c887f723812ed074309e79d4ad3625ea8bf) Thanks [@stevejuma](https://github.com/stevejuma)! - Make the default Docker image Homebrew-free and include checksum-verified JJ 0.45.1. Install agent CLIs through OCI Mods. Normal and -slim tags now share the minimal image; remove legacy Homebrew package environment settings when upgrading. Existing data and old Homebrew volumes are preserved.
+
+### Minor Changes
+
+- [#47](https://github.com/lapismd/lapis-server/pull/47) [`3aae069`](https://github.com/lapismd/lapis-server/commit/3aae0697efeacae8adb3a446bfa3986d469157a2) Thanks [@stevejuma](https://github.com/stevejuma)! - Observe hosted vault file changes through an authenticated native event stream with bounded replay and recovery, replacing recursive browser filesystem polling while preserving user-file updates and application-owned configuration handling.
+
+### Patch Changes
+
+- [#48](https://github.com/lapismd/lapis-server/pull/48) [`542133f`](https://github.com/lapismd/lapis-server/commit/542133ffa4adb9c1f65a0c26330393c4e0cd70c3) Thanks [@stevejuma](https://github.com/stevejuma)! - Restore the last successfully opened vault after an authenticated browser reload,
+  with fresh admission, owner-scoped browser preferences and safe chooser recovery.
+
 ## 1.1.0
 
 ### Minor Changes
