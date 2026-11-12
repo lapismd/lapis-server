@@ -174,12 +174,12 @@ behavior and observation streams stay in the Notes specification.
 
 <a id="srv-hst-016"></a>
 
-**Requirement.** Server builds, tests, executable output, and production containers MUST run without Deno. Runtime containers MUST use a non-root user, read-only application files, explicit writable storage for profile data and Homebrew state, and mounted bootstrap secrets.
+**Requirement.** Server builds, tests, executable output, and production containers MUST run without Deno. Runtime containers MUST use a non-root user, read-only application files, explicit writable storage for profile data and optional Mod cache, and mounted bootstrap secrets.
 
 ### Acceptance details
 
 - The runtime image does not include Deno.
-- The container runs as a non-root user with read-only application files and separate writable `/data` and Homebrew volumes.
+- The container runs as a non-root user with read-only application files and writable `/data` and an optional independent Mod cache.
 
 ## SRV-HST-017 — Direct native services
 

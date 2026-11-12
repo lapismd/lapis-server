@@ -132,35 +132,16 @@ jobs:
             type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
             type=raw,value=${{ steps.short.outputs.tag }},enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and publish the slim server image
+      - name: Build and publish the Homebrew-free server image
         uses: docker/build-push-action@v7
         with:
           context: .
           file: crates/lapis-server/Dockerfile
-          target: runtime-slim
-          build-args: MOD_LOADER_IMAGE=${{ needs.publish-mod-loader.outputs.image }}
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.slim-meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Prime the ARM64 Homebrew tooling layer
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: crates/lapis-server/Dockerfile
-          platforms: linux/arm64
-          target: tooling
-          outputs: type=cacheonly
-
-      - name: Build and publish the server image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: crates/lapis-server/Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
           target: runtime
           build-args: MOD_LOADER_IMAGE=${{ needs.publish-mod-loader.outputs.image }}
-          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ${{ steps.slim-meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

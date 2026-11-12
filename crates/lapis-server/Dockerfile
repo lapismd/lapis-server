@@ -55,54 +55,30 @@ ENV NODE_OPTIONS=--max-old-space-size=8192 GOMAXPROCS=2 UV_THREADPOOL_SIZE=2
 RUN --mount=type=cache,id=lapis-server-rust-pnpm-${TARGETARCH},target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
 RUN pnpm exec vite build --config web/vite.config.ts
 
-FROM ubuntu:24.04 AS homebrew-builder
-RUN apt-get update && apt-get install -y --no-install-recommends bash build-essential ca-certificates curl file git procps unzip xz-utils \
-    && rm -rf /var/lib/apt/lists/* \
-    && groupadd --gid 1993 lapis \
-    && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/bash lapis \
-    && mkdir -p /data /home/linuxbrew/.linuxbrew \
-    && chown -R lapis:lapis /data /home/linuxbrew
-ENV HOME=/data
-USER lapis
-RUN NONINTERACTIVE=1 CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-ENV PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
-    HOMEBREW_CACHE=/home/linuxbrew/.linuxbrew/var/cache/Homebrew \
-    HOMEBREW_DOWNLOAD_CONCURRENCY=1 \
-    HOMEBREW_LOGS=/home/linuxbrew/.linuxbrew/var/log/Homebrew \
-    HOMEBREW_NO_SANDBOX=1 \
-    HOMEBREW_TEMP=/home/linuxbrew/.linuxbrew/var/tmp
-RUN mkdir -p "$HOMEBREW_CACHE" "$HOMEBREW_LOGS" "$HOMEBREW_TEMP" \
-    && brew install --cask codex \
-    && brew install --cask cursor-cli \
-    && brew install --cask claude-code \
-    && brew install --force-bottle opencode \
-    && brew cleanup --prune=all \
-    && rm -rf "$HOMEBREW_CACHE"/* "$HOMEBREW_LOGS"/* "$HOMEBREW_TEMP"/*
+# Download target-platform JJ using the same checked upstream pins as CI.
+FROM --platform=$BUILDPLATFORM node:24.15.0-bookworm-slim AS jj-tool
+ARG TARGETARCH
+COPY scripts/ci-setup-jj.mjs /tmp/ci-setup-jj.mjs
+RUN TARGETARCH=$TARGETARCH node --input-type=module <<'JS'
+import { jjArtifact, verifyJj, jjArchiveMember } from "/tmp/ci-setup-jj.mjs";
+import { mkdirSync, writeFileSync, chmodSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+const arch = { amd64: "x64", arm64: "arm64" }[process.env.TARGETARCH];
+const { name, digest } = jjArtifact("linux", arch);
+const response = await fetch(`https://github.com/jj-vcs/jj/releases/download/v0.45.1/${name}`);
+if (!response.ok) throw Error(`JJ download failed: HTTP ${response.status}`);
+const bytes = Buffer.from(await response.arrayBuffer());
+verifyJj(bytes, digest);
+mkdirSync("/out");
+writeFileSync("/tmp/jj.tar.gz", bytes);
+const member = jjArchiveMember(execFileSync("tar", ["-tzf", "/tmp/jj.tar.gz"], { encoding: "utf8" }));
+execFileSync("tar", ["-xzf", "/tmp/jj.tar.gz", "-C", "/out", member]);
+chmodSync("/out/jj", 0o555);
+JS
 
-FROM ubuntu:24.04 AS tooling
-RUN apt-get update && apt-get install -y --no-install-recommends bash ca-certificates curl file git libstdc++6 libssl3 procps unzip xz-utils \
-    && rm -rf /var/lib/apt/lists/* \
-    && groupadd --gid 1993 lapis \
-    && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/bash lapis \
-    && mkdir -p /app /data /home/linuxbrew \
-    && chown -R lapis:lapis /data /home/linuxbrew
-COPY --from=homebrew-builder --chown=1993:1993 /home/linuxbrew/.linuxbrew /home/linuxbrew/.linuxbrew
-COPY --chmod=0555 crates/lapis-server/install-homebrew-packages.sh /app/install-homebrew-packages
-ENV HOME=/data \
-    PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH \
-    HOMEBREW_CACHE=/home/linuxbrew/.linuxbrew/var/cache/Homebrew \
-    HOMEBREW_LOGS=/home/linuxbrew/.linuxbrew/var/log/Homebrew \
-    HOMEBREW_NO_AUTO_UPDATE=1 \
-    HOMEBREW_NO_SANDBOX=1 \
-    HOMEBREW_TEMP=/home/linuxbrew/.linuxbrew/var/tmp
-USER lapis
-WORKDIR /app
-VOLUME ["/home/linuxbrew/.linuxbrew"]
-
-# Server-only variant: Ubuntu keeps the glibc ABI of the native executable.
-# Homebrew and agent distributions remain available in the default runtime.
+# The default and compatibility -slim tags share one Homebrew-free runtime.
 FROM ubuntu:24.04 AS runtime-slim
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl libgcc-s1 \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git libgcc-s1 \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --gid 1993 lapis \
     && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/sh lapis \
@@ -110,7 +86,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
 COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
 COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
-COPY --chmod=0555 crates/lapis-server/container-entrypoint-slim.sh /app/container-entrypoint
+COPY --from=jj-tool --chmod=0555 /out/jj /usr/local/bin/jj
+COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
 ENV HOME=/data LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
 USER lapis
 WORKDIR /app
@@ -120,17 +97,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["cur
 ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
 CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
 
-FROM tooling AS runtime
-USER root
-COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
-COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
-COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
-COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
-ENV LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
-USER lapis
-WORKDIR /app
-EXPOSE 8787
-VOLUME ["/data", "/home/linuxbrew/.linuxbrew"]
-HEALTHCHECK --interval=30s --timeout=3s --start-period=15s --retries=3 CMD ["curl", "--fail", "--silent", "http://127.0.0.1:8787/readyz"]
-ENTRYPOINT ["/usr/local/bin/mod-loader", "--uid", "1993", "--gid", "1993", "--", "/app/container-entrypoint"]
-CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
+FROM runtime-slim AS runtime

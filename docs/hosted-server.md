@@ -18,11 +18,10 @@ export LAPIS_SERVER_PASSWORD_FILE="$PWD/password.txt"
 docker compose up -d
 ```
 
-`docker-compose.yml` pulls `ghcr.io/lapismd/lapis-server`. It publishes port
+Use `./scripts/demo.sh image ghcr.io/lapismd/lapis-server:<tag>` to pull a published image without building. The root Compose file also supports checkout builds. It publishes port
 `8787`, keeps application files read-only, and stores the profile in the
-`lapis_data` volume mounted at `/data`. Homebrew and its installed packages use
-the independent `lapis_homebrew` volume mounted at
-`/home/linuxbrew/.linuxbrew`.
+`lapis_data` volume mounted at `/data`. The default image includes `jj` 0.45.1
+and does not include Homebrew or agent runtimes.
 
 Set `LAPIS_SERVER_ORIGIN` to the exact browser origin. Leave
 `LAPIS_SERVER_INSECURE_COOKIE=1` only for local HTTP. Behind HTTPS, set the
@@ -48,34 +47,16 @@ owner password only when the profile has no owner yet. An existing profile
 keeps the password from its first start. The bootstrap username is
 `LAPIS_SERVER_BOOTSTRAP_USERNAME`.
 
-## Homebrew and agent CLIs
+## JJ and agent Mods
 
-The image includes `brew`, `codex`, `cursor-agent`, `claude`, and `opencode` on
-both published architectures. Run Cursor as an ACP server with
-`cursor-agent acp`. Provider authentication and
-`LAPIS_SERVER_AGENTS_CONFIG` remain operator inputs; the image does not create
-agent targets or embed credentials.
+The default image supplies checksum-verified upstream `jj` on both published
+architectures. Normal and `-slim` tags refer to the same minimal image.
+Use the [Mod configuration guide](../README.md#configure-agent-mods) to select
+Codex, Cursor, Claude Code or OpenCode. Provider authentication and
+`LAPIS_SERVER_AGENTS_CONFIG` remain operator inputs.
 
-The named Homebrew volume is seeded from a new image and subsequently keeps
-its own installed versions. Do not replace it with an empty bind mount. Set
-`LAPIS_SERVER_HOMEBREW_PACKAGES` to a whitespace- or newline-separated list of
-additional formulae and `LAPIS_SERVER_HOMEBREW_CASKS` to the equivalent cask
-list. Startup validates every name and fails on installation errors. Formulae
-must have compatible bottles because the runtime intentionally omits build
-tools.
-
-Homebrew's implicit updates are disabled. Operators can update the retained
-state explicitly:
-
-```sh
-docker compose exec lapis-server brew update
-docker compose exec lapis-server brew upgrade
-```
-
-## Build context
-
-`crates/lapis-server/Dockerfile` builds from this `lapismd/lapis-server`
-checkout. The repository root is the Docker context. jj-store crates come from
-git revision `076e418cecbe204925aea874bef8aa8a680269a9`. `lapis-ai-service` is
-fetched from lapis-ai tag `v0.2.0`. Publishing the image is a separate
-authorization and is not part of this pull request.
+Mods require root initialization (`user: "0:0"`), a writable container layer
+and a separate cache volume. The loader starts the original application as
+UID/GID 1993. Keep the existing profile volume and Compose project identity
+when upgrading. Old Homebrew volumes are preserved but no longer mounted;
+remove obsolete `LAPIS_SERVER_HOMEBREW_*` package settings.

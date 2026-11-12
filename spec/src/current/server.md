@@ -23,19 +23,17 @@ lockfile and build the Vite application in `web/`.
 The Rust and Web build stages MUST execute on the native build platform; the
 Rust stage MUST cross-compile the requested target architecture rather than
 compile the ARM64 dependency graph through QEMU.
-The default runtime image MUST provide Homebrew at `/home/linuxbrew/.linuxbrew` on a
-separate persistent volume and MUST include native Codex, Cursor CLI, Claude
-Code, and OpenCode executables on both published architectures. Operators MAY
-request additional Homebrew formulae through
-`LAPIS_SERVER_HOMEBREW_PACKAGES` and casks through
-`LAPIS_SERVER_HOMEBREW_CASKS`; formula installation MUST use a published
-bottle and startup MUST fail rather than build from source or ignore an
-installation error.
-A companion `-slim` image MUST retain the same server, static UI, unprivileged
-application, readiness and `/data` contract on both architectures, omit Homebrew,
-and load optional agent runtimes through OCI Mods. The base runtime MUST stay
-below 500 MiB unpacked. Both variants MUST copy application files read-only
-without duplicating their contents in a later permissions layer.
+The default runtime image MUST omit Homebrew and bundled agent distributions,
+retain checksum-verified upstream jj 0.45.1 on both architectures, and load
+optional agent runtimes through OCI Mods. jj artifact pins MUST reuse the CI
+installer's source of truth. Normal tags and compatibility `-slim` tags MUST
+reference the same image index, retain the same server, static UI, unprivileged
+application, readiness and `/data` contract, and stay below 500 MiB unpacked.
+Both Docker build targets MUST copy application files read-only without
+later permission layers duplicating their contents. Nonempty legacy Homebrew
+package requests MUST fail with a migration diagnostic rather than be ignored.
+No image build or startup path may install Homebrew. Compose MUST stop mounting
+Homebrew storage without deleting existing volumes or modifying profile data.
 Mods follow the [reusable container extension contract](./mods.md).
 `lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
@@ -55,9 +53,9 @@ without requiring source-build memory.
 ### Acceptance details
 
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL, while Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
-- Main primes the ARM64 Homebrew tooling layer with serialized bottle downloads before publishing the 7-character commit hash and both architecture manifests, and a v\* tag publishes that version tag with both manifests.
+- Main publishes the 7-character commit and compatibility -slim tags from one multiarchitecture image index; v\* tags publish both aliases.
 - The image cross-compiles each target Rust executable and builds `web/` with Vite on the native build platform after a frozen lockfile install.
-- The runtime exposes `brew`, `codex`, `cursor-agent`, `claude`, and `opencode` as the non-root user, persists the Homebrew prefix independently from `/data`, and accepts bounded startup package names while requiring bottles for formulae and rejecting invalid or failed requests before starting the server.
+- Both architectures run jj version, repository initialization and status as UID 1993; OCI executable/hooks, read-only no-Mod boot, graceful shutdown, unsupported Homebrew request rejection and the 500 MiB limit remain required.
 
 ## SRV-SRV-002 — jj-store git revision
 

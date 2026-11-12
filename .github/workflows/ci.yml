@@ -140,25 +140,11 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/${{ matrix.architecture }} \
-            --target runtime-slim \
+            --target runtime \
             --build-context mod-loader=oci-layout://${{ github.workspace }}/.local/mod-loader-layout \
             --file crates/lapis-server/Dockerfile \
             --load --tag lapis-server-slim:${{ matrix.architecture }} .
           sh scripts/test-image-slim.sh lapis-server-slim:${{ matrix.architecture }}
-      - name: Build the persistent Homebrew tooling layer
-        run: >-
-          docker buildx build
-          --platform linux/${{ matrix.architecture }}
-          --target tooling
-          --file crates/lapis-server/Dockerfile
-          --load
-          --tag lapis-server-tooling:${{ matrix.architecture }}
-          .
-      - name: Verify bundled tools and startup input validation
-        run: sh scripts/test-image-tooling.sh lapis-server-tooling:${{ matrix.architecture }}
-      - name: Verify named-volume package persistence
-        if: matrix.architecture == 'amd64'
-        run: sh scripts/test-image-tooling.sh lapis-server-tooling:amd64 --persistence
       - name: Cancel this run after a required failure
         if: "${{ failure() && !cancelled() }}"
         env:
