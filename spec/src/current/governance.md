@@ -20,13 +20,14 @@ Current contracts and verification own behavior/status; the canonical backlog
 owns remaining work and acceptance. Supporting historical receipts retain their
 original scope and cannot replace current candidate qualification.
 
-The README image examples select the publicly qualified `e69c10d` release.
-SRV-SRV-001 and SRV-GOV-001 contracts remain unchanged; the
-[public acceptance record](../../records/2026-11-12-minimal-public-image-acceptance.md)
-retains exact-main CI, multiarchitecture identity, actual runtime/agent checks
-and the original packaged-frontend request budget. Documentation validation
-includes formatting, Compose interpolation and the canonical specification gate.
-The native file-event consumer and npm publication remain separately gated.
+The README image examples select publicly qualified `f16da57`.
+SRV-SRV-001, SRV-HST-022 and SRV-GOV-001 retain their existing contracts.
+The [public restoration acceptance](../../records/2026-11-12-vault-restoration-public-image-acceptance.md)
+verifies exact-main CI, anonymous multiarchitecture source identity, actual AMD64
+runtime, original startup limits and saved-note reload with fresh admission.
+Documentation validation includes formatting, Compose interpolation and the
+canonical specification gate. Earlier native-file-event and agent runtime
+receipts retain their separate scope.
 
 The [content API, MCP and CLI work](../backlog/content-automation.md) adds
 portable contracts and a generated-protocol gate to Configure CI. SRV-GOV-001/002

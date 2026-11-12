@@ -58,13 +58,16 @@ The same local configuration and volumes can run a published image without
 compiling the checkout:
 
 ```sh
-LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:e69c10d-slim
+LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:f16da57-slim
 ```
 
 Omit the context override when the local `default` context is available.
 Image mode pulls the requested tag, skips the build-memory preflight, and
 starts Compose with `--no-build`. For direct Compose use, set
 `LAPIS_SERVER_IMAGE` to the desired published tag and pass `--no-build`.
+
+The browser restores the last ready vault when you reload. Use **Manage Vaults**
+to return to the chooser; signing out clears that choice.
 
 Every push to `main` publishes `ghcr.io/lapismd/lapis-server` tagged with the
 7-character commit hash from `git rev-parse --short`. A `v*` git tag publishes
