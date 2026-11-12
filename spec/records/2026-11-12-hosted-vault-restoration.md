@@ -147,3 +147,11 @@ production vault. The Rust implementation and published Notes package cohort
 are unchanged. Exact-head hosted CI, postmerge exact-main CI and a new actual
 public-image restoration run remain delivery gates; the earlier `ad7cdd1`
 image predates this fix. Existing five hosted opt-ins retain their scope.
+
+## Public delivery qualification
+
+The later [public-image acceptance](2026-11-12-vault-restoration-public-image-acceptance.md)
+closes the exact-main CI and actual-public-image gates for `f16da57`. It retains
+separate source and image measurements, the prior-image reload negative control,
+unchanged startup budgets and explicit claim recovery. Production deployment,
+Desktop and plugin activation remain separate.
