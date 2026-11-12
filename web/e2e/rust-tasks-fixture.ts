@@ -83,9 +83,19 @@ export async function createHostedTasksFixture(
     target: Page,
     { ready = true, tasks = true }: { ready?: boolean; tasks?: boolean } = {},
   ): Promise<ClientDescriptor> {
+    // Restoration can admit a fresh client during navigation, before a picker
+    // would be visible. Observe admission before either entry path can start.
+    const admitted = target.waitForResponse(
+      (response) =>
+        response.url().endsWith(`/vaults/${service.vaultId}/clients`) &&
+        response.request().method() === "POST",
+    );
+    void admitted.catch(() => undefined);
     await target.goto(origin);
     await expect(
-      target.getByRole("heading", { name: /^(Sign in|Your vaults)$/ }),
+      target.locator(
+        '[data-server-host-state="login"], [data-server-host-state="vaults"], [data-server-host-state="opening"], [data-server-host-state="workspace"]',
+      ),
     ).toBeVisible();
     if (await target.getByLabel("Username").isVisible()) {
       await target.getByLabel("Username").fill("owner");
@@ -94,19 +104,27 @@ export async function createHostedTasksFixture(
         .getByRole("button", { name: "Sign in", exact: true })
         .click();
     }
-    const admitted = target.waitForResponse(
-      (response) =>
-        response.url().endsWith(`/vaults/${service.vaultId}/clients`) &&
-        response.request().method() === "POST",
-    );
-    await target
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      target.locator(
+        '[data-server-host-state="vaults"], [data-server-host-state="opening"], [data-server-host-state="workspace"]',
+      ),
+    ).toBeVisible();
+    if (
+      await target
+        .getByRole("heading", { name: "Your vaults", exact: true })
+        .isVisible()
+    )
+      await target
+        .getByRole("button", {
+          name: "Open Rust vault owner · server-hosted",
+          exact: true,
+        })
+        .click();
     const admittedClient: ClientDescriptor = await (await admitted).json();
     if (!ready) return admittedClient;
+    await expect(
+      target.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(target.getByText("Server DB", { exact: true })).toBeVisible();
     expect(runtimeErrors).toEqual([]);
     if (tasks)

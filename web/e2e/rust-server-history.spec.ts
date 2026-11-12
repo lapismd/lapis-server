@@ -298,27 +298,27 @@ test("retained restore recovery retries the original receipt after cold restart 
     )
       applied.push(request.postDataJSON());
   });
-  const open = async () => {
+  const open = async (initial = false) => {
     await page.goto(origin);
-    await expect(
-      page.getByRole("heading", { name: /^(Sign in|Your vaults)$/u }),
-    ).toBeVisible();
-    if (await page.getByLabel("Username").count()) {
+    if (initial) {
       await page.getByLabel("Username").fill("owner");
       await page.getByLabel("Password").fill(password);
       await page.getByRole("button", { name: "Sign in", exact: true }).click();
+      await page
+        .getByRole("button", {
+          name: "Open Rust vault owner · server-hosted",
+          exact: true,
+        })
+        .click();
     }
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(page.getByText("Server DB", { exact: true })).toBeVisible();
   };
   try {
     await runtime.start();
-    await open();
+    await open(true);
     await command(page, "Open Repository History");
     const history = page.getByRole("region", {
       name: "Repository history",

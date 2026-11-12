@@ -10,17 +10,21 @@ import {
 } from "./fixtures/hosted-backend";
 import { expectShellFillsViewport } from "./shell-layout";
 
-const renderScenario = (scenario: HostedScenario) => () => ({
-  Component: ServerHostFixture,
-  props: { backend: createHostedFixture(scenario).backend },
-});
+const renderScenario =
+  (scenario: HostedScenario, restoreVaultId?: string) => () => ({
+    Component: ServerHostFixture,
+    props: {
+      backend: createHostedFixture(scenario).backend,
+      ...(restoreVaultId ? { restoreVaultId } : {}),
+    },
+  });
 const meta = {
   title: "Shell/Hosted application",
   component: ServerVaultHost,
   args: { backend: createHostedFixture("login").backend },
   render: renderScenario("login"),
   tags: ["autodocs", "visual-pending"],
-  argTypes: { backend: { control: false } },
+  argTypes: { backend: { control: false }, restoration: { control: false } },
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -166,6 +170,45 @@ export const VaultChooser: Story = {
 };
 export const VaultChooserDark: Story = {
   ...VaultChooser,
+  globals: { colorMode: "dark" },
+};
+export const RestoredWorkspace: Story = {
+  render: renderScenario("vaults", "notes"),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await waitFor(
+      () =>
+        expect(
+          canvasElement.querySelector('[data-notes-session-ready="true"]'),
+        ).toBeInTheDocument(),
+      { timeout: 20_000 },
+    );
+    expect(canvas.getByText("Server DB", { exact: true })).toBeVisible();
+    expect(
+      canvas.queryByRole("heading", { name: "Your vaults" }),
+    ).not.toBeInTheDocument();
+    expectShellFillsViewport(canvasElement);
+  },
+};
+export const RestoredWorkspaceDark: Story = {
+  ...RestoredWorkspace,
+  globals: { colorMode: "dark" },
+};
+export const UnavailableRememberedVault: Story = {
+  render: renderScenario("vaults", "missing"),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole("heading", { name: "Your vaults" });
+    expect((await canvas.findByRole("alert")).textContent).toContain(
+      "previously selected vault is unavailable",
+    );
+    expect(
+      canvas.getByRole("button", { name: "Open Notes owner · server-hosted" }),
+    ).toBeEnabled();
+  },
+};
+export const UnavailableRememberedVaultDark: Story = {
+  ...UnavailableRememberedVault,
   globals: { colorMode: "dark" },
 };
 export const VaultActions: Story = {

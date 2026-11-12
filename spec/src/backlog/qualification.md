@@ -6,6 +6,15 @@ ledger's statement that runtime cutover is still primary is superseded by its
 later landed-main receipts and the server extraction. This does not transfer an
 old receipt to a different source, dependency or image cohort.
 
+## Authenticated workspace restoration
+
+SRV-HST-022 adds browser restoration through the existing admitted vault flow.
+The [source receipt](../../records/2026-11-12-hosted-vault-restoration.md)
+retains the original reload failure, qualified recovery checks and unchanged
+startup budget. Local source acceptance is complete; hosted CI,
+postmerge exact-main CI and actual new public-image acceptance remain required;
+prior public frontend receipts do not qualify this behavior.
+
 ## Coherent release-input qualification
 
 Disposition: qualification required for each release candidate. Retain the

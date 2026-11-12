@@ -246,3 +246,16 @@ reload without mirroring external observations back into compatibility files.
 - Bounded cursors replay retained events; gaps, overflow and watcher errors require reconciliation rather than silently dropping changes.
 - The user-file observer excludes app-state trees; the configuration owner retains a targeted file reload, while external user writes, rename, deletion, reconnect and teardown remain covered.
 - Cold enabled-plugin and idle tests supplement the unchanged 600-dormant-assets startup budget and exercise the real hosted transport.
+
+## SRV-HST-022 — Restore the authenticated workspace
+
+<a id="srv-hst-022"></a>
+
+**Requirement.** The hosted browser MUST remember a successfully ready vault per server origin and authenticated owner. Reload MUST revalidate that choice against accessible, unarchived vaults and open it through fresh admission. Stored intent MUST contain no credentials, client tokens or filesystem paths. Failed restoration MUST retain recovery without an automatic reload loop; explicit vault management and successful logout MUST preserve chooser and authentication intent.
+
+### Acceptance details
+
+- Persist or rearm only a ready workspace's vault choice, with layout and editor recovery retained by their existing owners.
+- Missing, archived, malformed or unavailable choices recover through the chooser.
+- Blocked browser storage does not prevent ordinary login and selection.
+- Consume the remembered attempt before opening and rearm it only on readiness.

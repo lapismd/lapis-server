@@ -7,11 +7,22 @@
 </script>
 
 <script lang="ts">
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, untrack } from "svelte";
   import ServerVaultHost from "../../web/src/ServerVaultHost.svelte";
-  import { releaseHostedFixture } from "./hosted-backend";
+  import {
+    createFixtureVaultRestoration,
+    releaseHostedFixture,
+  } from "./hosted-backend";
   import type { HostedBackend } from "../../web/src/hosted/backend";
-  let { backend }: { backend: HostedBackend } = $props();
+  let {
+    backend,
+    restoreVaultId,
+  }: { backend: HostedBackend; restoreVaultId?: string } = $props();
+  const restoration = untrack(() => {
+    const state = createFixtureVaultRestoration();
+    if (restoreVaultId) state.remember("owner", restoreVaultId);
+    return state;
+  });
   let host: { dispose(): Promise<void> } | undefined = $state();
   onMount(() => {
     disposers.add(async () => {
@@ -31,6 +42,7 @@
       }
     }
     {backend}
+    {restoration}
   />
 </div>
 

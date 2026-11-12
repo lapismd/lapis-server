@@ -258,3 +258,10 @@ qualifies the exact merged source through main CI, both public image platforms
 and actual AMD64 runtime/browser execution. The original core startup budget
 and default-plus-Tasks idle fixture remain separate; production deployment,
 all-active-plugin and post-publication ARM64 execution are not inferred.
+
+SRV-HST-022 keeps workspace restoration in the Server browser host, with an
+owner-scoped vault ID as optional preference and fresh server admission as
+authority. Qualification covers real reload, readiness, saved layout, explicit
+chooser/logout intent, authentication expiry, storage failure and retired-host
+fencing. Lost-browser editing claims retain their existing explicit recovery;
+source qualification and postmerge public-image acceptance remain separate.

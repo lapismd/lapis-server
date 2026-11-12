@@ -243,12 +243,9 @@ test("installed provider resumes an offline recovery fixture only from its confi
     ]);
     const finalHash = await fixture.transcriptHash(id);
     await page.reload();
-    await page
-      .getByRole("button", {
-        name: "Open Rust vault owner · server-hosted",
-        exact: true,
-      })
-      .click();
+    await expect(
+      page.locator('[data-notes-session-ready="true"]'),
+    ).toBeVisible();
     await expect(
       activeChat(page).getByText(`${witness}-RESUMED`, { exact: true }),
     ).toHaveCount(1);

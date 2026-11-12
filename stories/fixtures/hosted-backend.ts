@@ -3,6 +3,20 @@ import { contentFixture } from "./content-access";
 import { MemoryAppDatabase, MemoryVaultAdapter } from "@lapis-notes/api";
 import type { NotesWorkspaceHost } from "@lapis-notes/app-profile/workspace-session";
 import type { HostedBackend, HostedVault } from "../../web/src/hosted/backend";
+import { createVaultRestoration } from "../../web/src/vault-restoration";
+
+export function createFixtureVaultRestoration() {
+  const records = new Map<string, string>();
+  return createVaultRestoration(() => ({
+    getItem: (key) => records.get(key) ?? null,
+    setItem: (key, value) => {
+      records.set(key, value);
+    },
+    removeItem: (key) => {
+      records.delete(key);
+    },
+  }));
+}
 
 export type HostedScenario =
   | "login"
@@ -47,6 +61,7 @@ export function createHostedFixture(scenario: HostedScenario) {
     },
     current: async () => {
       if (!authenticated) throw new Error("Sign in required");
+      return { username: "owner" };
     },
     login: async (username, password) => {
       if (username !== "owner" || password !== "fixture-password")

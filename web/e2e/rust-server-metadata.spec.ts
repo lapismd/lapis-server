@@ -320,12 +320,9 @@ test("the retained hosted workspace observes native metadata and Search across d
       });
       try {
         await replacement.goto(origin);
-        await replacement
-          .getByRole("button", {
-            name: "Open Rust vault owner · server-hosted",
-            exact: true,
-          })
-          .click();
+        await expect(
+          replacement.locator('[data-notes-session-ready="true"]'),
+        ).toBeVisible();
         await expect(
           replacement.getByText("Server DB", { exact: true }),
         ).toBeVisible();
