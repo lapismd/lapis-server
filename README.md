@@ -58,7 +58,7 @@ The same local configuration and volumes can run a published image without
 compiling the checkout:
 
 ```sh
-LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:4a40488-slim
+LAPIS_DEMO_DOCKER_CONTEXT=desktop-linux ./scripts/demo.sh image ghcr.io/lapismd/lapis-server:e69c10d-slim
 ```
 
 Omit the context override when the local `default` context is available.
@@ -139,7 +139,7 @@ Use the dedicated [Mod Compose example](docker/mods/compose.example.yml):
 
 ```sh
 ./scripts/demo.sh prepare
-export LAPIS_SERVER_TAG=4a40488
+export LAPIS_SERVER_TAG=e69c10d
 export LAPIS_SERVER_CONFIG_FILE="$PWD/.local/demo/config.json"
 export LAPIS_SERVER_PASSWORD_FILE="$PWD/.local/demo/bootstrap-password"
 export DOCKER_MODS='ghcr.io/lapismd/mods:codex-0.167.0|ghcr.io/lapismd/mods:claude-2.1.311'
