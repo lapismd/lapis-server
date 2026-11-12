@@ -167,3 +167,5 @@ Core owns client-scoped Terminal Host PTY attachments. Client retirement and suc
 Terminal HTTP observations release their connection after a bounded response
 lease, even when the shell remains alive. Byte cursors preserve replay across
 reconnections; the browser yields connection capacity to editor commands.
+
+[SRV-HST-021](hosted.md#srv-hst-021) owns native file-change observation, replacing recursive browser filesystem polling without changing file-byte routes, admission or durable writers.

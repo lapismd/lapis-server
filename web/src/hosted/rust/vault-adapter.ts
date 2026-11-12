@@ -1,3 +1,5 @@
+import { FileWatchHub } from "./file-stream";
+import type { NativeWatchAdapter } from "@lapis-notes/api";
 import type { VaultAdapter } from "@lapis-notes/api/vault";
 import type { RustVaultClient } from "./vault-client";
 import { RustHostError } from "./client";
@@ -7,11 +9,14 @@ const vaultPath = (path: string) => path.replace(/^\/+|\/+$/gu, "");
 type WriteOptions = Parameters<VaultAdapter["write"]>[2];
 
 /** Browser presentation of one admitted native vault; no local file store. */
-export class RustVaultAdapter implements VaultAdapter {
+export class RustVaultAdapter implements VaultAdapter, NativeWatchAdapter {
+  private readonly fileWatches: FileWatchHub;
   constructor(
     readonly client: RustVaultClient,
     readonly name: string,
-  ) {}
+  ) {
+    this.fileWatches = new FileWatchHub(client);
+  }
 
   getVaultId(): string {
     return this.client.descriptor.vault_id;
@@ -24,13 +29,16 @@ export class RustVaultAdapter implements VaultAdapter {
       persistent: true,
       userVisibleFiles: false,
       requiresPermission: false,
-      nativeWatch: false,
+      nativeWatch: true,
       resourceUrls: true,
       systemTrash: false,
       exclusiveCreate: true,
       conditionalTextWrite: true,
     } as const;
   }
+
+  watch: NativeWatchAdapter["watch"] = (path, options, listener) =>
+    this.fileWatches.watch(path, options, listener);
 
   async stat(path: string): ReturnType<VaultAdapter["stat"]> {
     const value = await this.client.files({

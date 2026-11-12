@@ -1,19 +1,11 @@
-import { execFileSync, spawn } from "node:child_process";
-import { cp, mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { createServer } from "node:net";
 import { join, resolve } from "node:path";
 import { chromium } from "@playwright/test";
 
-const context = process.env.LAPIS_DOCKER_CONTEXT ?? "default";
-const docker = (...args) =>
-  execFileSync("docker", ["--context", context, ...args], {
-    encoding: "utf8",
-    maxBuffer: 64 * 1024 * 1024,
-  });
 const repository = resolve(import.meta.dirname, "..");
 const root = await mkdtemp(join(repository, ".local/startup-budget-"));
-const name = `lapis-startup-budget-${process.pid}`;
-const image = `lapis-startup-budget:${process.pid}`;
 const listener = createServer();
 await new Promise((accept) => listener.listen(0, "127.0.0.1", accept));
 const localPort = listener.address().port;
@@ -46,9 +38,6 @@ for (let index = 0; index < 600; index++) {
     `export const value = ${index};\n`,
   );
 }
-await cp(join(repository, "web/dist"), join(root, "static"), {
-  recursive: true,
-});
 await writeFile(join(root, "password"), password);
 await writeFile(
   join(root, "config.json"),
@@ -57,29 +46,13 @@ await writeFile(
       {
         id: "3a65a94f-b875-4143-b1f5-a6a32d861092",
         name: "Budget vault",
-        root: "/data/vault",
+        root: vault,
       },
     ],
   }),
 );
-await writeFile(
-  join(root, "Dockerfile"),
-  `FROM ghcr.io/lapismd/lapis-server:c0f4aae AS backend
-FROM ubuntu:24.04
-RUN apt-get update && apt-get install -y --no-install-recommends libgcc-s1 ca-certificates && rm -rf /var/lib/apt/lists/* && groupadd -g 1993 lapis && useradd -u 1993 -g 1993 -d /data lapis && mkdir -p /data && chown 1993:1993 /data
-COPY --from=backend /app/lapis-server /app/lapis-server
-COPY static/ /app/static/
-COPY --chown=1993:1993 vault/ /data/vault/
-COPY password /run/secrets/password
-COPY config.json /run/lapis/config.json
-ENV HOME=/data LAPIS_SERVER_DATA_ROOT=/data/profile LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_INSECURE_COOKIE=1 LAPIS_SERVER_BOOTSTRAP_USERNAME=owner LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE=/run/secrets/password
-USER 1993:1993
-ENTRYPOINT ["/app/lapis-server"]
-CMD ["/run/lapis/config.json", "0.0.0.0:8787"]
-`,
-);
-let tunnel, browser, page;
-let tunnelError = "";
+let service, browser, page;
+let logs = "";
 let readiness = "unreachable";
 const metrics = {
   commands: 0,
@@ -101,64 +74,33 @@ const exceeded = new Promise((_, reject) => {
 });
 exceeded.catch(() => {});
 try {
-  console.log(
-    `Building isolated request-budget fixture using Docker context ${context}`,
+  const binary = join(repository, ".local/rust-core-target/debug/lapis-server");
+  console.log(`Qualifying checkout backend ${binary} with checkout web/dist`);
+  const environment = {
+    ...process.env,
+    LAPIS_SERVER_ORIGIN: origin,
+    LAPIS_SERVER_DATA_ROOT: join(root, "profile"),
+    LAPIS_SERVER_STATIC_ROOT: join(repository, "web/dist"),
+    LAPIS_SERVER_INSECURE_COOKIE: "1",
+    LAPIS_SERVER_BOOTSTRAP_USERNAME: "owner",
+    LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE: join(root, "password"),
+    LAPIS_SERVER_NATIVE_HISTORY: "1",
+  };
+  delete environment.LAPIS_SERVER_TOKEN;
+  service = spawn(
+    binary,
+    [join(root, "config.json"), `127.0.0.1:${localPort}`],
+    {
+      env: environment,
+      stdio: ["ignore", "pipe", "pipe"],
+    },
   );
-  await writeFile(
-    join(root, "build.log"),
-    docker("build", "--load", "--tag", image, root),
-  );
-  const endpoint = JSON.parse(docker("context", "inspect", context))[0]
-    .Endpoints.docker.Host;
-  const remote = endpoint.startsWith("ssh://");
-  // On a local Linux engine, a new Docker veth can invalidate Chromium's
-  // in-flight module downloads with ERR_NETWORK_CHANGED. Bind only loopback
-  // in the existing host network namespace; SSH/Desktop keep port forwarding.
-  const hostNetwork =
-    process.platform === "linux" && endpoint === "unix:///var/run/docker.sock";
-  console.log(
-    `Startup budget transport: ${hostNetwork ? "host-loopback" : remote ? "ssh-forward" : "published-port"}`,
-  );
-  docker(
-    "run",
-    "--detach",
-    "--name",
-    name,
-    ...(hostNetwork
-      ? ["--network", "host"]
-      : [
-          "--publish",
-          remote ? "127.0.0.1::8787" : `127.0.0.1:${localPort}:8787`,
-        ]),
-    "--env",
-    `LAPIS_SERVER_ORIGIN=${origin}`,
-    image,
-    ...(hostNetwork
-      ? ["/run/lapis/config.json", `127.0.0.1:${localPort}`]
-      : []),
-  );
-  if (remote) {
-    const remotePort = docker("port", name, "8787/tcp")
-      .trim()
-      .split(":")
-      .at(-1);
-    const address = new URL(endpoint);
-    tunnel = spawn(
-      "ssh",
-      [
-        "-o",
-        "ExitOnForwardFailure=yes",
-        "-N",
-        "-L",
-        `${localPort}:127.0.0.1:${remotePort}`,
-        `${address.username}@${address.hostname}`,
-      ],
-      { stdio: ["ignore", "ignore", "pipe"] },
-    );
-  }
-  tunnel?.stderr.on("data", (bytes) => {
-    tunnelError = (tunnelError + bytes).slice(-4096);
-  });
+  const retainLog = (bytes) => {
+    logs = (logs + String(bytes)).slice(-32768);
+  };
+  service.stdout.on("data", retainLog);
+  service.stderr.on("data", retainLog);
+  service.on("error", (error) => retainLog(error.message));
   let ready = false;
   for (let attempt = 0; attempt < 60; attempt++) {
     try {
@@ -172,9 +114,7 @@ try {
     await new Promise((accept) => setTimeout(accept, 500));
   }
   if (!ready)
-    throw new Error(
-      `Budget host did not start (${readiness}, tunnel ${tunnel?.exitCode} ${tunnelError}): ${docker("logs", name)}`,
-    );
+    throw new Error(`Budget host did not start (${readiness}): ${logs}`);
   browser = await chromium.launch({ headless: true });
   page = await browser.newPage({ serviceWorkers: "block" });
   page.on("pageerror", (error) => retain(consoleErrors, error.message));
@@ -263,8 +203,12 @@ try {
   throw error;
 } finally {
   await browser?.close();
-  tunnel?.kill("SIGTERM");
-  try {
-    docker("rm", "--force", name);
-  } catch {}
+  if (service && service.exitCode === null) {
+    const stopped = new Promise((resolve) => service.once("exit", resolve));
+    service.kill("SIGTERM");
+    const timeout = setTimeout(() => service.kill("SIGKILL"), 5000);
+    await stopped;
+    clearTimeout(timeout);
+  }
+  await writeFile(join(root, "server.log"), logs);
 }

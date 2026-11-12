@@ -57,7 +57,17 @@ impl Client {
         state
             .retired_editor_intents
             .retain(|_, client| *client != self.id);
+        let watcher = if state.clients.is_empty() {
+            self.vault
+                .file_changes
+                .lock()
+                .unwrap_or_else(|e| e.into_inner())
+                .take()
+        } else {
+            None
+        };
         drop(state);
+        drop(watcher);
         let terminals = self.vault.revoke_terminals(Some(self.id));
         let history = self.vault.revoke_history_reader(self.id);
         terminals.and(history)

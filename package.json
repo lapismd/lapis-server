@@ -44,7 +44,7 @@
     "build-storybook": "storybook build",
     "demo": "sh scripts/demo.sh",
     "test:demo": "node --test scripts/demo.test.mjs",
-    "test:startup-budget": "node scripts/test-startup-budget.mjs",
+    "test:startup-budget": "cargo build -p lapis-server --locked && node scripts/test-startup-budget.mjs",
     "configure": "node scripts/configure.mjs",
     "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
     "release:github": "node scripts/release-github.mjs",
@@ -60,7 +60,7 @@
     "test:storybook:static": "playwright test -c web/playwright.storybook-static.config.ts"
   },
   "dependencies": {
-    "@lapis-notes/api": "^0.2.7",
+    "@lapis-notes/api": "^0.2.8",
     "@lapis-notes/file-explorer": "^0.2.3",
     "@lapis-notes/language-service": "^0.1.2",
     "@lapis-notes/markdown": "^0.2.1",

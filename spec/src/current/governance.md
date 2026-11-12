@@ -20,6 +20,14 @@ Current contracts and verification own behavior/status; the canonical backlog
 owns remaining work and acceptance. Supporting historical receipts retain their
 original scope and cannot replace current candidate qualification.
 
+The README image examples select the publicly qualified `e69c10d` release.
+SRV-SRV-001 and SRV-GOV-001 contracts remain unchanged; the
+[public acceptance record](../../records/2026-11-12-minimal-public-image-acceptance.md)
+retains exact-main CI, multiarchitecture identity, actual runtime/agent checks
+and the original packaged-frontend request budget. Documentation validation
+includes formatting, Compose interpolation and the canonical specification gate.
+The native file-event consumer and npm publication remain separately gated.
+
 The [content API, MCP and CLI work](../backlog/content-automation.md) adds
 portable contracts and a generated-protocol gate to Configure CI. SRV-GOV-001/002
 retain their source limits, documentation navigation and host qualification
@@ -236,3 +244,11 @@ adds a CLI-version alias to the same qualified Mod index without changing
 payloads or image build inputs. README configuration retains explicit root
 initialization, writable Mod application, independent cache and application
 privilege drop. Registry publication remains a post-merge verification gate.
+
+SRV-HST-021 requires native watcher/replay/overflow tests, real authenticated HTTP acceptance, browser registration/reconnect/retirement tests, and cold enabled-plugin plus steady-idle acceptance. Existing startup budgets and public-image identity checks remain unchanged.
+
+The released API 0.2.8 intake uses a normal npm range and registry lock, preserving
+SRV-GOV-003 ownership. Public integrity and exact-source workflow provenance
+are checked before consumer refresh. The narrow cache-discovery regression is
+retained unchanged before and after the dependency update; source/archive,
+registry consumer, hosted CI and public-image qualification remain distinct.

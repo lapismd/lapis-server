@@ -31,6 +31,8 @@ use ts_rs::{Config, TS};
 fn main() {
     let config = Config::default();
     let declarations = [
+        file_changes::FileChange::decl(&config),
+        file_changes::FileChangeSet::decl(&config),
         lapis_app_protocol::terminal::TerminalCommand::decl(&config),
         lapis_app_protocol::terminal::TerminalValue::decl(&config),
         lapis_app_protocol::terminal::TerminalOutput::decl(&config),

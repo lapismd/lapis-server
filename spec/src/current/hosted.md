@@ -3,6 +3,11 @@
 These requirements moved from the Notes hosted-server chapter. Shared client
 behavior and observation streams stay in the Notes specification.
 
+[Native file observation](#srv-hst-021) uses released API `^0.2.8` for user-file
+discovery and observation scopes. Installed plugin payloads and registry caches
+stay outside the user-file tree; configuration remains owned by its targeted
+reload without mirroring external observations back into compatibility files.
+
 ## SRV-HST-001 — Native hosted application
 
 <a id="srv-hst-001"></a>
@@ -228,3 +233,16 @@ behavior and observation streams stay in the Notes specification.
 - Inputs, session counts, replay and observers are bounded; output revalidates authentication and has a finite response lifetime.
 - Browser input writes preserve per-session order across pending HTTP requests.
 - Plugin disable and trust revocation close sessions; output may contain native paths from user commands.
+
+## SRV-HST-021 — Native file-change observation
+
+<a id="srv-hst-021"></a>
+
+**Requirement.** Authenticated clients MAY observe vault-relative file changes through GET `/api/v3/clients/{client}/file-events`. Core MUST own one native watcher per admitted vault, fence retired clients and physical roots, bound replay and frames, signal uncertainty explicitly, and preserve graceful teardown. Browser adapters MUST reuse NativeWatchAdapter, avoid recursive HTTP polling, and recover missed changes before projecting a complete tree.
+
+### Acceptance details
+
+- Scope checks cover owner, vault, generation, origin and expiry throughout a bounded response lease; events contain relative paths without file bytes or credentials.
+- Bounded cursors replay retained events; gaps, overflow and watcher errors require reconciliation rather than silently dropping changes.
+- The user-file observer excludes app-state trees; the configuration owner retains a targeted file reload, while external user writes, rename, deletion, reconnect and teardown remain covered.
+- Cold enabled-plugin and idle tests supplement the unchanged 600-dormant-assets startup budget and exercise the real hosted transport.

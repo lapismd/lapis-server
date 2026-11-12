@@ -1,5 +1,11 @@
 # OCI Mods verification
 
+The [Homebrew-free public image receipt](../../records/2026-11-12-minimal-public-image-acceptance.md)
+qualifies the published `e69c10d` Server with all four public digest-pinned
+agent Mods online and in a recreated offline-cache container on AMD64.
+Native AMD64/ARM64 CI and anonymous public multiarchitecture identity pass;
+post-publication ARM64 execution remains unclaimed.
+
 | ID          | Status      | Evidence                                                                                                                                                                                                                                                                                                                                                                      |
 | ----------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | SRV-MOD-001 | Implemented | [Source/remote qualification](../../records/2026-11-10-oci-mods-qualification.md) plus [public acceptance](../../records/2026-11-11-public-image-acceptance.md): native AMD64/ARM64 CI, public multiarch artifacts, verified loader/agents and original slim Server online/offline/hook/lifecycle checks on remote AMD64. Post-publication ARM64 execution remains unclaimed. |
