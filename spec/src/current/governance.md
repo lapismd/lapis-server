@@ -246,3 +246,9 @@ initialization, writable Mod application, independent cache and application
 privilege drop. Registry publication remains a post-merge verification gate.
 
 SRV-HST-021 requires native watcher/replay/overflow tests, real authenticated HTTP acceptance, browser registration/reconnect/retirement tests, and cold enabled-plugin plus steady-idle acceptance. Existing startup budgets and public-image identity checks remain unchanged.
+
+The released API 0.2.8 intake uses a normal npm range and registry lock, preserving
+SRV-GOV-003 ownership. Public integrity and exact-source workflow provenance
+are checked before consumer refresh. The narrow cache-discovery regression is
+retained unchanged before and after the dependency update; source/archive,
+registry consumer, hosted CI and public-image qualification remain distinct.
