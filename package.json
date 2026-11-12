@@ -70,7 +70,7 @@
     "@lapis-notes/workspace": "^0.3.5",
     "@lapismd/design-core": "^0.12.4",
     "@lapismd/jj-history": "~0.1.0",
-    "@lapismd/mira": "~0.1.4",
+    "@lapismd/mira": "~0.1.5",
     "@lucide/svelte": "^0.523.0",
     "fflate": "^0.8.3",
     "@codemirror/autocomplete": "^6.18.6",
