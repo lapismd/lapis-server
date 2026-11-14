@@ -5,6 +5,10 @@ the Notes specification at <https://lapismd.github.io/lapis-notes/>.
 The core crate README routes native ownership and commands here; outstanding
 integration and qualification live in the [canonical backlog](../backlog.md).
 
+The [plugin operation contract](plugin-operations.md) extends shared Core and
+Protocol with namespaced descriptors and credential-bound dispatch. It does not
+alter native engine ownership or the crate dependency direction in SRV-SRV-004.
+
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
 ## SRV-SRV-001 — Public image

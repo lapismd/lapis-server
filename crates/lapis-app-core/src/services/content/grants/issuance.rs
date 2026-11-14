@@ -9,7 +9,7 @@ impl ContentGrants {
         vaults: Vec<ContentVault>,
         lifetime: Duration,
     ) -> Result<IssuedContentGrant> {
-        self.issue(String::new(), vaults, lifetime)
+        self.issue(String::new(), vaults, lifetime, &[])
     }
 
     /// Owner-only issuance from dedicated host-admitted clients. A label is
@@ -28,7 +28,27 @@ impl ContentGrants {
                 "Invalid content grant label or scope",
             ));
         }
-        self.issue(label.into(), vaults, lifetime)
+        self.issue_named_operations(label, vaults, lifetime, &[])
+    }
+
+    pub fn issue_named_operations(
+        &self,
+        label: &str,
+        vaults: Vec<ContentVault>,
+        lifetime: Duration,
+        permissions: &[String],
+    ) -> Result<IssuedContentGrant> {
+        if label.trim().is_empty()
+            || label.len() > 128
+            || label.chars().any(char::is_control)
+            || vaults.is_empty()
+        {
+            return Err(failure(
+                ContentErrorCode::InvalidRequest,
+                "Invalid content grant label or scope",
+            ));
+        }
+        self.issue(label.trim().into(), vaults, lifetime, permissions)
     }
 
     fn issue(
@@ -36,7 +56,9 @@ impl ContentGrants {
         label: String,
         vaults: Vec<ContentVault>,
         lifetime: Duration,
+        permissions: &[String],
     ) -> Result<IssuedContentGrant> {
+        let operations = self.operations.snapshot(permissions)?;
         let epoch = {
             let registry = self.lock()?;
             registry.require_capacity()?;
@@ -74,6 +96,7 @@ impl ContentGrants {
         registry.entries.insert(
             grant_id,
             Arc::new(Entry {
+                operations,
                 verifier,
                 session,
                 label,

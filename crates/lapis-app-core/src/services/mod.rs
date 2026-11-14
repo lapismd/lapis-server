@@ -60,3 +60,4 @@ pub use turns::{
     ParticipantState, QueueEntry, QueueInput, QueuePhase, TurnQueue, TurnStorage,
 };
 pub use work::Work;
+pub mod plugin_operations;
