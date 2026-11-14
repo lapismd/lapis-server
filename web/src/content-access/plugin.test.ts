@@ -29,6 +29,12 @@ it("clears the renderer's credential before plugin cleanup unregisters its sourc
   const settings = getWorkspaceHostBinding(app.workspace).controller.settings;
   try {
     plugin.load();
+    expect(
+      settings.sections.find((section) => section.id === "general")?.title,
+    ).toBe("General");
+    expect(
+      settings.search("PATH").some((entry) => entry.sectionId === "general"),
+    ).toBe(true);
     await vi.waitFor(() =>
       expect(settings.get("content-access.status")).toBe("Disabled"),
     );
@@ -36,6 +42,9 @@ it("clears the renderer's credential before plugin cleanup unregisters its sourc
     expect(await settings.runAction("content-access.create")).toBe(true);
     expect(settings.get("content-access.token")).toMatch(/^lc1_/);
     plugin.unload();
+    expect(settings.sections.some((section) => section.id === "general")).toBe(
+      false,
+    );
     expect(settings.get("content-access.token")).toBe("");
     expect(settings.getSnapshot().values).not.toHaveProperty(
       "content-access.token",

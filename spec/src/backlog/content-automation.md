@@ -390,3 +390,7 @@ and settings ownership; define trash retention/restore collision behavior and
 operation-receipt crash recovery. Confirm `lapis` executable naming and initial
 packaged platforms. These are bounded design decisions, not permission to omit
 the CLI, MCP or either host from the end goal.
+
+CLI source setup, host UI ports, Linux x64 archives and the actual runtime image
+are [qualified locally](../../records/2026-11-14-bundled-cli.md). UI registry intake,
+remaining platform artifacts and governed publication remain release gates.

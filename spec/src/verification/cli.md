@@ -1,8 +1,8 @@
 # CLI verification
 
-| ID          | Status  | Evidence                                                                                                                        |
-| ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| SRV-CLI-001 | Partial | `crates/lapis-cli/tests/installation.rs`: eight installation regressions; desktop and packaged acceptance pending.               |
-| SRV-CLI-002 | Partial | Hosted settings and bounded release metadata adapter; published-download acceptance pending.                                    |
-| SRV-CLI-003 | Partial | Docker builds/copies `lapis`; `scripts/test-image-slim.sh` checks runtime PATH execution; final image acceptance pending.       |
-| SRV-CLI-004 | Partial | Four archive/release regressions and native Linux archive install/remove acceptance; hosted multi-platform publication pending. |
+| ID          | Status  | Evidence                                                                                                                                                                                |
+| ----------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SRV-CLI-001 | Partial | [Source qualification](../../records/2026-11-14-bundled-cli.md): eight installer regressions and 24 complete CLI cases pass; supported-platform packaged qualification remains pending. |
+| SRV-CLI-002 | Partial | Shared UI host ports, real plugin acceptance and bounded manifest validation pass; registry adoption and published-download acceptance remain pending.                                  |
+| SRV-CLI-003 | Partial | Actual Linux x64 image passes CLI PATH/help/version, UID, read-only and existing service acceptance at 404,303,872 bytes; ARM64 image qualification remains pending.                    |
+| SRV-CLI-004 | Partial | Four archive regressions and real Linux x64 extracted-archive install/execute/remove pass; multi-platform workflow/publication remain pending.                                          |

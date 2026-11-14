@@ -293,3 +293,8 @@ server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
 
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
+
+CLI host adoption qualifies UI's built `/cli` export separately from
+its registry release. Temporary consumer and image projections record the public
+archive's source and SHA-256; tracked manifests and lockfiles retain normal npm
+ranges. Canonical unit validation includes deterministic archive regressions.

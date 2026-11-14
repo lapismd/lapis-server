@@ -178,3 +178,8 @@ reconnections; the browser yields connection capacity to editor commands.
 [SRV-HST-021](hosted.md#srv-hst-021) owns native file-change observation, replacing recursive browser filesystem polling without changing file-byte routes, admission or durable writers.
 
 CLI registration is owned by [SRV-CLI-001](cli.md#srv-cli-001). Runtime bundling qualification is tracked separately from standalone registration and release archives.
+
+The runtime image includes `lapis` on the unprivileged runtime user's PATH.
+Hosted General → Advanced registers browser-computer download guidance through
+UI's App-independent CLI settings entry point. Release/archive and image
+qualification remain distinct from registry package adoption.

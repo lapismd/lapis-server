@@ -1,4 +1,5 @@
 mod auth;
+mod cli;
 mod content;
 pub use content::restore_settings as restore_content_settings;
 mod static_web;
@@ -103,6 +104,7 @@ fn configured_router(
     let transport = content::transport(&state)?;
     let mut router = Router::new()
         .merge(content::routes())
+        .route("/api/v3/cli/downloads", get(cli::downloads))
         .route(
             "/__lapis/plugins/{client}/{plugin}/{version}/{fingerprint}/{*path}",
             get(plugins::serve),
@@ -190,8 +192,14 @@ fn configured_router(
             get(terminal::observe),
         )
         .route("/api/v3/clients/{client}", delete(routes::detach))
-        .route("/api/v3/clients/{client}/operations", get(plugin_operations::catalog))
-        .route("/api/v3/clients/{client}/plugins/{plugin}/operations/{operation}", post(plugin_operations::invoke).layer(DefaultBodyLimit::max(64 * 1024)))
+        .route(
+            "/api/v3/clients/{client}/operations",
+            get(plugin_operations::catalog),
+        )
+        .route(
+            "/api/v3/clients/{client}/plugins/{plugin}/operations/{operation}",
+            post(plugin_operations::invoke).layer(DefaultBodyLimit::max(64 * 1024)),
+        )
         .route(
             "/api/v3/clients/{client}/plugin-bundles/download",
             get(plugins::download),
