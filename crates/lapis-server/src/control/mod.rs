@@ -1,6 +1,7 @@
 mod attempts;
 pub mod account_connections;
 pub mod bootstrap;
+pub mod checkpoint;
 mod content;
 pub mod enrollment;
 mod login;
@@ -13,6 +14,7 @@ pub use account_connections::{
     AuthorizationRequest, ConnectedAccount, ConnectionState, ConnectionInitiation, OAuthProvider,
     OAuthTokenResponse, ProviderUserInfo, TokenExchangeRequest,
 };
+pub use checkpoint::{Checkpoint, CheckpointFile};
 pub use enrollment::{DeviceType, EnrolledDevice, EnrollmentState, PairingCode, PairingRequest};
 pub use login::LoginError;
 pub use sessions::{IssuedSession, Session};

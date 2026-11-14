@@ -5,6 +5,7 @@ mod static_web;
 pub use static_web::StaticWeb;
 mod account_connections;
 mod browser;
+mod checkpoint;
 mod cookies;
 mod database;
 mod database_events;
@@ -129,6 +130,10 @@ fn configured_router(
         .route("/api/v3/auth/enrollment/devices", get(enrollment::list_enrolled_devices))
         .route("/api/v3/auth/enrollment/devices/{device_id}", delete(enrollment::revoke_device))
         .route("/api/v3/auth/enrollment/devices/{device_id}/touch", post(enrollment::touch_device))
+        .route("/api/v3/vaults/{vault}/checkpoints", get(checkpoint::list_checkpoints).post(checkpoint::create_checkpoint))
+        .route("/api/v3/vaults/{vault}/checkpoints/{checkpoint_id}", get(checkpoint::get_checkpoint).delete(checkpoint::delete_checkpoint))
+        .route("/api/v3/vaults/{vault}/checkpoints/{checkpoint_id}/files", get(checkpoint::list_checkpoint_files).post(checkpoint::add_checkpoint_file))
+        .route("/api/v3/vaults/{vault}/checkpoints/{checkpoint_id}/history", get(checkpoint::get_checkpoint_history))
         .route("/api/v3/vaults/{vault}/clients", post(routes::attach))
         .route("/api/v3/vaults/{vault}", delete(routes::close))
         .route("/api/v3/clients/{client}/commands", post(routes::execute))

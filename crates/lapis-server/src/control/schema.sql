@@ -92,3 +92,29 @@ CREATE TABLE IF NOT EXISTS enrolled_devices (
 );
 
 CREATE INDEX IF NOT EXISTS enrolled_devices_state_idx ON enrolled_devices(state);
+
+CREATE TABLE IF NOT EXISTS checkpoints (
+  id TEXT PRIMARY KEY,
+  vault_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  created_at INTEGER NOT NULL,
+  file_count INTEGER NOT NULL DEFAULT 0,
+  total_size INTEGER NOT NULL DEFAULT 0,
+  parent_checkpoint_id TEXT REFERENCES checkpoints(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS checkpoints_vault_idx ON checkpoints(vault_id);
+CREATE INDEX IF NOT EXISTS checkpoints_created_idx ON checkpoints(created_at);
+
+CREATE TABLE IF NOT EXISTS checkpoint_files (
+  checkpoint_id TEXT NOT NULL REFERENCES checkpoints(id) ON DELETE CASCADE,
+  path TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  modified_at INTEGER NOT NULL,
+  content_hash TEXT NOT NULL,
+  PRIMARY KEY (checkpoint_id, path)
+);
+
+CREATE INDEX IF NOT EXISTS checkpoint_files_checkpoint_idx ON checkpoint_files(checkpoint_id);
+CREATE INDEX IF NOT EXISTS checkpoint_files_path_idx ON checkpoint_files(path);
