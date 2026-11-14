@@ -5,6 +5,7 @@ import type { ContentHostStatus } from "../../crates/lapis-app-protocol/bindings
 /** Disposable HTTP fixture; real authorization/credentials are covered by hosted acceptance. */
 export function contentFixture(vaults: () => HostedVault[]) {
   const status: ContentHostStatus = {
+    operation_permissions: ["tasks:read", "tasks:write"],
     available: true,
     persistent: true,
     access: { enabled: false, grants: [] },
@@ -32,6 +33,7 @@ export function contentFixture(vaults: () => HostedVault[]) {
       const input = JSON.parse(String(init.body));
       const grant_id = crypto.randomUUID();
       status.access.grants.push({
+        permissions: input.permissions ?? [],
         grant_id,
         label: input.label,
         vault_ids: input.vault_ids,

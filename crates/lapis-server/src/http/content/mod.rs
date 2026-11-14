@@ -83,6 +83,7 @@ async fn status(state: State) -> Result<ContentHostStatus, Failure> {
     let host = state.host.clone();
     let access = blocking(move || host.content.grants.status().map_err(native)).await?;
     Ok(ContentHostStatus {
+        operation_permissions: state.host.content.grants.operation_permissions(),
         access,
         available,
         persistent: state.auth.control.is_some(),

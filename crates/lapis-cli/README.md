@@ -17,8 +17,9 @@ regular files owned by the effective user without group/other permissions; final
 symlinks and FIFOs are refused. Other platforms currently use stdin. The host
 must issue the scoped credential; owner-wide server tokens do not grant access.
 
-Global flags may appear before or after subcommands. `--json` emits one Protocol
-`ContentReply`; human note reads reproduce saved UTF-8 bytes exactly. Human list
+Global flags may appear before or after built-in subcommands. Host/credential
+flags precede plugin commands. `--json` emits one Protocol reply; human note reads
+reproduce saved UTF-8 bytes exactly. Human list
 output uses tab-separated columns, with next-page hints on stderr. Lists accept
 `--cursor`, and note lists accept `--directory`. Vaults use explicit UUIDs.
 Errors use stderr and, in JSON mode, the structured stdout reply.
@@ -53,11 +54,18 @@ async services without hanging on a blocking stdin reader. Transport diagnostics
 are sanitized and use stderr.
 
 The hosted server now mounts these endpoints when enabled in **Settings → Core plugins
-→ Content API and MCP**. Create a read-only credential there, copy it into your
+→ Content API and MCP**. Create a scoped credential there, copy it into your
 protected token file, and use the public origin shown in settings. Credentials
 expire within 24 hours and never survive server restart. Desktop mounting and
-plugin settings, named profiles, login/custody, Desktop discovery, writes,
+plugin settings, named profiles, login/custody, Desktop discovery, general note writes,
 completions and distribution remain pending. See
 [SRV-SRV-010](../../spec/src/current/content.md#srv-srv-010) and the
 [stdio contract](../../spec/src/current/content.md#srv-srv-012), plus the
 [content backlog](../../spec/src/backlog/content-automation.md).
+
+Compiled plugin commands use live operation discovery and the same admitted
+native services as HTTP/MCP. Tasks includes 17 operations and bundled offline
+Markdown help: `lapis tasks complete --help`, `lapis help tasks` and
+`lapis help -k tasks`. Use `--input-file` for a JSON input object (64 KiB maximum)
+and `--invocation-id` to retain an explicit lifecycle identity. See
+[plugin operations](../../docs/plugin-operations.md) for scopes and recovery.

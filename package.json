@@ -29,6 +29,7 @@
     }
   },
   "scripts": {
+    "test:plugin-operations": "cargo build --locked -p lapis-server -p lapis-cli && node --test scripts/plugin-operations.test.mjs",
     "protocol:generate": "node scripts/protocol.mjs --write",
     "protocol:check": "node scripts/protocol.mjs --check && tsc -p crates/lapis-app-protocol/tsconfig.json",
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
@@ -56,7 +57,7 @@
     "check:app-ownership": "node scripts/check-app-ownership.ts",
     "validation:profile": "node scripts/prepare-profile-consumer.mjs",
     "test:hosted": "node scripts/test-hosted.mjs",
-    "validate": "pnpm check && pnpm test && pnpm build && pnpm test:storybook && pnpm build-storybook && pnpm test:storybook:static && pnpm test:hosted",
+    "validate": "pnpm check && pnpm test && pnpm build && pnpm test:storybook && pnpm build-storybook && pnpm test:storybook:static && pnpm test:hosted && pnpm test:plugin-operations",
     "test:storybook:static": "playwright test -c web/playwright.storybook-static.config.ts"
   },
   "dependencies": {

@@ -12,7 +12,7 @@ pub struct Failure {
     status: StatusCode,
     error: ContentError,
 }
-fn status(code: ContentErrorCode) -> StatusCode {
+pub(crate) fn status(code: ContentErrorCode) -> StatusCode {
     match code {
         ContentErrorCode::InvalidRequest => StatusCode::BAD_REQUEST,
         ContentErrorCode::Unauthenticated => StatusCode::UNAUTHORIZED,

@@ -15,7 +15,7 @@ local-sibling-projections = []
 [dependencies]
 lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "e240ad5f8e891a3b30336aca49926992a08bde42", version = "0.1.0" }
 lapis-plugin-services = { git = "https://github.com/lapismd/lapis-plugins", rev = "879581d1549187bdbac2d75b40d02e0df46e721a", version = "0.1.0" }
-lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "52270c2aa7838811604a20be0861cdbd04027b42", version = "0.1.0" }
+lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439", version = "0.1.0" }
 lapis-docs-projection = { git = "https://github.com/lapismd/lapis-plugin-docs", rev = "f772f2bacc20a914cef2f0398f294cefbac4ba3c", version = "0.0.0" }
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0", version = "0.2.0" }
@@ -34,6 +34,7 @@ subtle = "=2.6.1"
 uuid = { version = "1", features = ["v4"] }
 tempfile = "=3.27.0"
 serde_json = "1"
+jsonschema = { version = "=0.33.0", default-features = false }
 serde_yaml = "=0.9.34"
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros"] }
 turso = { version = "=0.7.2", default-features = false, features = ["fts"] }

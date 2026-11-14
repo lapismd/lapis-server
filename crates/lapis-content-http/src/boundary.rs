@@ -14,6 +14,29 @@ pub struct Boundary {
     origin: Arc<str>,
 }
 impl Boundary {
+    pub async fn operation_catalog(
+        &self,
+        parts: Parts,
+        vault: Option<uuid::Uuid>,
+    ) -> Result<lapis_app_protocol::operations::OperationCatalog, Rejection> {
+        self.run(parts, move |_, grants, bearer| {
+            grants.operation_catalogs(bearer, vault).map_err(Into::into)
+        })
+        .await
+    }
+    pub async fn invoke_operation(
+        &self,
+        parts: Parts,
+        vault: uuid::Uuid,
+        plugin: String,
+        id: String,
+        request: lapis_app_protocol::operations::OperationRequest,
+    ) -> Result<lapis_app_protocol::operations::OperationReply, Rejection> {
+        self.run(parts, move |_, grants, bearer| {
+            Ok(grants.invoke_operation(bearer, vault, &plugin, &id, request))
+        })
+        .await
+    }
     pub fn new(grants: Arc<ContentGrants>, origin: &str) -> std::io::Result<Self> {
         Ok(Self {
             grants,

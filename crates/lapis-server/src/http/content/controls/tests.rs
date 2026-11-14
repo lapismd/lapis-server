@@ -101,6 +101,7 @@ async fn refused_native_shutdown_keeps_content_closed_while_owner_can_recover() 
     host.content.grants.set_enabled(true).unwrap();
     let issued = host
         .issue_content(ContentGrantRequest {
+            permissions: vec![],
             label: "CLI".into(),
             vault_ids: vec![vault],
             lifetime_seconds: 60,

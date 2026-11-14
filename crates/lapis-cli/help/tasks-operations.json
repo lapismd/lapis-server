@@ -1,0 +1,2250 @@
+[
+  {
+    "plugin_id": "tasks",
+    "id": "list",
+    "version": 1,
+    "description": "list a saved Task using admitted native services",
+    "permission": "tasks:read",
+    "effect": "read_only",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "view": {
+          "type": "string"
+        },
+        "today": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object"
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "freshness": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "const": "projection"
+            },
+            "authoritative": {
+              "const": false
+            }
+          },
+          "required": [
+            "source",
+            "authoritative"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "items",
+        "truncated",
+        "freshness"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "list"
+      ],
+      "summary": "Tasks list",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks list --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "read"
+      ],
+      "arguments": [
+        {
+          "flag": "view",
+          "field": "view",
+          "description": "view",
+          "required": false,
+          "json": false
+        },
+        {
+          "flag": "today",
+          "field": "today",
+          "description": "today",
+          "required": false,
+          "json": false
+        },
+        {
+          "flag": "limit",
+          "field": "limit",
+          "description": "limit",
+          "required": false,
+          "json": true
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "get",
+    "version": 1,
+    "description": "get a saved Task using admitted native services",
+    "permission": "tasks:read",
+    "effect": "read_only",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        },
+        "task": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "snapshot",
+        "task"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "get"
+      ],
+      "summary": "Tasks get",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks get --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "read"
+      ],
+      "arguments": [
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "checklist",
+    "version": 1,
+    "description": "checklist a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "position": {
+          "type": "number",
+          "format": "double"
+        },
+        "expectedText": {
+          "type": "string"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "position",
+        "expectedText",
+        "checked",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "checklist"
+      ],
+      "summary": "Tasks checklist",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks checklist --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "position",
+          "field": "position",
+          "description": "position",
+          "required": true,
+          "json": true
+        },
+        {
+          "flag": "expected-text",
+          "field": "expectedText",
+          "description": "expectedText",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "checked",
+          "field": "checked",
+          "description": "checked",
+          "required": true,
+          "json": true
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "plan",
+    "version": 1,
+    "description": "plan a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "plan": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "at": {
+              "type": "string",
+              "enum": [
+                "anytime",
+                "morning",
+                "afternoon",
+                "evening",
+                "time"
+              ]
+            },
+            "time": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "duration": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "durationMinutes": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            }
+          },
+          "required": [
+            "date",
+            "at"
+          ]
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "plan"
+      ],
+      "summary": "Tasks plan",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks plan --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "plan",
+          "field": "plan",
+          "description": "plan",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "start",
+    "version": 1,
+    "description": "start a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "start": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "anytime"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "someday"
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "date"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "kind",
+                "date"
+              ]
+            }
+          ]
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "start",
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "start"
+      ],
+      "summary": "Tasks start",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks start --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "start",
+          "field": "start",
+          "description": "start",
+          "required": true,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "deadline",
+    "version": 1,
+    "description": "deadline a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "deadline": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "deadline"
+      ],
+      "summary": "Tasks deadline",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks deadline --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "deadline",
+          "field": "deadline",
+          "description": "deadline",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "inbox",
+    "version": 1,
+    "description": "inbox a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "inbox": {
+          "type": "boolean"
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "inbox",
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "inbox"
+      ],
+      "summary": "Tasks inbox",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks inbox --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "inbox",
+          "field": "inbox",
+          "description": "inbox",
+          "required": true,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "repeat",
+    "version": 1,
+    "description": "repeat a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "repeat": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rrule": {
+              "type": "string"
+            },
+            "anchor": {
+              "type": "string",
+              "enum": [
+                "schedule",
+                "completion"
+              ]
+            },
+            "missed": {
+              "type": "string",
+              "enum": [
+                "carry",
+                "skip"
+              ]
+            },
+            "rdate": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "exdate": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "resetChecklist": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "paused": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "pausedSince": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "pauseRanges": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string"
+                  },
+                  "end": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end"
+                ]
+              }
+            },
+            "lastCompletedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "completionCount": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "format": "double"
+            }
+          },
+          "required": [
+            "rrule",
+            "anchor",
+            "missed"
+          ]
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "repeat"
+      ],
+      "summary": "Tasks repeat",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks repeat --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "repeat",
+          "field": "repeat",
+          "description": "repeat",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "tracking",
+    "version": 1,
+    "description": "tracking a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "tracking": {
+          "anyOf": [
+            {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "boolean"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "count"
+                    },
+                    "unit": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "format": "double"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "unit"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "duration"
+                    },
+                    "target": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "number"
+                    },
+                    "unit": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "format": "double"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "unit"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "tracking"
+      ],
+      "summary": "Tasks tracking",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks tracking --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "tracking",
+          "field": "tracking",
+          "description": "tracking",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "pause",
+    "version": 1,
+    "description": "pause a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "localDate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "pause"
+      ],
+      "summary": "Tasks pause",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks pause --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "local-date",
+          "field": "localDate",
+          "description": "localDate",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "resume",
+    "version": 1,
+    "description": "resume a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "localDate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "resume"
+      ],
+      "summary": "Tasks resume",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks resume --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "local-date",
+          "field": "localDate",
+          "description": "localDate",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "cancel",
+    "version": 1,
+    "description": "cancel a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "cancel"
+      ],
+      "summary": "Tasks cancel",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks cancel --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "reopen",
+    "version": 1,
+    "description": "reopen a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "snapshot"
+        },
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "text",
+            "version"
+          ],
+          "title": "TextSnapshot",
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      },
+      "required": [
+        "kind",
+        "snapshot"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "reopen"
+      ],
+      "summary": "Tasks reopen",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks reopen --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "complete",
+    "version": 1,
+    "description": "complete a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "localDate": {
+          "type": "string"
+        },
+        "trackedValue": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "localDate",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "retryable",
+                    "divergent",
+                    "completed"
+                  ],
+                  "title": "NativeTaskDisposition",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                },
+                "last_failure": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Nullable_NativeTaskKnownFailure",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                }
+              },
+              "required": [
+                "request_id",
+                "path",
+                "disposition",
+                "last_failure"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "complete"
+      ],
+      "summary": "Tasks complete",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks complete --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "local-date",
+          "field": "localDate",
+          "description": "localDate",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "tracked-value",
+          "field": "trackedValue",
+          "description": "trackedValue",
+          "required": false,
+          "json": true
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "skip",
+    "version": 1,
+    "description": "skip a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "type": "string",
+          "description": "Version returned by tasks get"
+        },
+        "at": {
+          "type": "string"
+        },
+        "localDate": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Vault-relative saved Task path"
+        }
+      },
+      "required": [
+        "at",
+        "localDate",
+        "path",
+        "expected_version"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "retryable",
+                    "divergent",
+                    "completed"
+                  ],
+                  "title": "NativeTaskDisposition",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                },
+                "last_failure": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Nullable_NativeTaskKnownFailure",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                }
+              },
+              "required": [
+                "request_id",
+                "path",
+                "disposition",
+                "last_failure"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "skip"
+      ],
+      "summary": "Tasks skip",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks skip --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Version returned by tasks get",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "at",
+          "field": "at",
+          "description": "at",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "local-date",
+          "field": "localDate",
+          "description": "localDate",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Vault-relative saved Task path",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "inspect",
+    "version": 1,
+    "description": "inspect a saved Task using admitted native services",
+    "permission": "tasks:read",
+    "effect": "read_only",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "retryable",
+                    "divergent",
+                    "completed"
+                  ],
+                  "title": "NativeTaskDisposition",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                },
+                "last_failure": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Nullable_NativeTaskKnownFailure",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                }
+              },
+              "required": [
+                "request_id",
+                "path",
+                "disposition",
+                "last_failure"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "inspect"
+      ],
+      "summary": "Tasks inspect",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks inspect --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "read"
+      ],
+      "arguments": [
+        {
+          "flag": "request-id",
+          "field": "request_id",
+          "description": "request_id",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "tasks",
+    "id": "retry",
+    "version": 1,
+    "description": "retry a saved Task using admitted native services",
+    "permission": "tasks:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "operation": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "request_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "disposition": {
+                  "type": "string",
+                  "enum": [
+                    "retryable",
+                    "divergent",
+                    "completed"
+                  ],
+                  "title": "NativeTaskDisposition",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                },
+                "last_failure": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "title": "Nullable_NativeTaskKnownFailure",
+                  "$schema": "https://json-schema.org/draft/2020-12/schema"
+                }
+              },
+              "required": [
+                "request_id",
+                "path",
+                "disposition",
+                "last_failure"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "tasks",
+        "retry"
+      ],
+      "summary": "Tasks retry",
+      "markdown": "# Tasks automation\n\nTasks commands operate on saved Markdown in an explicitly admitted vault.\nUse `tasks list` to discover Tasks and `tasks get --path <path>` to obtain the\ncurrent saved version. Pass that version as `--if-version` when changing a Task.\nAn active dirty editor or a changed source causes a conflict.\n\nComplete and skip retain their request identity in the native lifecycle journal.\nAfter a lost response, inspect that identity with `tasks inspect --request-id`.\nUse `tasks retry --request-id` only after reviewing the retained disposition.\nCommands never retry writes automatically. Complete and skip may also update\nthe configured daily note before advancing the Task.\n\nGrant `tasks:read` for list/get/inspect, and `tasks:write` for guarded actions.\nUse `--invocation-id <uuid>` for a caller-known lifecycle identity. MCP writes\nrequire the equivalent `invocation_id`; HTTP uses the envelope's `request_id`.\n\nHost and credential flags precede the plugin command. For example:\n\n```sh\nlapis --target https://notes.example --token-file token --json tasks list --vault <vault-uuid>\nlapis --target https://notes.example --token-file token --json tasks get --vault <vault-uuid> --path Task.md\nlapis --target https://notes.example --token-file token --json tasks complete --vault <vault-uuid> --invocation-id <request-uuid> --input-file complete.json\nlapis --target https://notes.example --token-file token --json tasks inspect --vault <vault-uuid> --request-id <request-uuid>\n```\n\n`complete.json` is an input object, for example\n`{\"path\":\"Task.md\",\"expected_version\":\"<saved-version>\",\"at\":\"2026-11-14T12:00:00Z\",\"localDate\":\"2026-11-14\"}`.\n`--input-file` accepts at most 64 KiB; explicit field flags override file fields.\nJSON output retains `protocol_version`, `request_id` and an `outcome` with `status`\n`ok`/`error`. Errors also produce a nonzero exit code. Keep the request identity\nwhen investigating a conflict or unknown outcome; do not generate a new identity\nto blindly retry a completion.\n\nStructured flag values are JSON. Times and local dates are explicit action\ninputs; the CLI does not infer them from its own timezone. Creation and\ntitle/body editing are not part of this operation catalog.\n",
+      "examples": [
+        "lapis --target https://notes.example --token-file token tasks retry --help"
+      ],
+      "keywords": [
+        "tasks",
+        "automation",
+        "write"
+      ],
+      "arguments": [
+        {
+          "flag": "request-id",
+          "field": "request_id",
+          "description": "request_id",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  }
+]

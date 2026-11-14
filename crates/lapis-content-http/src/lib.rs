@@ -1,6 +1,7 @@
 //! Shared content HTTP transport. Host integration is intentionally explicit.
 mod admission;
 mod boundary;
+mod operations;
 mod policy;
 mod response;
 mod routes;
@@ -34,7 +35,7 @@ pub fn router(grants: Arc<ContentGrants>, public_origin: &str) -> std::io::Resul
 pub fn router_with_boundary(boundary: Boundary) -> Router {
     Router::new().nest(
         "/api/content/v1",
-        Router::new().fallback(handle).with_state(boundary),
+        operations::routes().fallback(handle).with_state(boundary),
     )
 }
 

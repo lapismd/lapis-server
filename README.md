@@ -217,7 +217,10 @@ Open a vault, then choose **Settings → Core plugins → Content API and MCP**.
 access, select the vaults a client may read, choose a label and lifetime, and
 create a credential. Copy it immediately into your client's protected credential
 file; the screen clears it after one minute or when dismissed. It cannot be
-retrieved again. Each credential is read-only and expires within 24 hours.
+retrieved again. Credentials expire within 24 hours. Note access is read-only;
+explicit plugin permissions can also admit guarded Task writes. See
+[native plugin operations](docs/plugin-operations.md) for registration, API/MCP
+usage and contributed CLI commands/help.
 
 The same server process exposes `/api/content/v1` and `/mcp` at the addresses
 shown in settings. A new profile starts with access disabled. The enable
@@ -281,6 +284,6 @@ pnpm storybook
 Schema and TypeScript. `pnpm protocol:check` verifies those artifacts without
 rewriting them and checks representative clients; CI runs the same gate.
 The [content automation plan](spec/src/backlog/content-automation.md) tracks
-the shared content API, MCP and CLI work. Its contracts and read-only native
-sessions power the optional hosted endpoints described above. Desktop integration,
-content writes, OAuth and CLI packaging remain separate delivery gates.
+the shared content API, MCP and CLI work. Native read sessions and scoped plugin
+operations power the optional hosted endpoints described above. Desktop integration,
+general note writes, OAuth and CLI packaging remain separate delivery gates.

@@ -1,4 +1,46 @@
 use super::*;
+
+#[tokio::test]
+async fn task_declaration_survives_cold_reopen_and_explicit_disable() {
+    let f = Fixture::new("complete / ordinary / none");
+    let runtime = f.runtime();
+    let (_, client) = configured(&f, &runtime).await;
+    drop(client);
+    close(runtime).await;
+    let runtime = f.runtime();
+    let vault = runtime.admit(f.id, &f.root).unwrap();
+    let client = vault.attach().unwrap();
+    let NativeTaskValue::Status { status } = client
+        .control_tasks(NativeTaskCommand::Status {})
+        .await
+        .unwrap()
+    else {
+        panic!("status")
+    };
+    assert!(status.enabled);
+    assert_eq!(
+        serde_json::to_value(status.configuration).unwrap(),
+        serde_json::to_value(Some(f.configuration())).unwrap()
+    );
+    client
+        .control_tasks(NativeTaskCommand::Disable {})
+        .await
+        .unwrap();
+    drop(client);
+    close(runtime).await;
+    let runtime = f.runtime();
+    let client = runtime.admit(f.id, &f.root).unwrap().attach().unwrap();
+    let NativeTaskValue::Status { status } = client
+        .control_tasks(NativeTaskCommand::Status {})
+        .await
+        .unwrap()
+    else {
+        panic!("status")
+    };
+    assert!(!status.enabled);
+    drop(client);
+    close(runtime).await;
+}
 #[tokio::test]
 async fn native_tasks_port_preserves_retained_bytes_and_cold_idempotent_identity() {
     let f = Fixture::new("complete / schedule / count");

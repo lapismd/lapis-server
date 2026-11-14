@@ -6,6 +6,7 @@ impl ContentGrants {
     /// This owns native access only; hosts own listeners and persistent consent.
     pub fn disabled() -> Self {
         Self {
+            operations: Default::default(),
             registry: Mutex::new(Registry {
                 paused: true,
                 ..Default::default()
@@ -67,6 +68,7 @@ impl ContentGrants {
                 let remaining = entry.session.expires.saturating_duration_since(now);
                 let seconds = remaining.as_secs() + u64::from(remaining.subsec_nanos() != 0);
                 ContentGrantSummary {
+                    permissions: entry.permissions.clone(),
                     grant_id: *id,
                     label: entry.label.clone(),
                     vault_ids: entry.vault_ids.clone(),

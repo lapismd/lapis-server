@@ -5,10 +5,10 @@ does not start a listener, choose vault roots, issue credentials or enable eithe
 production host. [SRV-SRV-011](../../spec/src/current/content.md#srv-srv-011) owns the
 contract; the hosted mount/settings are qualified under
 [SRV-SRV-014](../../spec/src/current/content.md#srv-srv-014). Remaining Desktop,
-OAuth, client approval and write work lives in the
+OAuth, client approval and general note write work lives in the
 [content backlog](../../spec/src/backlog/content-automation.md).
 
-`router(grants, public_origin)` serves controlled ephemeral read grants.
+`router(grants, public_origin)` serves controlled ephemeral scoped grants.
 For combined hosts, construct `lapis_content_http::Boundary::new(grants, origin)`
 and pass clones to each crate's `router_with_boundary`. MCP additionally takes a
 `CancellationToken`. Clones share the native concurrency budget. Hosts cancel
@@ -20,7 +20,7 @@ and listeners. Hosts still own TLS/proxies, connection limits and consent.
 | Server SDK     | Official Rust `rmcp = 3.9.0`                            |
 | MCP protocol   | `2026-07-28`, stateless Streamable HTTP                 |
 | Client         | Same official Rust SDK, `ClientLifecycleMode::Discover` |
-| Authentication | Native scoped read-only grants, per-request bearer       |
+| Authentication | Native scoped grants, per-request bearer                 |
 
 Older initialized clients, public MCP client applications, OAuth protected-resource
 discovery/authorization servers remain unqualified. The source CLI stdio bridge
@@ -34,7 +34,14 @@ Protocol fields without the `operation` discriminator; list commands require
 `page: { limit: 1..100, cursor?: string }`. Replies contain a Protocol
 `ContentReply` in `structuredContent`; tool content failures set `isError` and
 preserve the stable code/effect. Invalid tool names or argument shapes are MCP
-parameter errors. Write commands are absent and refused.
+parameter errors. General note write commands remain absent and refused.
+
+Credential-admitted native plugin operations add tools named
+`{plugin_id}_{operation_id}`, with input schemas from Core's shared registry.
+They add an explicit `vault_id`, and writes require a caller-chosen
+`invocation_id` UUID retained for recovery. Results use `OperationReply` and the
+same typed error/effect handling. Tasks contributes the first 17 operations; see
+[plugin operations](../../docs/plugin-operations.md).
 
 `resources/templates/list` advertises `lapis://notes/{vault_id}/{path}`. Use an
 admitted UUID and percent-encode the relative path; `resources/read` returns saved

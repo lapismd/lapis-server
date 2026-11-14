@@ -213,6 +213,11 @@
           "minimum": 0,
           "type": "integer"
         },
+        "permissions": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
         "vault_ids": {
           "items": { "format": "uuid", "type": "string" },
           "type": "array"
@@ -233,6 +238,11 @@
         },
         "grant_id": { "format": "uuid", "type": "string" },
         "label": { "type": "string" },
+        "permissions": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
         "scope": { "$ref": "#/$defs/ContentScope" },
         "vault_ids": {
           "items": { "format": "uuid", "type": "string" },
@@ -256,6 +266,11 @@
         "api_url": { "type": ["string", "null"] },
         "available": { "type": "boolean" },
         "mcp_url": { "type": ["string", "null"] },
+        "operation_permissions": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
         "persistent": { "type": "boolean" }
       },
       "required": ["access", "available", "persistent"],
@@ -2935,6 +2950,137 @@
       "enum": ["info", "warning", "error"],
       "type": "string"
     },
+    "OperationArgument": {
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "field": { "type": "string" },
+        "flag": { "type": "string" },
+        "json": {
+          "description": "Structured values are passed as JSON, never evaluated as code.",
+          "type": "boolean"
+        },
+        "required": { "type": "boolean" }
+      },
+      "required": ["flag", "field", "description", "required", "json"],
+      "type": "object"
+    },
+    "OperationCatalog": {
+      "additionalProperties": false,
+      "properties": {
+        "operations": {
+          "items": { "$ref": "#/$defs/OperationDescriptor" },
+          "type": "array"
+        },
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": ["protocol_version", "operations"],
+      "type": "object"
+    },
+    "OperationDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "effect": { "$ref": "#/$defs/ContentEffect" },
+        "help": { "$ref": "#/$defs/OperationHelp" },
+        "id": { "type": "string" },
+        "input_schema": true,
+        "output_schema": true,
+        "permission": { "type": "string" },
+        "plugin_id": { "type": "string" },
+        "version": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": [
+        "plugin_id",
+        "id",
+        "version",
+        "description",
+        "permission",
+        "effect",
+        "input_schema",
+        "output_schema",
+        "help"
+      ],
+      "type": "object"
+    },
+    "OperationHelp": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "items": { "$ref": "#/$defs/OperationArgument" },
+          "type": "array"
+        },
+        "command": { "items": { "type": "string" }, "type": "array" },
+        "examples": { "items": { "type": "string" }, "type": "array" },
+        "keywords": { "items": { "type": "string" }, "type": "array" },
+        "markdown": { "type": "string" },
+        "summary": { "type": "string" }
+      },
+      "required": [
+        "command",
+        "summary",
+        "markdown",
+        "examples",
+        "keywords",
+        "arguments"
+      ],
+      "type": "object"
+    },
+    "OperationOutcome": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "status": { "const": "ok", "type": "string" },
+            "value": true
+          },
+          "required": ["status", "value"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "error": { "$ref": "#/$defs/ContentError" },
+            "status": { "const": "error", "type": "string" }
+          },
+          "required": ["status", "error"],
+          "type": "object"
+        }
+      ]
+    },
+    "OperationReply": {
+      "additionalProperties": false,
+      "properties": {
+        "outcome": { "$ref": "#/$defs/OperationOutcome" },
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "request_id": { "format": "uuid", "type": "string" }
+      },
+      "required": ["protocol_version", "request_id", "outcome"],
+      "type": "object"
+    },
+    "OperationRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "input": true,
+        "protocol_version": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "request_id": { "format": "uuid", "type": "string" },
+        "version": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": ["protocol_version", "request_id", "version", "input"],
+      "type": "object"
+    },
     "Outcome": {
       "oneOf": [
         {
@@ -5535,6 +5681,9 @@
     "native_task_value": { "$ref": "#/$defs/NativeTaskValue" },
     "notebook": { "$ref": "#/$defs/NotebookState" },
     "notification": { "$ref": "#/$defs/NotificationRecord" },
+    "operation_catalog": { "$ref": "#/$defs/OperationCatalog" },
+    "operation_reply": { "$ref": "#/$defs/OperationReply" },
+    "operation_request": { "$ref": "#/$defs/OperationRequest" },
     "participant_command": { "$ref": "#/$defs/ParticipantCommand" },
     "participant_value": { "$ref": "#/$defs/ParticipantValue" },
     "projection_definition": { "$ref": "#/$defs/ProjectionDefinition" },
@@ -5590,6 +5739,9 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "operation_catalog",
+    "operation_request",
+    "operation_reply",
     "file_change",
     "terminal_command",
     "terminal_value",

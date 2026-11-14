@@ -190,6 +190,8 @@ fn configured_router(
             get(terminal::observe),
         )
         .route("/api/v3/clients/{client}", delete(routes::detach))
+        .route("/api/v3/clients/{client}/operations", get(plugin_operations::catalog))
+        .route("/api/v3/clients/{client}/plugins/{plugin}/operations/{operation}", post(plugin_operations::invoke).layer(DefaultBodyLimit::max(64 * 1024)))
         .route(
             "/api/v3/clients/{client}/plugin-bundles/download",
             get(plugins::download),
@@ -224,3 +226,4 @@ fn configured_router(
         .layer(middleware::from_fn(auth::response_headers))
         .with_state(state))
 }
+mod plugin_operations;

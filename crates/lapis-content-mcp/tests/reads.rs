@@ -1,6 +1,8 @@
 #[path = "support/security.rs"]
 mod security;
 mod support;
+#[path = "support/registered.rs"]
+mod operations;
 
 use lapis_app_core::services::content::ContentVault;
 use rmcp::{

@@ -70,6 +70,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let (Some(control), Some(profile)) = (&control, std::env::var_os("LAPIS_SERVER_DATA_ROOT")) {
         host.enable_management(control.clone(), std::path::Path::new(&profile))
             .await?;
+        host.restore_task_declarations().await?;
     }
     let web = match std::env::var_os("LAPIS_SERVER_STATIC_ROOT") {
         Some(root) => {

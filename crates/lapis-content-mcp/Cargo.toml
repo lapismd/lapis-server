@@ -5,7 +5,7 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 publish.workspace = true
-description = "Shared read-only MCP adapter for Lapis Server and Desktop"
+description = "Shared content and native plugin MCP adapter for Lapis Server and Desktop"
 
 [dependencies]
 lapis-app-core = { path = "../lapis-app-core" }

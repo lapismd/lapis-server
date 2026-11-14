@@ -8,6 +8,11 @@ rust-version = "1.99"
 license = "Apache-2.0"
 publish = false
 
+# Compiled plugin adapters use the same Core/Protocol instances as this host.
+[patch."https://github.com/lapismd/lapis-server"]
+lapis-app-core = { path = "crates/lapis-app-core" }
+lapis-app-protocol = { path = "crates/lapis-app-protocol" }
+
 [profile.dev]
 debug = 0
 incremental = false

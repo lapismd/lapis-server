@@ -22,20 +22,26 @@ pub struct Fixture {
 }
 impl Fixture {
     pub async fn start() -> Self {
+        Self::with_operations(Default::default(), &[]).await
+    }
+    pub async fn with_operations(registry: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>, permissions: &[String]) -> Self {
         let root = tempfile::tempdir().unwrap();
         fs::write(root.path().join("a note.md"), SAVED).unwrap();
         fs::write(root.path().join("b.md"), "second").unwrap();
         let runtime = Runtime::default();
         let vault = Uuid::new_v4();
         let admitted = runtime.admit(vault, root.path()).unwrap();
-        let grants = Arc::new(ContentGrants::default());
+        let grants = Arc::new(ContentGrants::with_operations(registry));
+        grants.set_enabled(true).unwrap();
         let issued = grants
-            .issue_read_only(
+            .issue_named_operations(
+                "MCP client",
                 vec![ContentVault {
                     name: "Personal".into(),
                     client: admitted.attach().unwrap(),
                 }],
                 Duration::from_secs(60),
+                permissions,
             )
             .unwrap();
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();

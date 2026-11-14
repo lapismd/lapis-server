@@ -15,7 +15,7 @@ const projectionPins = [
   [
     "lapis-task-services",
     "lapis-plugin-tasks",
-    "52270c2aa7838811604a20be0861cdbd04027b42",
+    "bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439",
   ],
   [
     "lapis-docs-projection",

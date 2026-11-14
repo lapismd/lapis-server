@@ -1,5 +1,13 @@
 # Governance
 
+Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
+Source registry checks do not qualify the Tasks provider or hosted delivery;
+the content automation backlog retains those acceptance boundaries.
+`pnpm test:plugin-operations` builds the production server and CLI, then exercises
+scoped Tasks reads/writes, MCP parity, lifecycle inspection and a cold restart
+using an isolated profile. This source gate does not publish packages or images.
+Provider pin refreshes retain catalog drift and actual server/CLI cold acceptance.
+
 <!-- dependency-automation-policy -->
 
 Dependency update PRs from the trusted LapisMD App, Dependabot or Renovate MAY skip specification checks using the PR author rather than the rerun actor. Functional checks remain required. The shared `lapismd/dependency-automation` coordinator proposes published first-party npm updates with Changeset release intent where required; it does not merge, publish, sign or deploy. This CI policy changes no runtime or public contract in this chapter.
@@ -94,6 +102,9 @@ behavior remains unchanged; documentation checks do not qualify CLI distribution
 Configure preflight rejects a disabled default native projection feature or a
 projection dependency that leaves its pinned owning Git source. Source/core
 checks and original Desktop acceptance remain separate qualification lanes.
+The native plugin operations intake keeps that boundary unchanged: Configure
+now expects the same reviewed Tasks revision `bdb1e583` already pinned by Core
+and Server, and still rejects path, tag or mutable projection sources.
 
 The merged first-party dependency intake resolves public Design Core 0.13.1
 and Mira 0.2 through the existing registry ranges and frozen lock. It preserves

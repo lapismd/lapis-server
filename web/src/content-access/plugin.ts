@@ -15,7 +15,7 @@ export function contentAccessPlugin(host: RustHttpClient, vaultId: string) {
         version: "0.1.0",
         minAppVersion: "0.0.1",
         author: "Lapis",
-        description: "Manage read-only access for external content clients.",
+        description: "Manage scoped access for external content clients.",
       });
     }
     onload() {
@@ -30,6 +30,12 @@ export function contentAccessPlugin(host: RustHttpClient, vaultId: string) {
         }),
       );
       this.registerSettingsSection(definition(this.#model));
+      this.register(
+        binding.controller.configuration.optionSources.register({
+          id: "content-access.permissions",
+          load: this.#model.permissionOptions,
+        }),
+      );
       void this.#model.refresh().catch(() => {
         /* Status displays the connection failure. */
       });

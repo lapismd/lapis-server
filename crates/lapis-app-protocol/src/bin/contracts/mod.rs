@@ -3,6 +3,9 @@ use schemars::JsonSchema;
 
 #[derive(JsonSchema)]
 pub struct Contracts {
+    pub operation_catalog: lapis_app_protocol::operations::OperationCatalog,
+    pub operation_request: lapis_app_protocol::operations::OperationRequest,
+    pub operation_reply: lapis_app_protocol::operations::OperationReply,
     pub file_change: lapis_app_protocol::file_changes::FileChangeSet,
     pub terminal_command: lapis_app_protocol::terminal::TerminalCommand,
     pub terminal_value: lapis_app_protocol::terminal::TerminalValue,
