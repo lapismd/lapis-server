@@ -228,3 +228,34 @@ fn shell_setup_preserves_original_bytes_without_a_final_newline() {
         "export USER_CONFIGURATION=retained"
     );
 }
+#[test]
+fn path_only_removal_requires_the_same_exclusive_setup_lease() {
+    let home = TempDir::new().unwrap();
+    assert!(
+        cli(&home, &["cli", "install", "--setup-path", "zsh"])
+            .status
+            .success()
+    );
+    assert!(cli(&home, &["cli", "uninstall"]).status.success());
+    let path = home.path().join(".zshrc");
+    let before = fs::read_to_string(&path).unwrap();
+    let lock = fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(home.path().join(".local/share/lapis/cli/installation.lock"))
+        .unwrap();
+    lock.lock().unwrap();
+    assert!(
+        !cli(&home, &["cli", "uninstall", "--remove-path"])
+            .status
+            .success()
+    );
+    assert_eq!(fs::read_to_string(&path).unwrap(), before);
+    drop(lock);
+    assert!(
+        cli(&home, &["cli", "uninstall", "--remove-path"])
+            .status
+            .success()
+    );
+    assert_eq!(fs::read_to_string(path).unwrap(), "");
+}

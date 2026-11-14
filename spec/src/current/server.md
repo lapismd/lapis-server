@@ -183,3 +183,6 @@ The runtime image includes `lapis` on the unprivileged runtime user's PATH.
 Hosted General → Advanced registers browser-computer download guidance through
 UI's App-independent CLI settings entry point. Release/archive and image
 qualification remain distinct from registry package adoption.
+
+Bundled CLI removal keeps its setup lease until shell cleanup finishes, including
+PATH-only cleanup after command removal. Server and Desktop consume this rule.

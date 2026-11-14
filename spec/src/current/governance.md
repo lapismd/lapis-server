@@ -301,3 +301,6 @@ ranges. Canonical unit validation includes deterministic archive regressions.
 
 CLI release jobs explicitly install their matrix Rust target before compilation;
 runner host architecture cannot substitute for target availability.
+
+CLI registration mutations retain one exclusive per-user lease through shell
+cleanup; PATH-only cleanup follows the same source-qualified concurrency rule.

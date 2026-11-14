@@ -11,6 +11,7 @@
 - Isolated-home subprocess tests execute the installed command and repeat installation and removal.
 - Foreign files, directories and links remain unchanged; installer resources and shell paths refuse symlink traversal.
 - Only exact marked PATH blocks created by Lapis are removed on explicit request.
+- Serialize command and PATH mutations under one per-user lease, including PATH-only cleanup after command removal.
 
 ## SRV-CLI-002 — Hosted CLI setup
 

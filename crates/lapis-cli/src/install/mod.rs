@@ -159,15 +159,16 @@ pub fn install(_: &Path, _: &Path, _: Option<Shell>, _: bool) -> io::Result<Stat
 pub fn uninstall(home: &Path, remove_path: bool) -> io::Result<()> {
     match status(home)? {
         Status::Conflict => return Err(conflict()),
+        Status::NotInstalled if !remove_path => return Ok(()),
+        _ => {}
+    }
+    directories(home, ".local/bin")?;
+    directories(home, ".local/share/lapis/cli")?;
+    let _lease = receipt::lease(home)?;
+    match status(home)? {
+        Status::Conflict => return Err(conflict()),
         Status::NotInstalled => {}
         _ => {
-            // Validate the fixed parents before unlinking either entry.
-            directories(home, ".local/bin")?;
-            directories(home, ".local/share/lapis/cli")?;
-            let _lease = receipt::lease(home)?;
-            if status(home)? == Status::Conflict {
-                return Err(conflict());
-            }
             let target = managed(home);
             match fs::symlink_metadata(&target) {
                 Ok(m) if m.is_file() && !m.is_symlink() => fs::remove_file(target)?,
