@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.0.3
+
+### Patch Changes
+
+- [#57](https://github.com/lapismd/lapis-server/pull/57) [`c187d15`](https://github.com/lapismd/lapis-server/commit/c187d1533431f2fb73eac7601dd1df51f26e4212) Thanks [@lapismd-dependency-bot](https://github.com/apps/lapismd-dependency-bot)! - Refresh first-party Lapis dependencies to the published versions recorded in this pull request.
+
 ## 2.0.2
 
 ### Patch Changes
