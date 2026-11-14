@@ -95,6 +95,14 @@ Configure preflight rejects a disabled default native projection feature or a
 projection dependency that leaves its pinned owning Git source. Source/core
 checks and original Desktop acceptance remain separate qualification lanes.
 
+The merged first-party dependency intake resolves public Design Core 0.13.1
+and Mira 0.2 through the existing registry ranges and frozen lock. It preserves
+server routes, native ownership, startup limits and image release contracts.
+All eight PR CI checks passed on source
+`d8e6fcf1e88a939feeff792efb720447af32edde`, including native Rust, production
+Notes catalog and both architecture image-tooling lanes. Whole-range spec-first
+also requires this unchanged-governance confirmation on the main push.
+
 ## SRV-GOV-001 — Specification and source limits
 
 <a id="srv-gov-001"></a>
