@@ -8,6 +8,7 @@ mod browser;
 mod cookies;
 mod database;
 mod database_events;
+mod enrollment;
 mod history_index;
 mod history_reader;
 mod identity;
@@ -123,6 +124,11 @@ fn configured_router(
         .route("/api/v3/auth/connections/initiate", post(account_connections::initiate_connection))
         .route("/api/v3/auth/connections/complete", post(account_connections::complete_connection))
         .route("/api/v3/auth/connections/{account_id}", delete(account_connections::disconnect_account))
+        .route("/api/v3/auth/enrollment/pairing", post(enrollment::generate_pairing_code))
+        .route("/api/v3/auth/enrollment/approve", post(enrollment::approve_pairing))
+        .route("/api/v3/auth/enrollment/devices", get(enrollment::list_enrolled_devices))
+        .route("/api/v3/auth/enrollment/devices/{device_id}", delete(enrollment::revoke_device))
+        .route("/api/v3/auth/enrollment/devices/{device_id}/touch", post(enrollment::touch_device))
         .route("/api/v3/vaults/{vault}/clients", post(routes::attach))
         .route("/api/v3/vaults/{vault}", delete(routes::close))
         .route("/api/v3/clients/{client}/commands", post(routes::execute))

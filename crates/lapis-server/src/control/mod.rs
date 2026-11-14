@@ -2,6 +2,7 @@ mod attempts;
 pub mod account_connections;
 pub mod bootstrap;
 mod content;
+pub mod enrollment;
 mod login;
 mod owner;
 pub mod passwords;
@@ -12,6 +13,7 @@ pub use account_connections::{
     AuthorizationRequest, ConnectedAccount, ConnectionState, ConnectionInitiation, OAuthProvider,
     OAuthTokenResponse, ProviderUserInfo, TokenExchangeRequest,
 };
+pub use enrollment::{DeviceType, EnrolledDevice, EnrollmentState, PairingCode, PairingRequest};
 pub use login::LoginError;
 pub use sessions::{IssuedSession, Session};
 use std::{io, path::Path, sync::Arc};

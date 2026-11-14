@@ -63,3 +63,32 @@ CREATE TABLE IF NOT EXISTS connected_accounts (
 
 CREATE INDEX IF NOT EXISTS connected_accounts_provider_idx ON connected_accounts(provider_id);
 CREATE INDEX IF NOT EXISTS connected_accounts_state_idx ON connected_accounts(state);
+
+CREATE TABLE IF NOT EXISTS pairing_requests (
+  id TEXT PRIMARY KEY,
+  device_id TEXT NOT NULL,
+  device_name TEXT NOT NULL,
+  device_type TEXT NOT NULL,
+  pairing_code TEXT NOT NULL,
+  public_key TEXT NOT NULL,
+  state TEXT NOT NULL CHECK(state IN ('pending', 'approved', 'rejected', 'expired', 'revoked')),
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL,
+  approved_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS pairing_requests_code_idx ON pairing_requests(pairing_code);
+CREATE INDEX IF NOT EXISTS pairing_requests_device_idx ON pairing_requests(device_id);
+
+CREATE TABLE IF NOT EXISTS enrolled_devices (
+  device_id TEXT PRIMARY KEY,
+  device_name TEXT NOT NULL,
+  device_type TEXT NOT NULL,
+  public_key TEXT NOT NULL,
+  enrolled_at INTEGER NOT NULL,
+  last_seen_at INTEGER NOT NULL,
+  state TEXT NOT NULL CHECK(state IN ('pending', 'approved', 'rejected', 'expired', 'revoked')),
+  revoked_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS enrolled_devices_state_idx ON enrolled_devices(state);
