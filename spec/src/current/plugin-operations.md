@@ -39,3 +39,30 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 - Offline help includes argument descriptions and authored examples.
 - Invocations use live discovery and never replay a failed write.
 - Input files are bounded JSON data; MCP writes retain a caller-known invocation UUID.
+
+## SRV-OPS-005 — Packaged skill sources
+
+**Requirement.** Native hosts MUST discover skill contributions from admitted package files without loading renderer code and expose explicit vault-scoped list, install and update operations. Writes MUST require skill-management permission.
+
+### Acceptance details
+
+- Disabled or unverified plugin sources are excluded.
+- Existing read-only grants cannot install or update skills.
+
+## SRV-OPS-006 — Protected skill updates
+
+**Requirement.** Updates MUST preserve an entire skill directory when its files differ from its recorded installation. Unmanaged directories MUST remain untouched and skipped results MUST identify the skill and reason.
+
+### Acceptance details
+
+- Edited, added and deleted files preserve the directory.
+- Clean updates install the packaged file set without retaining obsolete resources.
+
+## SRV-OPS-007 — Durable skill installation
+
+**Requirement.** Native serialization MUST own skill writes independently of renderer lifetime. Versioned receipts MUST record source versions, file hashes and pending operations; interrupted operations MUST remain fenced until explicitly resolved.
+
+### Acceptance details
+
+- Cold reopen retains installation ownership and local-edit detection.
+- Interrupted writes cannot be mistaken for completed updates or automatically replayed.

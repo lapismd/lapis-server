@@ -398,3 +398,8 @@ source-switch, repair and tamper-refusal assertions remain unchanged.
 Repository qualification follows [the remotes topic](governance/remotes.md).
 
 [Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate.
+
+Skill package preparation and CLI qualification follow [SRV-OPS-005–007](plugin-operations.md); source checks and consumer adoption remain separate.
+
+[Final skill qualification](../../records/2026-11-14-skills-final-source-acceptance.md)
+records the final Core and public-package acceptance separately from release intake.

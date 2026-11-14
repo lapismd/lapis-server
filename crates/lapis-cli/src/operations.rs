@@ -34,10 +34,10 @@ async fn fetch(
     args: &Cli,
     path: &str,
     body: Option<&OperationRequest>,
+    token: &str,
 ) -> Result<Value, ContentError> {
     let mut url = client::target(args.target.as_deref())?;
     url.set_path(path);
-    let token = credential::read(args)?;
     let client = reqwest::Client::builder()
         .redirect(reqwest::redirect::Policy::none())
         .no_proxy()
@@ -157,22 +157,50 @@ fn command(plugin: &str, descriptors: &[OperationDescriptor]) -> ClapCommand {
 async fn execute(args: &Cli) -> Result<u8, ContentError> {
     let bundled_help = match &args.command {
         Command::Help { words, .. } => {
-            words.is_empty() || words.first().is_some_and(|word| word == "tasks")
+            words.is_empty()
+                || words
+                    .first()
+                    .is_some_and(|word| ["tasks", "skills"].contains(&word.as_str()))
         }
         Command::Operation(tokens) => {
-            tokens.first().is_some_and(|word| word == "tasks")
+            tokens
+                .first()
+                .is_some_and(|word| ["tasks", "skills"].contains(&word.as_str()))
                 && tokens.iter().any(|word| word == "--help" || word == "-h")
         }
         _ => false,
     };
+    let token = if args.target.is_some() && !bundled_help {
+        Some(credential::read(args)?)
+    } else {
+        None
+    };
     let catalog: OperationCatalog = if args.target.is_some() && !bundled_help {
-        serde_json::from_value(fetch(args, "/api/content/v1/operations", None).await?)
-            .map_err(|_| errors::failure(ContentErrorCode::ProtocolMismatch))?
+        serde_json::from_value(
+            fetch(
+                args,
+                "/api/content/v1/operations",
+                None,
+                token.as_deref().ok_or_else(invalid)?,
+            )
+            .await?,
+        )
+        .map_err(|_| errors::failure(ContentErrorCode::ProtocolMismatch))?
     } else {
         OperationCatalog {
             protocol_version: 1,
-            operations: serde_json::from_str(include_str!("../help/tasks-operations.json"))
-                .map_err(|_| invalid())?,
+            operations: {
+                let mut entries: Vec<OperationDescriptor> =
+                    serde_json::from_str(include_str!("../help/tasks-operations.json"))
+                        .map_err(|_| invalid())?;
+                entries.extend(
+                    serde_json::from_str::<Vec<OperationDescriptor>>(include_str!(
+                        "../../lapis-app-core/skills/operations.json"
+                    ))
+                    .map_err(|_| invalid())?,
+                );
+                entries
+            },
         }
     };
     if catalog.protocol_version != 1 {
@@ -236,8 +264,16 @@ async fn execute(args: &Cli) -> Result<u8, ContentError> {
         input: input::read(descriptor, matches)?,
     };
     let path = format!("/api/content/v1/vaults/{vault}/plugins/{plugin}/operations/{id}");
-    let reply: OperationReply = serde_json::from_value(fetch(args, &path, Some(&request)).await?)
-        .map_err(|_| errors::failure(ContentErrorCode::ProtocolMismatch))?;
+    let reply: OperationReply = serde_json::from_value(
+        fetch(
+            args,
+            &path,
+            Some(&request),
+            token.as_deref().ok_or_else(invalid)?,
+        )
+        .await?,
+    )
+    .map_err(|_| errors::failure(ContentErrorCode::ProtocolMismatch))?;
     if reply.request_id != request_id || reply.protocol_version != 1 {
         return Err(errors::failure(ContentErrorCode::ProtocolMismatch));
     }

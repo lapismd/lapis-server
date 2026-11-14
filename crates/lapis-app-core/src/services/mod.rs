@@ -66,3 +66,5 @@ pub use turns::{
 };
 pub use work::Work;
 pub mod plugin_operations;
+
+mod packaged_skills;

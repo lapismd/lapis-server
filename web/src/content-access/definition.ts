@@ -100,7 +100,7 @@ export function definition(
           title: "Plugin operation permissions",
           optionsSource: "content-access.permissions",
           description:
-            "Optional native plugin access. Write permissions can change saved Tasks and their configured daily notes. Existing credentials never gain newly added operations.",
+            "Optional native plugin access. Write permissions can change saved Tasks, their configured daily notes and installed agent skills. Existing credentials never gain newly added operations.",
         },
         {
           id: id("create"),

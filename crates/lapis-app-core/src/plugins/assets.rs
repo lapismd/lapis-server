@@ -65,6 +65,8 @@ fn content_type(path: &str) -> Option<&'static str> {
         "mjs" | "js" | "cjs" => Some("text/javascript; charset=utf-8"),
         "css" => Some("text/css; charset=utf-8"),
         "json" => Some("application/json; charset=utf-8"),
+        "md" => Some("text/markdown; charset=utf-8"),
+        "txt" => Some("text/plain; charset=utf-8"),
         "wasm" => Some("application/wasm"),
         "svg" => Some("image/svg+xml"),
         "png" => Some("image/png"),
@@ -171,4 +173,16 @@ pub fn read(
         content_type: mime,
         sha256,
     })
+}
+
+/// Native admission derives the same signed installation identity as asset reads.
+pub(crate) fn installation_fingerprint(root: &VaultRoot, plugin: &str) -> io::Result<String> {
+    let state: InstalledState =
+        serde_json::from_str(&root.read_text(".lapis/installed-plugins.json")?)
+            .map_err(|_| invalid("Invalid plugin installation state"))?;
+    let record = state
+        .plugins
+        .get(plugin)
+        .ok_or_else(|| invalid("Plugin is not installed"))?;
+    fingerprint(&record.files)
 }

@@ -81,7 +81,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             Host::new(config)?
         }
-    });
+    }.with_bundled_skills(match std::env::var_os("LAPIS_SERVER_BUNDLED_SKILLS") {
+        Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
+        None => Vec::new(),
+    }));
     if let (Some(control), Some(profile)) = (&control, std::env::var_os("LAPIS_SERVER_DATA_ROOT")) {
         host.enable_management(control.clone(), std::path::Path::new(&profile))
             .await?;

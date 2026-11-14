@@ -23,12 +23,22 @@ pub(crate) struct Access {
 }
 impl Default for Access {
     fn default() -> Self {
-        let mut operations =
+        Self::with_bundled(Vec::new())
+    }
+}
+impl Access {
+    pub(crate) fn with_bundled(bundles: Vec<lapis_app_core::skills::PackagedSkill>) -> Self {
+        let mut registry =
             lapis_app_core::services::plugin_operations::OperationRegistry::default();
-        operations
+        registry
             .register(Arc::new(lapis_task_operations::TaskOperations))
             .expect("Bundled Tasks operation catalog is valid");
-        let operations = Arc::new(operations);
+        registry
+            .register(Arc::new(
+                lapis_app_core::skills::provider::SkillsProvider::default().with_bundled(bundles),
+            ))
+            .expect("valid packaged skill descriptors");
+        let operations = Arc::new(registry);
         Self {
             grants: Arc::new(ContentGrants::with_operations(operations.clone())),
             operations,
@@ -40,6 +50,7 @@ impl Default for Access {
         }
     }
 }
+
 impl Access {
     pub fn admission(&self) -> Result<MutexGuard<'_, ()>> {
         self.admission

@@ -304,3 +304,5 @@ source-switch, repair and tamper-refusal assertions remain unchanged.
 The hosted native History composition MUST supply the admitted native editing-
 intent bridge even when Tasks is unselected. Opted-in native backup merging
 cannot rely on a Tasks feature flag to learn about unsaved editor buffers.
+
+Packaged skill source and installation contracts are defined in [SRV-OPS-005–007](plugin-operations.md). Native services own their writes; host adapters supply immutable packaged resources.

@@ -1,3 +1,4 @@
+import { createRustSkillManagement } from "./skill-management";
 import { contentAccessPlugin } from "../../content-access/plugin";
 import { createRustNativeEditingIntents } from "./native-editing-intents";
 import { HistoryClient } from "@lapismd/jj-history";
@@ -88,6 +89,7 @@ export function createRustHostedBackend(
           },
         },
         adapter,
+        skillManagement: createRustSkillManagement(client),
         nativeTasks: nativeTasks
           ? { call: (command) => client.tasks(command) }
           : undefined,

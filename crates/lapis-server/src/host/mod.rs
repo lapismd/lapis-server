@@ -58,6 +58,14 @@ pub fn error(code: ErrorCode, message: &str) -> ServiceError {
 }
 
 impl Host {
+    /// Load immutable resources supplied by the owning application package before serving.
+    pub fn with_bundled_skills(
+        mut self,
+        bundles: Vec<lapis_app_core::skills::PackagedSkill>,
+    ) -> Self {
+        self.content = Arc::new(content::Access::with_bundled(bundles));
+        self
+    }
     pub fn new(config: Config) -> std::io::Result<Self> {
         config.validate()?;
         Self::with_runtime(config, Runtime::default())
