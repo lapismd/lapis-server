@@ -4,6 +4,7 @@
 - [Hosted server](current/server.md)
 - [OCI runtime Mods](current/mods.md)
 - [Content automation](current/content.md)
+  - [Plugin operations](current/plugin-operations.md)
 - [Hosted contract](current/hosted.md)
 - [Static delivery](current/delivery.md)
 - [Governance](current/governance.md)

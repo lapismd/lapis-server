@@ -6,6 +6,7 @@ impl ContentGrants {
     /// This owns native access only; hosts own listeners and persistent consent.
     pub fn disabled() -> Self {
         Self {
+            operations: Default::default(),
             registry: Mutex::new(Registry {
                 paused: true,
                 ..Default::default()

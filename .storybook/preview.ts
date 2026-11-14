@@ -84,6 +84,7 @@ const preview: Preview = {
             "Hosted server",
             "OCI runtime Mods",
             "Content automation",
+            "Plugin operations",
             "Hosted contract",
             "Static delivery",
             "Governance",

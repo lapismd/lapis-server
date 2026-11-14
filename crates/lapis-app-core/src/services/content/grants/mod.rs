@@ -25,6 +25,7 @@ pub const MAX_CONTENT_GRANTS: usize = 128;
 /// through bearer-authenticated content routes. All methods can block.
 #[derive(Default)]
 pub struct ContentGrants {
+    pub(super) operations: Arc<crate::services::plugin_operations::OperationRegistry>,
     registry: Mutex<Registry>,
     transition: Mutex<()>,
 }
@@ -38,11 +39,12 @@ struct Registry {
     epoch: Arc<()>,
 }
 
-struct Entry {
+pub(super) struct Entry {
+    pub(super) operations: BTreeMap<String, String>,
     verifier: [u8; 32],
-    session: ContentSession,
+    pub(super) session: ContentSession,
     label: String,
-    vault_ids: Vec<Uuid>,
+    pub(super) vault_ids: Vec<Uuid>,
 }
 
 fn unauthenticated() -> ContentError {
@@ -60,7 +62,7 @@ impl ContentGrants {
     }
 
     // Do not expose the Arc/session: every call must verify the original token.
-    fn authenticate(&self, bearer: &str) -> Result<Arc<Entry>> {
+    pub(super) fn authenticate(&self, bearer: &str) -> Result<Arc<Entry>> {
         let verifier = token::verifier(bearer).ok_or_else(unauthenticated)?;
         let registry = self.lock()?;
         if registry.closed || registry.paused {
