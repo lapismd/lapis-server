@@ -58,3 +58,9 @@ including the complete production Notes catalog and both image architectures.
 The separate main-push spec-first range requires the unchanged-contract
 confirmation in `current/governance.md`; release image verification remains
 separate from those PR receipts.
+
+Core 0.13.2 maintenance: PR 57 head
+`fc9994927b5d1eb8762d323a20ee36526ca45314` passed all eight hosted source
+lanes before merge. Its main-branch range from
+`b9f1feb72c4545b574164e918b5a7c15051343ab` initially lacked one mapped
+governance chapter; the documentation repair checks that full range.
