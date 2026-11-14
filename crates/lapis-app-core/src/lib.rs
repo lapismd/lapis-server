@@ -9,6 +9,7 @@ pub mod embedding;
 pub mod plugins;
 mod record_store;
 pub mod services;
+pub mod sync;
 mod text;
 pub mod turns;
 pub mod vault;
