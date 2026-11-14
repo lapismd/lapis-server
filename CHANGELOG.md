@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.1.0
+
+### Minor Changes
+
+- [#60](https://github.com/lapismd/lapis-server/pull/60) [`5ac69ff`](https://github.com/lapismd/lapis-server/commit/5ac69ff7633fcce41d2b1b98dc84c7d6dd6970df) Thanks [@stevejuma](https://github.com/stevejuma)! - Add scoped native plugin operations across HTTP, MCP and CLI, beginning with Tasks reads, guarded actions and lifecycle recovery. Include shared command schemas, authored offline help and cold declaration recovery.
+
 ## 2.0.3
 
 ### Patch Changes
