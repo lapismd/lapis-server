@@ -1,0 +1,57 @@
+name: Release CLI archives
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: lapis-cli-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { runner: macos-15, target: aarch64-apple-darwin }
+          - { runner: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu }
+          - { runner: ubuntu-24.04, target: x86_64-unknown-linux-gnu }
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require the matching version tag
+        run: node --input-type=module -e 'import p from "./package.json" with { type:"json" }; if (process.env.GITHUB_REF_NAME !== `v${p.version}`) throw Error("Release tag mismatch")'
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
+        with:
+          toolchain: "1.99.0"
+      - run: cargo build --release --locked -p lapis-cli --target ${{ matrix.target }}
+      - name: Ad-hoc sign the macOS preview command
+        if: runner.os == 'macOS'
+        run: codesign --force --sign - .local/rust-core-target/${{ matrix.target }}/release/lapis
+      - name: Qualify Linux executable
+        if: runner.os == 'Linux'
+        run: |
+          .local/rust-core-target/${{ matrix.target }}/release/lapis --help
+          .local/rust-core-target/${{ matrix.target }}/release/lapis --version
+      - run: node scripts/cli-archive.mjs ${{ matrix.target }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: cli-${{ matrix.target }}
+          path: |
+            .local/cli-release/*.tar.gz
+            .local/cli-release/*.sha256
+            .local/cli-release/*.json
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: cli-*
+          path: .local/cli-release
+          merge-multiple: true
+      - name: Assemble manifest and upload immutable assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/publish-cli.mjs

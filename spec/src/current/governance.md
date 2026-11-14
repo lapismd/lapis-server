@@ -291,3 +291,5 @@ registry dependency ownership and all hosted/release qualification gates.
 It changes dependency manifests and the registry lockfile, without changing
 server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
+
+CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.

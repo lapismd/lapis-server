@@ -54,3 +54,7 @@ if (!hadTag) {
     stdio: "inherit",
   });
 }
+
+execFileSync("gh", ["workflow", "run", "release-cli.yml", "--ref", tag], {
+  stdio: "inherit",
+});

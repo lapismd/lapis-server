@@ -2,9 +2,10 @@ mod args;
 mod client;
 mod credential;
 mod errors;
+mod installation;
 mod mcp;
-mod output;
 mod operations;
+mod output;
 mod validation;
 
 use clap::Parser;
@@ -31,7 +32,13 @@ fn main() -> ExitCode {
 
 async fn run() -> ExitCode {
     let args = args::Cli::parse();
-    if matches!(args.command, args::Command::Operation(_) | args::Command::Help { .. }) {
+    if let args::Command::Cli { command } = &args.command {
+        return installation::run(command, args.json);
+    }
+    if matches!(
+        args.command,
+        args::Command::Operation(_) | args::Command::Help { .. }
+    ) {
         return operations::run(&args).await;
     }
     let Some(command) = args.command.content() else {

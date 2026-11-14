@@ -32,6 +32,11 @@ pub(crate) struct Cli {
 }
 #[derive(Subcommand)]
 pub(crate) enum Command {
+    /// Install or remove the command for the current user.
+    Cli {
+        #[command(subcommand)]
+        command: Installation,
+    },
     /// Read contributed command help or search its Markdown guides.
     Help {
         #[arg(short = 'k')]
@@ -105,7 +110,9 @@ impl Page {
 impl Command {
     pub(crate) fn content(&self) -> Option<ContentCommand> {
         Some(match self {
-            Self::Mcp { .. } | Self::Help { .. } | Self::Operation(_) => return None,
+            Self::Cli { .. } | Self::Mcp { .. } | Self::Help { .. } | Self::Operation(_) => {
+                return None;
+            }
             Self::Capabilities => ContentCommand::Capabilities {},
             Self::Vault {
                 command: Vault::List(page),
@@ -130,4 +137,22 @@ impl Command {
             },
         })
     }
+}
+
+#[derive(Subcommand)]
+pub(crate) enum Installation {
+    Status,
+    Install {
+        /// Explicitly replace another Lapis-owned installation source.
+        #[arg(long)]
+        replace: bool,
+        /// Explicitly add a marked PATH entry to Bash or Zsh configuration.
+        #[arg(long, value_parser = ["bash", "zsh"])]
+        setup_path: Option<String>,
+    },
+    Uninstall {
+        /// Remove unchanged PATH entries previously created by Lapis.
+        #[arg(long)]
+        remove_path: bool,
+    },
 }

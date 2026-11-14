@@ -4,6 +4,7 @@
 - [Hosted server](current/server.md)
 - [OCI runtime Mods](current/mods.md)
 - [Content automation](current/content.md)
+  - [CLI installation](current/cli.md)
   - [Plugin operations](current/plugin-operations.md)
 - [Hosted contract](current/hosted.md)
 - [Static delivery](current/delivery.md)
@@ -14,3 +15,4 @@
   - [Hosted qualification and delivery](backlog/qualification.md)
 - [Verification](verification.md)
   - [OCI Mods verification](verification/mods.md)
+  - [CLI verification](verification/cli.md)
