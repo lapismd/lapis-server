@@ -18,7 +18,7 @@ published npm cohort, container image, Desktop listener or CLI release archive.
   for offline command-path and keyword help.
 - The Tasks-owned adapter contributes 17 operations over existing native reads,
   guarded transforms and lifecycle journal submission/inspection/retry. Its
-  `a79345638076333b8e093795a762416f4d57b9ff` Git revision also supplies the pure
+  `bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439` Git revision also supplies the pure
   engine dependency. Workspace patches keep one Core/Protocol type identity.
 - Hosted settings offer explicit plugin permissions. Per-vault owner-approved
   Tasks configuration persists outside vault content and restores before the
@@ -70,6 +70,17 @@ Visual baseline approval remains separate; no baseline was replaced.
 The checkout startup budget passes at 69 native commands and 75 database calls.
 
 ## Remaining owning work
+
+Before opening the companion PRs, remote main was fetched and integrated in all
+three repositories: Server `9289a742`, Notes `0c44d1cf` and Tasks `63f5ee92`.
+Notes root spec/check/test/build/package lanes and Tasks Docker
+spec/check/test/build/publint pass after rebase. The Tasks verification conflict
+preserves remote evidence and LN-TASK-106. Its native provider/engine source and
+generated help remain unchanged; the adapter's Core/Protocol pin now references
+the rebased contract revision `82583b77`. Server requalification passes 132 unit
+cases, protocol/spec/format/ownership checks, strict workspace Clippy, registry
+and catalog-drift tests and actual HTTP/MCP/CLI cold-process acceptance against
+the refreshed provider pin above.
 
 The content automation backlog retains Desktop integration, installable native
 provider execution, OAuth, CLI distribution and later Task creation/title/body

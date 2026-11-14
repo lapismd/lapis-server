@@ -3737,7 +3737,7 @@ dependencies = [
 [[package]]
 name = "lapis-task-operations"
 version = "0.1.0"
-source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=a79345638076333b8e093795a762416f4d57b9ff#a79345638076333b8e093795a762416f4d57b9ff"
+source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439#bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439"
 dependencies = [
  "lapis-app-core",
  "lapis-app-protocol",
@@ -3752,7 +3752,7 @@ dependencies = [
 [[package]]
 name = "lapis-task-services"
 version = "0.1.0"
-source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=a79345638076333b8e093795a762416f4d57b9ff#a79345638076333b8e093795a762416f4d57b9ff"
+source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439#bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439"
 dependencies = [
  "chrono",
  "pulldown-cmark",

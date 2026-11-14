@@ -8,8 +8,8 @@ integration and qualification live in the [canonical backlog](../backlog.md).
 The [plugin operation contract](plugin-operations.md) extends shared Core and
 Protocol with namespaced descriptors and credential-bound dispatch. It does not
 alter native engine ownership or the crate dependency direction in SRV-SRV-004.
-The compiled Tasks adapter is consumed from its pinned owning-repository Git
-revision. Workspace patches bind its Core/Protocol dependencies to this host's
+The compiled Tasks adapter incorporates its owning repository's current-main
+intake at a pinned Git revision. Workspace patches bind Core/Protocol to this host's
 internal workspace instances without introducing an external Cargo path.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->

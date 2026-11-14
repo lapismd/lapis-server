@@ -6,6 +6,7 @@ the content automation backlog retains those acceptance boundaries.
 `pnpm test:plugin-operations` builds the production server and CLI, then exercises
 scoped Tasks reads/writes, MCP parity, lifecycle inspection and a cold restart
 using an isolated profile. This source gate does not publish packages or images.
+Provider pin refreshes retain catalog drift and actual server/CLI cold acceptance.
 
 <!-- dependency-automation-policy -->
 
