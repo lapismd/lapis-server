@@ -319,12 +319,12 @@ export const ContentAccess: Story = {
       name: "Enable API and MCP access",
     });
     await userEvent.click(enabled);
-    await page.findByText("Enabled · read-only");
+    await page.findByText("Enabled · scoped access");
     const label = page.getByRole("textbox", { name: "Credential label" });
     await userEvent.clear(label);
     await userEvent.type(label, "Story client");
     await userEvent.click(
-      page.getByRole("button", { name: "Create a read-only credential" }),
+      page.getByRole("button", { name: "Create a scoped credential" }),
     );
     await page.findByRole("button", { name: /^Copy full credential:/ });
     await page.findByText("Story client", { exact: true });

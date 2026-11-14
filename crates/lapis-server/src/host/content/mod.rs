@@ -13,6 +13,7 @@ use std::{
 use tokio_util::sync::CancellationToken;
 
 pub(crate) struct Access {
+    pub operations: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>,
     pub grants: Arc<ContentGrants>,
     pub cancellation: CancellationToken,
     pub gate: tokio::sync::Mutex<()>,
@@ -22,8 +23,15 @@ pub(crate) struct Access {
 }
 impl Default for Access {
     fn default() -> Self {
+        let mut operations =
+            lapis_app_core::services::plugin_operations::OperationRegistry::default();
+        operations
+            .register(Arc::new(lapis_task_operations::TaskOperations))
+            .expect("Bundled Tasks operation catalog is valid");
+        let operations = Arc::new(operations);
         Self {
-            grants: Arc::new(ContentGrants::disabled()),
+            grants: Arc::new(ContentGrants::with_operations(operations.clone())),
+            operations,
             cancellation: CancellationToken::new(),
             gate: tokio::sync::Mutex::new(()),
             admission: Mutex::new(()),
@@ -87,10 +95,11 @@ impl Host {
             .collect::<Result<Vec<_>>>()?;
         self.content
             .grants
-            .issue_named_read_only(
+            .issue_named_operations(
                 &input.label,
                 vaults,
                 Duration::from_secs(input.lifetime_seconds.into()),
+                &input.permissions,
             )
             .map_err(native)
     }

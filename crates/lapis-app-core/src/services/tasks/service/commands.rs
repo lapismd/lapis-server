@@ -87,7 +87,7 @@ pub(super) fn execute(
                     .configuration
                     .clone(),
             ),
-            None => status(&vault, None),
+            None => status(&vault, storage(&vault)?.configuration(vault.id)?),
         });
     }
     let owner = owner(&vault)?;
@@ -95,6 +95,7 @@ pub(super) fn execute(
     match command {
         NativeTaskCommand::Configure { configuration } => {
             let policy = projection::policy(&configuration)?;
+            storage(&vault)?.save_configuration(vault.id, Some(&configuration))?;
             let provider = match &configuration.provider {
                 NativeTaskProvider::Default {} => TrackedTaskProvider::Default(policy),
                 NativeTaskProvider::Unavailable { message } => {
@@ -108,6 +109,7 @@ pub(super) fn execute(
         NativeTaskCommand::Disable {} => {
             data.configuration = None;
             runtime.block_on(vault.set_tracked_task_materialization(None))?;
+            storage(&vault)?.save_configuration(vault.id, None)?;
             Ok(status(&vault, None))
         }
         NativeTaskCommand::Mutate {

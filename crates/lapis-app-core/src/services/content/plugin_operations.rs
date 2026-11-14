@@ -27,9 +27,11 @@ impl ContentSession {
                 .map_err(reads::native)?;
             native.root.verify_physical_root().map_err(reads::io)?;
         }
+        let operations = registry.catalog(&vault.client, snapshot)?;
+        self.require_live()?;
         Ok(OperationCatalog {
             protocol_version: OPERATION_PROTOCOL_MAJOR,
-            operations: registry.catalog(&vault.client, snapshot)?,
+            operations,
         })
     }
 
@@ -59,11 +61,20 @@ impl ContentSession {
                 .map_err(reads::native)?;
             native.root.verify_physical_root().map_err(reads::io)?;
         }
-        registry.invoke(&vault.client, snapshot, plugin, id, request)
+        registry.invoke(
+            &vault.client,
+            snapshot,
+            &crate::services::plugin_operations::operation_key(plugin, id),
+            request,
+            &|| self.require_live(),
+        )
     }
 }
 
 impl ContentGrants {
+    pub fn operation_permissions(&self) -> Vec<String> {
+        self.operations.permissions()
+    }
     pub fn operation_catalogs(
         &self,
         bearer: &str,

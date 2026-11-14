@@ -7,7 +7,9 @@ use uuid::Uuid;
 #[command(
     name = "lapis",
     version,
-    about = "Read notes through an explicitly selected Lapis content host"
+    disable_help_subcommand = true,
+    after_help = crate::operations::overview(),
+    about = "Read notes and invoke permitted plugin operations through a Lapis content host"
 )]
 pub(crate) struct Cli {
     /// Exact HTTPS origin, or HTTP loopback for a local host.
@@ -19,7 +21,7 @@ pub(crate) struct Cli {
     /// Read the scoped bearer credential from stdin until EOF.
     #[arg(long, global = true)]
     pub token_stdin: bool,
-    /// Emit one stable ContentReply JSON value to stdout.
+    /// Emit one stable reply JSON value to stdout.
     #[arg(long, global = true)]
     pub json: bool,
     /// Maximum time for the complete HTTP request and response.
@@ -30,6 +32,14 @@ pub(crate) struct Cli {
 }
 #[derive(Subcommand)]
 pub(crate) enum Command {
+    /// Read contributed command help or search its Markdown guides.
+    Help {
+        #[arg(short = 'k')]
+        keyword: Option<String>,
+        words: Vec<String>,
+    },
+    #[command(external_subcommand)]
+    Operation(Vec<String>),
     /// Show operations advertised by the selected host and credential.
     Capabilities,
     /// Discover admitted vault identities.
@@ -95,7 +105,7 @@ impl Page {
 impl Command {
     pub(crate) fn content(&self) -> Option<ContentCommand> {
         Some(match self {
-            Self::Mcp { .. } => return None,
+            Self::Mcp { .. } | Self::Help { .. } | Self::Operation(_) => return None,
             Self::Capabilities => ContentCommand::Capabilities {},
             Self::Vault {
                 command: Vault::List(page),

@@ -15,6 +15,9 @@ pub struct ContentAccessStatus {
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema, TS)]
 #[serde(deny_unknown_fields)]
 pub struct ContentGrantSummary {
+    #[serde(default)]
+    #[ts(as = "Option<Vec<String>>", optional)]
+    pub permissions: Vec<String>,
     pub grant_id: Uuid,
     pub label: String,
     pub vault_ids: Vec<Uuid>,
@@ -27,6 +30,9 @@ pub struct ContentGrantSummary {
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema, TS)]
 #[serde(deny_unknown_fields)]
 pub struct ContentHostStatus {
+    #[serde(default)]
+    #[ts(as = "Option<Vec<String>>", optional)]
+    pub operation_permissions: Vec<String>,
     pub access: ContentAccessStatus,
     pub available: bool,
     pub persistent: bool,
@@ -43,6 +49,9 @@ pub struct ContentAccessSetting {
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema, TS)]
 #[serde(deny_unknown_fields)]
 pub struct ContentGrantRequest {
+    #[serde(default)]
+    #[ts(as = "Option<Vec<String>>", optional)]
+    pub permissions: Vec<String>,
     pub label: String,
     pub vault_ids: Vec<Uuid>,
     pub lifetime_seconds: u32,

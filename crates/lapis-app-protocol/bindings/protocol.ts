@@ -106,6 +106,7 @@ export type ContentAccessStatus = {
   grants: Array<ContentGrantSummary>;
 };
 export type ContentHostStatus = {
+  operation_permissions?: Array<string>;
   access: ContentAccessStatus;
   available: boolean;
   persistent: boolean;
@@ -114,12 +115,14 @@ export type ContentHostStatus = {
 };
 export type ContentAccessSetting = { enabled: boolean };
 export type ContentGrantRequest = {
+  permissions?: Array<string>;
   label: string;
   vault_ids: Array<string>;
   lifetime_seconds: number;
 };
 export type CreatedContentGrant = { grant_id: string; token: string };
 export type ContentGrantSummary = {
+  permissions?: Array<string>;
   grant_id: string;
   label: string;
   vault_ids: Array<string>;
@@ -130,6 +133,54 @@ export type ContentGrantSummary = {
    */
   expires_in_seconds: number;
 };
+export type OperationArgument = {
+  flag: string;
+  field: string;
+  description: string;
+  required: boolean;
+  /**
+   * Structured values are passed as JSON, never evaluated as code.
+   */
+  json: boolean;
+};
+export type OperationHelp = {
+  command: Array<string>;
+  summary: string;
+  markdown: string;
+  examples: Array<string>;
+  keywords: Array<string>;
+  arguments: Array<OperationArgument>;
+};
+export type OperationDescriptor = {
+  plugin_id: string;
+  id: string;
+  version: number;
+  description: string;
+  permission: string;
+  effect: ContentEffect;
+  input_schema: Record<string, unknown>;
+  output_schema: Record<string, unknown>;
+  help: OperationHelp;
+};
+export type OperationCatalog = {
+  protocol_version: number;
+  operations: Array<OperationDescriptor>;
+};
+export type OperationRequest = {
+  protocol_version: number;
+  request_id: string;
+  version: number;
+  input: Record<string, unknown>;
+};
+export type OperationOutcome =
+  | { status: "ok"; value: unknown }
+  | { status: "error"; error: ContentError };
+export type OperationReply = {
+  protocol_version: number;
+  request_id: string;
+  outcome: OperationOutcome;
+};
+export type OperationContribution = { id: string; version: number };
 export type HistoryExpression =
   | { type: "term"; field: string | null; value: string }
   | { type: "and"; clauses: Array<HistoryExpression> }

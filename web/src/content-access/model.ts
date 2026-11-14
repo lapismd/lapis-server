@@ -15,6 +15,16 @@ export class ContentAccessModel {
   #label = "CLI client";
   #selected: string[];
   #hours = 1;
+  #permissions: string[] = [];
+  permissionOptions = async () => {
+    const status = await this.#json<ContentHostStatus>("");
+    return this.#closed
+      ? []
+      : (status.operation_permissions ?? []).map((value) => ({
+          value,
+          label: value,
+        }));
+  };
   #token = "";
   #expires = new Map<string, number>();
   #listeners = new Set<(id?: string) => void>();
@@ -91,7 +101,7 @@ export class ContentAccessModel {
         return this.status
           ? this.available
             ? this.enabled
-              ? "Enabled · read-only"
+              ? "Enabled · scoped access"
               : "Disabled"
             : "Unavailable for this server address"
           : this.notice;
@@ -109,6 +119,8 @@ export class ContentAccessModel {
         return this.#selected;
       case "hours":
         return this.#hours;
+      case "permissions":
+        return this.#permissions;
       case "token":
         return this.#token;
       case "grants":
@@ -118,7 +130,7 @@ export class ContentAccessModel {
           vaults: grant.vault_ids
             .map((id) => this.vaults.find((v) => v.vault_id === id)?.name ?? id)
             .join(", "),
-          permission: "Read notes",
+          permission: ["Read notes", ...(grant.permissions ?? [])].join(", "),
           expires: new Date(
             this.#expires.get(grant.grant_id) ?? Date.now(),
           ).toLocaleString(),
@@ -182,6 +194,19 @@ export class ContentAccessModel {
         )
           throw new Error("Choose 1 to 24 hours.");
         this.#hours = value;
+        break;
+      }
+      case "permissions": {
+        if (
+          !Array.isArray(value) ||
+          value.some(
+            (permission) =>
+              typeof permission !== "string" ||
+              !this.status?.operation_permissions?.includes(permission),
+          )
+        )
+          throw new Error("Choose advertised plugin permissions.");
+        this.#permissions = [...new Set(value as string[])];
         break;
       }
       default:
@@ -248,6 +273,7 @@ export class ContentAccessModel {
         label: this.#label.trim(),
         vault_ids: this.#selected,
         lifetime_seconds: this.#hours * 3600,
+        ...(this.#permissions.length ? { permissions: this.#permissions } : {}),
       });
       if (this.#closed) return;
       this.#token = result.token;

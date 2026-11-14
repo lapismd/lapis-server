@@ -237,3 +237,4 @@ jobs:
       - run: pnpm build-storybook
       - run: pnpm test:storybook:static
       - run: pnpm test:hosted
+      - run: pnpm test:plugin-operations

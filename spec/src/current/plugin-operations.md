@@ -1,7 +1,7 @@
 # Plugin operations
 
-Source contracts and qualification remain distinct. Outstanding host and provider
-acceptance belongs to the content automation backlog.
+Compiled providers share the native registry and hosted transports. Outstanding
+Desktop, installable-provider and delivery work belongs to the content automation backlog.
 
 ## SRV-OPS-001 — Shared operation registry
 
@@ -38,4 +38,4 @@ acceptance belongs to the content automation backlog.
 
 - Offline help includes argument descriptions and authored examples.
 - Invocations use live discovery and never replay a failed write.
-
+- Input files are bounded JSON data; MCP writes retain a caller-known invocation UUID.

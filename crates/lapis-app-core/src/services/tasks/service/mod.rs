@@ -45,7 +45,7 @@ fn owner(vault: &Arc<VaultService>) -> Result<Arc<Owner>> {
     let owner = Arc::new(Owner {
         data: Mutex::new(Data {
             journal,
-            configuration: None,
+            configuration: storage.configuration(vault.id)?,
         }),
     });
     *slot = Some(owner.clone());

@@ -7,24 +7,31 @@ and a first-party `lapis` CLI for interactive use, scripts and agents.
 
 ## Existing foundations and gaps
 
+Native plugin operation contributions follow SRV-OPS-001–004. The Tasks provider
+and shared API/MCP/CLI adapters have source acceptance, including cold native
+declaration recovery. Desktop listeners, independently installable executable
+providers, packaged CLI delivery and new Notes package publication remain separate
+gates. Task creation, title/body editing, bulk actions and custom transport routes
+are outside the initial Tasks operation catalog.
+
 The first implementation increment adds strict content DTOs, request validation,
 an operation/scope/effect catalog and generated bindings with a CI drift gate.
 The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
 verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
-rotation, durable client approvals, write dispatch, durable operation receipts
+rotation, durable client approvals, general note writes and generic durable receipts
 and Desktop intake remain unimplemented. Hosted owner consent now controls the
 optional read-only API/MCP endpoints and transient named credentials. OAuth selection and consumer contracts remain part of
 the first contract slice below; do not mark that whole slice or either host done.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
 grants, strict Host/Origin checks, typed control responses and direct note bytes.
-It is now mounted by the hosted server under SRV-SRV-014; HTTP writes and Desktop
+It is now mounted by the hosted server under SRV-SRV-014; general note writes and Desktop
 mounting/lifecycle integration remain pending.
 The source `lapis` executable now supports capabilities, vault/note lists and
 note reads against the HTTP adapter, with explicit origin/UUID selection,
 protected file/stdin credentials, JSON output and stable exit codes. It has
-subprocess acceptance; profiles/login, writes and distribution remain pending
+subprocess acceptance; profiles/login, general note writes and distribution remain pending
 alongside Desktop mounting and consent. The source CLI also bridges stdio
 MCP clients to an explicit host using a protected credential file; SRV-SRV-012
 qualifies current discovery and 2025-11-25 initialized clients.
@@ -233,7 +240,8 @@ retirement. SRV-SRV-014 now mounts both adapters inside the actual hosted proces
 persists its enable preference, and registers the production Notes plugin settings
 screen. Cold static/preview/development browser acceptance creates and revokes
 credentials, reads HTTP/MCP, refuses foreign vaults, disables access and restarts
-the process. Hosted authority remains read-only and credentials process-local.
+the process. Note authority stays read-only; plugin writes require explicit
+permissions under SRV-OPS-002. Credentials remain process-local.
 
 The next host slice MUST integrate the shared controls/adapters into Desktop's
 native listener and real plugin settings screen. Server and Desktop MUST each expose

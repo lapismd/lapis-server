@@ -3718,6 +3718,7 @@ dependencies = [
  "lapis-app-protocol",
  "lapis-content-http",
  "lapis-content-mcp",
+ "lapis-task-operations",
  "mime_guess",
  "reqwest 0.12.28",
  "scrypt",
@@ -3734,9 +3735,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "lapis-task-operations"
+version = "0.1.0"
+source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=a79345638076333b8e093795a762416f4d57b9ff#a79345638076333b8e093795a762416f4d57b9ff"
+dependencies = [
+ "lapis-app-core",
+ "lapis-app-protocol",
+ "lapis-task-services",
+ "schemars",
+ "serde",
+ "serde_json",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
 name = "lapis-task-services"
 version = "0.1.0"
-source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=52270c2aa7838811604a20be0861cdbd04027b42#52270c2aa7838811604a20be0861cdbd04027b42"
+source = "git+https://github.com/lapismd/lapis-plugin-tasks?rev=a79345638076333b8e093795a762416f4d57b9ff#a79345638076333b8e093795a762416f4d57b9ff"
 dependencies = [
  "chrono",
  "pulldown-cmark",

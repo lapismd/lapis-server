@@ -6,6 +6,7 @@ mod editing_intents;
 mod history_index;
 mod indexing;
 mod native_tasks;
+mod operations;
 mod participants;
 mod queues;
 mod repository_backup;
@@ -218,6 +219,7 @@ fn main() {
         content::constants(),
         content::declarations(&config)
             .iter()
+            .chain(operations::declarations(&config).iter())
             .chain(history_index::declarations(&config).iter())
             .chain(repository_backup::declarations(&config).iter())
             .chain(editing_intents::declarations(&config).iter())

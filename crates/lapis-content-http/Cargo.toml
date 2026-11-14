@@ -8,6 +8,7 @@ publish.workspace = true
 description = "Shared content HTTP adapter for Lapis Server and Desktop"
 
 [dependencies]
+serde_json = "1"
 lapis-app-core = { path = "../lapis-app-core" }
 lapis-app-protocol = { path = "../lapis-app-protocol" }
 axum = { version = "=0.8.9", default-features = false, features = ["http1", "json", "original-uri", "query", "tokio"] }

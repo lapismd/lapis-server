@@ -4,6 +4,7 @@ mod credential;
 mod errors;
 mod mcp;
 mod output;
+mod operations;
 mod validation;
 
 use clap::Parser;
@@ -30,6 +31,9 @@ fn main() -> ExitCode {
 
 async fn run() -> ExitCode {
     let args = args::Cli::parse();
+    if matches!(args.command, args::Command::Operation(_) | args::Command::Help { .. }) {
+        return operations::run(&args).await;
+    }
     let Some(command) = args.command.content() else {
         return match mcp::run(&args).await {
             Ok(()) => ExitCode::SUCCESS,

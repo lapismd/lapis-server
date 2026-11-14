@@ -59,7 +59,14 @@ impl ServerHandler for Handler {
     ) -> Result<ListToolsResult, ErrorData> {
         self.authorize(&context).await?;
         no_cursor(request)?;
-        Ok(ListToolsResult::with_all_items(self.catalog.tools.clone())
+        let mut tools = self.catalog.tools.clone();
+        tools.extend(crate::operations::tools(
+            self.boundary
+                .operation_catalog(parts(&context)?, None)
+                .await
+                .map_err(|e| content_error(e.into_error()))?,
+        )?);
+        Ok(ListToolsResult::with_all_items(tools)
             .with_ttl_ms(0)
             .with_cache_scope(CacheScope::Private))
     }
@@ -69,6 +76,71 @@ impl ServerHandler for Handler {
         context: RequestContext<RoleServer>,
     ) -> Result<CallToolResponse, ErrorData> {
         self.authorize(&context).await?;
+        if !self
+            .catalog
+            .tools
+            .iter()
+            .any(|tool| tool.name == request.name)
+        {
+            let catalog = self
+                .boundary
+                .operation_catalog(parts(&context)?, None)
+                .await
+                .map_err(|e| content_error(e.into_error()))?;
+            if let Some(descriptor) = catalog
+                .operations
+                .iter()
+                .find(|d| format!("{}_{}", d.plugin_id, d.id) == request.name)
+            {
+                let plugin = descriptor.plugin_id.clone();
+                let operation = descriptor.id.clone();
+                let mut arguments = request.arguments.unwrap_or_default();
+                let vault = arguments
+                    .remove("vault_id")
+                    .and_then(|v| v.as_str().and_then(|s| Uuid::parse_str(s).ok()))
+                    .ok_or_else(|| ErrorData::invalid_params("Explicit vault_id required", None))?;
+                let request_id = match arguments.remove("invocation_id") {
+                    Some(value) => value
+                        .as_str()
+                        .and_then(|s| Uuid::parse_str(s).ok())
+                        .ok_or_else(|| {
+                            ErrorData::invalid_params("invocation_id must be a UUID", None)
+                        })?,
+                    None if descriptor.effect
+                        == lapis_app_protocol::content::ContentEffect::Write =>
+                    {
+                        return Err(ErrorData::invalid_params(
+                            "Writes require a stable invocation_id",
+                            None,
+                        ));
+                    }
+                    None => Uuid::new_v4(),
+                };
+                let input = lapis_app_protocol::operations::OperationRequest {
+                    protocol_version: 1,
+                    request_id,
+                    version: descriptor.version,
+                    input: serde_json::Value::Object(arguments),
+                };
+                let reply = self
+                    .boundary
+                    .invoke_operation(parts(&context)?, vault, plugin, operation, input)
+                    .await
+                    .map_err(|e| content_error(e.into_error()))?;
+                let error = matches!(
+                    reply.outcome,
+                    lapis_app_protocol::operations::OperationOutcome::Error { .. }
+                );
+                let value = serde_json::to_value(reply)
+                    .map_err(|_| ErrorData::internal_error("Operation result unavailable", None))?;
+                return Ok(if error {
+                    CallToolResult::structured_error(value)
+                } else {
+                    CallToolResult::structured(value)
+                }
+                .into());
+            }
+        }
         let command = self.catalog.command(&request.name, request.arguments)?;
         let reply = self.execute(&context, command).await?;
         let error = matches!(reply.outcome, ContentOutcome::Error { .. });

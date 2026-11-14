@@ -11,6 +11,7 @@ description = "Hosted HTTP adapter for shared Lapis native application services"
 local-sibling-projections = []
 
 [dependencies]
+lapis-task-operations = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "a79345638076333b8e093795a762416f4d57b9ff" }
 lapis-content-http = { path = "../lapis-content-http" }
 lapis-content-mcp = { path = "../lapis-content-mcp" }
 lapis-app-core = { path = "../lapis-app-core" }

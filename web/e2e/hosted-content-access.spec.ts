@@ -8,6 +8,8 @@ import {
   signOutHostedWorkspace,
 } from "./rust-hosted-session";
 
+test.use({ trace: "retain-on-failure" });
+
 async function settings(page: Page) {
   await page
     .getByRole("button", {
@@ -29,16 +31,19 @@ async function settings(page: Page) {
   ).toBeVisible();
 }
 
-async function issue(page: Page) {
+async function issue(page: Page, permissions: string[] = []) {
   const response = page.waitForResponse(
     (r) =>
       r.url().endsWith("/api/v3/content-access/grants") &&
       r.request().method() === "POST",
   );
   await page
-    .getByRole("button", { name: "Create a read-only credential", exact: true })
+    .getByRole("button", { name: "Create a scoped credential", exact: true })
     .click();
   const created = await response;
+  expect(created.request().postDataJSON().permissions ?? []).toEqual(
+    permissions,
+  );
   expect(created.status()).toBe(201);
   expect(created.headers()["cache-control"]).toBe("no-store");
   const { token } = await created.json();
@@ -57,6 +62,8 @@ for (const renderer of ["static", "preview", "development"] as const) {
     page,
   }) => {
     const repository = resolve(import.meta.dirname, "../..");
+    const browserErrors: string[] = [];
+    page.on("pageerror", (error) => browserErrors.push(error.message));
     await mkdir(join(repository, ".local"), { recursive: true });
     const root = await mkdtemp(join(repository, ".local/content-settings-"));
     const password = randomBytes(32).toString("base64url");
@@ -94,7 +101,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
       expect((await read("invalid")).status).toBe(404);
       await enabled.click();
       await expect(
-        page.getByText("Enabled · read-only", { exact: true }),
+        page.getByText("Enabled · scoped access", { exact: true }),
       ).toBeVisible();
       await page
         .getByRole("textbox", { name: "Credential label", exact: true })
@@ -148,7 +155,17 @@ for (const renderer of ["static", "preview", "development"] as const) {
         page.getByRole("button", { name: "Revoke", exact: true }),
       ).toHaveCount(0);
       expect((await read(first)).status).toBe(401);
-      const second = await issue(page);
+      await page
+        .getByRole("combobox", {
+          name: "Plugin operation permissions",
+          exact: true,
+        })
+        .click();
+      await page
+        .getByRole("option", { name: "tasks:read", exact: true })
+        .click();
+      await page.keyboard.press("Escape");
+      const second = await issue(page, ["tasks:read"]);
       await signOutHostedWorkspace(page);
       expect((await read(second)).status).toBe(200);
       // Dispose the old development document before Vite restarts: its HMR
@@ -166,7 +183,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
       expect((await read(third)).status).toBe(404);
       await enabled.click();
       await expect(
-        page.getByText("Enabled · read-only", { exact: true }),
+        page.getByText("Enabled · scoped access", { exact: true }),
       ).toBeVisible();
       expect((await read(third)).status).toBe(401);
       await enabled.click();
@@ -180,6 +197,17 @@ for (const renderer of ["static", "preview", "development"] as const) {
           runtime.logs.includes(second) ||
           runtime.logs.includes(third),
       ).toBe(false);
+      expect(browserErrors).toEqual([]);
+    } catch (error) {
+      await test.info().attach("host-and-browser-diagnostics", {
+        body: JSON.stringify({
+          browserErrors,
+          url: page.url(),
+          logs: runtime.logs,
+        }),
+        contentType: "application/json",
+      });
+      throw error;
     } finally {
       await runtime.stop();
     }

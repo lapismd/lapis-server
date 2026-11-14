@@ -16,6 +16,12 @@ supply a scoped bearer credential and `x-lapis-content-api: 1`. Control replies
 use Protocol's `ContentReply`; note reads return UTF-8 bytes and a strong ETag.
 The optional `x-lapis-request-id` UUID is echoed in every adapter response.
 
+Compiled plugin providers also contribute `GET /operations` discovery and
+`POST /vaults/{vault}/plugins/{plugin}/operations/{operation}` invocation, relative
+to the same content root. Explicit permissions admit each immutable descriptor;
+legacy read grants gain no plugin authority. Input/output schemas and handlers
+come from Core's shared registry. See [plugin operations](../../docs/plugin-operations.md).
+
 The host must configure an exact HTTPS origin (HTTP only for loopback), preserve
 the matching Host header through its trusted proxy, and own TLS, listener and
 connection limits. The router rejects foreign Origin/Host values, never trusts

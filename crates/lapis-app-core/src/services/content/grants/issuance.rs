@@ -96,6 +96,7 @@ impl ContentGrants {
         registry.entries.insert(
             grant_id,
             Arc::new(Entry {
+                permissions: permissions.to_vec(),
                 operations,
                 verifier,
                 session,

@@ -40,6 +40,7 @@ struct Registry {
 }
 
 pub(super) struct Entry {
+    pub(super) permissions: Vec<String>,
     pub(super) operations: BTreeMap<String, String>,
     verifier: [u8; 32],
     pub(super) session: ContentSession,

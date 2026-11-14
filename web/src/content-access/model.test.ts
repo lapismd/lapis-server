@@ -21,6 +21,48 @@ function fixture(intercept?: typeof fetch) {
 }
 afterEach(() => vi.useRealTimers());
 
+it("loads permission choices before the initial status refresh", async () => {
+  const { model } = fixture();
+  try {
+    expect(await model.permissionOptions()).toEqual([
+      { value: "tasks:read", label: "tasks:read" },
+      { value: "tasks:write", label: "tasks:write" },
+    ]);
+  } finally {
+    model.dispose();
+  }
+});
+
+it("requires explicit advertised plugin permissions and retains the exact scope", async () => {
+  const { model, transport } = fixture();
+  try {
+    await model.refresh();
+    await model.set("content-access.enabled", true);
+    await expect(
+      model.set("content-access.permissions", ["unknown:write"]),
+    ).rejects.toThrow("advertised");
+    await model.set("content-access.permissions", [
+      "tasks:read",
+      "tasks:write",
+    ]);
+    await model.create();
+    const issue = transport.mock.calls.find(
+      ([url, init]) =>
+        String(url).endsWith("/grants") && init?.method === "POST",
+    )!;
+    expect(JSON.parse(String(issue[1]?.body)).permissions).toEqual([
+      "tasks:read",
+      "tasks:write",
+    ]);
+    expect(
+      (model.get("content-access.grants") as Array<{ permission: string }>)[0]
+        .permission,
+    ).toContain("tasks:write");
+  } finally {
+    model.dispose();
+  }
+});
+
 it("uses owner CSRF and keeps one-time tokens out of controller persistence", async () => {
   const { model, host, transport } = fixture();
   const settings = new WorkspaceSettingsController();

@@ -3,6 +3,9 @@
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.
+`pnpm test:plugin-operations` builds the production server and CLI, then exercises
+scoped Tasks reads/writes, MCP parity, lifecycle inspection and a cold restart
+using an isolated profile. This source gate does not publish packages or images.
 
 <!-- dependency-automation-policy -->
 

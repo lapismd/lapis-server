@@ -252,8 +252,8 @@ request handling to 15 seconds. Cancellation MUST retain native worker capacity
 until blocking work finishes. Hosts own listener limits, cancellation and grant
 shutdown/drain. Session IDs MUST NOT confer authority and MUST be rejected.
 
-Discovery MUST advertise only `capabilities`, `list_vaults`, `list_notes` and
-`read_note`, with input/output schemas derived from Protocol and advisory read
+Built-in discovery MUST advertise only `capabilities`, `list_vaults`, `list_notes` and
+`read_note`, plus credential-admitted plugin operations under SRV-OPS-001/002, with input/output schemas derived from Protocol and advisory read
 annotations. Tool dispatch MUST decode strict Protocol arguments and call Core;
 typed content failures retain code/effect with `isError`. Note resources use
 `lapis://notes/{vault_id}/{path}`, decode the relative path exactly once and use
@@ -307,7 +307,7 @@ credential summaries. Hosts MUST authenticate owner control independently from
 content bearer access and keep listener/persistence policy outside Core. This
 source slice MUST NOT claim either host mount or plugin settings qualification.
 
-Disabling MUST fence every grant before draining any accepted native read;
+Disabling MUST fence every grant before draining any accepted native operation;
 re-enabling MUST NOT revive old tokens or an issuance started before disable.
 Enable, disable and shutdown MUST serialize; shutdown is permanent. Admission
 MUST recheck the current enable epoch before publishing a credential. Registry
@@ -315,8 +315,8 @@ locks MUST NOT span native attachment validation, reads or drain.
 
 Named issuance MUST validate a nonempty trimmed display label of at most
 128 UTF-8 bytes, reject control characters and consume 1–32 dedicated
-host-admitted clients into the existing read-only grant.
-Summaries MUST expose only the grant UUID, label, admitted vault IDs, read scope,
+host-admitted clients into the existing grant, with explicit plugin permissions.
+Summaries MUST expose only the grant UUID, label, admitted vault IDs, permissions,
 active flag and bounded remaining lifetime; never tokens or verifiers. They
 MUST derive expiry from the original monotonic session deadline and remain
 bounded by the existing 128-grant capacity. Failed drains remain fenced and
@@ -352,19 +352,22 @@ work after disconnect, and drain before host shutdown. Vault close/archive MUST
 retire affected whole grants while excluding concurrent native admission.
 
 The control database MUST persist only the enable preference, never content
-tokens. Grants remain process-local, read-only, named, explicitly scoped to
+tokens. Grants remain process-local, named, explicitly scoped to
 1–20 active managed/configured vault IDs, and valid for at most 24 hours. Only
 issuance reveals the secret; list/status never do. Disable MUST fence/drain even
 if saving the preference fails. Enabling MUST save consent before admitting
 credentials. Token-only installations MAY use process-local preferences.
 
+Content note operations remain read-only. Explicit plugin permissions MAY admit
+guarded plugin writes under SRV-OPS-002/003; existing grants gain no authority.
+
 The hosted Notes workspace MUST register a Content API and MCP plugin settings
 section under **Core plugins** using the public declarative settings API and
 `navigationGroupId: "core-plugins"`. It MUST show enablement,
-endpoint availability/addresses, selected vaults, read permission, expiry,
+endpoint availability/addresses, selected vaults, explicit plugin permissions, expiry,
 creation and revocation. One-time tokens MUST stay in transient memory, clear on
 teardown/dismissal, and never enter browser/vault settings storage. Desktop
-integration, OAuth and write operations remain independently gated.
+integration, OAuth and general note writes remain independently gated.
 
 ### Acceptance details
 

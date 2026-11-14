@@ -47,6 +47,14 @@ fn identifier(value: &str) -> bool {
 const RESERVED: &[&str] = &["help", "version", "capabilities", "vault", "note", "mcp"];
 
 impl OperationRegistry {
+    pub fn permissions(&self) -> Vec<String> {
+        self.entries
+            .values()
+            .map(|entry| entry.descriptor.permission.clone())
+            .collect::<std::collections::BTreeSet<_>>()
+            .into_iter()
+            .collect()
+    }
     /// Registration is transactional: a bad provider publishes no partial catalog.
     pub fn register(&mut self, provider: Arc<dyn OperationProvider>) -> Result<()> {
         let descriptors = provider.descriptors();
@@ -79,7 +87,15 @@ impl OperationRegistry {
                     descriptor.input_schema.get("type").and_then(Value::as_str),
                     Some("object")
                 )
-                || descriptor.input_schema.get("additionalProperties") != Some(&Value::Bool(false));
+                || descriptor.input_schema.get("additionalProperties") != Some(&Value::Bool(false))
+                || descriptor.input_schema["properties"]
+                    .get("vault_id")
+                    .is_some()
+                || descriptor.input_schema["properties"]
+                    .get("invocation_id")
+                    .is_some()
+                || ["capabilities", "list_vaults", "list_notes", "read_note"]
+                    .contains(&format!("{}_{}", descriptor.plugin_id, descriptor.id).as_str());
             if invalid || self.entries.contains_key(&key) || pending.contains_key(&key) {
                 return Err(failure(
                     ContentErrorCode::InvalidRequest,
@@ -98,8 +114,11 @@ impl OperationRegistry {
                         "token-stdin",
                         "json",
                         "timeout-ms",
+                        "input-file",
+                        "invocation-id",
                     ]
                     .contains(&arg.flag.as_str())
+                    || ["help", "vault", "input-file", "invocation-id"].contains(&arg.field.as_str())
                     || !flags.insert(&arg.flag)
                     || !fields.insert(&arg.field)
                     || descriptor.input_schema["properties"]
@@ -203,15 +222,14 @@ impl OperationRegistry {
         &self,
         client: &Client,
         snapshot: &BTreeMap<String, String>,
-        plugin: &str,
-        id: &str,
+        key: &str,
         request: &OperationRequest,
+        authorize: &dyn Fn() -> Result<()>,
     ) -> Result<Value> {
-        let key = operation_key(plugin, id);
         let entry = self
             .entries
-            .get(&key)
-            .filter(|entry| snapshot.get(&key) == Some(&entry.digest))
+            .get(key)
+            .filter(|entry| snapshot.get(key) == Some(&entry.digest))
             .ok_or_else(|| {
                 failure(
                     ContentErrorCode::PermissionDenied,
@@ -238,7 +256,10 @@ impl OperationRegistry {
                 "Plugin provider is disabled",
             ));
         }
-        let value = entry.provider.invoke(client, id, request)?;
+        authorize()?;
+        let value = entry
+            .provider
+            .invoke(client, &entry.descriptor.id, request)?;
         if !entry.output.is_valid(&value) {
             return Err(ContentError {
                 effect: if entry.descriptor.effect == ContentEffect::Write {

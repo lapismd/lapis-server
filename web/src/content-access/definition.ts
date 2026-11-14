@@ -14,7 +14,7 @@ export function definition(
       sourcePluginId: "content-access",
       navigationGroupId: "core-plugins",
       description:
-        "Allow external clients to read selected vaults through this server.",
+        "Connect external clients to selected vaults and explicitly permitted plugin operations.",
       fields: [
         {
           id: id("notice"),
@@ -29,7 +29,7 @@ export function definition(
           default: false,
           title: "Enable API and MCP access",
           description:
-            "Disabling access revokes all credentials and waits for active reads to finish.",
+            "Disabling access revokes all credentials and waits for active operations to finish.",
         },
         {
           id: id("status"),
@@ -94,9 +94,18 @@ export function definition(
           title: "Credential lifetime (hours)",
         },
         {
+          id: id("permissions"),
+          type: "multi-enum",
+          default: [],
+          title: "Plugin operation permissions",
+          optionsSource: "content-access.permissions",
+          description:
+            "Optional native plugin access. Write permissions can change saved Tasks and their configured daily notes. Existing credentials never gain newly added operations.",
+        },
+        {
           id: id("create"),
           type: "action",
-          title: "Create a read-only credential",
+          title: "Create a scoped credential",
           label: "Create credential",
           isDisabled: () => !model.canCreate,
           isBusy: () => model.busy,
