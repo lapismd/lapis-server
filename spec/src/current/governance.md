@@ -298,3 +298,6 @@ CLI host adoption qualifies UI's built `/cli` export separately from
 its registry release. Temporary consumer and image projections record the public
 archive's source and SHA-256; tracked manifests and lockfiles retain normal npm
 ranges. Canonical unit validation includes deterministic archive regressions.
+
+CLI release jobs explicitly install their matrix Rust target before compilation;
+runner host architecture cannot substitute for target availability.

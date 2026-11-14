@@ -24,6 +24,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
         with:
           toolchain: "1.99.0"
+          targets: ${{ matrix.target }}
       - run: cargo build --release --locked -p lapis-cli --target ${{ matrix.target }}
       - name: Ad-hoc sign the macOS preview command
         if: runner.os == 'macOS'
