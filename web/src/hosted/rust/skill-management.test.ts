@@ -3,20 +3,18 @@ import { createRustSkillManagement } from "./skill-management";
 import type { RustVaultClient } from "./vault-client";
 describe("native hosted skill management", () => {
   it("preserves admission identity and returns skipped local edits", async () => {
-    const json = vi
-      .fn()
-      .mockResolvedValue({
-        outcome: {
-          status: "ok",
-          value: [
-            {
-              name: "lapis-markdown",
-              status: "skipped",
-              reason: "locally-modified",
-            },
-          ],
-        },
-      });
+    const json = vi.fn().mockResolvedValue({
+      outcome: {
+        status: "ok",
+        value: [
+          {
+            name: "lapis-markdown",
+            status: "skipped",
+            reason: "locally-modified",
+          },
+        ],
+      },
+    });
     const requireOpen = vi.fn();
     const client = {
       path: "/clients/admitted",

@@ -403,3 +403,9 @@ Skill package preparation and CLI qualification follow [SRV-OPS-005–007](plugi
 
 [Final skill qualification](../../records/2026-11-14-skills-final-source-acceptance.md)
 records the final Core and public-package acceptance separately from release intake.
+
+Plugin-skill verification lives in its [own table](../verification/plugin-skills.md)
+so every canonical page retains the existing 32 KiB limit. SUMMARY navigation
+and its metadata-only Storybook mirror retain identical chapter order.
+[CI regression evidence](../../records/2026-11-14-skills-verification-page-split.md)
+retains the failure, cancellation cause and unchanged verification requirements.
