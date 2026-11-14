@@ -304,3 +304,7 @@ runner host architecture cannot substitute for target availability.
 
 CLI registration mutations retain one exclusive per-user lease through shell
 cleanup; PATH-only cleanup follows the same source-qualified concurrency rule.
+
+Runtime-image CLI qualification exercises the actual packaged command under the
+unprivileged runtime user, including held-lease cleanup refusal. It retains the
+original image gates and separate platform/publication qualification.
