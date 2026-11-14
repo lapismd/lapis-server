@@ -15,11 +15,11 @@
   },
   "pnpm": {
     "overrides": {
-      "@lapis-notes/api>@lapismd/design-core": "0.13.1",
-      "@lapis-notes/app-profile>@lapismd/design-core": "0.13.1",
-      "@lapis-notes/file-explorer>@lapismd/design-core": "0.13.1",
-      "@lapis-notes/ui>@lapismd/design-core": "0.13.1",
-      "@lapis-notes/workspace>@lapismd/design-core": "0.13.1"
+      "@lapis-notes/api>@lapismd/design-core": "0.13.2",
+      "@lapis-notes/app-profile>@lapismd/design-core": "0.13.2",
+      "@lapis-notes/file-explorer>@lapismd/design-core": "0.13.2",
+      "@lapis-notes/ui>@lapismd/design-core": "0.13.2",
+      "@lapis-notes/workspace>@lapismd/design-core": "0.13.2"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -68,7 +68,7 @@
     "@lapis-notes/source-editor": "^0.1.3",
     "@lapis-notes/ui": "^0.1.8",
     "@lapis-notes/workspace": "^0.3.5",
-    "@lapismd/design-core": "^0.13.1",
+    "@lapismd/design-core": "^0.13.2",
     "@lapismd/jj-history": "~0.1.0",
     "@lapismd/mira": "~0.2.0",
     "@lucide/svelte": "^0.523.0",
