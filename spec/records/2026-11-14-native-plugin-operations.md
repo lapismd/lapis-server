@@ -69,6 +69,13 @@ spec-validator doctor pass. The doctor retains the existing script-alias warning
 Visual baseline approval remains separate; no baseline was replaced.
 The checkout startup budget passes at 69 native commands and 75 database calls.
 
+Hosted Configure attempt 2 initially failed once because its source guard still
+expected the superseded Tasks engine revision `52270c2a` after Core and Server
+had moved to the reviewed provider source `bdb1e583`. The exact local
+`pnpm configure` reproduction failed once before aligning that guard and passes
+afterward. This retains the pinned owning-Git-source contract; it does not admit
+a path, tag or mutable Tasks dependency.
+
 ## Remaining owning work
 
 Before opening the companion PRs, remote main was fetched and integrated in all

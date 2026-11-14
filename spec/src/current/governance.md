@@ -102,6 +102,9 @@ behavior remains unchanged; documentation checks do not qualify CLI distribution
 Configure preflight rejects a disabled default native projection feature or a
 projection dependency that leaves its pinned owning Git source. Source/core
 checks and original Desktop acceptance remain separate qualification lanes.
+The native plugin operations intake keeps that boundary unchanged: Configure
+now expects the same reviewed Tasks revision `bdb1e583` already pinned by Core
+and Server, and still rejects path, tag or mutable projection sources.
 
 The merged first-party dependency intake resolves public Design Core 0.13.1
 and Mira 0.2 through the existing registry ranges and frozen lock. It preserves
