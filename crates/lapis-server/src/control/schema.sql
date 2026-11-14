@@ -36,3 +36,30 @@ CREATE TABLE IF NOT EXISTS content_access_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   enabled INTEGER NOT NULL CHECK (enabled IN (0,1))
 );
+
+CREATE TABLE IF NOT EXISTS pending_connections (
+  state TEXT PRIMARY KEY,
+  provider_id TEXT NOT NULL,
+  code_verifier TEXT NOT NULL,
+  redirect_uri TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS connected_accounts (
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES installation_owner(id) CHECK(owner_id = 1),
+  provider_id TEXT NOT NULL,
+  external_id TEXT NOT NULL,
+  display_name TEXT,
+  email TEXT,
+  state TEXT NOT NULL CHECK(state IN ('pending', 'connected', 'expired', 'revoked')),
+  access_token_hash TEXT NOT NULL,
+  refresh_token_hash TEXT,
+  token_expires_at INTEGER,
+  scopes TEXT NOT NULL,
+  connected_at INTEGER NOT NULL,
+  last_used_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS connected_accounts_provider_idx ON connected_accounts(provider_id);
+CREATE INDEX IF NOT EXISTS connected_accounts_state_idx ON connected_accounts(state);

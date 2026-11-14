@@ -52,3 +52,8 @@ pub(super) fn digest(value: &str) -> String {
     use sha2::{Digest, Sha256};
     format!("{:x}", Sha256::digest(value.as_bytes()))
 }
+pub fn sha256_base64url(value: &str) -> String {
+    use sha2::{Digest, Sha256};
+    let hash = Sha256::digest(value.as_bytes());
+    URL_SAFE_NO_PAD.encode(hash)
+}

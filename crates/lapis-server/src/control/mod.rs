@@ -1,4 +1,5 @@
 mod attempts;
+pub mod account_connections;
 pub mod bootstrap;
 mod content;
 mod login;
@@ -7,6 +8,10 @@ pub mod passwords;
 mod sessions;
 pub(crate) mod vaults;
 
+pub use account_connections::{
+    AuthorizationRequest, ConnectedAccount, ConnectionState, ConnectionInitiation, OAuthProvider,
+    OAuthTokenResponse, ProviderUserInfo, TokenExchangeRequest,
+};
 pub use login::LoginError;
 pub use sessions::{IssuedSession, Session};
 use std::{io, path::Path, sync::Arc};

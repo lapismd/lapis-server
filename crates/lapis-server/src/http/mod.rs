@@ -3,6 +3,7 @@ mod content;
 pub use content::restore_settings as restore_content_settings;
 mod static_web;
 pub use static_web::StaticWeb;
+mod account_connections;
 mod browser;
 mod cookies;
 mod database;
@@ -118,6 +119,10 @@ fn configured_router(
         .route("/api/v3/vaults/{vault}/export", get(transfers::export))
         .route("/api/v3/auth/current", get(browser::current))
         .route("/api/v3/auth/logout", post(browser::logout))
+        .route("/api/v3/auth/connections", get(account_connections::list_connections))
+        .route("/api/v3/auth/connections/initiate", post(account_connections::initiate_connection))
+        .route("/api/v3/auth/connections/complete", post(account_connections::complete_connection))
+        .route("/api/v3/auth/connections/{account_id}", delete(account_connections::disconnect_account))
         .route("/api/v3/vaults/{vault}/clients", post(routes::attach))
         .route("/api/v3/vaults/{vault}", delete(routes::close))
         .route("/api/v3/clients/{client}/commands", post(routes::execute))
