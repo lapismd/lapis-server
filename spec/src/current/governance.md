@@ -274,3 +274,9 @@ authority. Qualification covers real reload, readiness, saved layout, explicit
 chooser/logout intent, authentication expiry, storage failure and retired-host
 fencing. Lost-browser editing claims retain their existing explicit recovery;
 source qualification and postmerge public-image acceptance remain separate.
+
+The Core 0.13.2 maintenance intake retains SRV-GOV-001/002/003 source limits,
+registry dependency ownership and all hosted/release qualification gates.
+It changes dependency manifests and the registry lockfile, without changing
+server routes, native ownership or runtime startup budgets. The complete
+PR 57 range requires this canonical confirmation on main.
