@@ -219,13 +219,17 @@ pub async fn load(config: &Config, registry: &Registry) -> Result<Receipts> {
     hooks.sort_by_key(|path| path.file_name().is_some_and(|name| name == "post-init.sh"));
     for path in hooks {
         log("hook", &path.display().to_string());
-        let succeeded = Command::new(&path)
-            .status()
-            .is_ok_and(|status| status.success());
-        if !succeeded {
-            log("hook-failed", &path.display().to_string());
-            ensure!(!config.strict, "Mod hook failed");
-        }
+        let failure = match Command::new(&path).status() {
+            Ok(status) if status.success() => continue,
+            Ok(status) => format!("exit_failed: code={:?}", status.code()),
+            Err(error) => format!(
+                "spawn_failed: kind={:?} os_code={:?}",
+                error.kind(),
+                error.raw_os_error()
+            ),
+        };
+        log("hook-failed", &format!("{}: {failure}", path.display()));
+        ensure!(!config.strict, "Mod hook failed: {failure}");
     }
     Ok(receipts)
 }
