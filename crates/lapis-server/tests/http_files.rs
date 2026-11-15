@@ -13,9 +13,9 @@ mod lifetime;
 #[cfg(feature = "local-sibling-projections")]
 mod native_tasks;
 mod physical;
+mod remote_routes;
 mod repository_backup;
 mod repository_restore;
-mod remote_routes;
 mod repository_sources;
 mod streams;
 mod support;
