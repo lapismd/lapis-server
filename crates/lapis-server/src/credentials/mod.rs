@@ -1,6 +1,9 @@
 //! Installation-private custody. HTTP adapters supply authenticated owner IDs;
 //! only native composition can choose this directory and the operator key file.
 mod forge;
+mod forge_adapter;
+#[cfg(test)]
+mod forge_adapter_tests;
 #[cfg(test)]
 mod forge_tests;
 mod record;

@@ -228,3 +228,33 @@ fn anonymous_legacy_selection_never_enables_automatic_publication() {
     assert!(!saved.automatic_sync);
     assert!(selection.set_automatic(saved.revision, true).is_err());
 }
+
+#[test]
+fn host_ssh_selection_needs_no_forge_account_and_stays_manual() {
+    let (_temporary, _vault, _private, selection) = fixture();
+    let mut ssh = connection(false);
+    ssh.url = "ssh://git@forge.example/team/notes.git".into();
+    ssh.authentication = RemoteAuthentication::SshAgent;
+    ssh.credential.clear();
+    let saved = selection
+        .configure(0, Target::Backup, ssh.clone(), || Ok(false))
+        .unwrap();
+    assert!(!saved.automatic_sync);
+    assert_eq!(
+        saved.backup.as_ref().unwrap().authentication,
+        RemoteAuthentication::SshAgent
+    );
+    ssh.authentication = RemoteAuthentication::SshDefault;
+    let saved = selection
+        .configure(saved.revision, Target::Backup, ssh.clone(), || Ok(false))
+        .unwrap();
+    assert!(!saved.automatic_sync);
+    ssh.authentication = RemoteAuthentication::Token;
+    ssh.credential = Uuid::new_v4().to_string();
+    assert!(
+        selection
+            .configure(saved.revision, Target::Backup, ssh, || Ok(false))
+            .is_err()
+    );
+    assert_eq!(selection.read().unwrap().revision, saved.revision);
+}

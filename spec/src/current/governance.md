@@ -333,3 +333,9 @@ Forge secret-custody qualification retains the existing repository token format
 and separates account metadata from encrypted credential JSON. Source tests
 prove full account/owner binding and restart/replace/forget behavior; they do
 not qualify sign-in delivery, admitted HTTP routes or real forge transport.
+
+Native remotes intake records the checked jj-store PR tree and its identical
+merged source tree separately. Portable Cargo pins and configure checks select
+the merged revision. Adapter/cold-key tests qualify injected encrypted custody;
+they do not qualify host manager startup, HTTP/Tauri admission or application
+publication.

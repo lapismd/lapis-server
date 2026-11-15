@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const forbidden = "35356e655765143b29a6c9b1518ef3b91d04837d";
-const revision = "076e418cecbe204925aea874bef8aa8a680269a9";
+const revision = "7ac5b142fdbb4378dfc48b60cfbb7324bea1c5a0";
 const git = 'git = "https://github.com/stevejuma/jj-store"';
 const server = await readFile("crates/lapis-server/Cargo.toml", "utf8");
 const core = await readFile("crates/lapis-app-core/Cargo.toml", "utf8");
@@ -55,7 +55,7 @@ for (const manifest of [server, core]) {
     throw new Error("jj-store pull request 22 is not a server dependency");
   const pinned = manifest
     .split("\n")
-    .filter((line) => /jj-(?:store|history|vault)/u.test(line));
+    .filter((line) => /jj-(?:store|history|vault|forge)/u.test(line));
   if (pinned.length === 0) throw new Error("jj-store dependency is missing");
   for (const line of pinned) {
     if (line.includes('path = "../../../jj-store/'))

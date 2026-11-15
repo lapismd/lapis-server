@@ -19,3 +19,7 @@ The [forge custody source receipt](../../records/2026-11-15-encrypted-forge-cust
 adds encrypted account credentials with full identity binding and independent
 raw-token inventory. Forge-manager injection, operator startup and admitted host
 sign-in/remote acceptance remain outstanding.
+
+The [merged engine/adapter intake](../../records/2026-11-15-remotes-native-intake.md)
+qualifies portable merged Git pins, host-SSH selection and owner-bound injection
+through jj-forge's SecretStore. Host startup and actual sign-in remain separate.
