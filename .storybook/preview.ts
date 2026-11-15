@@ -89,6 +89,7 @@ const preview: Preview = {
             "Hosted contract",
             "Static delivery",
             "Governance",
+            "Repository remotes qualification",
             "Backlog",
             "Native application services",
             "Content API, MCP and CLI",

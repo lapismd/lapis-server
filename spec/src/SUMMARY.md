@@ -9,6 +9,7 @@
 - [Hosted contract](current/hosted.md)
 - [Static delivery](current/delivery.md)
 - [Governance](current/governance.md)
+  - [Repository remotes qualification](current/governance/remotes.md)
 - [Backlog](backlog.md)
   - [Native application services](backlog/native-services.md)
   - [Content API, MCP and CLI](backlog/content-automation.md)
