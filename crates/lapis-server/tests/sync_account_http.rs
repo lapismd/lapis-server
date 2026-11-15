@@ -25,6 +25,10 @@ async fn native_exchange_requires_browser_consent_and_never_grants_vault_authori
     assert_eq!(response.headers()["cache-control"], "no-store");
     let connection: Value = response.json().await.unwrap();
     let id = connection["id"].as_str().unwrap();
+    assert_eq!(
+        connection["approval_url"],
+        format!("{}/?sync-connect={id}", f.origin)
+    );
     let redeem = || {
         f.client
             .post(format!("{}/api/v3/sync/account/{id}/redeem", f.base))

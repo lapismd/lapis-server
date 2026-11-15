@@ -61,6 +61,25 @@ function runtimeErrors(page: Page) {
   return errors;
 }
 
+test("static Sync consent keeps expired requests bounded and unavailable at narrow width", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(
+    `${origin}/iframe.html?id=shell-sync-account-consent--expired&viewMode=story`,
+  );
+  await expect(page.getByRole("status")).toContainText("expired");
+  await expect(
+    page.getByRole("button", { name: "Approve connection" }),
+  ).toHaveCount(0);
+  const card = await page.locator(".server-login-card").boundingBox();
+  expect(card).not.toBeNull();
+  expect(card!.x).toBeGreaterThanOrEqual(0);
+  expect(card!.x + card!.width).toBeLessThanOrEqual(390);
+  expect(errors).toEqual([]);
+});
+
 test("static login loads its branding and remains centered", async ({
   page,
 }) => {

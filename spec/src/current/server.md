@@ -23,7 +23,9 @@ control module under SRV-SRV-004 and [SRV-SYNC-002](sync.md). It retains only
 S256 challenges and bearer hashes, binds approval to an active owner session,
 and grants no vault attachment, endpoint enrollment or content authority.
 Its bounded native initiation/redemption routes and owner-cookie decision route
-are governed by SRV-SYNC-002; browser presentation and Desktop integration remain open.
+are governed by SRV-SYNC-002. Initiation returns a consent URL under the configured
+public origin. The static hosted renderer reviews that request before an explicit
+owner decision under SRV-SYNC-014. Desktop integration remains open.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
