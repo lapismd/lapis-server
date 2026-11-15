@@ -41,7 +41,11 @@ intake plus every endpoint/content enrollment boundary remain open. The shared
 native account HTTP client now has fixed-origin HTTPS admission, bounded
 handoff/discovery, secret-bearing host-only values and real current-server
 qualification under SRV-SYNC-015. Protected credential restoration, durable
-unknown-outcome orchestration and Tauri consumption remain open.
+unknown-outcome orchestration and Tauri consumption remain open. Proof-bound
+handoff inspection and exact cancellation under SRV-SYNC-016 now preserve a
+consumed credential association through consent-request cleanup and restart;
+legacy missing associations stay explicitly unavailable. These account-only
+routes do not enroll an endpoint or authorize working-file mutations.
 
 ## Logical participants and rich queue workflows
 

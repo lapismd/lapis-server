@@ -73,6 +73,7 @@ impl Control {
             )
             .await
             .map_err(engine)?;
+        connection.execute("DELETE FROM sync_account_outcomes WHERE credential_id IS NULL AND connection_expires_at<=?", turso::params![now]).await.map_err(engine)?;
         let changed = connection
             .execute(
                 "INSERT INTO sync_account_connections(id,client_id,client_name,s256_challenge,requested_at,expires_at) SELECT ?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM sync_account_connections)<128",
@@ -128,7 +129,7 @@ impl Control {
         };
         let changed = connection
             .execute(
-                "UPDATE sync_account_connections SET decision=?,decided_by_session=?,decided_at=? WHERE id=? AND decision IS NULL AND consumed_at IS NULL AND expires_at>?",
+                "UPDATE sync_account_connections SET decision=?,decided_by_session=?,decided_at=? WHERE id=? AND decision IS NULL AND consumed_at IS NULL AND expires_at>? AND NOT EXISTS(SELECT 1 FROM sync_account_outcomes WHERE connection_id=sync_account_connections.id AND cancelled_at IS NOT NULL)",
                 turso::params![value,session.to_string(),now,id.to_string(),now],
             )
             .await
@@ -185,7 +186,7 @@ impl Control {
     ) -> io::Result<IssuedAccountCredential> {
         let mut rows = connection
             .query(
-                "SELECT client_id,s256_challenge FROM sync_account_connections WHERE id=? AND decision='approved' AND consumed_at IS NULL AND expires_at>?",
+                "SELECT client_id,s256_challenge,expires_at FROM sync_account_connections WHERE id=? AND decision='approved' AND consumed_at IS NULL AND expires_at>? AND NOT EXISTS(SELECT 1 FROM sync_account_outcomes WHERE connection_id=sync_account_connections.id AND cancelled_at IS NOT NULL)",
                 turso::params![id.to_string(),now],
             )
             .await
@@ -218,6 +219,10 @@ impl Control {
             )
             .await
             .map_err(engine)?;
+        connection.execute(
+            "INSERT INTO sync_account_outcomes(connection_id,client_id,s256_challenge,connection_expires_at,credential_id) VALUES(?,?,?,?,?)",
+            turso::params![id.to_string(),credential.client_id.to_string(),URL_SAFE_NO_PAD.encode(presented),row.get::<i64>(2).map_err(engine)?,credential.id.to_string()],
+        ).await.map_err(engine)?;
         connection.execute("COMMIT", ()).await.map_err(engine)?;
         Ok(IssuedAccountCredential { credential, token })
     }
@@ -285,7 +290,7 @@ fn validate_challenge(value: &str) -> io::Result<()> {
     Ok(())
 }
 
-fn verifier_challenge(value: &str) -> io::Result<[u8; 32]> {
+pub(super) fn verifier_challenge(value: &str) -> io::Result<[u8; 32]> {
     if !(43..=128).contains(&value.len())
         || !value
             .bytes()

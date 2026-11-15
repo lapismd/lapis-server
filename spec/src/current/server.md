@@ -1,5 +1,6 @@
 # Hosted server
 
+Proof-bound native handoff inspection and cancellation follow SRV-SYNC-016.
 The shared native account transport follows SRV-SYNC-015; its bounded
 handoff/discovery client grants no endpoint or working-vault authority.
 

@@ -2,6 +2,7 @@ mod auth;
 mod cli;
 mod content;
 mod sync_account;
+mod sync_account_recovery;
 mod sync_discovery;
 pub use content::restore_settings as restore_content_settings;
 mod static_web;
@@ -230,6 +231,14 @@ fn configured_router(
         .route(
             "/api/v3/sync/account/{id}/redeem",
             post(sync_account::redeem),
+        )
+        .route(
+            "/api/v3/sync/account/{id}/inspect",
+            post(sync_account_recovery::inspect),
+        )
+        .route(
+            "/api/v3/sync/account/{id}/cancel",
+            post(sync_account_recovery::cancel),
         )
         .route("/api/v3/sync/discovery/vaults", get(sync_discovery::vaults))
         .route(

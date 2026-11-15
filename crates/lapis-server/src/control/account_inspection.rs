@@ -39,7 +39,7 @@ impl Control {
         validate_time(now)?;
         let guard = self.connection.lock().await;
         let mut rows = guard.as_ref().ok_or_else(unavailable)?.query(
-            "SELECT client_id,client_name,expires_at,decision,consumed_at FROM sync_account_connections WHERE id=?",
+            "SELECT client_id,client_name,expires_at,decision,consumed_at,EXISTS(SELECT 1 FROM sync_account_outcomes WHERE connection_id=sync_account_connections.id AND cancelled_at IS NOT NULL) FROM sync_account_connections WHERE id=?",
             turso::params![id.to_string()],
         ).await.map_err(engine)?;
         let Some(row) = rows.next().await.map_err(engine)? else {
@@ -50,6 +50,8 @@ impl Control {
         let consumed: Option<i64> = row.get(4).map_err(engine)?;
         let status = if consumed.is_some() {
             AccountConnectionStatus::Consumed
+        } else if row.get::<i64>(5).map_err(engine)? != 0 {
+            AccountConnectionStatus::Rejected
         } else if expires_at <= now {
             AccountConnectionStatus::Expired
         } else {

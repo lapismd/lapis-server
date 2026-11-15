@@ -1,5 +1,6 @@
 mod account_connections;
 mod account_inspection;
+mod account_recovery;
 mod attempts;
 pub mod bootstrap;
 mod content;
@@ -13,6 +14,7 @@ pub use account_connections::{
     ACCOUNT_CONNECTION_LIFETIME_MS, ACCOUNT_CREDENTIAL_LIFETIME_MS, AccountConnection,
     AccountConnectionDecision, AccountConnectionStatus, AccountCredential, IssuedAccountCredential,
 };
+pub use account_recovery::{DiscoveryCredentialStatus, NativeAccountInspection};
 pub use login::LoginError;
 pub use sessions::{IssuedSession, Session};
 use std::{io, path::Path, sync::Arc};

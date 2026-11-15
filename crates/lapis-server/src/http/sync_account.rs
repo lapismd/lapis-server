@@ -30,7 +30,7 @@ struct Redeem {
     verifier: String,
 }
 
-async fn input<T: serde::de::DeserializeOwned>(request: Request) -> Result<T, Failure> {
+pub(super) async fn input<T: serde::de::DeserializeOwned>(request: Request) -> Result<T, Failure> {
     let bytes = tokio::time::timeout(
         std::time::Duration::from_secs(10),
         to_bytes(request.into_body(), 4096),
@@ -63,7 +63,7 @@ pub(super) fn store(error: std::io::Error) -> Failure {
 }
 
 // Native handoff requests carry no browser cookie or ambient account authority.
-fn native(state: &State, request: &Request) -> Result<(), Failure> {
+pub(super) fn native(state: &State, request: &Request) -> Result<(), Failure> {
     auth::origin(request.headers(), &state.origin, false)?;
     auth::version(request.headers(), false)?;
     if request.headers().contains_key("cookie") || request.headers().contains_key("authorization") {

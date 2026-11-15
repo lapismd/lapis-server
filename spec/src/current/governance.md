@@ -10,6 +10,9 @@ SRV-MOD-006. Strict failure and explicit best-effort behavior remain unchanged;
 the original ARM64 lifecycle failure and its successful unchanged-head rerun
 remain recorded separately from diagnostic-patch qualification.
 
+SRV-SYNC-016 qualifies proof-bound unknown-outcome inspection and cancellation
+without widening account, enrollment or content authority.
+
 SRV-SYNC-015 adds bounded native account transport without changing release,
 application admission or OS custody gates.
 
