@@ -16,6 +16,11 @@ its durable revision graph and provide stable bounded catch-up snapshots.
 Protocol admission, enrollment, scheduling, working-file apply, HTTP and
 application selection remain unavailable.
 
+The first account-connection source slice adds durable S256 consent requests
+and revocable discovery-only credentials to the server control store. It does
+not expose an HTTP route, grant endpoint enrollment or unlock encrypted
+content.
+
 ## SRV-SYNC-001 — One explicit destination per vault
 
 <a id="srv-sync-001"></a>
@@ -45,6 +50,7 @@ and authorization verifiers MUST remain host-owned.
 
 - Login grants neither decryption nor membership authority.
 - Secret-bearing material never enters renderer snapshots or logs.
+- Account connection credentials are S256-bound, single-use, hashed at rest and limited to discovery until separately enrolled.
 
 ## SRV-SYNC-003 — Owner-authorized participant enrollment
 
