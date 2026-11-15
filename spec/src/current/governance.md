@@ -10,6 +10,9 @@ SRV-MOD-006. Strict failure and explicit best-effort behavior remain unchanged;
 the original ARM64 lifecycle failure and its successful unchanged-head rerun
 remain recorded separately from diagnostic-patch qualification.
 
+SRV-SYNC-015 adds bounded native account transport without changing release,
+application admission or OS custody gates.
+
 The Lapis Sync contract intake adds its canonical chapter, verification table,
 Storybook mirror and exact spec-first mapping. SRV-GOV-001 and SRV-GOV-002 stay
 unchanged: all authored files remain within existing limits, protected Sync

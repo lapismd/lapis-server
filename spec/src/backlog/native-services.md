@@ -37,7 +37,11 @@ managed-vault discovery exposes only names and identities, while sign-out
 revokes discovery-only credentials. The
 static hosted consent screen now supports owner sign-in, request inspection,
 keyboard decisions and explicit unknown-outcome recovery. Desktop custody and
-intake plus every endpoint/content enrollment boundary remain open.
+intake plus every endpoint/content enrollment boundary remain open. The shared
+native account HTTP client now has fixed-origin HTTPS admission, bounded
+handoff/discovery, secret-bearing host-only values and real current-server
+qualification under SRV-SYNC-015. Protected credential restoration, durable
+unknown-outcome orchestration and Tauri consumption remain open.
 
 ## Logical participants and rich queue workflows
 
