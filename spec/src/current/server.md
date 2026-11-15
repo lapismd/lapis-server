@@ -229,3 +229,10 @@ remain distinct gates.
 
 Bundled CLI removal keeps its setup lease until shell cleanup finishes, including
 PATH-only cleanup after command removal. Server and Desktop consume this rule.
+
+Core owns target-aware private remote selection independently of secret custody
+and repository configuration. Saving a new or changed backup connection MUST
+leave automatic synchronization off. Original selection never changes that
+backup preference. Exact configuration revisions and pending-publication guards
+fence stale writes; records contain validated endpoints and opaque credential
+references, never token bytes or host filesystem paths.

@@ -9,3 +9,8 @@ The [shared Core/Protocol source receipt](../../records/2026-11-15-shared-remote
 qualifies version-one backup selection extraction and generated path-free remotes
 commands under SRV-SRV-004. Neither credential row advances: admitted host
 integration and cold transport/credential acceptance remain outstanding.
+
+The [private selection receipt](../../records/2026-11-15-remotes-selection-policy.md)
+qualifies target isolation, locked pending checks, stale writes, restart
+persistence and manual defaults. It does not advance admitted host or transport
+acceptance.

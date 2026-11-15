@@ -323,3 +323,8 @@ The first hosted registry-adoption run passed specification validation before
 one CLI verification page failed formatting and cancelled the remaining jobs.
 The replacement formats that page and retains its SRV-GOV-001 mapping; local
 format and three-lane specification checks pass before the new hosted run.
+
+Shared remote selection qualification covers private-root admission, independent
+backup/original state, explicit manual defaults, exact revisions and credential
+reference validation. Source selection tests do not qualify transfer, scheduling,
+secret custody or host HTTP/Tauri admission.
