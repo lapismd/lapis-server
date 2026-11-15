@@ -7,7 +7,7 @@ pub use types::{
 
 use self::storage::{identity_path, sequence_path};
 use self::types::{ArrivalRecord, ArrivalState, MAX_MEMBERSHIP_BYTES, MAX_PAGE_SIZE};
-use super::{invalid, open_private_leaf, validate_object_id};
+use super::{invalid, private::open_private_leaf, validate_object_id};
 use crate::vault::{VaultRoot, WriteOptions};
 use base64::{Engine as _, engine::general_purpose::STANDARD_NO_PAD};
 use same_file::Handle;

@@ -5,7 +5,7 @@ pub use types::{OperationKind, OperationPhase, OperationRecord, StageOutcome};
 use self::types::{
     MAX_RECORD_BYTES, MAX_SEALED_BYTES, allowed_transition, decode_sealed, validate_request_id,
 };
-use super::{invalid, open_private_leaf, refused};
+use super::{invalid, private::open_private_leaf, refused};
 use crate::vault::{VaultRoot, WriteOptions};
 use base64::{Engine as _, engine::general_purpose::STANDARD_NO_PAD};
 use same_file::Handle;
