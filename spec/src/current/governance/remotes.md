@@ -159,3 +159,21 @@ anonymous reads, cross-target isolation, explicit single-branch publication,
 unchanged unsnapshotted original files, restart persistence and locked-key
 refusal through the actual binary. Trust installation is confined to the
 disposable Linux worker; disabling TLS verification cannot qualify this gate.
+
+## Lapis Sync source qualification
+
+SRV-SYNC-020 keeps cancellable leave admission and custody preflight in Core;
+hosts commit only after their remaining native leave checks approve.
+
+SRV-SYNC-019 account ownership keeps blocking transport off async executors,
+retains uncertain sessions after failed close and bounds command admission,
+including one native drain that fences later work without a renderer retry loop.
+Native source tests do not qualify Desktop or OS custody.
+
+SRV-SYNC-018 adds a native-only account coordinator within existing source and
+test limits, preserving separate OS custody, Tauri and publication gates.
+
+SRV-SYNC-017 adds explicit protected account custody injection and guarded
+profile metadata within the existing source limits, including public identity
+reservation before the first custody lookup. Portable tests use a RAM
+fake; OS custody, native application and release gates remain separate.

@@ -33,7 +33,7 @@
     "protocol:generate": "node scripts/protocol.mjs --write",
     "protocol:check": "node scripts/protocol.mjs --check && tsc -p crates/lapis-app-protocol/tsconfig.json",
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",
-    "spec:check": "node scripts/dependency-automation/spec-policy.mjs check && pnpm check:app-ownership",
+    "spec:check": "node scripts/dependency-automation/spec-policy.mjs check && pnpm check:app-ownership && pnpm test:release-workflow",
     "spec:first": "node scripts/dependency-automation/spec-policy.mjs first",
     "spec:index": "spec-validator index",
     "spec:search": "spec-validator search",
@@ -51,14 +51,15 @@
     "release:github": "node scripts/release-github.mjs",
     "test:hosted-ui": "vite build --config web/vite.config.ts && playwright test -c web/playwright.hosted-notes.config.ts",
     "build": "vite build --config web/vite.config.ts",
-    "check": "svelte-check --tsconfig tsconfig.json --fail-on-warnings && pnpm check:app-ownership",
-    "test": "node --test scripts/cli-distribution.test.mjs && vitest run --project unit",
+    "check": "svelte-check --tsconfig tsconfig.json --fail-on-warnings && pnpm check:app-ownership && pnpm test:release-workflow",
+    "test": "node --test scripts/cli-distribution.test.mjs scripts/version-pr-auth.test.mjs && vitest run --project unit",
     "test:storybook": "vitest run --project storybook --no-file-parallelism",
     "check:app-ownership": "node scripts/check-app-ownership.ts",
     "validation:profile": "node scripts/prepare-profile-consumer.mjs",
     "test:hosted": "node scripts/test-hosted.mjs",
     "validate": "pnpm check && pnpm test && pnpm build && pnpm test:storybook && pnpm build-storybook && pnpm test:storybook:static && pnpm test:hosted && pnpm test:plugin-operations",
-    "test:storybook:static": "playwright test -c web/playwright.storybook-static.config.ts"
+    "test:storybook:static": "playwright test -c web/playwright.storybook-static.config.ts",
+    "test:release-workflow": "node --test scripts/version-pr-auth.test.mjs"
   },
   "dependencies": {
     "@lapis-notes/api": "^0.2.8",
@@ -122,6 +123,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "@lapis-notes/lapis-plugin-tasks": "^0.1.1",
-    "@lapis-notes/history": "^0.2.4"
+    "@lapis-notes/history": "^0.2.4",
+    "yaml": "2.9.1"
   }
 }

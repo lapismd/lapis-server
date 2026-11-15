@@ -5,21 +5,17 @@ before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
 required; navigation cannot await asynchronous App teardown.
 
-SRV-SYNC-020 keeps cancellable leave admission and custody preflight in Core;
-hosts commit only after their remaining native leave checks approve.
+Concurrent Sync qualification remains under SRV-GOV-001 in the
+[Lapis Sync source qualification](governance/remotes.md#lapis-sync-source-qualification) topic.
 
-SRV-SYNC-019 account ownership keeps blocking transport off async executors,
-retains uncertain sessions after failed close and bounds command admission,
-including one native drain that fences later work without a renderer retry loop.
-Native source tests do not qualify Desktop or OS custody.
-
-SRV-SYNC-018 adds a native-only account coordinator within existing source and
-test limits, preserving separate OS custody, Tauri and publication gates.
-
-SRV-SYNC-017 adds explicit protected account custody injection and guarded
-profile metadata within the existing source limits, including public identity
-reservation before the first custody lookup. Portable tests use a RAM
-fake; OS custody, native application and release gates remain separate.
+Version PR authentication uses the existing dependency App on canonical main,
+scoped to this repository with contents and pull-request write permissions only;
+missing credentials MUST fail closed and checkout MUST NOT persist credentials.
+Changesets MUST NOT create GitHub releases directly. The existing release helper
+MUST retain the workflow token through `GH_TOKEN` for tag/release creation and
+image/CLI dispatch. SRV-GOV-001 native, image, specification and publication
+requirements remain unchanged. Parsed workflow regression checks run in normal
+check, test and specification lanes.
 
 The SRV-SRV-002 candidate dependency intake retains one consistent owning JJ
 Store revision, manifest admission and registry lockfile. Its original hosted
