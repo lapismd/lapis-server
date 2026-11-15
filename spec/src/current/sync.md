@@ -21,8 +21,9 @@ discovery-only credentials in the server control store. Bounded native HTTP
 initiation and redemption require protocol version 3 and reject ambient
 cookies and authorization headers. Browser decisions require an active owner
 cookie, same-origin admission and CSRF verification. These routes grant no
-endpoint enrollment or encrypted-content authority. Browser consent presentation
-and Desktop handoff integration remain open.
+endpoint enrollment or encrypted-content authority. The browser consent screen
+reviews the requesting device and discovery-only scope before an explicit
+decision. Desktop handoff integration remains open.
 
 ## SRV-SYNC-001 — One explicit destination per vault
 
@@ -224,6 +225,19 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - At most 128 unexpired connection requests may be retained; expired requests are removed before new admission.
 - Installation tokens cannot substitute for an owner cookie when approving a connection.
 - Discovery returns at most 4,096 managed vaults and refuses overflow; sign-out invalidates the presented credential without modifying vault history.
+
+## SRV-SYNC-014 — Explicit browser connection consent
+
+<a id="srv-sync-014"></a>
+
+**Requirement.** The browser connection screen MUST preserve the request through owner sign-in, show its device identity and discovery-only scope, and require an explicit decision. It MUST NOT receive native verifiers or discovery bearers. Unknown decision outcomes MUST require inspection before another submission.
+
+### Acceptance details
+
+- The server constructs the consent URL from its configured origin and request UUID; arbitrary redirects are not accepted.
+- Invalid links, expired requests and unavailable authentication expose no approval action.
+- Keyboard users can approve or reject; narrow presentation and accessibility use the retained hosted UI primitives.
+- Teardown aborts outstanding inspection and prevents late results from reactivating a retired screen.
 
 ## Deferred destinations
 

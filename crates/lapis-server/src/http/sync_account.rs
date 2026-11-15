@@ -94,7 +94,8 @@ pub(super) async fn initiate(
         .map_err(store)?;
     Ok(Json(
         json!({"id":connection.id,"client_id":connection.client_id,
-        "client_name":connection.client_name,"expires_at":connection.expires_at}),
+        "client_name":connection.client_name,"expires_at":connection.expires_at,
+        "approval_url":format!("{}/?sync-connect={}",state.origin,connection.id)}),
     ))
 }
 

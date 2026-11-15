@@ -28,7 +28,13 @@ initiation/redemption, owner-cookie inspection and consent, managed-vault
 discovery and credential sign-out. SRV-SYNC-013 owns the transport limits and
 discovery-only authority. Each new production module remains within 300 lines;
 the account control and HTTP tests remain separate and within 500 lines each.
-Browser consent presentation, Desktop custody and enrolled participation remain open.
+Desktop custody and enrolled participation remain open.
+
+The hosted browser now renders explicit Sync connection consent at the
+server-issued `sync-connect` URL. SRV-SYNC-014 owns sign-in continuity,
+display-only request inspection, explicit keyboard decisions, teardown and
+unknown-outcome inspection. Desktop custody and enrolled participation remain
+open. New consent stories retain `visual-pending`; baselines are unchanged.
 
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
