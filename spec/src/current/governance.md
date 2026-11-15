@@ -343,3 +343,8 @@ The [recorded-backup status receipt](../../records/2026-11-15-recorded-backup-st
 qualifies the no-original footer data path through immutable native checkpoint
 and diff reads. It retains original physical-observer semantics, explicit source
 identity and separate cold host gates under SRV-SRV-004.
+
+CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
+The alternate-source fixture is copied by a completed child process so parallel
+process starts cannot inherit its executable writer descriptor. All existing
+source-switch, repair and tamper-refusal assertions remain unchanged.

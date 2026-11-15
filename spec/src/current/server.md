@@ -351,3 +351,8 @@ metadata and separate secret custody. No renderer request chooses a store root.
 A locked provider retains host SSH capability but disables token/account access;
 private device authorization sessions never cross the Protocol boundary. Saved
 forge identity comes from the verified provider, not submitted display fields.
+
+CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
+The alternate-source fixture is copied by a completed child process so parallel
+process starts cannot inherit its executable writer descriptor. All existing
+source-switch, repair and tamper-refusal assertions remain unchanged.

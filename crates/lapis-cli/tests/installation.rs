@@ -159,7 +159,19 @@ fn receipts_repair_missing_links_refuse_tampering_and_require_explicit_source_sw
     fs::remove_file(home.path().join(".local/bin/lapis")).unwrap();
     assert!(cli(&home, &["cli", "install"]).status.success());
     let other = home.path().join("another-source");
-    fs::copy(env!("CARGO_BIN_EXE_lapis"), &other).unwrap();
+    // Keep executable write descriptors out of this multithreaded test runner:
+    // a concurrent fork/exec can otherwise inherit one before CLOEXEC closes it,
+    // making Linux reject execution of the new fixture with ETXTBSY.
+    let copied = Command::new("cp")
+        .arg(env!("CARGO_BIN_EXE_lapis"))
+        .arg(&other)
+        .output()
+        .unwrap();
+    assert!(
+        copied.status.success(),
+        "{}",
+        String::from_utf8_lossy(&copied.stderr)
+    );
     fs::set_permissions(&other, fs::Permissions::from_mode(0o700)).unwrap();
     assert!(
         !Command::new(&other)
