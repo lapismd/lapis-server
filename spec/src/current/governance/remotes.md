@@ -77,3 +77,11 @@ state. The encrypted Server adapter additionally proves owner isolation and
 cold store reopening with the correct, absent and wrong keys. Both adapters
 retain authenticated host-route and real transport gates; provider fixtures
 cannot establish live forge sign-in or cold application acceptance.
+
+No-original status qualification uses an existing native checkpoint and the
+operation-pinned native diff response. Test both text and binary changes with a
+live capture lease held, later unrecorded files, unchanged native operations and
+no vault metadata initialization. An invalid original must refuse instead of
+falling back to backup. Native hunks supply statistics; application code must
+not implement a scanner or diff algorithm. Missing/complex observations stay
+unavailable, and source status does not qualify either host composition.

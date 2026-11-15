@@ -55,3 +55,8 @@ The [native provider composition receipt](../../records/2026-11-15-remotes-nativ
 qualifies shared account/scope/device-flow handling and owner-bound encrypted
 Server token/forge custody with cold store reopening. HTTP/Tauri startup and
 real host acceptance remain separate; SRV-SRV-015/016 remain Partial.
+
+The [recorded-backup status receipt](../../records/2026-11-15-recorded-backup-status.md)
+adds real saved-checkpoint statistics for vaults without an original under
+SRV-SRV-004. No-source initialization, invalid-original refusal and binary
+unknown counts are distinct from cold host and transport qualification.

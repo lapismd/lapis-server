@@ -256,8 +256,12 @@ Working-copy status MUST read an admitted existing Git-backed JJ original
 without snapshotting files, changing checkout metadata or moving history pins.
 Its frame identifies that source and includes complete bounded file/line totals;
 unsupported or unstable observations remain unavailable rather than invented
-zeros. A vault with no original MUST remain uninitialized by this read. Native
-source witnesses remain independent of mutation capabilities and client-owned
+zeros. With no original, an already initialized managed backup MAY report its
+latest recorded checkpoint and native parent-diff totals. This status MUST omit
+later unrecorded disk bytes, use the existing native diff engine, and retain
+unknown line counts for binary/unsupported content. It MUST NOT initialize a
+repository, start capture, move a pin or silently fall back after an invalid
+original-source witness. Native source witnesses remain independent of mutation capabilities and client-owned
 history handles.
 
 Passive original remote discovery MUST use the immutable native constructor,

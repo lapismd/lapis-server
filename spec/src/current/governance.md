@@ -338,3 +338,8 @@ provider source qualification does not enable routes or promote cold host gates.
 The native provider SDK pin now has exact-head hosted CI and an identical-tree
 PR #87 merge receipt. This source intake proof does not qualify application host
 admission or release; SRV-GOV-001 keeps those gates separate.
+
+The [recorded-backup status receipt](../../records/2026-11-15-recorded-backup-status.md)
+qualifies the no-original footer data path through immutable native checkpoint
+and diff reads. It retains original physical-observer semantics, explicit source
+identity and separate cold host gates under SRV-SRV-004.

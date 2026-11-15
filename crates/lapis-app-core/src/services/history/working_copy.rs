@@ -1,4 +1,5 @@
-//! A bounded physical read of an admitted existing original; never a JJ snapshot.
+//! Read an admitted original or an existing recorded backup; never snapshot.
+mod backup;
 use super::source_access::SourceAccess;
 use crate::services::{Client, Error, Result};
 use jj_history_service::local::{self, Access as _};
@@ -8,7 +9,7 @@ use std::sync::Arc;
 fn unavailable() -> Error {
     Error::new(
         ErrorCode::Unsupported,
-        "Original working copy status is unavailable",
+        "Repository working copy status is unavailable",
     )
 }
 impl Client {
@@ -19,12 +20,37 @@ impl Client {
         let vault = self.vault.clone();
         let result = turn
             .run(work, move || {
-                let access =
-                    SourceAccess::read(&vault, Target::Original).map_err(|_| unavailable())?;
+                let original = super::policy::Policy::original(&vault)
+                    .map_err(|_| unavailable())?
+                    .is_some();
+                let target = if original {
+                    Target::Original
+                } else {
+                    Target::Backup
+                };
+                let access = SourceAccess::read(&vault, target).map_err(|_| unavailable())?;
                 let runtime = tokio::runtime::Builder::new_current_thread()
                     .enable_all()
                     .build()?;
-                runtime.block_on(read(access))
+                let result = if original {
+                    runtime.block_on(read(access))
+                } else {
+                    let binding = vault
+                        .backup_storage
+                        .as_ref()
+                        .ok_or_else(unavailable)?
+                        .history_source(&vault)?
+                        .binding;
+                    runtime.block_on(backup::read(access, binding))
+                };
+                if super::policy::Policy::original(&vault)
+                    .map_err(|_| unavailable())?
+                    .is_some()
+                    != original
+                {
+                    return Err(unavailable());
+                }
+                result
             })
             .await;
         self.vault.lock()?.require_client(self.id)?;
