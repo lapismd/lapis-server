@@ -7,11 +7,11 @@ source must map to both the Sync and hosted-server chapters, and Storybook order
 continues to follow `SUMMARY.md`. This documentation slice changes no runtime,
 release, image, dependency or visual baseline.
 
-The first Sync Core source slice retains those limits: its production module is
-below 300 lines, its exact test is below 500, and it adds a Changeset without
-publishing. Exact tests, strict affected Clippy, the complete Core suite and
-specification gates qualify source only; Docker, image, HTTP, Desktop and visual
-acceptance remain unchanged and unclaimed.
+The first Sync Core source slices retain those limits: each production module is
+below 300 lines, each exact test is below 500, and the stack adds a Changeset
+without publishing. Exact tests, strict affected Clippy, the complete Core suite
+and specification gates qualify source only; Docker, image, HTTP, Desktop and
+visual acceptance remain unchanged and unclaimed.
 
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;

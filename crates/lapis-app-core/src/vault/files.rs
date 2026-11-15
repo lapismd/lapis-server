@@ -33,6 +33,12 @@ impl VaultRoot {
         Ok(Self { dir, path })
     }
 
+    pub(crate) fn from_capability(path: PathBuf, dir: Dir) -> io::Result<Self> {
+        let root = Self { dir, path };
+        root.verify_physical_root()?;
+        Ok(root)
+    }
+
     pub fn try_clone(&self) -> io::Result<Self> {
         Ok(Self {
             dir: self.dir.try_clone()?,
