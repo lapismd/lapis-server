@@ -94,3 +94,9 @@ and opaque credentials across correct, absent and incorrect keys. Key/trust and
 identity location/symlink failures must refuse before a host is exposed. Actual
 HTTP transport/custody evidence does not substitute for browser UI or native
 HTTPS/SSH acceptance, automatic scheduling or either application release gate.
+
+Browser transport qualification records the initial missing-port failures, then
+proves immutable client/vault/generation scoping, exact reviewed command bodies,
+late-response fencing and no replay after detach. Preserve raw working-copy JSON
+without parsing native identities at the transport boundary. Client units alone
+do not qualify the production browser shell or network authentication.

@@ -353,3 +353,7 @@ CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
 The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
+
+Admitted remote browser ports qualify exact client/vault/generation routing,
+late-delivery fencing and no publication replay independently from native custody.
+Their unit evidence does not enable or qualify the application settings surface.

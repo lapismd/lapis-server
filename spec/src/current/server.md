@@ -217,6 +217,12 @@ remain in the native-services backlog until independently qualified.
 
 ## Shared backup remote selection
 
+The admitted browser transport uses only its existing client descriptor for
+remote-settings and working-copy requests, including the exact vault/generation
+query. It fences delivery after detach and never replays a remote mutation after
+a lost response. Working-copy transport preserves raw native JSON. This port
+does not itself enable shared settings or credential/browser handoff.
+
 Core owns the device-private backup remote selection policy extracted from
 Desktop. Existing version-one records, configuration revisions, fetched anchors
 and native-derived pending-publication identities remain compatible. Saving

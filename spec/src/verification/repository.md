@@ -66,3 +66,8 @@ qualifies admitted HTTP composition, encrypted restart and operator provisioning
 plus both targets through real SSH with wrong-host-key refusal, detach and lost
 response/restart recovery. Both credential rows remain Partial until actual
 browser, HTTPS/forge and cold application acceptance complete.
+
+The [browser port receipt](../../records/2026-11-15-remotes-browser-port.md)
+qualifies generated remote commands and raw working-copy observations on the
+existing admitted client. Settings/credential browser handoff, full shell adoption
+and actual browser HTTPS/SSH acceptance remain separate.
