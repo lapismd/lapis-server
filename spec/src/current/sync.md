@@ -290,6 +290,22 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - A lost sign-out response is inspected before retry; missing, foreign or corrupt state never selects another provider.
 - Real current-server, cold native process and fault-injection evidence remain distinct from OS custody and Tauri qualification.
 
+## SRV-SYNC-019 — Retained bounded account execution
+
+<a id="srv-sync-019"></a>
+
+**Requirement.** Shared Core MUST own bounded account command execution off the
+async executor and retain accepted work independently of response waiters.
+Hosts MUST retain the owner through view detach and refused teardown; successful
+explicit close alone releases its session and custody scope.
+
+### Acceptance details
+
+- Synchronous single-flight admission refuses busy work without effects or a queued command backlog.
+- Passive latest-value observers retain no session or custody ownership and begin explicitly uninspected.
+- Failed inspection replaces successful snapshots with recovery-required status without selecting a fallback.
+- Refused close retains the same uncertain session and protected bytes for explicit inspection and identical-byte custody retry.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple

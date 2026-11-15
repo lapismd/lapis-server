@@ -1,4 +1,5 @@
 //! Host-owned bounded account transport. No endpoint enrollment or content authority.
+pub mod owner;
 pub mod protected;
 mod recovery;
 pub mod session;

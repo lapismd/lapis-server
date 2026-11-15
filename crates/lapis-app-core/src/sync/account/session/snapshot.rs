@@ -13,7 +13,7 @@ pub enum AccountPhase {
     SigningOut,
 }
 /// Only this allowlisted public value may cross presentation IPC.
-#[derive(Debug, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 pub struct AccountSnapshot {
     pub client_id: Uuid,
     pub origin: String,
