@@ -6,6 +6,13 @@ session capability contracts remain in Notes; Tauri and OS adapters remain in
 Desktop. Sync is optional and disabled until a vault explicitly enrolls this
 server destination and participant.
 
+The first source-qualified foundation implements only the Server-owned encrypted
+object repository under SRV-SYNC-004/005. It binds an admitted physical profile,
+logical vault and destination, publishes verified ciphertext atomically, reuses
+stable retry bytes, refuses corruption and streams through a 256 KiB buffer.
+Events, HEADs, enrollment, scheduling, apply, HTTP and application selection
+remain unavailable.
+
 ## SRV-SYNC-001 — One explicit destination per vault
 
 <a id="srv-sync-001"></a>
