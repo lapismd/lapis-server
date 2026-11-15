@@ -1,5 +1,8 @@
 //! Installation-private custody. HTTP adapters supply authenticated owner IDs;
 //! only native composition can choose this directory and the operator key file.
+mod forge;
+#[cfg(test)]
+mod forge_tests;
 mod record;
 mod sealed;
 #[cfg(test)]
@@ -145,7 +148,7 @@ impl Unlocked {
         };
         if store.root.stat(".key-check")?.is_none() {
             // Existing records with no verifier never authorize a fresh key.
-            if !store.ids()?.is_empty() {
+            if !store.ids()?.is_empty() || store.has_forge_records()? {
                 return Err(unavailable());
             }
             let bytes = store.cipher.seal(Uuid::nil(), Uuid::nil(), CHECK)?;
@@ -191,6 +194,9 @@ impl Unlocked {
             let name = entry.file_name().into_string().map_err(|_| unavailable())?;
             if name == ".custody.lock" || name == ".key-check" || name.starts_with(".lapis-stage-")
             {
+                continue;
+            }
+            if name == ".forge" && entry.file_type()?.is_dir() {
                 continue;
             }
             let ids = name.strip_suffix(".sealed").ok_or_else(unavailable)?;

@@ -185,7 +185,7 @@ in the native-services backlog until independently qualified.
 
 <a id="srv-srv-015"></a>
 
-**Requirement.** Server repository tokens MUST use authenticated encryption at rest with a separately operator-mounted 32-byte key. Missing or incorrect keys and corrupted stores MUST remain locked without plaintext fallback. Authenticated records MUST bind installation, authenticated owner and credential identity.
+**Requirement.** Server repository tokens and forge account credentials MUST use authenticated encryption at rest with a separately operator-mounted 32-byte key. Missing or incorrect keys and corrupted stores MUST remain locked without plaintext fallback. Authenticated records MUST bind installation, authenticated owner and credential identity.
 
 ### Acceptance details
 
@@ -236,3 +236,10 @@ leave automatic synchronization off. Original selection never changes that
 backup preference. Exact configuration revisions and pending-publication guards
 fence stale writes; records contain validated endpoints and opaque credential
 references, never token bytes or host filesystem paths.
+
+Forge credential ciphertext uses a separate authenticated domain and the full
+256-bit account identity, alongside installation and owner. Account metadata
+and token inventory remain independent. Replacing/forgetting forge secrets
+preserves the stable account identity; no stored secret crosses into browser
+inventory. Missing keys and authentication failures never create plaintext
+fallback records. Host forge-manager and route adoption remain separate gates.

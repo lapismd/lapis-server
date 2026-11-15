@@ -46,6 +46,19 @@ impl Cipher {
         result
     }
     pub fn seal(&self, owner: Uuid, id: Uuid, plaintext: &[u8]) -> io::Result<Vec<u8>> {
+        self.seal_aad(&self.aad(owner, id), plaintext)
+    }
+    pub fn seal_forge(&self, owner: Uuid, account: &str, plaintext: &[u8]) -> io::Result<Vec<u8>> {
+        self.seal_aad(&self.forge_aad(owner, account), plaintext)
+    }
+    fn forge_aad(&self, owner: Uuid, account: &str) -> Vec<u8> {
+        let mut result = b"lapis.repository.forge.v1\0".to_vec();
+        result.extend_from_slice(self.installation.as_bytes());
+        result.extend_from_slice(owner.as_bytes());
+        result.extend_from_slice(account.as_bytes());
+        result
+    }
+    fn seal_aad(&self, aad: &[u8], plaintext: &[u8]) -> io::Result<Vec<u8>> {
         let mut nonce = [0u8; 12];
         getrandom::fill(&mut nonce).map_err(|_| unavailable())?;
         let ciphertext = Aes256Gcm::new_from_slice(self.key.as_ref())
@@ -54,7 +67,7 @@ impl Cipher {
                 Nonce::from_slice(&nonce),
                 Payload {
                     msg: plaintext,
-                    aad: &self.aad(owner, id),
+                    aad,
                 },
             )
             .map_err(|_| unavailable())?;
@@ -64,6 +77,17 @@ impl Cipher {
         Ok(result)
     }
     pub fn open(&self, owner: Uuid, id: Uuid, bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
+        self.open_aad(&self.aad(owner, id), bytes)
+    }
+    pub fn open_forge(
+        &self,
+        owner: Uuid,
+        account: &str,
+        bytes: &[u8],
+    ) -> io::Result<Zeroizing<Vec<u8>>> {
+        self.open_aad(&self.forge_aad(owner, account), bytes)
+    }
+    fn open_aad(&self, aad: &[u8], bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
         if bytes.len() < 29 || bytes[0] != 1 || bytes.len() > 16 * 1024 {
             return Err(unavailable());
         }
@@ -73,7 +97,7 @@ impl Cipher {
                 Nonce::from_slice(&bytes[1..13]),
                 Payload {
                     msg: &bytes[13..],
-                    aad: &self.aad(owner, id),
+                    aad,
                 },
             )
             .map_err(|_| unavailable())?;

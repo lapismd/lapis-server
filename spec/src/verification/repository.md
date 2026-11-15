@@ -14,3 +14,8 @@ The [private selection receipt](../../records/2026-11-15-remotes-selection-polic
 qualifies target isolation, locked pending checks, stale writes, restart
 persistence and manual defaults. It does not advance admitted host or transport
 acceptance.
+
+The [forge custody source receipt](../../records/2026-11-15-encrypted-forge-custody.md)
+adds encrypted account credentials with full identity binding and independent
+raw-token inventory. Forge-manager injection, operator startup and admitted host
+sign-in/remote acceptance remain outstanding.

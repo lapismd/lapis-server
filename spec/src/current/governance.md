@@ -328,3 +328,8 @@ Shared remote selection qualification covers private-root admission, independent
 backup/original state, explicit manual defaults, exact revisions and credential
 reference validation. Source selection tests do not qualify transfer, scheduling,
 secret custody or host HTTP/Tauri admission.
+
+Forge secret-custody qualification retains the existing repository token format
+and separates account metadata from encrypted credential JSON. Source tests
+prove full account/owner binding and restart/replace/forget behavior; they do
+not qualify sign-in delivery, admitted HTTP routes or real forge transport.
