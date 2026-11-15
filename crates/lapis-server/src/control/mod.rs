@@ -1,3 +1,4 @@
+mod account_connections;
 mod attempts;
 pub mod bootstrap;
 mod content;
@@ -7,6 +8,10 @@ pub mod passwords;
 mod sessions;
 pub(crate) mod vaults;
 
+pub use account_connections::{
+    ACCOUNT_CONNECTION_LIFETIME_MS, ACCOUNT_CREDENTIAL_LIFETIME_MS, AccountConnection,
+    AccountConnectionDecision, AccountConnectionStatus, AccountCredential, IssuedAccountCredential,
+};
 pub use login::LoginError;
 pub use sessions::{IssuedSession, Session};
 use std::{io, path::Path, sync::Arc};

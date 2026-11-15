@@ -18,6 +18,11 @@ complete Core and workspace suites and specification gates qualify source only;
 Docker, image, HTTP, protocol admission, Desktop and visual acceptance remain
 unchanged and unclaimed.
 
+The [account consent receipt](../../records/2026-11-15-sync-account-consent.md)
+adds the next disabled Server control slice within existing source/test limits.
+It records durable S256, expiry, single-use and hashed-token evidence without
+claiming an HTTP, Desktop, enrollment, content-key or installed boundary.
+
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.
