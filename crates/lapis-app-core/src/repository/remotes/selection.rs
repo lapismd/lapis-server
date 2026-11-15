@@ -41,6 +41,8 @@ pub struct SelectionState {
     pub automatic_sync: bool,
     pub migrated: bool,
     #[serde(default)]
+    pub credential_epoch: u64,
+    #[serde(default)]
     pub original_observed: Option<OriginalObservation>,
     #[serde(default)]
     pub original_binding: Option<String>,
@@ -54,6 +56,7 @@ impl Default for SelectionState {
             original: None,
             automatic_sync: false,
             migrated: false,
+            credential_epoch: 0,
             original_observed: None,
             original_binding: None,
         }
@@ -123,7 +126,10 @@ impl Selection {
         }
         let state: SelectionState = serde_json::from_slice(&bytes)
             .map_err(|_| invalid("Saved repository selection is invalid"))?;
-        if state.version != 1 || state.revision > MAX_REVISION {
+        if state.version != 1
+            || state.revision > MAX_REVISION
+            || state.credential_epoch > MAX_REVISION
+        {
             return Err(invalid("Saved repository selection version is unsupported"));
         }
         for (target, connection) in [
@@ -151,6 +157,22 @@ impl Selection {
     }
     pub fn read(&self) -> io::Result<SelectionState> {
         self.loaded().map(|v| v.0)
+    }
+    pub(crate) fn observe_credentials(&self, epoch: u64) -> io::Result<SelectionState> {
+        if epoch > MAX_REVISION {
+            return Err(invalid("Credential observation epoch is exhausted"));
+        }
+        let current = self.read()?;
+        if epoch < current.credential_epoch {
+            return Err(invalid("Credential observation epoch is unavailable"));
+        }
+        if current.credential_epoch == epoch {
+            return Ok(current);
+        }
+        self.update(current.revision, |state| {
+            state.credential_epoch = epoch;
+            Ok(())
+        })
     }
     fn lock(&self) -> io::Result<File> {
         match self

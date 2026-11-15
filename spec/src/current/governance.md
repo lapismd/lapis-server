@@ -326,3 +326,5 @@ format and three-lane specification checks pass before the new hosted run.
 
 Repository remote qualification is retained in the linked
 [remotes governance topic](governance/remotes.md), under SRV-GOV-001.
+Credential mutation additionally qualifies cross-vault observation epochs,
+accepted custody lifetime and retained publication references in that topic.

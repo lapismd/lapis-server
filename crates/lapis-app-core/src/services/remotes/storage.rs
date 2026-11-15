@@ -1,7 +1,18 @@
 use super::*;
 use crate::vault::VaultRoot;
 use cap_std::fs::MetadataExt as _;
+use std::{future::Future, pin::Pin};
 use std::{io, path::Path, sync::Mutex};
+
+pub type RemoteCredentialFuture<'a, T = ()> = Pin<Box<dyn Future<Output = Result<T>> + Send + 'a>>;
+/// Backend-only custody commands; neither printable nor serializable.
+pub enum RemoteCredentialAction {
+    Save(RemoteCredentialInput),
+    Forget(String),
+    BeginSignIn,
+    CheckSignIn,
+    CancelSignIn,
+}
 
 /// Native-only custody. Renderers receive inventory, never resolved credentials.
 pub trait RemoteCredentials: Send + Sync {
@@ -10,10 +21,19 @@ pub trait RemoteCredentials: Send + Sync {
     fn resolve(&self, _connection: &RemoteConnection) -> Result<jj_vault::GitCredentials> {
         Err(unsupported())
     }
+    fn resolve_async<'a>(
+        &'a self,
+        connection: &'a RemoteConnection,
+    ) -> RemoteCredentialFuture<'a, jj_vault::GitCredentials> {
+        Box::pin(async move { self.resolve(connection) })
+    }
+    fn control(&self, _action: RemoteCredentialAction) -> RemoteCredentialFuture<'_> {
+        Box::pin(async { Err(unsupported()) })
+    }
 }
 /// Installation selection only. No request can choose these native paths/providers.
 pub struct RemoteStorage {
-    root: VaultRoot,
+    pub(super) root: VaultRoot,
     pub(super) credentials: Arc<dyn RemoteCredentials>,
     pub(super) gate: Mutex<()>,
     pub(super) transfers: bool,

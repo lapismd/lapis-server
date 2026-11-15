@@ -88,6 +88,10 @@ pub(super) fn run(
         if let Command::StopPush { request_id, .. } = &command {
             require_pending(pending.as_ref(), request_id)?;
             binding.stop_publication(request_id).map_err(|_| failed())?;
+            if let Some(mut journal) = Journal::open(selection, &state)? {
+                journal.review = None;
+                journal.save(selection)?;
+            }
             return Ok(());
         }
         if pending.is_some() && !matches!(command, Command::ObservePush { .. }) {
@@ -118,7 +122,7 @@ pub(super) fn run(
             }
             _ => {}
         }
-        let transfer = transfer::connect(storage, binding, connection).await?;
+        let transfer = transfer::connect(storage, binding.clone(), connection).await?;
         match command {
             Command::TestConnection { .. } => {
                 // Reachability/authentication only: no fetch and no publication.
@@ -172,16 +176,20 @@ pub(super) fn run(
                 journal.save(selection)?;
                 // Native rechecks operation, bookmark, endpoint and ancestry,
                 // then durably reserves the request before starting any push.
-                match repository
-                    .push(&native, &transfer)
-                    .await
-                    .map_err(original_error)?
-                {
+                let outcome = repository.push(&native, &transfer).await;
+                if outcome.is_err() && self::pending(&binding)?.is_none() {
+                    journal.review = None;
+                    journal.save(selection)?;
+                }
+                match outcome.map_err(original_error)? {
                     PushOutcome::Complete => {
                         journal.observation = None;
+                        journal.review = None;
                         journal.save(selection)?;
                     }
                     PushOutcome::Stale => {
+                        journal.review = None;
+                        journal.save(selection)?;
                         return Err(Error::new(
                             ErrorCode::Conflict,
                             "Remote rejected this update; fetch and review again",
@@ -192,10 +200,17 @@ pub(super) fn run(
             }
             Command::ObservePush { request_id, .. } => {
                 require_pending(pending.as_ref(), &request_id)?;
-                transfer
+                let outcome = transfer
                     .reconcile(&request_id)
                     .await
                     .map_err(|_| failed())?;
+                if matches!(
+                    outcome,
+                    PushOutcome::Complete | PushOutcome::Stale | PushOutcome::Stopped
+                ) {
+                    journal.review = None;
+                    journal.save(selection)?;
+                }
             }
             _ => return Err(unsupported()),
         }

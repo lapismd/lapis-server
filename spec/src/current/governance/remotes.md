@@ -59,3 +59,12 @@ from saving/capture, independent target journals and restart recovery without a
 second receive. Shared private-record storage changes rerun both original and
 backup transport scenarios. Native library, application host and release
 qualification remain separate.
+
+Credential mutation qualification uses an installation process fence and a
+durable secret-free observation epoch. Prove cross-vault stale refusals, failed
+or lost provider responses, scope-preserving replacement, epoch rollback refusal
+and accepted completion after waiter cancellation/detach. Retained publication
+credentials remain protected across vaults and source-observation changes until
+native terminal recovery/local stop retires the hold. Policy fixtures and local
+prepared receipts do not qualify actual host custody or network authentication;
+rerun both real transport scenarios after shared journal/terminal cleanup changes.

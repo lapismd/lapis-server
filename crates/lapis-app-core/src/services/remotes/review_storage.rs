@@ -8,6 +8,12 @@ pub(super) fn load<T: DeserializeOwned>(
     path: &'static str,
 ) -> Result<Option<T>> {
     let root = VaultRoot::open(selection.private_path())?;
+    load_root(&root, path)
+}
+pub(super) fn load_root<T: DeserializeOwned>(
+    root: &VaultRoot,
+    path: &'static str,
+) -> Result<Option<T>> {
     root.verify_physical_root()?;
     let Some(metadata) = root.stat(path)? else {
         return Ok(None);
@@ -29,6 +35,13 @@ pub(super) fn save<T: Serialize>(
     value: &T,
 ) -> Result<()> {
     let root = VaultRoot::open(selection.private_path())?;
+    save_root(&root, path, value)
+}
+pub(super) fn save_root<T: Serialize>(
+    root: &VaultRoot,
+    path: &'static str,
+    value: &T,
+) -> Result<()> {
     root.verify_physical_root()?;
     let before = match root.stat(path)? {
         None => None,

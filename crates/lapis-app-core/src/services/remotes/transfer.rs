@@ -27,7 +27,7 @@ pub(super) async fn connect(
             RemoteTransfer::connect_ssh(binding, target, identity).await
         }
         Auth::Token | Auth::Forge => {
-            let credential = storage.credentials.resolve(connection)?;
+            let credential = storage.credentials.resolve_async(connection).await?;
             RemoteTransfer::connect(binding, target, credential).await
         }
     }

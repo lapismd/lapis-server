@@ -21,6 +21,9 @@ pub(super) async fn run(
     if let Command::StopPush { request_id, .. } = &command {
         operations::require_pending(pending.as_ref(), request_id)?;
         binding.stop_publication(request_id).map_err(|_| failed())?;
+        let mut journal = Journal::open(selection, state, &backup::source(vault)?)?;
+        journal.review = None;
+        journal.save(selection)?;
         return Ok(());
     }
     if pending.is_some() && !matches!(command, Command::ObservePush { .. }) {
@@ -91,13 +94,24 @@ pub(super) async fn run(
             let native = review.native.clone();
             review.started = true;
             journal.save(selection)?;
-            transfer.reserve(&native).map_err(|_| failed())?;
-            match transfer.publish(&native).await.map_err(|_| failed())? {
+            let outcome = async {
+                transfer.reserve(&native).map_err(|_| failed())?;
+                transfer.publish(&native).await.map_err(|_| failed())
+            }
+            .await;
+            if outcome.is_err() && operations::pending(&binding)?.is_none() {
+                journal.review = None;
+                journal.save(selection)?;
+            }
+            match outcome? {
                 PushOutcome::Complete => {
                     journal.observation = None;
+                    journal.review = None;
                     journal.save(selection)?;
                 }
                 PushOutcome::Stale => {
+                    journal.review = None;
+                    journal.save(selection)?;
                     return Err(Error::new(
                         ErrorCode::Conflict,
                         "Remote backup changed; fetch and review again",
@@ -107,10 +121,17 @@ pub(super) async fn run(
             }
         }
         Command::ObservePush { request_id, .. } => {
-            transfer
+            let outcome = transfer
                 .reconcile(&request_id)
                 .await
                 .map_err(|_| failed())?;
+            if matches!(
+                outcome,
+                PushOutcome::Complete | PushOutcome::Stale | PushOutcome::Stopped
+            ) {
+                journal.review = None;
+                journal.save(selection)?;
+            }
         }
         _ => return Err(unsupported()),
     }

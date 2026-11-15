@@ -2,6 +2,7 @@
 mod backup;
 mod backup_journal;
 mod backup_operations;
+mod custody;
 mod journal;
 mod operations;
 mod original;
@@ -13,7 +14,9 @@ use super::{Client, Error, Result, VaultService};
 use crate::repository::remotes::selection::{Selection, SelectionState};
 use lapis_app_protocol::{ErrorCode, repository_remotes::*};
 use std::sync::Arc;
-pub use storage::{RemoteCredentials, RemoteStorage};
+pub use storage::{
+    RemoteCredentialAction, RemoteCredentialFuture, RemoteCredentials, RemoteStorage,
+};
 
 fn unsupported() -> Error {
     Error::new(
@@ -43,7 +46,9 @@ impl Client {
             .run(work, move || {
                 let storage = vault.remotes_storage.as_ref().ok_or_else(unsupported)?;
                 let _gate = storage.gate.lock().map_err(|_| Error::busy())?;
+                let _process = custody::lock(storage)?;
                 let selection = storage.selection(&vault)?;
+                selection.observe_credentials(custody::epoch(storage)?)?;
                 let executor = tokio::runtime::Builder::new_current_thread()
                     .enable_all()
                     .build()?;
@@ -78,6 +83,9 @@ impl Client {
                                     )?;
                                 }
                             }
+                        }
+                        command if custody::is_command(&command) => {
+                            custody::run(storage, &selection, command, &executor)?;
                         }
                         command => {
                             operations::run(&vault, storage, &selection, command, &executor)?

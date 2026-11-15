@@ -326,3 +326,14 @@ receipts survive restart, prevent rebinding/new publication, and permit
 observe-only recovery or an explicit credential-free local stop. New backup
 connections and later local captures MUST remain unpublished until an explicit
 push or separately persisted synchronization opt-in.
+
+Credential mutations MUST execute through backend-only custody with the same
+accepted-work lifetime and an installation-scoped process fence. An observation
+epoch MUST be durably reserved before provider effects; every vault MUST observe
+that epoch before admitting another command, fencing stale credential settings
+across targets and vaults even after a lost mutation response. Remote selection
+records contain only the epoch and opaque references, never submitted secrets.
+Replacement MUST preserve endpoint/account scope. An unresolved publication MUST
+retain its referenced credentials; terminal native outcomes retire its review
+hold without permitting replay. Sign-in completion that could replace a retained
+account MUST wait for observation or explicit local stop.

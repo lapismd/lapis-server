@@ -39,3 +39,9 @@ The [manual backup-transfer receipt](../../records/2026-11-15-backup-transfer-or
 adds immutable recorded-checkpoint publication, capture-independent transport,
 standby metadata fetch and credential-free local stop after restart. It retains
 the separate SDK intake and admitted host gates; neither credential row advances.
+
+The [credential orchestration receipt](../../records/2026-11-15-remotes-credential-orchestration.md)
+adds backend-only custody actions, cross-vault epoch fencing, retained credential
+holds and cancelled-waiter completion. The full native workspace and both real
+SSH scenarios pass. Actual provider startup and admitted host custody/sign-in
+remain separate; neither credential row advances.

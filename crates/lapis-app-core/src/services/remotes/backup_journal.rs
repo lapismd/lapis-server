@@ -2,6 +2,13 @@
 use super::*;
 use serde::{Deserialize, Serialize};
 const PATH: &str = "backup-review.json";
+pub(super) fn held_credential(root: &crate::vault::VaultRoot) -> Result<Option<String>> {
+    let saved: Option<Journal> = review_storage::load_root(root, PATH)?;
+    Ok(saved
+        .filter(|j| j.review.as_ref().is_some_and(|r| r.started))
+        .map(|j| j.connection.credential)
+        .filter(|id| !id.is_empty()))
+}
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Review {
