@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 
 const forbidden = "35356e655765143b29a6c9b1518ef3b91d04837d";
 // PR #87 merged after exact-head CI; its source and merge trees are identical.
-const revision = "6649b7e95ee58823ba28f0a9ca01e507b458edd9";
+const revision = "086def182eae2ab6e5dc39aba030390d7ea8612c";
 const git = 'git = "https://github.com/stevejuma/jj-store"';
 const server = await readFile("crates/lapis-server/Cargo.toml", "utf8");
 const core = await readFile("crates/lapis-app-core/Cargo.toml", "utf8");
