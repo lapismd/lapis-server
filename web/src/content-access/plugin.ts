@@ -1,3 +1,4 @@
+import { registerCliSettings } from "@lapis-notes/ui/cli";
 import { getWorkspaceHostBinding } from "@lapis-notes/api/workspace-host";
 import { Plugin, type App } from "@lapis-notes/api";
 import type { RustHttpClient } from "../hosted/rust/client";
@@ -19,6 +20,14 @@ export function contentAccessPlugin(host: RustHttpClient, vaultId: string) {
       });
     }
     onload() {
+      this.register(
+        registerCliSettings(
+          getWorkspaceHostBinding(this.app.workspace).controller.settings,
+          {
+            downloads: () => host.json("/cli/downloads", "GET"),
+          },
+        ),
+      );
       // Plugin registrations dispose before onunload. Clear the source while
       // the settings controller is still subscribed so its cached token clears.
       this.register(() => this.#model.dispose());

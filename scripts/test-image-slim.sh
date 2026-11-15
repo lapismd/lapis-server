@@ -12,6 +12,9 @@ docker_slim run --rm --entrypoint /bin/sh "$image" -c '
   test "$(id -u)" = 1993
   test -s /app/static/index.html
   test -x /app/lapis-server
+  lapis --help >/dev/null
+  lapis --version
+  ! test -w /usr/local/bin/lapis
   test ! -e /home/linuxbrew/.linuxbrew
   test ! -e /app/install-homebrew-packages
   jj --version | grep -E "^jj 0\.45\.1(-|$)"

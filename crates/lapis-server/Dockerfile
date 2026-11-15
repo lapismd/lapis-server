@@ -34,8 +34,9 @@ RUN --mount=type=cache,id=lapis-server-rust-cargo-${TARGETARCH},target=/usr/loca
       arm64) target=aarch64-unknown-linux-gnu ;; \
       *) echo "Unsupported target architecture: $TARGETARCH" >&2; exit 1 ;; \
     esac \
-    && cargo build --release --locked -p lapis-server --target "$target" \
-    && cp ".local/rust-core-target/$target/release/lapis-server" /lapis-server
+    && cargo build --release --locked -p lapis-server -p lapis-cli --target "$target" \
+    && cp ".local/rust-core-target/$target/release/lapis-server" /lapis-server \
+    && cp ".local/rust-core-target/$target/release/lapis" /lapis
 
 FROM --platform=$BUILDPLATFORM node:24.15.0-bookworm-slim AS web
 ARG TARGETARCH
@@ -85,6 +86,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     && mkdir -p /app /data && chown lapis:lapis /data
 COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
 COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
+COPY --from=native --chmod=0555 /lapis /usr/local/bin/lapis
 COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
 COPY --from=jj-tool --chmod=0555 /out/jj /usr/local/bin/jj
 COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint

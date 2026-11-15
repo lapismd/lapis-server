@@ -69,3 +69,21 @@ Markdown help: `lapis tasks complete --help`, `lapis help tasks` and
 `lapis help -k tasks`. Use `--input-file` for a JSON input object (64 KiB maximum)
 and `--invocation-id` to retain an explicit lifecycle identity. See
 [plugin operations](../../docs/plugin-operations.md) for scopes and recovery.
+
+## Install the command
+
+Official archives contain a standalone executable for macOS ARM64 and Linux
+ARM64/x64. Verify the archive SHA-256 before extraction. Run `./lapis cli install`
+to install a private copy at `~/.local/share/lapis/cli/lapis` and register
+`~/.local/bin/lapis`. No server or credential is required for installation.
+Use `--setup-path bash` or `--setup-path zsh` only if you want marked shell PATH
+entries. Other shells require manual PATH setup. Open a new terminal afterward.
+`lapis cli status` reports registration; `lapis cli uninstall --remove-path`
+removes the owned command and unchanged marked PATH entries, retaining vaults
+and credentials. Conflicting files/links are never replaced.
+
+A private installation receipt binds the registered copy to its original source
+and SHA-256. `--replace` explicitly switches between Lapis-owned sources;
+unrelated or modified binaries are still refused. A missing owned registration
+can be repaired by repeating installation. Setup mutations use an exclusive
+per-user lock.

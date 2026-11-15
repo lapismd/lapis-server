@@ -379,3 +379,5 @@ integration, OAuth and general note writes remain independently gated.
 ## Native token fixture
 
 CLI token-file acceptance creates an actual private FIFO with POSIX `mkfifo` on macOS and Linux before proving non-regular credentials are refused.
+
+CLI setup and delivery are governed by [CLI installation](cli.md).

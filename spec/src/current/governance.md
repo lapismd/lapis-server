@@ -291,3 +291,25 @@ registry dependency ownership and all hosted/release qualification gates.
 It changes dependency manifests and the registry lockfile, without changing
 server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
+
+CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
+
+CLI host adoption first qualified UI's built `/cli` export separately from its
+registry release. The host now pins the published `^0.2.0` range and integrity;
+the earlier temporary projection remains historical evidence only. Canonical
+unit validation includes deterministic archive regressions.
+
+CLI release jobs explicitly install their matrix Rust target before compilation;
+runner host architecture cannot substitute for target availability.
+
+CLI registration mutations retain one exclusive per-user lease through shell
+cleanup; PATH-only cleanup follows the same source-qualified concurrency rule.
+
+Runtime-image CLI qualification exercises the actual packaged command under the
+unprivileged runtime user, including held-lease cleanup refusal. It retains the
+original image gates and separate platform/publication qualification.
+
+The first hosted registry-adoption run passed specification validation before
+one CLI verification page failed formatting and cancelled the remaining jobs.
+The replacement formats that page and retains its SRV-GOV-001 mapping; local
+format and three-lane specification checks pass before the new hosted run.
