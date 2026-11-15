@@ -1,9 +1,11 @@
 //! Retained native account ownership. Observers and cancelled response waiters
 //! cannot cancel accepted work. Hosts retain this owner until explicit close.
+mod close;
 use super::{
     DiscoveredVault, HandoffInspection,
     session::{AccountSession, AccountSnapshot},
 };
+pub use close::{AccountClosePreparation, PreparedAccountClose};
 use serde::Serialize;
 use std::{
     io,
@@ -90,6 +92,13 @@ impl AccountOwner {
 
     pub fn subscribe(&self) -> watch::Receiver<AccountObservation> {
         self.0.observation.subscribe()
+    }
+
+    /// Fence and drain without releasing custody until the native host commits.
+    /// Dropping preparation after a refused leave restores ordinary admission.
+    pub fn prepare_close(&self) -> io::Result<AccountClosePreparation> {
+        let runtime = tokio::runtime::Handle::try_current().map_err(|_| unavailable())?;
+        close::prepare(self.0.clone(), runtime)
     }
 
     /// Ordinary admission is single-flight with no queued command backlog.

@@ -308,6 +308,19 @@ holding an async executor or blocking worker while waiting for admission.
 - Failed inspection replaces successful snapshots with recovery-required status without selecting a fallback.
 - A failed drained close retains the same uncertain session and protected bytes for explicit inspection and identical-byte custody retry.
 
+## SRV-SYNC-020 — Cancellable native leave preparation
+
+<a id="srv-sync-020"></a>
+
+**Requirement.** Core MUST provide native close preparation that fences and drains accepted account work without releasing its original custody scope until the host commits leave. Abandoned or refused preparation MUST retain the original owner and protected state.
+
+### Acceptance details
+
+- Preparation checks settled custody and captured scope before other native owners close.
+- A prepared guard cannot be redirected to another account, root or custody provider.
+- Admission waits asynchronously and remains bounded with one blocking worker.
+- Failed or abandoned preparation releases its fence and permits explicit recovery without a replacement identity.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple

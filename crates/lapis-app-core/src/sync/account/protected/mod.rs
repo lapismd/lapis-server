@@ -141,6 +141,11 @@ impl ProtectedAccountState {
         self.require_settled()?;
         self.owner.close()
     }
+    /// Non-mutating native leave preflight; custody ownership remains retained.
+    pub fn prepare_close(&self) -> io::Result<()> {
+        self.require_settled()?;
+        self.owner.verify_marker()
+    }
     fn current_raw(&self) -> io::Result<Option<HostSecretBytes>> {
         let raw = self.custody.read(&self.owner.key).map_err(custody_error)?;
         if let Some(raw) = &raw {
