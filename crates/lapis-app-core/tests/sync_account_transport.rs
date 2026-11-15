@@ -267,3 +267,47 @@ fn oversized_vault_count_and_invalid_names_are_refused() {
         task.join().unwrap();
     }
 }
+
+#[test]
+fn recovery_inspection_binds_request_client_and_outcome_without_exposing_a_bearer() {
+    let id = Uuid::new_v4();
+    let client = Uuid::new_v4();
+    for (returned_id, returned_client, status, credential, valid) in [
+        (id, client, "consumed", "unavailable", true),
+        (Uuid::new_v4(), client, "consumed", "active", false),
+        (id, Uuid::new_v4(), "consumed", "active", false),
+        (id, client, "pending", "active", false),
+        (id, client, "consumed", "not-issued", false),
+    ] {
+        let (origin, task) = server(move |_| {
+            ok(&serde_json::json!({"connection_id":returned_id,"client_id":returned_client,"expires_at":1000,"status":status,"credential_status":credential}).to_string())
+        });
+        let proof = AccountVerifier::generate().unwrap();
+        let response = endpoint(&origin).inspect_handoff(id, client, &proof);
+        assert_eq!(response.is_ok(), valid);
+        let request = task.join().unwrap();
+        assert!(request.contains(proof.expose_secret()));
+        assert!(!request.to_lowercase().contains("authorization:"));
+        assert!(!request.to_lowercase().contains("cookie:"));
+    }
+}
+#[test]
+fn cancellation_does_not_claim_success_from_a_still_active_or_approved_outcome() {
+    let id = Uuid::new_v4();
+    let client = Uuid::new_v4();
+    for (status, credential) in [
+        ("approved", "not-issued"),
+        ("consumed", "active"),
+        ("consumed", "unavailable"),
+    ] {
+        let (origin, task) = server(move |_| {
+            ok(&serde_json::json!({"connection_id":id,"client_id":client,"expires_at":1000,"status":status,"credential_status":credential}).to_string())
+        });
+        assert!(
+            endpoint(&origin)
+                .cancel_handoff(id, client, &AccountVerifier::generate().unwrap())
+                .is_err()
+        );
+        task.join().unwrap();
+    }
+}

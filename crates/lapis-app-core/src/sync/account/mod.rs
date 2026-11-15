@@ -1,5 +1,7 @@
 //! Host-owned bounded account transport. No endpoint enrollment or content authority.
+mod recovery;
 mod types;
+pub use recovery::{DiscoveryCredentialStatus, HandoffInspection, HandoffStatus};
 use reqwest::{
     Method, Url,
     blocking::{Client, RequestBuilder},

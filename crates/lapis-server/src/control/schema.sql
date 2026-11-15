@@ -65,3 +65,15 @@ CREATE TABLE IF NOT EXISTS sync_account_credentials (
 );
 CREATE INDEX IF NOT EXISTS sync_account_credentials_token_idx
   ON sync_account_credentials(token_hash);
+
+-- This association outlives the ten-minute consent request, so a native owner
+-- can inspect/revoke an issued discovery credential after a lost response.
+CREATE TABLE IF NOT EXISTS sync_account_outcomes (
+  connection_id TEXT PRIMARY KEY,
+  client_id TEXT NOT NULL,
+  s256_challenge TEXT NOT NULL,
+  connection_expires_at INTEGER NOT NULL,
+  credential_id TEXT UNIQUE REFERENCES sync_account_credentials(id),
+  cancelled_at INTEGER,
+  CHECK(credential_id IS NOT NULL OR cancelled_at IS NOT NULL)
+);

@@ -105,7 +105,8 @@ async fn native_client_completes_owner_approved_discovery_and_sign_out_against_c
     let managed: Value = managed.json().await.unwrap();
     let expected: Uuid = serde_json::from_value(managed["vault_id"].clone()).unwrap();
     let base = origin.clone();
-    let (native, credential) = tokio::task::spawn_blocking(move || {
+    let connection_id = connection.id;
+    let (native, credential, verifier) = tokio::task::spawn_blocking(move || {
         let issued = native
             .redeem(connection.id, device, &verifier, now())
             .unwrap();
@@ -124,7 +125,7 @@ async fn native_client_completes_owner_approved_discovery_and_sign_out_against_c
         assert_eq!(vaults.len(), 1);
         assert_eq!(vaults[0].vault_id, expected);
         assert_eq!(vaults[0].name, "Native discovered vault");
-        (native, restored)
+        (native, restored, verifier)
     })
     .await
     .unwrap();
@@ -138,7 +139,27 @@ async fn native_client_completes_owner_approved_discovery_and_sign_out_against_c
         .unwrap();
     assert_eq!(response.status(), 401);
     tokio::task::spawn_blocking(move || {
+        let inspected = native
+            .inspect_handoff(connection_id, device, &verifier)
+            .unwrap();
+        assert_eq!(
+            inspected.credential_status,
+            lapis_app_core::sync::account::DiscoveryCredentialStatus::Active
+        );
         native.sign_out(&credential, now()).unwrap();
+        let revoked = native
+            .inspect_handoff(connection_id, device, &verifier)
+            .unwrap();
+        assert_eq!(
+            revoked.credential_status,
+            lapis_app_core::sync::account::DiscoveryCredentialStatus::Revoked
+        );
+        assert_eq!(
+            native
+                .cancel_handoff(connection_id, device, &verifier)
+                .unwrap(),
+            revoked
+        );
         assert!(native.discover(&credential, now()).is_err());
     })
     .await

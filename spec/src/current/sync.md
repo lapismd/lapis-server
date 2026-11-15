@@ -252,6 +252,18 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - Account mutations are attempted once; a lost acknowledgement is returned to the owning service without automatic replay.
 - The real current server proves native initiation, owner consent, S256 redemption, managed-vault discovery and revocation; OS custody and application admission remain separate gates.
 
+## SRV-SYNC-016 — Proof-bound account handoff recovery
+
+<a id="srv-sync-016"></a>
+
+**Requirement.** Native account callers MUST inspect and cancel their exact handoff using its S256 proof without browser or account credentials. Inspection MUST disclose no verifier, bearer or authorization hash. Cancellation MUST atomically prevent unconsumed redemption or revoke only that handoff's issued discovery credential. Consumed outcome evidence MUST survive request expiry and restart; unavailable legacy associations MUST remain explicitly unknown.
+
+### Acceptance details
+
+- Wrong proof, foreign request identity and ambient credentials cannot inspect or cancel a handoff.
+- Cancellation and redemption serialize so a cancelled handoff cannot leave a usable credential.
+- A lost redemption or cancellation response is inspected before further action; cancellation retries reuse the same handoff and proof.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple
