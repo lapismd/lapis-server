@@ -32,7 +32,8 @@ independent-device acceptance.
 
 The [account consent store](../../records/2026-11-15-sync-account-consent.md)
 now retains expiring S256 requests and revocable discovery-only credentials.
-Browser/native handoff routes, vault discovery, Desktop custody, sign-out
+Bounded native initiation/redemption and owner-cookie decision routes now exist;
+browser consent presentation, vault discovery, Desktop custody, sign-out
 integration and every endpoint/content enrollment boundary remain open.
 
 ## Logical participants and rich queue workflows

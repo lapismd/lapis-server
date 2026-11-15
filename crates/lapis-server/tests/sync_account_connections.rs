@@ -17,6 +17,31 @@ fn challenge() -> String {
     URL_SAFE_NO_PAD.encode(Sha256::digest(verifier().as_bytes()))
 }
 
+#[tokio::test]
+async fn connection_admission_is_bounded_and_recovers_only_after_expiry() {
+    let (_root, control, _session) = fixture().await;
+    for _ in 0..128 {
+        control
+            .create_account_connection(Uuid::new_v4(), "Desktop", &challenge(), NOW)
+            .await
+            .unwrap();
+    }
+    let error = control
+        .create_account_connection(Uuid::new_v4(), "Overflow", &challenge(), NOW)
+        .await
+        .unwrap_err();
+    assert_eq!(error.kind(), std::io::ErrorKind::WouldBlock);
+    control
+        .create_account_connection(
+            Uuid::new_v4(),
+            "Fresh",
+            &challenge(),
+            NOW + ACCOUNT_CONNECTION_LIFETIME_MS,
+        )
+        .await
+        .unwrap();
+}
+
 async fn fixture() -> (tempfile::TempDir, Control, Uuid) {
     let root = tempfile::tempdir().unwrap();
     let control = Control::open(root.path()).await.unwrap();

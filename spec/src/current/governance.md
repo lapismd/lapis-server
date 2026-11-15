@@ -23,6 +23,13 @@ adds the next disabled Server control slice within existing source/test limits.
 It records durable S256, expiry, single-use and hashed-token evidence without
 claiming an HTTP, Desktop, enrollment, content-key or installed boundary.
 
+The account HTTP handoff extends that source boundary with bounded native
+initiation/redemption, owner-cookie inspection and consent, managed-vault
+discovery and credential sign-out. SRV-SYNC-013 owns the transport limits and
+discovery-only authority. Each new production module remains within 300 lines;
+the account control and HTTP tests remain separate and within 500 lines each.
+Browser consent presentation, Desktop custody and enrolled participation remain open.
+
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.

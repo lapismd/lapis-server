@@ -1,6 +1,8 @@
 mod auth;
 mod cli;
 mod content;
+mod sync_account;
+mod sync_discovery;
 pub use content::restore_settings as restore_content_settings;
 mod static_web;
 pub use static_web::StaticWeb;
@@ -120,6 +122,11 @@ fn configured_router(
         .route("/api/v3/vaults/{vault}/export", get(transfers::export))
         .route("/api/v3/auth/current", get(browser::current))
         .route("/api/v3/auth/logout", post(browser::logout))
+        .route(
+            "/api/v3/sync/account/{id}/decision",
+            post(sync_account::decide),
+        )
+        .route("/api/v3/sync/account/{id}", get(sync_account::inspect))
         .route("/api/v3/vaults/{vault}/clients", post(routes::attach))
         .route("/api/v3/vaults/{vault}", delete(routes::close))
         .route("/api/v3/clients/{client}/commands", post(routes::execute))
@@ -219,6 +226,16 @@ fn configured_router(
         ))
         .route("/api/v3/system/info", get(browser::info))
         .route("/api/v3/auth/login", post(browser::login))
+        .route("/api/v3/sync/account", post(sync_account::initiate))
+        .route(
+            "/api/v3/sync/account/{id}/redeem",
+            post(sync_account::redeem),
+        )
+        .route("/api/v3/sync/discovery/vaults", get(sync_discovery::vaults))
+        .route(
+            "/api/v3/sync/discovery/sign-out",
+            post(sync_discovery::sign_out),
+        )
         .merge(transport);
     if selected_web {
         router = router
