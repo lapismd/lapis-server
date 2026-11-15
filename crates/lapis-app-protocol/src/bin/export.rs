@@ -13,6 +13,7 @@ mod repository_backup;
 mod repository_remotes;
 mod repository_restore;
 mod repository_sources;
+mod repository_sync;
 mod turns;
 use lapis_app_protocol::database::call::*;
 use lapis_app_protocol::database::indexed::{mutations::IndexedFile, queries::*, records::*};
@@ -227,6 +228,7 @@ fn main() {
             .chain(repository_restore::declarations(&config).iter())
             .chain(repository_sources::declarations(&config).iter())
             .chain(repository_remotes::declarations(&config).iter())
+            .chain(repository_sync::declarations(&config).iter())
             .chain(indexing::declarations(&config).iter())
             .chain(native_tasks::declarations(&config).iter())
             .chain(turns::declarations(&config).iter())

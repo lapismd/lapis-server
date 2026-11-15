@@ -3,6 +3,8 @@ use schemars::JsonSchema;
 
 #[derive(JsonSchema)]
 pub struct Contracts {
+    pub repository_sync_command: lapis_app_protocol::repository_sync::RepositorySyncCommand,
+    pub repository_sync_snapshot: lapis_app_protocol::repository_sync::RepositorySyncSnapshot,
     pub repository_remotes_command:
         lapis_app_protocol::repository_remotes::RepositoryRemotesCommand,
     pub repository_remotes_snapshot:

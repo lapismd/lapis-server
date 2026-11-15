@@ -11,6 +11,7 @@ mod original;
 mod review_storage;
 mod snapshot;
 mod storage;
+pub(in crate::services) mod synchronization;
 mod transfer;
 use super::{Client, Error, Result, VaultService};
 use crate::repository::remotes::selection::{Selection, SelectionState};
@@ -71,7 +72,14 @@ impl Client {
                                         expected_revision,
                                         target,
                                         connection,
-                                        || pending_backup(&vault).map_err(std::io::Error::other),
+                                        || {
+                                            pending_backup(&vault)
+                                                .and_then(|pending| {
+                                                    Ok(pending
+                                                        || synchronization::pending(&selection)?)
+                                                })
+                                                .map_err(std::io::Error::other)
+                                        },
                                     )?;
                                 }
                                 RemoteRepositoryTarget::Original => {
@@ -86,6 +94,26 @@ impl Client {
                                 }
                             }
                         }
+                        RepositoryRemotesCommand::SetAutomaticSync {
+                            expected_revision,
+                            enabled,
+                        } => {
+                            if enabled {
+                                if !storage.transfers || vault.backup_storage.is_none() {
+                                    return Err(unsupported());
+                                }
+                                crate::services::backup::remote::synchronization_admitted(&vault)?;
+                                let state = selection.read()?;
+                                state.expect(expected_revision)?;
+                                admit_connection(
+                                    storage,
+                                    state.backup.as_ref().ok_or_else(unsupported)?,
+                                )?;
+                            }
+                            let state = selection.set_automatic(expected_revision, enabled)?;
+                            vault.synchronization.selection(&state);
+                            vault.synchronization.wake();
+                        }
                         command if custody::is_command(&command) => {
                             custody::run(storage, &selection, command, &executor)?;
                         }
@@ -97,6 +125,7 @@ impl Client {
                 let original = executor.block_on(original::read(&vault))?;
                 let state =
                     selection.observe_original(original.as_ref().map(|d| d.observed.clone()))?;
+                vault.synchronization.selection(&state);
                 snapshot::read(storage, &selection, state, original, &vault, &executor)
             })
             .await;

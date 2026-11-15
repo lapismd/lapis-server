@@ -255,6 +255,14 @@ backup preference. Exact configuration revisions and pending-publication guards
 fence stale writes; records contain validated endpoints and opaque credential
 references, never token bytes or host filesystem paths.
 
+Opted-in backup synchronization MUST be owned by Core for the admitted vault,
+survive client detach, and drain accepted work at close without retaining an idle
+work lease. It MUST use native capture, merge proposals and guarded apply before
+single-branch publication. Conflicts and uncertain apply receipts MUST pause for
+explicit recovery; restart MUST NOT replay an uncertain file application.
+Passive synchronization status MUST remain observable during network work.
+Original-repository transfers remain manual. See [qualification](governance/remotes.md).
+
 Forge credential ciphertext uses a separate authenticated domain and the full
 256-bit account identity, alongside installation and owner. Account metadata
 and token inventory remain independent. Replacing/forgetting forge secrets

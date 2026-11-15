@@ -357,3 +357,8 @@ source-switch, repair and tamper-refusal assertions remain unchanged.
 Admitted remote browser ports qualify exact client/vault/generation routing,
 late-delivery fencing and no publication replay independently from native custody.
 Their unit evidence does not enable or qualify the application settings surface.
+
+Native backup synchronization follows the same [repository qualification rules](governance/remotes.md).
+Keep its source orchestration, passive authenticated status, explicit recovery,
+actual SSH/HTTPS transport and cold host UI evidence distinct. The scheduler's
+idle lifetime must not hold a vault work lease or a renderer dependency.

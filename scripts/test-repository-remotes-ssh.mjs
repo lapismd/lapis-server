@@ -18,8 +18,9 @@ if (!["darwin", "linux"].includes(process.platform))
   throw Error("SSH fixture requires macOS or Linux");
 const backupOnly = process.argv[2] === "--backup-only";
 const serverOnly = process.argv[2] === "--server-only";
-if (process.argv.length !== (backupOnly || serverOnly ? 3 : 2))
-  throw Error("Use --backup-only, --server-only or no arguments");
+const syncOnly = process.argv[2] === "--sync-only";
+if (process.argv.length !== (backupOnly || serverOnly || syncOnly ? 3 : 2))
+  throw Error("Use --backup-only, --server-only, --sync-only or no arguments");
 // OpenSSH StrictModes rejects a Linux authorized_keys path beneath world-writable /tmp.
 // Only fresh disposable fixture state is created here; host profiles are never read.
 const base = realpathSync(
@@ -198,13 +199,16 @@ child.on('close',code=>{if(dropping&&code===0){unlinkSync(base+'/drop-next-respo
   });
   const targets = serverOnly
     ? [["lapis-server", "repository_remotes"]]
-    : backupOnly
-      ? [["lapis-app-core", "repository_backup_remotes_ssh"]]
-      : [
-          ["lapis-app-core", "repository_remotes_ssh"],
-          ["lapis-app-core", "repository_backup_remotes_ssh"],
-          ["lapis-server", "repository_remotes"],
-        ];
+    : syncOnly
+      ? [["lapis-app-core", "repository_synchronization_ssh"]]
+      : backupOnly
+        ? [["lapis-app-core", "repository_backup_remotes_ssh"]]
+        : [
+            ["lapis-app-core", "repository_remotes_ssh"],
+            ["lapis-app-core", "repository_backup_remotes_ssh"],
+            ["lapis-app-core", "repository_synchronization_ssh"],
+            ["lapis-server", "repository_remotes"],
+          ];
   for (const [owner, target] of targets) {
     const test = spawn(
       "cargo",

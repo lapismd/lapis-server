@@ -104,6 +104,7 @@ impl Runtime {
         vault.turn_storage = self.turns.clone();
         vault.task_storage = self.tasks.clone();
         let vault = Arc::new(vault);
+        vault.synchronization.start(&vault)?;
         registry.roots.insert(identity, id);
         registry.vaults.insert(id, vault.clone());
         Ok(vault)

@@ -135,6 +135,11 @@ fn configured_router(
             get(repository_remotes::working_copy),
         )
         .route(
+            "/api/v3/clients/{client}/repository-synchronization",
+            get(repository_remotes::synchronization).post(repository_remotes::control_synchronization)
+                .layer(DefaultBodyLimit::max(1024 * 1024 + 16 * 1024)),
+        )
+        .route(
             "/api/v3/clients/{client}/database",
             post(database::call).layer(DefaultBodyLimit::max(database::JSON_LIMIT)),
         )

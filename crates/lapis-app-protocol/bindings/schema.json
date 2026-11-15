@@ -4449,6 +4449,194 @@
         }
       ]
     },
+    "RepositorySyncCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "run", "type": "string" }
+          },
+          "required": ["kind", "expected_revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resume_apply", "type": "string" },
+            "request_id": { "type": "string" }
+          },
+          "required": ["kind", "expected_revision", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "keep_current", "type": "string" }
+          },
+          "required": ["kind", "expected_revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "candidate": { "type": "string" },
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "inspect", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "expected_revision", "candidate", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "candidate": { "type": "string" },
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resolve", "type": "string" },
+            "path": { "type": "string" },
+            "resolution": { "$ref": "#/$defs/RepositorySyncResolution" }
+          },
+          "required": [
+            "kind",
+            "expected_revision",
+            "candidate",
+            "path",
+            "resolution"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositorySyncConflict": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "terms": {
+          "items": { "$ref": "#/$defs/RepositorySyncTerm" },
+          "type": "array"
+        }
+      },
+      "required": ["path", "terms"],
+      "type": "object"
+    },
+    "RepositorySyncPhase": {
+      "enum": [
+        "ready",
+        "fetching",
+        "applying",
+        "publishing",
+        "conflicts",
+        "attention",
+        "paused"
+      ],
+      "type": "string"
+    },
+    "RepositorySyncProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositoryCheckpoint" },
+            { "type": "null" }
+          ]
+        },
+        "conflicts": { "items": { "type": "string" }, "type": "array" },
+        "incoming": { "$ref": "#/$defs/RepositoryCheckpoint" },
+        "local": { "$ref": "#/$defs/RepositoryCheckpoint" }
+      },
+      "required": ["local", "incoming", "conflicts"],
+      "type": "object"
+    },
+    "RepositorySyncResolution": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "id": { "format": "uint", "minimum": 0, "type": "integer" },
+            "kind": { "const": "term", "type": "string" }
+          },
+          "required": ["kind", "id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "executable": { "type": "boolean" },
+            "kind": { "const": "text", "type": "string" },
+            "text": { "type": "string" }
+          },
+          "required": ["kind", "text", "executable"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "delete", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositorySyncSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "busy": { "type": "boolean" },
+        "conflict": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositorySyncConflict" },
+            { "type": "null" }
+          ]
+        },
+        "enabled": { "type": "boolean" },
+        "lastSuccess": { "format": "int64", "type": ["integer", "null"] },
+        "pendingApply": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/RepositorySyncPhase" },
+        "proposal": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositorySyncProposal" },
+            { "type": "null" }
+          ]
+        },
+        "recovery": { "type": "boolean" },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["revision", "enabled", "busy", "phase", "recovery"],
+      "type": "object"
+    },
+    "RepositorySyncTerm": {
+      "additionalProperties": false,
+      "properties": {
+        "executable": { "type": ["boolean", "null"] },
+        "id": { "format": "uint", "minimum": 0, "type": "integer" },
+        "kind": { "type": "string" },
+        "role": { "type": "string" },
+        "text": { "type": ["string", "null"] }
+      },
+      "required": ["id", "role", "kind"],
+      "type": "object"
+    },
     "RepositoryVaultRestorePreview": {
       "additionalProperties": false,
       "properties": {
@@ -6132,6 +6320,8 @@
     "repository_sources_command": {
       "$ref": "#/$defs/RepositorySourcesCommand"
     },
+    "repository_sync_command": { "$ref": "#/$defs/RepositorySyncCommand" },
+    "repository_sync_snapshot": { "$ref": "#/$defs/RepositorySyncSnapshot" },
     "request": { "$ref": "#/$defs/Request" },
     "search_document": { "$ref": "#/$defs/SearchDocumentRecord" },
     "search_embedding_config": {
@@ -6164,6 +6354,8 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "repository_sync_command",
+    "repository_sync_snapshot",
     "repository_remotes_command",
     "repository_remotes_snapshot",
     "operation_catalog",

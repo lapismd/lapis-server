@@ -8,6 +8,7 @@ use serde_json::{Value, json};
 use std::{path::Path, sync::Arc};
 use uuid::Uuid;
 mod transport;
+mod synchronization;
 
 const TOKEN: &str = "disposable-remotes-owner-token-0123456789";
 const SECRET: &str = "disposable-https-credential-fixture";

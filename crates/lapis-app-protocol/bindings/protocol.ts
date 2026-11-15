@@ -496,6 +496,63 @@ export type RepositoryRemotesSnapshot = {
   capabilities: RemoteCapabilities;
   settings: RemoteSettings;
 };
+export type RepositorySyncCommand =
+  | { kind: "run"; expected_revision: number }
+  | { kind: "resume_apply"; expected_revision: number; request_id: string }
+  | { kind: "keep_current"; expected_revision: number }
+  | {
+      kind: "inspect";
+      expected_revision: number;
+      candidate: string;
+      path: string;
+    }
+  | {
+      kind: "resolve";
+      expected_revision: number;
+      candidate: string;
+      path: string;
+      resolution: RepositorySyncResolution;
+    };
+export type RepositorySyncResolution =
+  | { kind: "term"; id: number }
+  | { kind: "text"; text: string; executable: boolean }
+  | { kind: "delete" };
+export type RepositorySyncPhase =
+  | "ready"
+  | "fetching"
+  | "applying"
+  | "publishing"
+  | "conflicts"
+  | "attention"
+  | "paused";
+export type RepositorySyncProposal = {
+  local: RepositoryCheckpoint;
+  incoming: RepositoryCheckpoint;
+  candidate: RepositoryCheckpoint | null;
+  conflicts: Array<string>;
+};
+export type RepositorySyncTerm = {
+  id: number;
+  role: string;
+  kind: string;
+  text: string | null;
+  executable: boolean | null;
+};
+export type RepositorySyncConflict = {
+  path: string;
+  terms: Array<RepositorySyncTerm>;
+};
+export type RepositorySyncSnapshot = {
+  revision: number;
+  enabled: boolean;
+  busy: boolean;
+  phase: RepositorySyncPhase;
+  proposal?: RepositorySyncProposal;
+  conflict?: RepositorySyncConflict;
+  lastSuccess?: number;
+  recovery: boolean;
+  pendingApply?: string;
+};
 export type ProjectionContribution = {
   projection_id: string;
   owner_plugin_id: string;

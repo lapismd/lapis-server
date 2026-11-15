@@ -132,6 +132,40 @@ async fn saving_a_connection_is_private_manual_and_performs_no_repository_initia
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn disabling_automatic_sync_is_a_guarded_native_selection_without_network_or_capture() {
+    let f = Fixture::new();
+    let saved = f
+        .client
+        .control_repository_remotes(Fixture::command())
+        .await
+        .unwrap();
+    let paused = f
+        .client
+        .control_repository_remotes(RepositoryRemotesCommand::SetAutomaticSync {
+            expected_revision: saved.revision,
+            enabled: false,
+        })
+        .await
+        .unwrap();
+    assert!(!paused.settings.automatic_sync);
+    assert!(paused.revision > saved.revision);
+    assert_eq!(
+        fs::read_dir(f.temp.path().join("notes")).unwrap().count(),
+        1
+    );
+    assert!(
+        f.client
+            .control_repository_remotes(RepositoryRemotesCommand::SetAutomaticSync {
+                expected_revision: saved.revision,
+                enabled: false,
+            })
+            .await
+            .is_err()
+    );
+    f.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn detached_waiter_is_fenced_and_a_later_client_observes_the_accepted_write() {
     let f = Fixture::new();
     let (wait, resume) = f.credentials.pause();

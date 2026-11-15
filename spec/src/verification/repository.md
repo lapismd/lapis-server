@@ -71,3 +71,11 @@ The [browser port receipt](../../records/2026-11-15-remotes-browser-port.md)
 qualifies generated remote commands and raw working-copy observations on the
 existing admitted client. Settings/credential browser handoff, full shell adoption
 and actual browser HTTPS/SSH acceptance remain separate.
+
+The [native synchronization receipt](../../records/2026-11-15-native-backup-synchronization.md)
+qualifies opted-in Core scheduling, passive authenticated status, native merge/
+conflict/application/publication, detached completion, dirty-editor protection,
+exact cold apply recovery and receive-free lost-response reconciliation. Full
+native workspace, strict Clippy/build and all four real SSH scenarios pass.
+Both credential rows remain Partial until the remaining host UI, HTTPS/forge
+and cold application acceptance completes.

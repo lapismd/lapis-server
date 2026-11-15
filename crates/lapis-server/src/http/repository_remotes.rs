@@ -5,6 +5,7 @@ use axum::{
     extract::{Path, Query, State as AxumState, rejection::JsonRejection},
 };
 use lapis_app_protocol::repository_remotes::{RepositoryRemotesCommand, RepositoryRemotesSnapshot};
+use lapis_app_protocol::repository_sync::{RepositorySyncCommand, RepositorySyncSnapshot};
 use serde::Deserialize;
 use uuid::Uuid;
 
@@ -13,6 +14,39 @@ use uuid::Uuid;
 pub(super) struct Scope {
     vault: Uuid,
     generation: Uuid,
+}
+pub(super) async fn synchronization(
+    AxumState(state): AxumState<State>,
+    Path(client): Path<Uuid>,
+    Query(scope): Query<Scope>,
+    Extension(principal): Extension<Principal>,
+) -> Result<Json<RepositorySyncSnapshot>, Failure> {
+    state
+        .host
+        .repository_synchronization(client, principal, scope.vault, scope.generation, None)
+        .await
+        .map(Json)
+        .map_err(Into::into)
+}
+pub(super) async fn control_synchronization(
+    AxumState(state): AxumState<State>,
+    Path(client): Path<Uuid>,
+    Query(scope): Query<Scope>,
+    Extension(principal): Extension<Principal>,
+    input: Result<Json<RepositorySyncCommand>, JsonRejection>,
+) -> Result<Json<RepositorySyncSnapshot>, Failure> {
+    state
+        .host
+        .repository_synchronization(
+            client,
+            principal,
+            scope.vault,
+            scope.generation,
+            Some(body(input)?),
+        )
+        .await
+        .map(Json)
+        .map_err(Into::into)
 }
 
 pub(super) async fn settings(

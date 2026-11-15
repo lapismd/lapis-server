@@ -3,6 +3,15 @@
 These acceptance rules belong to SRV-GOV-001. Native source, host adoption and
 release evidence remain independent.
 
+Synchronization qualification starts with the admitted opt-out command's missing-
+capability regression. Prove explicit opt-in, idle work count, detach survival,
+successful close drain and refused-close continuity. Use native merge/conflict
+and guarded apply receipts before publication; restart of an uncertain apply
+must wait for an explicit exact-request retry or keep-current action. Conflict
+inspection/resolution stays on the existing production inspector. Status reads
+must not wait behind transfer turns. Actual HTTPS/SSH two-vault convergence,
+dirty-editor guards, rejection and lost publication responses remain required.
+
 Shared remote selection qualification covers private-root admission, independent
 backup/original state, explicit manual defaults, exact revisions and credential
 reference validation. Source selection tests do not qualify transfer, scheduling,

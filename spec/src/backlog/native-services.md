@@ -141,8 +141,10 @@ across capture, standby fetch and restart/stop recovery in
 Shared credential-provider mutation/sign-in and the encrypted Server adapter
 now have source qualification. Server installation startup and guarded native
 HTTP routes have encrypted restart and real HTTP/SSH qualification. Browser,
-HTTPS/forge and cold application acceptance remain separate. Complete the Desktop OS adapter
-and routes, automatic backup scheduling and both browser/native application
+HTTPS/forge and cold application acceptance remain separate. Native automatic
+backup scheduling, passive status and explicit recovery now have [Core/HTTP and
+actual SSH qualification](../../records/2026-11-15-native-backup-synchronization.md).
+Complete the Desktop OS adapter and routes, shared observer intake and both browser/native application
 compositions, then qualify the approved production components. The SDK intake must retain its
 capture-independent transfer qualification and merge proof; do not add consumer
 Busy retries.
