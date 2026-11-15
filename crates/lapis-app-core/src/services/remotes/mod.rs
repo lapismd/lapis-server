@@ -1,4 +1,6 @@
 //! Accepted native remote work survives waiter cancellation; hosts retain custody.
+mod provider;
+pub use provider::{NativeRemoteCredentials, RemoteTokenStore};
 mod backup;
 mod backup_journal;
 mod backup_operations;

@@ -2,7 +2,8 @@ import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const forbidden = "35356e655765143b29a6c9b1518ef3b91d04837d";
-const revision = "787dac1ae1ee524d54e4fa7fd4212cf99d5768f8";
+// Exact source-qualified PR #87 candidate; merge proof is a delivery gate.
+const revision = "6649b7e95ee58823ba28f0a9ca01e507b458edd9";
 const git = 'git = "https://github.com/stevejuma/jj-store"';
 const server = await readFile("crates/lapis-server/Cargo.toml", "utf8");
 const core = await readFile("crates/lapis-app-core/Cargo.toml", "utf8");

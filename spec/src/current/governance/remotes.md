@@ -68,3 +68,12 @@ credentials remain protected across vaults and source-observation changes until
 native terminal recovery/local stop retires the hold. Policy fixtures and local
 prepared receipts do not qualify actual host custody or network authentication;
 rerun both real transport scenarios after shared journal/terminal cleanup changes.
+
+Native provider composition qualifies shared Core account/scope/device-flow
+policy separately from host custody. Exercise raw-token lifecycle, SDK-backed
+GitHub/Enterprise/Forgejo replacement, cross-method and cross-endpoint refusal,
+locked inventories, sign-in polling/expiry/cancellation and secret-free public
+state. The encrypted Server adapter additionally proves owner isolation and
+cold store reopening with the correct, absent and wrong keys. Both adapters
+retain authenticated host-route and real transport gates; provider fixtures
+cannot establish live forge sign-in or cold application acceptance.

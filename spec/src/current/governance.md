@@ -329,3 +329,8 @@ Repository remote qualification is retained in the linked
 Credential mutation additionally qualifies cross-vault observation epochs,
 accepted custody lifetime and retained publication references in that topic.
 Native-executor custody tests include the existing SDK's single-threaded futures.
+
+The [native provider composition receipt](../../records/2026-11-15-remotes-native-provider.md)
+qualifies shared credential policy and owner-bound encrypted Server custody
+under SRV-SRV-004/015/016. Accepted-work fences remain independent of storage;
+provider source qualification does not enable routes or promote cold host gates.

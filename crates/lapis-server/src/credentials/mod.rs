@@ -7,6 +7,9 @@ mod forge_adapter_tests;
 #[cfg(test)]
 mod forge_tests;
 mod record;
+mod remotes;
+#[cfg(test)]
+mod remotes_tests;
 mod sealed;
 #[cfg(test)]
 mod tests;

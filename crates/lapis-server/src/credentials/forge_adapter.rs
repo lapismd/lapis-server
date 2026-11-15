@@ -22,6 +22,19 @@ impl CredentialStore {
         }))
     }
 }
+impl CredentialStore {
+    // Runtime construction also admits an explicitly locked encrypted backend;
+    // every effect still passes ready(), with no alternative custody backend.
+    pub(super) fn forge_backend(self: &Arc<Self>, owner: Uuid) -> io::Result<Arc<dyn SecretStore>> {
+        if owner.is_nil() {
+            return Err(unavailable());
+        }
+        Ok(Arc::new(ForgeSecrets {
+            store: self.clone(),
+            owner,
+        }))
+    }
+}
 impl SecretStore for ForgeSecrets {
     fn get(&self, id: &str) -> Result<Option<String>> {
         self.store

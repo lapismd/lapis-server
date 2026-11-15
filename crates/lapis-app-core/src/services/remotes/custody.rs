@@ -86,7 +86,7 @@ pub(super) fn run(
     let (_guard, _) = selection.guard(state.revision)?;
     executor.block_on(storage.credentials.control(action))
 }
-fn preflight(settings: &RemoteSettings, action: &RemoteCredentialAction) -> Result<()> {
+pub(super) fn preflight(settings: &RemoteSettings, action: &RemoteCredentialAction) -> Result<()> {
     use RemoteCredentialAction as A;
     if matches!(action, A::Save(_) | A::Forget(_))
         && !matches!(settings.storage, RemoteStorageState::Available)

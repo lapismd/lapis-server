@@ -26,7 +26,8 @@ mod plugins;
 mod protocol;
 mod remotes;
 pub use remotes::{
-    RemoteCredentialAction, RemoteCredentialFuture, RemoteCredentials, RemoteStorage,
+    NativeRemoteCredentials, RemoteCredentialAction, RemoteCredentialFuture, RemoteCredentials,
+    RemoteStorage, RemoteTokenStore,
 };
 mod runtime;
 mod state;

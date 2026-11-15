@@ -70,7 +70,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`787dac1ae1ee524d54e4fa7fd4212cf99d5768f8`. This repository MUST NOT use a
+`6649b7e95ee58823ba28f0a9ca01e507b458edd9`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 
@@ -339,3 +339,11 @@ hold without permitting replay. Sign-in completion that could replace a retained
 account MUST wait for observation or explicit local stop.
 Custody futures MAY be single-threaded inside the accepted native executor;
 they MUST NOT cross the worker/task boundary or retain a renderer lifetime.
+
+Native credential composition shares account inventory, endpoint/account scope,
+identity-preserving token replacement and SDK device authorization in Core.
+Hosts inject their admitted-owner raw-token store and forge manager with private
+metadata and separate secret custody. No renderer request chooses a store root.
+A locked provider retains host SSH capability but disables token/account access;
+private device authorization sessions never cross the Protocol boundary. Saved
+forge identity comes from the verified provider, not submitted display fields.

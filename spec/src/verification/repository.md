@@ -50,3 +50,8 @@ The [single-threaded custody receipt](../../records/2026-11-15-remotes-single-th
 qualifies existing SDK futures inside Core's native executor, including
 cancelled-waiter completion and both real SSH regressions. It adds no host
 startup or actual store qualification.
+
+The [native provider composition receipt](../../records/2026-11-15-remotes-native-provider.md)
+qualifies shared account/scope/device-flow handling and owner-bound encrypted
+Server token/forge custody with cold store reopening. HTTP/Tauri startup and
+real host acceptance remain separate; SRV-SRV-015/016 remain Partial.

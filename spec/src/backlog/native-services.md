@@ -138,8 +138,9 @@ Shared manual original transfers now have source and real SSH acceptance in
 Shared backup operations additionally have real SSH proof for immutable reviews
 across capture, standby fetch and restart/stop recovery in
 [the backup receipt](../../records/2026-11-15-backup-transfer-orchestration.md).
-Complete credential-provider mutation/sign-in and startup, then wire both host
-adapters and the approved production components. The SDK intake must retain its
+Shared credential-provider mutation/sign-in and the encrypted Server adapter
+now have source qualification. Complete admitted startup, the Desktop OS adapter
+and both host routes, then wire the approved production components. The SDK intake must retain its
 capture-independent transfer qualification and merge proof; do not add consumer
 Busy retries.
 
