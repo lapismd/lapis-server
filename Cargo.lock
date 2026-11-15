@@ -4051,6 +4051,7 @@ dependencies = [
  "regress",
  "reqwest 0.12.28",
  "rustix 1.1.6",
+ "same-file",
  "serde",
  "serde_json",
  "serde_yaml",

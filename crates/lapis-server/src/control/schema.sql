@@ -36,3 +36,32 @@ CREATE TABLE IF NOT EXISTS content_access_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   enabled INTEGER NOT NULL CHECK (enabled IN (0,1))
 );
+
+CREATE TABLE IF NOT EXISTS sync_account_connections (
+  id TEXT PRIMARY KEY,
+  client_id TEXT NOT NULL,
+  client_name TEXT NOT NULL,
+  s256_challenge TEXT NOT NULL,
+  requested_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL,
+  decision TEXT CHECK(decision IN ('approved','rejected')),
+  decided_by_session TEXT REFERENCES sessions(id),
+  decided_at INTEGER,
+  consumed_at INTEGER,
+  CHECK((decision IS NULL) = (decided_at IS NULL)),
+  CHECK((decision IS NULL) = (decided_by_session IS NULL)),
+  CHECK(consumed_at IS NULL OR decision = 'approved')
+);
+CREATE INDEX IF NOT EXISTS sync_account_connections_expiry_idx
+  ON sync_account_connections(expires_at);
+
+CREATE TABLE IF NOT EXISTS sync_account_credentials (
+  id TEXT PRIMARY KEY,
+  client_id TEXT NOT NULL,
+  token_hash TEXT NOT NULL UNIQUE,
+  issued_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL,
+  revoked_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS sync_account_credentials_token_idx
+  ON sync_account_credentials(token_hash);

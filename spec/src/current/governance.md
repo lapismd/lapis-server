@@ -1,5 +1,46 @@
 # Governance
 
+Mod hook diagnostics retain bounded launch-error and child-exit categories under
+SRV-MOD-006. Strict failure and explicit best-effort behavior remain unchanged;
+the original ARM64 lifecycle failure and its successful unchanged-head rerun
+remain recorded separately from diagnostic-patch qualification.
+
+The Lapis Sync contract intake adds its canonical chapter, verification table,
+Storybook mirror and exact spec-first mapping. SRV-GOV-001 and SRV-GOV-002 stay
+unchanged: all authored files remain within existing limits, protected Sync
+source must map to both the Sync and hosted-server chapters, and Storybook order
+continues to follow `SUMMARY.md`. This documentation slice changes no runtime,
+release, image, dependency or visual baseline.
+
+The first Sync Core source slices retain those limits: each production module is
+below 300 lines, each exact test is below 500, and the stack adds a Changeset
+without publishing. The guarded [object repository](../../records/2026-11-15-sync-object-repository.md),
+[operation journal](../../records/2026-11-15-sync-operation-journal.md) and
+[dependency-ordered event storage](../../records/2026-11-15-sync-event-ordering.md),
+and [stable arrival catch-up](../../records/2026-11-15-sync-arrival-catch-up.md)
+record their exact source evidence. Exact tests, strict affected Clippy, the
+complete Core and workspace suites and specification gates qualify source only;
+Docker, image, HTTP, protocol admission, Desktop and visual acceptance remain
+unchanged and unclaimed.
+
+The [account consent receipt](../../records/2026-11-15-sync-account-consent.md)
+adds the next disabled Server control slice within existing source/test limits.
+It records durable S256, expiry, single-use and hashed-token evidence without
+claiming an HTTP, Desktop, enrollment, content-key or installed boundary.
+
+The account HTTP handoff extends that source boundary with bounded native
+initiation/redemption, owner-cookie inspection and consent, managed-vault
+discovery and credential sign-out. SRV-SYNC-013 owns the transport limits and
+discovery-only authority. Each new production module remains within 300 lines;
+the account control and HTTP tests remain separate and within 500 lines each.
+Desktop custody and enrolled participation remain open.
+
+The hosted browser now renders explicit Sync connection consent at the
+server-issued `sync-connect` URL. SRV-SYNC-014 owns sign-in continuity,
+display-only request inspection, explicit keyboard decisions, teardown and
+unknown-outcome inspection. Desktop custody and enrolled participation remain
+open. New consent stories retain `visual-pending`; baselines are unchanged.
+
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.
@@ -344,21 +385,10 @@ qualifies the no-original footer data path through immutable native checkpoint
 and diff reads. It retains original physical-observer semantics, explicit source
 identity and separate cold host gates under SRV-SRV-004.
 
-Server remote startup and authenticated-route qualification follows the
-[repository rules](governance/remotes.md) under SRV-GOV-001. Actual HTTP custody
-and source-level transport evidence remain distinct from browser adoption,
-Desktop integration, native automatic synchronization and release acceptance.
-
 CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
 The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
 
-Admitted remote browser ports qualify exact client/vault/generation routing,
-late-delivery fencing and no publication replay independently from native custody.
-Their unit evidence does not enable or qualify the application settings surface.
-
-Native backup synchronization follows the same [repository qualification rules](governance/remotes.md).
-Keep its source orchestration, passive authenticated status, explicit recovery,
-actual SSH/HTTPS transport and cold host UI evidence distinct. The scheduler's
-idle lifetime must not hold a vault work lease or a renderer dependency.
+Native remote and synchronization qualification follows the
+[repository rules](governance/remotes.md) under SRV-GOV-001.

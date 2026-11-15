@@ -55,6 +55,11 @@ no Alpine application compatibility is implied by a portable loader design.
 
 **Requirement.** Successful application MUST record references, resolved manifest/layer digests, platform and installed paths in container-local receipts. Structured logs MUST distinguish resolution, cache, apply, hooks and failures without printing credentials. Mod cache and receipts MUST reject unsafe ownership, symlinks and world-writable state.
 
+Hook failure diagnostics distinguish a launch error (error kind and numeric OS
+code) from a child exit (numeric exit code, or termination without an exit
+code). These bounded fields never include script contents or arguments. Hooks
+are attempted once; diagnostics do not authorize replay after an uncertain outcome.
+
 ### Acceptance details
 
 - Run the owning isolated registry, filesystem or lifecycle regression for this boundary.

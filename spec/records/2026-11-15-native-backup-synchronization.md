@@ -94,3 +94,20 @@ Generated bindings come from the native Rust `export` binary and the same public
 Prettier formatting used by `scripts/protocol.mjs`; the cross-platform validation
 helper and cache locations remain ignored. Production code contains no fixture
 imports or acceptance switches. No package or image is published by this slice.
+
+## Current-main integration
+
+The first hosted feature run (`43745478778`, source `6ce02445`) stops at the
+canonical chapter-size gate: the merged Server and governance chapters exceed
+400 lines after concurrent main additions. Integrating main `a32ab23d` preserves
+its Design Core 0.13.4 intake and independent Lapis Sync work. Detailed remote
+requirements move to the linked repository-remotes chapter; qualification prose
+moves to the existing remote governance page. Requirement IDs remain anchored in
+Server. The nested qualification links are corrected after the first split
+check identifies two broken relative paths.
+
+Merged native source `6f5e7006b246c2e88f49fb2f02d9b464851057db` passes all 905
+workspace tests with zero failures and the same 11 explicit opt-in ignores
+across 182 suites, strict workspace Clippy and the workspace build. Final spec
+and App-ownership checks pass. No runtime behavior is changed by the chapter
+split. Hosted feature CI remains a separate gate.

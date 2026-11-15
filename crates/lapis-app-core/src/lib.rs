@@ -10,6 +10,7 @@ pub mod plugins;
 mod record_store;
 pub mod repository;
 pub mod services;
+pub mod sync;
 mod text;
 pub mod turns;
 pub mod vault;

@@ -109,3 +109,17 @@ proves immutable client/vault/generation scoping, exact reviewed command bodies,
 late-response fencing and no replay after detach. Preserve raw working-copy JSON
 without parsing native identities at the transport boundary. Client units alone
 do not qualify the production browser shell or network authentication.
+
+Server remote startup and authenticated-route qualification follows the
+[repository rules](remotes.md) under SRV-GOV-001. Actual HTTP custody
+and source-level transport evidence remain distinct from browser adoption,
+Desktop integration, native automatic synchronization and release acceptance.
+
+Admitted remote browser ports qualify exact client/vault/generation routing,
+late-delivery fencing and no publication replay independently from native custody.
+Their unit evidence does not enable or qualify the application settings surface.
+
+Native backup synchronization follows the same [repository qualification rules](remotes.md).
+Keep its source orchestration, passive authenticated status, explicit recovery,
+actual SSH/HTTPS transport and cold host UI evidence distinct. The scheduler's
+idle lifetime must not hold a vault work lease or a renderer dependency.
