@@ -1,5 +1,6 @@
 //! Durable, profile-private storage used by native Sync services.
 
+pub mod account;
 mod arrivals;
 mod events;
 mod journal;
