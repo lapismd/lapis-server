@@ -1,5 +1,8 @@
 # Hosted server
 
+SRV-SYNC-020 native leave preparation retains original account ownership until
+host commit; refused leave releases only the admission fence.
+
 Shared Core retains SRV-SYNC-019 account actions beyond response-waiter lifetime,
 with single-flight admission, passive observations and one native close drain
 that fences later work before releasing custody on confirmed success.

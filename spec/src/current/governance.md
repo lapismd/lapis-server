@@ -5,6 +5,9 @@ before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
 required; navigation cannot await asynchronous App teardown.
 
+SRV-SYNC-020 keeps cancellable leave admission and custody preflight in Core;
+hosts commit only after their remaining native leave checks approve.
+
 SRV-SYNC-019 account ownership keeps blocking transport off async executors,
 retains uncertain sessions after failed close and bounds command admission,
 including one native drain that fences later work without a renderer retry loop.

@@ -63,6 +63,9 @@ impl AccountSession {
     pub fn close(&mut self) -> io::Result<()> {
         self.store.close()
     }
+    pub fn prepare_close(&self) -> io::Result<()> {
+        self.store.prepare_close()
+    }
     fn load(&self) -> io::Result<Record> {
         if self.store.origin() != self.endpoint.origin() {
             return Err(invalid());
