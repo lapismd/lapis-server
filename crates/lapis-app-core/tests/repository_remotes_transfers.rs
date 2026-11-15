@@ -1,4 +1,4 @@
-use lapis_app_core::services::{RemoteCredentials, RemoteStorage, Runtime};
+use lapis_app_core::services::{BackupStorage, RemoteCredentials, RemoteStorage, Runtime};
 use lapis_app_protocol::{ErrorCode, repository_remotes::*};
 use std::{fs, os::unix::fs::PermissionsExt as _, sync::Arc};
 use std::{
@@ -124,6 +124,81 @@ fn jj(root: &Path, args: &[&str]) {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn backup_without_capture_keeps_counts_unknown_and_refuses_invalid_ids_before_custody() {
+    let temp = tempfile::tempdir().unwrap();
+    let base = temp.path().canonicalize().unwrap();
+    for path in ["notes", "private", "history"] {
+        fs::create_dir(base.join(path)).unwrap();
+        fs::set_permissions(base.join(path), fs::Permissions::from_mode(0o700)).unwrap();
+    }
+    fs::write(base.join("notes/Note.md"), "never captured\n").unwrap();
+    let custody = Arc::new(TokenCustody {
+        id: Uuid::new_v4().to_string(),
+        calls: AtomicUsize::new(0),
+        pause: Mutex::new(None),
+    });
+    let runtime = Arc::new(
+        Runtime::default()
+            .with_backup(BackupStorage::new(&base.join("history")).unwrap())
+            .with_remotes(
+                RemoteStorage::new(&base.join("private"), custody.clone())
+                    .unwrap()
+                    .with_transfers(true),
+            ),
+    );
+    let vault = runtime.admit(Uuid::new_v4(), &base.join("notes")).unwrap();
+    let client = vault.attach().unwrap();
+    let current = client
+        .control_repository_remotes(RepositoryRemotesCommand::SaveConnection {
+            expected_revision: 0,
+            target: RemoteRepositoryTarget::Backup,
+            connection: RemoteConnection {
+                name: "backup".into(),
+                url: "https://example.invalid/backup.git".into(),
+                branch: "backup".into(),
+                bookmark: String::new(),
+                authentication: RemoteAuthentication::Token,
+                credential: custody.id.clone(),
+            },
+        })
+        .await
+        .unwrap();
+    let target = &current.settings.targets[0];
+    assert_eq!(target.target, RemoteRepositoryTarget::Backup);
+    assert!(target.can_fetch && !target.can_push);
+    assert!(target.observation.is_none() && target.review.is_none());
+    assert!(!current.settings.automatic_sync);
+    for command in [
+        RepositoryRemotesCommand::Push {
+            expected_revision: current.revision,
+            target: RemoteRepositoryTarget::Backup,
+            review_id: "not-a-review".into(),
+        },
+        RepositoryRemotesCommand::ObservePush {
+            expected_revision: current.revision,
+            target: RemoteRepositoryTarget::Backup,
+            request_id: "not-a-request".into(),
+        },
+    ] {
+        assert_eq!(
+            client
+                .control_repository_remotes(command)
+                .await
+                .unwrap_err()
+                .code(),
+            ErrorCode::Conflict
+        );
+    }
+    assert_eq!(custody.calls.load(Ordering::SeqCst), 0);
+    assert_eq!(fs::read_dir(base.join("history")).unwrap().count(), 0);
+    assert!(!base.join("notes/.jj").exists());
+    tokio::task::spawn_blocking(move || runtime.shutdown())
+        .await
+        .unwrap()
+        .unwrap();
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]

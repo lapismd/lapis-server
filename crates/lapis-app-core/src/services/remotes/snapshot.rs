@@ -5,24 +5,14 @@ pub(super) fn read(
     private: &Selection,
     selection: SelectionState,
     original: Option<original::Discovery>,
+    vault: &VaultService,
+    runtime: &tokio::runtime::Runtime,
 ) -> Result<RepositoryRemotesSnapshot> {
     let mut settings = storage.credentials.inventory()?;
-    let connection = selection.backup.clone();
-    let status = connection_status(connection.as_ref(), &settings);
     settings.automatic_sync = selection.automatic_sync;
-    settings.targets = vec![RemoteRepositorySettings {
-        target: RemoteRepositoryTarget::Backup,
-        connection,
-        status,
-        bookmarks: vec![],
-        remotes: None,
-        // Transport admission arrives separately; a settings projection grants none.
-        can_fetch: false,
-        can_push: false,
-        observation: None,
-        review: None,
-        publication: None,
-    }];
+    settings.targets = vec![backup::project(
+        vault, storage, private, &selection, &settings, runtime,
+    )?];
     let mut targets = vec![RemoteRepositoryTarget::Backup];
     if let Some(original) = original {
         let binding = original
@@ -124,7 +114,7 @@ pub(super) fn read(
     })
 }
 
-fn connection_status(
+pub(super) fn connection_status(
     connection: Option<&RemoteConnection>,
     settings: &RemoteSettings,
 ) -> RemoteConnectionState {

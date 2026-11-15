@@ -6,7 +6,7 @@ Read the current contract, verification and `spec/src/backlog.md`; keep remainin
 work in the owning spec topic instead of a migration or milestone tracker.
 
 jj-store crates use `git = "https://github.com/stevejuma/jj-store"` and
-`rev = "a1d5efa0d96024075e3971f278db76684c49cb18"`. Do not invent a jj-store
+`rev = "787dac1ae1ee524d54e4fa7fd4212cf99d5768f8"`. Do not invent a jj-store
 tag. `lapis-ai-service` stays tag `v0.2.0`.
 
 Use Jujutsu. Do not publish crates. A push to `main` publishes

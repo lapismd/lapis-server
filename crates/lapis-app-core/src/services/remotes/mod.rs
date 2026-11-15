@@ -1,7 +1,11 @@
 //! Accepted native remote work survives waiter cancellation; hosts retain custody.
+mod backup;
+mod backup_journal;
+mod backup_operations;
 mod journal;
 mod operations;
 mod original;
+mod review_storage;
 mod snapshot;
 mod storage;
 mod transfer;
@@ -83,7 +87,7 @@ impl Client {
                 let original = executor.block_on(original::read(&vault))?;
                 let state =
                     selection.observe_original(original.as_ref().map(|d| d.observed.clone()))?;
-                snapshot::read(storage, &selection, state, original)
+                snapshot::read(storage, &selection, state, original, &vault, &executor)
             })
             .await;
         // Detach fences delivery, while the accepted worker keeps its own lease.

@@ -1,11 +1,9 @@
 //! Native-private reviews are separate from path-free connection selection.
 use super::*;
-use crate::vault::{VaultRoot, WriteOptions};
 use jj_store_jj::original_remotes::PushReview;
 use serde::{Deserialize, Serialize};
 
 const PATH: &str = "original-review.json";
-const MAX: usize = 128 * 1024;
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Review {
@@ -25,23 +23,12 @@ pub(super) struct Journal {
 }
 impl Journal {
     pub fn open(selection: &Selection, state: &SelectionState) -> Result<Option<Self>> {
-        let root = VaultRoot::open(selection.private_path())?;
-        root.verify_physical_root()?;
-        let Some(metadata) = root.stat(PATH)? else {
+        let Some(saved): Option<Self> = review_storage::load(selection, PATH)? else {
             return Ok(None);
         };
-        if metadata.r#type != "file" || metadata.size > MAX as u64 {
-            return Err(invalid());
-        }
-        let bytes = root.read_range(PATH, 0, MAX + 1)?;
-        if bytes.len() > MAX {
-            return Err(invalid());
-        }
-        let saved: Self = serde_json::from_slice(&bytes).map_err(|_| invalid())?;
         if saved.version != 1 {
             return Err(invalid());
         }
-        root.verify_physical_root()?;
         Ok((state.original.as_ref() == Some(&saved.connection)
             && state.original_binding.as_ref() == Some(&saved.source))
         .then_some(saved))
@@ -56,27 +43,7 @@ impl Journal {
         })
     }
     pub fn save(&self, selection: &Selection) -> Result<()> {
-        let root = VaultRoot::open(selection.private_path())?;
-        root.verify_physical_root()?;
-        let before = match root.stat(PATH)? {
-            None => None,
-            Some(metadata) if metadata.r#type == "file" && metadata.size <= MAX as u64 => {
-                Some(root.read_range(PATH, 0, MAX + 1)?)
-            }
-            _ => return Err(invalid()),
-        };
-        let bytes = serde_json::to_vec(self).map_err(|_| invalid())?;
-        if bytes.len() > MAX {
-            return Err(invalid());
-        }
-        root.write_if_unchanged(
-            PATH,
-            &bytes[..],
-            before.as_deref(),
-            &WriteOptions::default(),
-        )?;
-        root.verify_physical_root()?;
-        Ok(())
+        review_storage::save(selection, PATH, self)
     }
 }
 pub(super) fn public(review: &Review) -> Result<RemotePushReview> {

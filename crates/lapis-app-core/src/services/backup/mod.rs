@@ -10,6 +10,7 @@ pub(super) mod history;
 mod history_tests;
 mod initialization;
 mod provider;
+pub(in crate::services) mod remote;
 mod restore;
 mod slot;
 pub(in crate::services) use slot::Slot;

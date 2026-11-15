@@ -135,10 +135,13 @@ semantics and existing backup recovery records.
 
 Shared manual original transfers now have source and real SSH acceptance in
 [the Core receipt](../../records/2026-11-15-original-transfer-orchestration.md).
-Complete shared backup operations, credential-provider mutation/sign-in and
-startup, then wire both host adapters and the approved production components.
-The native SDK additionally needs capture-independent backup review/transfer
-qualification before its new intake; do not add consumer Busy retries.
+Shared backup operations additionally have real SSH proof for immutable reviews
+across capture, standby fetch and restart/stop recovery in
+[the backup receipt](../../records/2026-11-15-backup-transfer-orchestration.md).
+Complete credential-provider mutation/sign-in and startup, then wire both host
+adapters and the approved production components. The SDK intake must retain its
+capture-independent transfer qualification and merge proof; do not add consumer
+Busy retries.
 
 Acceptance: qualify credential replacement/forgetting, locked/mismatched keys,
 restart persistence, endpoint/owner isolation, redaction and key provisioning;

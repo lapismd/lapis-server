@@ -372,3 +372,11 @@ resolution; cancelled waiters retain accepted work. An SDK defect is fixed and
 qualified upstream before permanent host intake. A temporary unmerged source
 qualification pin must retain its PR and checked revision and become a merged
 pin before delivery. Native transfer flags do not enable HTTP/Tauri routes.
+
+Backup orchestration qualification uses real transport with the actual capture
+worker and a separate standby runtime. Retain the first missing-capability
+failure; prove immutable checkpoint review across later capture, no publication
+from saving/capture, independent target journals and restart recovery without a
+second receive. Shared private-record storage changes rerun both original and
+backup transport scenarios. Native library, application host and release
+qualification remain separate.

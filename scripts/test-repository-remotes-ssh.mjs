@@ -16,7 +16,9 @@ import { join } from "node:path";
 import { createServer, connect } from "node:net";
 if (!["darwin", "linux"].includes(process.platform))
   throw Error("SSH fixture requires macOS or Linux");
-if (process.argv.length !== 2) throw Error("No arguments are accepted");
+const backupOnly = process.argv[2] === "--backup-only";
+if (process.argv.length !== (backupOnly ? 3 : 2))
+  throw Error("Use --backup-only or no arguments");
 // OpenSSH StrictModes rejects a Linux authorized_keys path beneath world-writable /tmp.
 // Only fresh disposable fixture state is created here; host profiles are never read.
 const base = realpathSync(
@@ -186,25 +188,30 @@ child.on('close',code=>{if(dropping&&code===0){unlinkSync(base+'/drop-next-respo
     ...testEnv,
     GIT_SSH_COMMAND: `ssh -F /dev/null -oBatchMode=yes -oStrictHostKeyChecking=yes -oIdentityFile=none -oGlobalKnownHostsFile=/dev/null '-oUserKnownHostsFile="${trust}"'`,
   });
-  const test = spawn(
-    "cargo",
-    [
-      "test",
-      "--locked",
-      "-p",
-      "lapis-app-core",
-      "--test",
-      "repository_remotes_ssh",
-      "--",
-      "--ignored",
-      "--test-threads=1",
-    ],
-    { env: testEnv, stdio: "inherit" },
-  );
-  const code = await new Promise((resolve) =>
-    test.once("exit", (code) => resolve(code ?? 1)),
-  );
-  if (code !== 0) throw Error("Real SSH acceptance failed");
+  const targets = backupOnly
+    ? ["repository_backup_remotes_ssh"]
+    : ["repository_remotes_ssh", "repository_backup_remotes_ssh"];
+  for (const target of targets) {
+    const test = spawn(
+      "cargo",
+      [
+        "test",
+        "--locked",
+        "-p",
+        "lapis-app-core",
+        "--test",
+        target,
+        "--",
+        "--ignored",
+        "--test-threads=1",
+      ],
+      { env: testEnv, stdio: "inherit" },
+    );
+    const code = await new Promise((resolve) =>
+      test.once("exit", (code) => resolve(code ?? 1)),
+    );
+    if (code !== 0) throw Error("Real SSH acceptance failed: " + target);
+  }
   console.log(
     "Real SSH acceptance passed; disposable agent, host and keys retired.",
   );

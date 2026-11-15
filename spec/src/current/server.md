@@ -70,7 +70,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`a1d5efa0d96024075e3971f278db76684c49cb18`. This repository MUST NOT use a
+`787dac1ae1ee524d54e4fa7fd4212cf99d5768f8`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 
@@ -308,3 +308,21 @@ rebinding, and expose its original identity for observe-only recovery or an
 explicit local stop. Stopping requires no credentials and cannot claim to undo a
 possibly accepted remote update. Native custody resolves scoped secrets only
 inside the accepted backend operation; stored secrets never become DTO fields.
+
+Managed backup test/fetch/review/publication/recovery MUST use the same explicit
+target and private selection admission, independently of original repositories.
+Fetched metadata MUST enter through the running native capture worker when one
+exists. With no running worker, explicit metadata import MUST NOT start capture
+or snapshot files. Network transfer and immutable review/validation MUST remain
+independent of the capture lease; application code MUST NOT mask native races
+with Busy retries.
+
+Backup review MUST pin an existing recorded checkpoint and native intent/counts.
+A later local capture cannot replace that reviewed commit or add newly saved
+files to its publication. Missing local history remains unknown and cannot be
+reported as zero outgoing changes. Source/connection-bound private journals and
+their bounded storage remain independent for the two targets. Native pending
+receipts survive restart, prevent rebinding/new publication, and permit
+observe-only recovery or an explicit credential-free local stop. New backup
+connections and later local captures MUST remain unpublished until an explicit
+push or separately persisted synchronization opt-in.

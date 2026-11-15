@@ -54,7 +54,9 @@ pub(super) fn run(
         )
     })?;
     if target != RemoteRepositoryTarget::Original {
-        return Err(unsupported());
+        return runtime.block_on(backup_operations::run(
+            vault, storage, selection, &state, command,
+        ));
     }
     runtime.block_on(async {
         let access = SourceAccess::read(vault, target).map_err(|_| unsupported())?;
@@ -205,7 +207,10 @@ pub(super) fn pending(binding: &Binding) -> Result<Option<jj_vault::PendingPubli
     // active receipt even when its binding record is missing or damaged.
     binding.pending_publication().map_err(|_| failed())
 }
-fn require_pending(pending: Option<&jj_vault::PendingPublication>, id: &str) -> Result<()> {
+pub(super) fn require_pending(
+    pending: Option<&jj_vault::PendingPublication>,
+    id: &str,
+) -> Result<()> {
     if pending.is_none_or(|p| p.request_id != id) {
         return Err(Error::new(
             ErrorCode::Conflict,
@@ -214,7 +219,7 @@ fn require_pending(pending: Option<&jj_vault::PendingPublication>, id: &str) -> 
     }
     Ok(())
 }
-fn require_push(connection: &RemoteConnection) -> Result<()> {
+pub(super) fn require_push(connection: &RemoteConnection) -> Result<()> {
     if connection.authentication == RemoteAuthentication::Anonymous {
         return Err(Error::new(
             ErrorCode::PermissionDenied,

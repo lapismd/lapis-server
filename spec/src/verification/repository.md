@@ -34,3 +34,8 @@ qualifies shared native test/fetch/review/publication and real SSH restart/lost
 response recovery, including orphaned receipt refusal and token-resolution
 serialization. Credential mutation, startup, both admitted hosts and cold
 application gates remain open.
+
+The [manual backup-transfer receipt](../../records/2026-11-15-backup-transfer-orchestration.md)
+adds immutable recorded-checkpoint publication, capture-independent transport,
+standby metadata fetch and credential-free local stop after restart. It retains
+the separate SDK intake and admitted host gates; neither credential row advances.
