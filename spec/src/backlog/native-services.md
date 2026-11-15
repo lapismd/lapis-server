@@ -21,6 +21,11 @@ exact security, retry, paging, scheduler, writer, recovery and independent-store
 journeys in SRV-SYNC-001 through SRV-SYNC-012 before hosted activation. Desktop
 custody/admission and Notes/plugin consumption remain separately owned.
 
+The first clean Core slice now provides the disabled profile-private encrypted
+object repository recorded in the [source receipt](../../records/2026-11-15-sync-object-repository.md).
+It does not advance enrollment, events/HEADs, paging, scheduling, guarded apply,
+HTTP, hosted participant or independent-device acceptance.
+
 ## Logical participants and rich queue workflows
 
 Disposition: remaining implementation and host qualification. Native publication,
