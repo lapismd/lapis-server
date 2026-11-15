@@ -258,6 +258,14 @@ impl Selection {
     pub(crate) fn private_path(&self) -> &std::path::Path {
         self.private.path()
     }
+    /// Hold across an accepted transfer/review so another process cannot rebind
+    /// either target while credentials or publication identities are in use.
+    pub(crate) fn guard(&self, expected: u64) -> io::Result<(File, SelectionState)> {
+        let lock = self.lock()?;
+        let state = self.read()?;
+        state.expect(expected)?;
+        Ok((lock, state))
+    }
     /// The native config transaction is explicit and runs under the private
     /// selection lock. If the final private write fails, endpoint/source checks
     /// keep the previous selection from authorizing the changed configuration.

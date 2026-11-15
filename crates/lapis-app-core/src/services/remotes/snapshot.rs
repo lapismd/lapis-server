@@ -2,11 +2,12 @@ use super::*;
 
 pub(super) fn read(
     storage: &RemoteStorage,
+    private: &Selection,
     selection: SelectionState,
-    original: Option<jj_store_jj::original_remotes::Snapshot>,
+    original: Option<original::Discovery>,
 ) -> Result<RepositoryRemotesSnapshot> {
     let mut settings = storage.credentials.inventory()?;
-    let connection = selection.backup;
+    let connection = selection.backup.clone();
     let status = connection_status(connection.as_ref(), &settings);
     settings.automatic_sync = selection.automatic_sync;
     settings.targets = vec![RemoteRepositorySettings {
@@ -24,13 +25,19 @@ pub(super) fn read(
     }];
     let mut targets = vec![RemoteRepositoryTarget::Backup];
     if let Some(original) = original {
+        let binding = original
+            .repository
+            .transport_binding(private.private_path())
+            .map_err(transfer::original_error)?;
+        let pending = operations::pending(&binding)?;
+        let native = original.snapshot;
         targets.push(RemoteRepositoryTarget::Original);
         let bound = selection
             .original_observed
             .as_ref()
             .is_some_and(|observed| selection.original_binding.as_ref() == Some(&observed.source))
             && selection.original.as_ref().is_some_and(|connection| {
-                original
+                native
                     .remotes
                     .iter()
                     .any(|r| r.name == connection.name && r.url.as_ref() == Some(&connection.url))
@@ -40,18 +47,53 @@ pub(super) fn read(
         } else {
             RemoteConnectionState::Disconnected
         };
+        let admitted = storage.transfers
+            && bound
+            && matches!(
+                status,
+                RemoteConnectionState::Connected | RemoteConnectionState::ReadOnly
+            );
+        let journal = if bound {
+            journal::Journal::open(private, &selection)?
+        } else {
+            None
+        };
+        let review = journal
+            .as_ref()
+            .and_then(|j| j.review.as_ref())
+            .filter(|r| !r.started && pending.is_none())
+            .map(journal::public)
+            .transpose()?;
+        let publication = pending.as_ref().map(|p| RemotePublication {
+            id: p.request_id.clone(),
+            commit: p.after.clone(),
+            outcome: if p.outcome == jj_vault::PushOutcome::Stopped {
+                RemotePublicationState::Stopped
+            } else {
+                RemotePublicationState::Unknown
+            },
+        });
+        let can_push = admitted
+            && pending.is_none()
+            && matches!(status, RemoteConnectionState::Connected)
+            && selection.original.as_ref().is_some_and(|c| {
+                native
+                    .bookmarks
+                    .iter()
+                    .any(|b| b.name == c.bookmark && b.commit.is_some() && !b.conflicted)
+            });
         settings.targets.push(RemoteRepositorySettings {
             target: RemoteRepositoryTarget::Original,
             connection: selection.original,
             status,
-            bookmarks: original
+            bookmarks: native
                 .bookmarks
                 .into_iter()
                 .filter(|b| !b.conflicted && b.commit.is_some())
                 .map(|b| b.name)
                 .collect(),
             remotes: Some(
-                original
+                native
                     .remotes
                     .into_iter()
                     .map(|r| RemoteEndpoint {
@@ -60,12 +102,11 @@ pub(super) fn read(
                     })
                     .collect(),
             ),
-            // Immutable discovery cannot authorize remote mutations.
-            can_fetch: false,
-            can_push: false,
-            observation: None,
-            review: None,
-            publication: None,
+            can_fetch: admitted && pending.is_none(),
+            can_push,
+            observation: journal.and_then(|j| j.observation),
+            review,
+            publication,
         });
     }
     Ok(RepositoryRemotesSnapshot {

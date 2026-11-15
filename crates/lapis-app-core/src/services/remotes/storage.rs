@@ -3,15 +3,21 @@ use crate::vault::VaultRoot;
 use cap_std::fs::MetadataExt as _;
 use std::{io, path::Path, sync::Mutex};
 
-/// Passive host-owned inventory. Implementations must not transfer or return secrets.
+/// Native-only custody. Renderers receive inventory, never resolved credentials.
 pub trait RemoteCredentials: Send + Sync {
     fn inventory(&self) -> Result<RemoteSettings>;
+    /// Implementations must enforce owner, endpoint and account scope again.
+    fn resolve(&self, _connection: &RemoteConnection) -> Result<jj_vault::GitCredentials> {
+        Err(unsupported())
+    }
 }
 /// Installation selection only. No request can choose these native paths/providers.
 pub struct RemoteStorage {
     root: VaultRoot,
     pub(super) credentials: Arc<dyn RemoteCredentials>,
     pub(super) gate: Mutex<()>,
+    pub(super) transfers: bool,
+    pub(super) known_hosts: Option<std::path::PathBuf>,
 }
 impl RemoteStorage {
     pub fn new(directory: &Path, credentials: Arc<dyn RemoteCredentials>) -> Result<Self> {
@@ -23,11 +29,32 @@ impl RemoteStorage {
             root,
             credentials,
             gate: Mutex::new(()),
+            transfers: false,
+            known_hosts: None,
         })
+    }
+    /// Explicit host composition admits network commands. Saving alone does not.
+    pub fn with_transfers(mut self, enabled: bool) -> Self {
+        self.transfers = enabled;
+        self
+    }
+    /// Host-selected trust file, outside every admitted vault; no DTO path.
+    pub fn with_known_hosts(mut self, path: &Path) -> Result<Self> {
+        let path = path.canonicalize()?;
+        if !path.is_file() {
+            return Err(Error::denied());
+        }
+        self.known_hosts = Some(path);
+        Ok(self)
     }
     pub(in crate::services) fn validate_vault(&self, vault: &VaultRoot) -> Result<()> {
         self.root.verify_physical_root()?;
-        if self.root.path().starts_with(vault.path()) || vault.path().starts_with(self.root.path())
+        if self.root.path().starts_with(vault.path())
+            || vault.path().starts_with(self.root.path())
+            || self
+                .known_hosts
+                .as_ref()
+                .is_some_and(|path| path.starts_with(vault.path()))
         {
             return Err(Error::denied());
         }

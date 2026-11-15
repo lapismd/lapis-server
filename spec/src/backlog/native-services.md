@@ -133,6 +133,13 @@ server encrypted custody separate. Saving never transfers; anonymous HTTPS and
 host-managed SSH do not require a forge account. Preserve original JJ bookmark
 semantics and existing backup recovery records.
 
+Shared manual original transfers now have source and real SSH acceptance in
+[the Core receipt](../../records/2026-11-15-original-transfer-orchestration.md).
+Complete shared backup operations, credential-provider mutation/sign-in and
+startup, then wire both host adapters and the approved production components.
+The native SDK additionally needs capture-independent backup review/transfer
+qualification before its new intake; do not add consumer Busy retries.
+
 Acceptance: qualify credential replacement/forgetting, locked/mismatched keys,
 restart persistence, endpoint/owner isolation, redaction and key provisioning;
 then real HTTPS/SSH fetch and one reviewed branch push, rejection and uncertain

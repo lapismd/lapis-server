@@ -1,7 +1,10 @@
 //! Accepted native remote work survives waiter cancellation; hosts retain custody.
+mod journal;
+mod operations;
 mod original;
 mod snapshot;
 mod storage;
+mod transfer;
 use super::{Client, Error, Result, VaultService};
 use crate::repository::remotes::selection::{Selection, SelectionState};
 use lapis_app_protocol::{ErrorCode, repository_remotes::*};
@@ -72,13 +75,15 @@ impl Client {
                                 }
                             }
                         }
-                        _ => return Err(unsupported()),
+                        command => {
+                            operations::run(&vault, storage, &selection, command, &executor)?
+                        }
                     }
                 }
                 let original = executor.block_on(original::read(&vault))?;
                 let state =
                     selection.observe_original(original.as_ref().map(|d| d.observed.clone()))?;
-                snapshot::read(storage, state, original.map(|d| d.snapshot))
+                snapshot::read(storage, &selection, state, original)
             })
             .await;
         // Detach fences delivery, while the accepted worker keeps its own lease.
@@ -91,9 +96,6 @@ fn pending_backup(vault: &VaultService) -> Result<bool> {
         return Ok(false);
     };
     let source = storage.history_source(vault)?;
-    if !source.binding.state.join("vault.json").try_exists()? {
-        return Ok(false);
-    }
     source
         .binding
         .pending_publication()

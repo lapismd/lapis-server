@@ -11,6 +11,7 @@ use std::{io, path::Path};
 pub(super) struct Discovery {
     pub snapshot: Snapshot,
     pub observed: OriginalObservation,
+    pub repository: OriginalRepository,
 }
 pub(super) async fn read(vault: &Arc<VaultService>) -> Result<Option<Discovery>> {
     let access = match SourceAccess::read(vault, RemoteRepositoryTarget::Original) {
@@ -30,6 +31,7 @@ pub(super) async fn read(vault: &Arc<VaultService>) -> Result<Option<Discovery>>
             configuration: snapshot.remote_configuration.clone(),
         },
         snapshot,
+        repository,
     }))
 }
 fn unavailable() -> Error {
@@ -40,7 +42,7 @@ fn unavailable() -> Error {
 }
 /// Only the explicit accepted save path constructs this capability. It never
 /// derives authority from a browser History handle or the passive reader owner.
-struct Writer(Arc<SourceAccess>);
+pub(super) struct Writer(pub Arc<SourceAccess>);
 #[async_trait::async_trait]
 impl local::Access for Writer {
     fn repository(&self) -> jj_store_model::RepositoryId {
@@ -104,9 +106,6 @@ pub(super) fn save(
         connection.clone(),
         observed.clone(),
         || {
-            if !binding.state.join("vault.json").try_exists()? {
-                return Ok(false);
-            }
             binding
                 .pending_publication()
                 .map(|p| p.is_some())

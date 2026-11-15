@@ -11,7 +11,7 @@ description = "Hosted HTTP adapter for shared Lapis native application services"
 local-sibling-projections = []
 
 [dependencies]
-jj-forge = { git = "https://github.com/stevejuma/jj-store", rev = "2f8f9ec484f02a8d46f08578f1d18302e0867cf1", version = "0.2.0", default-features = false }
+jj-forge = { git = "https://github.com/stevejuma/jj-store", rev = "a1d5efa0d96024075e3971f278db76684c49cb18", version = "0.2.0", default-features = false }
 cap-std = "=4.0.3"
 aes-gcm = { version = "=0.10.3", features = ["zeroize"] }
 zeroize = "=1.9.1"
@@ -41,6 +41,6 @@ reqwest = { version = "=0.12.28", default-features = false, features = ["rustls-
 
 [dev-dependencies]
 zip = { version = "=9.1.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
-jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "2f8f9ec484f02a8d46f08578f1d18302e0867cf1", version = "0.2.0", default-features = false, features = ["vault-backup"] }
+jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "a1d5efa0d96024075e3971f278db76684c49cb18", version = "0.2.0", default-features = false, features = ["vault-backup"] }
 reqwest = { version = "=0.12.28", default-features = false, features = ["json", "stream"] }
 tokio = { version = "1", features = ["process", "io-util", "time"] }

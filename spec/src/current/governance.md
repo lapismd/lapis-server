@@ -361,3 +361,14 @@ stale external config refusal, preservation of unrelated remotes and checkout
 bytes, cross-process private-lock ordering, failure rollback of private selection,
 credential admission before Git writes, and host SSH setup with locked token
 storage. Native source, transfer and cold application gates remain distinct.
+
+Manual original-transfer qualification uses real Core services and disposable
+Git/SSH endpoints independently from mocked UI and cold host acceptance. Prove
+review persistence and exact single-branch publication, unchanged unsnapshotted
+files/checkout bytes, status after metadata-only fetch, consumed-review refusal,
+and lost-response restart recovery without a second receive. Credential-ID
+preflight and cross-process selection locking must be tested before secret
+resolution; cancelled waiters retain accepted work. An SDK defect is fixed and
+qualified upstream before permanent host intake. A temporary unmerged source
+qualification pin must retain its PR and checked revision and become a merged
+pin before delivery. Native transfer flags do not enable HTTP/Tauri routes.

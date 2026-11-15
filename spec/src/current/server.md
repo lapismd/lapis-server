@@ -70,7 +70,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`2f8f9ec484f02a8d46f08578f1d18302e0867cf1`. This repository MUST NOT use a
+`a1d5efa0d96024075e3971f278db76684c49cb18`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 
@@ -278,5 +278,33 @@ cannot authorize a mismatched endpoint or source. Unrelated remotes survive;
 saving does not initialize transport, transfer data or change working-copy state.
 Anonymous HTTPS and host SSH remain valid with locked token storage; missing,
 wrong-host or unavailable token/account references refuse before Git writes.
-Only an explicit accepted save constructs the separate native writer capability;
-passive source witnesses and History handles never acquire it.
+Only explicit accepted saves or separately admitted manual transfer commands
+construct the separate native writer capability; passive source witnesses and
+History handles never acquire it.
+
+Native host composition MUST explicitly admit transfers independently of
+credential inventory. Test, fetch, push review, execution, observation and stop
+commands MUST hold the private cross-process selection guard for their accepted
+operation. Stale revisions, source/configuration changes and invalid review or
+request identities refuse before credential resolution or network access.
+Test connection observes remote reachability/authentication without fetching or
+publishing. Anonymous reads and host SSH need no unlocked token store.
+
+Original fetch MUST use native JJ bookmark/tracking semantics without capturing
+files, writing checkout state or retargeting a client-owned History pin. Status
+after a metadata-only fetch MUST remain readable through the qualified native
+immutable observer; application code MUST NOT repair the checkout pointer or
+substitute invented counts. Observations retain real bounded incoming/outgoing
+counts and their fetch time independently for the selected connection.
+
+Original push reviews MUST persist outside the vault, bound to the physical
+source, exact saved connection and native immutable review. The public response
+contains only an opaque review identity, selected commit and safe summary/counts.
+Execution consumes that identity durably before invoking native publication,
+which revalidates its operation, endpoint, bookmark and ancestry and reserves a
+stable receipt before network publication. Consumed reviews cannot replay.
+Pending publication MUST survive detach/restart, prevent new publication or
+rebinding, and expose its original identity for observe-only recovery or an
+explicit local stop. Stopping requires no credentials and cannot claim to undo a
+possibly accepted remote update. Native custody resolves scoped secrets only
+inside the accepted backend operation; stored secrets never become DTO fields.

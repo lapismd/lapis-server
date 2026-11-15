@@ -28,3 +28,9 @@ The [accepted settings-work receipt](../../records/2026-11-15-remotes-accepted-s
 qualifies the shared native work lifetime for private read/save operations,
 including cancellation, detach, drain and restart. It does not qualify the
 remaining remote manager, host routes or transport.
+
+The [manual original-transfer receipt](../../records/2026-11-15-original-transfer-orchestration.md)
+qualifies shared native test/fetch/review/publication and real SSH restart/lost
+response recovery, including orphaned receipt refusal and token-resolution
+serialization. Credential mutation, startup, both admitted hosts and cold
+application gates remain open.
