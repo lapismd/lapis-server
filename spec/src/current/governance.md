@@ -1,5 +1,10 @@
 # Governance
 
+The SRV-SRV-002 candidate dependency intake retains one consistent owning JJ
+Store revision, manifest admission and registry lockfile. Its original hosted
+backup regression and complete consumer lanes must qualify before acceptance;
+upstream source and application/platform evidence remain distinct.
+
 Mod hook diagnostics retain bounded launch-error and child-exit categories under
 SRV-MOD-006. Strict failure and explicit best-effort behavior remain unchanged;
 the original ARM64 lifecycle failure and its successful unchanged-head rerun
