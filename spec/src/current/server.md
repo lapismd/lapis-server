@@ -181,8 +181,9 @@ CLI registration is owned by [SRV-CLI-001](cli.md#srv-cli-001). Runtime bundling
 
 The runtime image includes `lapis` on the unprivileged runtime user's PATH.
 Hosted General → Advanced registers browser-computer download guidance through
-UI's App-independent CLI settings entry point. Release/archive and image
-qualification remain distinct from registry package adoption.
+UI's App-independent CLI settings entry point. The host consumes its published
+`@lapis-notes/ui@^0.2.0` registry export. Release/archive and image qualification
+remain distinct gates.
 
 Bundled CLI removal keeps its setup lease until shell cleanup finishes, including
 PATH-only cleanup after command removal. Server and Desktop consume this rule.
