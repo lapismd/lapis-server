@@ -6,14 +6,15 @@ session capability contracts remain in Notes; Tauri and OS adapters remain in
 Desktop. Sync is optional and disabled until a vault explicitly enrolls this
 server destination and participant.
 
-The first source-qualified foundation implements the Server-owned encrypted
-object repository, opaque operation journal and dependency-ordered event/HEAD
-repository under SRV-SYNC-004/005. They bind an admitted physical profile,
-logical vault and destination, publish verified ciphertext atomically, reuse
-stable retry bytes, refuse corruption, stream through a 256 KiB buffer, retain
-explicit operation outcomes and expose a device HEAD only after its durable
-revision graph. Protocol admission, enrollment, paging, scheduling,
-working-file apply, HTTP and application selection remain unavailable.
+The source-qualified foundation implements the Server-owned encrypted object
+repository, opaque operation journal, dependency-ordered event/HEAD repository
+and immutable arrival history under SRV-SYNC-004–007. They bind an admitted
+physical profile, logical vault and destination, publish verified ciphertext
+atomically, reuse stable retry bytes, refuse corruption, stream through a 256
+KiB buffer, retain explicit operation outcomes, expose a device HEAD only after
+its durable revision graph and provide stable bounded catch-up snapshots.
+Protocol admission, enrollment, scheduling, working-file apply, HTTP and
+application selection remain unavailable.
 
 ## SRV-SYNC-001 — One explicit destination per vault
 
@@ -69,6 +70,8 @@ durable and validated before a signed event or device HEAD makes them
 discoverable. Destination state MUST distinguish staged, accepted and applied
 work. A retry MUST reuse the persisted ciphertext and signed event identity;
 an uncertain write MUST expose inspection instead of automatic replay.
+Revision and HEAD arrival publication MUST follow durable event acceptance and
+repair an interrupted local publication on reopen.
 
 ### Acceptance details
 
@@ -106,6 +109,7 @@ authorized after the applicable cutoff.
 
 - Unknown signers, generations and dependencies are refused without discovery.
 - Rotation preserves history that was valid before its recorded cutoff.
+- Caller-validated owner membership events retain an immutable generation and predecessor chain plus exact opaque bytes.
 
 ## SRV-SYNC-007 — Bounded catch-up without inferred deletion
 
@@ -121,6 +125,7 @@ work.
 
 - Cursor expiry returns an explicit restart outcome.
 - An empty or partial page never creates a deletion.
+- A page pins one arrival-sequence snapshot and excludes later arrivals until the caller starts a fresh catch-up.
 
 ## SRV-SYNC-008 — Continuous server participant
 

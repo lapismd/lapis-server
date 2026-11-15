@@ -1,8 +1,13 @@
 //! Durable, profile-private storage used by native Sync services.
 
+mod arrivals;
 mod events;
 mod journal;
 
+pub use arrivals::{
+    ArrivalCursor, ArrivalItem, ArrivalKind, ArrivalPage, ArrivalRepository, CatchUpOutcome,
+    RecordedArrival,
+};
 pub use events::{
     AcceptedEvent, EventKind, EventRepository, HeadSnapshot, PublishedHead, StoredEvent,
 };

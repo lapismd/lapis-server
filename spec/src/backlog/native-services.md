@@ -24,8 +24,11 @@ custody/admission and Notes/plugin consumption remain separately owned.
 The first clean Core slices now provide the disabled profile-private encrypted
 object repository, [opaque operation journal](../../records/2026-11-15-sync-operation-journal.md)
 and [dependency-ordered event/HEAD storage](../../records/2026-11-15-sync-event-ordering.md).
-They do not advance protocol admission, enrollment, paging, scheduling, guarded
-working-file apply, HTTP, hosted participant or independent-device acceptance.
+The [arrival repository](../../records/2026-11-15-sync-arrival-catch-up.md)
+adds immutable membership history and bounded stable event catch-up with explicit
+cursor-expiry recovery. These slices do not advance protocol admission,
+enrollment, scheduling, guarded working-file apply, HTTP, hosted participant or
+independent-device acceptance.
 
 ## Logical participants and rich queue workflows
 

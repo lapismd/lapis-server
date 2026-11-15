@@ -12,11 +12,11 @@ The compiled Tasks adapter incorporates its owning repository's current-main
 intake at a pinned Git revision. Workspace patches bind Core/Protocol to this host's
 internal workspace instances without introducing an external Cargo path.
 
-The disabled Sync object, operation-journal and dependency-ordered event/HEAD
-repositories are internal `lapis-app-core` modules under SRV-SRV-004 and
-[SRV-SYNC-004/005](sync.md). They add no crate, external path, renderer
-scheduler, host route or default service. Algorithm ownership remains in Plugins
-and host admission remains unimplemented.
+The disabled Sync object, operation-journal, dependency-ordered event/HEAD and
+stable-arrival repositories are internal `lapis-app-core` modules under
+SRV-SRV-004 and [SRV-SYNC-004–007](sync.md). They add no crate, external path,
+renderer scheduler, host route or default service. Algorithm ownership remains
+in Plugins and host admission remains unimplemented.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
