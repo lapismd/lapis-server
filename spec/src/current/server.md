@@ -57,6 +57,8 @@ package requests MUST fail with a migration diagnostic rather than be ignored.
 No image build or startup path may install Homebrew. Compose MUST stop mounting
 Homebrew storage without deleting existing volumes or modifying profile data.
 Mods follow the [reusable container extension contract](./mods.md).
+Hook failures retain bounded launch-error or child-exit diagnostics under
+SRV-MOD-006; these diagnostics do not retry initialization hooks.
 `lapis-ai-service` stays the git dependency
 `https://github.com/lapismd/lapis-ai` tag `v0.2.0` at version `0.2.0`.
 

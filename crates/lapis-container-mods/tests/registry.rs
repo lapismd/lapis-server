@@ -273,10 +273,13 @@ async fn hook_failure_blocks_strict_startup_and_does_not_reapply_installed_files
     let temp = tempfile::tempdir().unwrap();
     let root = tempfile::tempdir().unwrap();
     let mut config = configuration(root.path(), temp.path(), vec![reference]);
+    let failure = lapis_container_mods::runtime::load(&config, &registry())
+        .await
+        .err()
+        .expect("strict hook failure");
     assert!(
-        lapis_container_mods::runtime::load(&config, &registry())
-            .await
-            .is_err()
+        failure.to_string().contains("exit_failed: code=Some(9)"),
+        "{failure}"
     );
     config.strict = false;
     assert!(
@@ -304,6 +307,36 @@ async fn corrupt_network_blob_is_never_committed_to_cache() {
             .is_err()
     );
     assert!(!cache.blob(&digest(b"valid")).unwrap().exists());
+    server.abort();
+}
+
+#[tokio::test]
+async fn missing_hook_interpreter_reports_spawn_failure_without_disclosing_script_content() {
+    let data = Arc::new(Data::default());
+    let root = tempfile::tempdir().unwrap();
+    let secret = "must-not-enter-hook-error";
+    let script = format!(
+        "#!{}\n{secret}\n",
+        root.path().join("absent-interpreter").display()
+    );
+    candidate(
+        &data,
+        "amd64",
+        &tar_payload(&[("opt/mods/demo/init.sh", script.as_bytes())]),
+        1,
+    );
+    let (reference, server) = fixture(data).await;
+    let cache = tempfile::tempdir().unwrap();
+    let config = configuration(root.path(), cache.path(), vec![reference]);
+    let failure = lapis_container_mods::runtime::load(&config, &registry())
+        .await
+        .err()
+        .expect("missing interpreter must refuse startup");
+    let message = failure.to_string();
+    assert!(message.contains("spawn_failed:"), "{message}");
+    assert!(message.contains("os_code=Some(2)"), "{message}");
+    assert!(!message.contains(secret));
+    assert!(!message.contains("absent-interpreter"));
     server.abort();
 }
 
