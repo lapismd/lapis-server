@@ -6,11 +6,14 @@ replacement and SDK device-flow policy remain transport-independent. Server
 injects its installation/owner-bound encrypted store; no native keyring or
 plaintext fallback is constructed when its key is missing or incorrect.
 
-The source SDK candidate is jj-store PR #87 at
+The checked SDK source is jj-store PR #87 at
 `6649b7e95ee58823ba28f0a9ca01e507b458edd9`. All 18 locked SDK coordinates and
-native manifests/configuration select that immutable candidate. Its required
-hosted checks and merge receipt are pending at this source-qualification record;
-the candidate must be merged before host delivery or release.
+native manifests/configuration select that immutable source. The initial source
+qualification retained its pending merge gate. Hosted CI `43712203583` passed
+at that exact head. PR #87 then merged as
+`9a804c393487cf8ae6c5535ae8c4bec54b38d5e5`; both commit trees are
+`4923d402d4c16d678d6ef30162dab185a747aa7b`. The source pin is now merged,
+without changing qualified source bytes or rebuilding under another coordinate.
 
 ## Narrow evidence
 

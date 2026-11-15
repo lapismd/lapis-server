@@ -8,8 +8,7 @@ work in the owning spec topic instead of a migration or milestone tracker.
 jj-store crates use `git = "https://github.com/stevejuma/jj-store"` and
 `rev = "6649b7e95ee58823ba28f0a9ca01e507b458edd9"`. Do not invent a jj-store
 tag. `lapis-ai-service` stays tag `v0.2.0`.
-The current SDK revision is the exact locally qualified PR #87 candidate;
-record its passing hosted checks and merge before host delivery or release.
+PR #87 passed hosted CI and merged with a tree identical to this pinned source.
 
 Use Jujutsu. Do not publish crates. A push to `main` publishes
 `ghcr.io/lapismd/lapis-server` tagged with the 7-character

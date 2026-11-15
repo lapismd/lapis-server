@@ -334,3 +334,7 @@ The [native provider composition receipt](../../records/2026-11-15-remotes-nativ
 qualifies shared credential policy and owner-bound encrypted Server custody
 under SRV-SRV-004/015/016. Accepted-work fences remain independent of storage;
 provider source qualification does not enable routes or promote cold host gates.
+
+The native provider SDK pin now has exact-head hosted CI and an identical-tree
+PR #87 merge receipt. This source intake proof does not qualify application host
+admission or release; SRV-GOV-001 keeps those gates separate.
