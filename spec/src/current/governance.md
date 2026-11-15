@@ -1,5 +1,10 @@
 # Governance
 
+SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
+before navigation, and qualification MUST observe original native-client release
+before fresh admission. Runtime-error and retained-recovery assertions remain
+required; navigation cannot await asynchronous App teardown.
+
 SRV-SYNC-019 account ownership keeps blocking transport off async executors,
 retains uncertain sessions after refused close and bounds command admission.
 Native source tests do not qualify Desktop or OS custody.

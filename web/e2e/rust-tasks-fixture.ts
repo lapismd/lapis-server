@@ -83,6 +83,10 @@ export async function createHostedTasksFixture(
     target: Page,
     { ready = true, tasks = true }: { ready?: boolean; tasks?: boolean } = {},
   ): Promise<ClientDescriptor> {
+    // A ready App owns watchers and pending configuration reads. Cross its
+    // guarded leave boundary before navigation destroys that browser frame.
+    if (await target.locator('[data-notes-session-ready="true"]').isVisible())
+      await signOutHostedWorkspace(target);
     // Restoration can admit a fresh client during navigation, before a picker
     // would be visible. Observe admission before either entry path can start.
     const admitted = target.waitForResponse(
