@@ -17,6 +17,7 @@ pub mod native_tasks;
 pub mod participants;
 pub mod queues;
 pub mod repository_backup;
+pub mod repository_remotes;
 pub mod repository_restore;
 pub mod repository_sources;
 pub mod terminal;

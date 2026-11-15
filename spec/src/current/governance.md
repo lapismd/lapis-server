@@ -297,6 +297,11 @@ acceptance. Source tests use temporary private storage and synthetic secrets;
 HTTP admission, consumer visibility and real Git transport remain required at
 host adoption. No test opens a user's profile, vault or credential namespace.
 
+Repository remotes source qualification separates shared selection policy and
+generated path-free Protocol commands from native transport and host admission.
+The Core extraction preserves version-one Desktop backup selection and pending
+publication records. Source receipts cannot qualify host adoption or custody.
+
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
 
 CLI host adoption first qualified UI's built `/cli` export separately from its
