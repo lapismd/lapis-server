@@ -258,3 +258,99 @@ fn host_ssh_selection_needs_no_forge_account_and_stays_manual() {
     );
     assert_eq!(selection.read().unwrap().revision, saved.revision);
 }
+
+#[test]
+fn original_discovery_and_config_save_share_one_cross_process_selection_guard() {
+    use lapis_app_core::repository::remotes::selection::OriginalObservation;
+    let (_temporary, vault, private, selection) = fixture();
+    let observed = OriginalObservation {
+        source: "a".repeat(64),
+        configuration: "b".repeat(64),
+    };
+    assert!(
+        selection
+            .observe_original(Some(OriginalObservation {
+                source: "invalid".into(),
+                configuration: "b".repeat(64)
+            }))
+            .is_err()
+    );
+    assert_eq!(selection.read().unwrap().revision, 0);
+    let discovered = selection.observe_original(Some(observed.clone())).unwrap();
+    assert_eq!(
+        selection
+            .observe_original(Some(observed.clone()))
+            .unwrap()
+            .revision,
+        discovered.revision
+    );
+    let next = OriginalObservation {
+        source: observed.source.clone(),
+        configuration: "c".repeat(64),
+    };
+    let second = Selection::open(
+        VaultRoot::open(&private).unwrap(),
+        &VaultRoot::open(&vault).unwrap(),
+    )
+    .unwrap();
+    assert!(
+        selection
+            .configure_original(
+                0,
+                connection(true),
+                observed.clone(),
+                || panic!("stale pending callback"),
+                || panic!("stale config write")
+            )
+            .is_err()
+    );
+    assert!(
+        selection
+            .configure_original(
+                discovered.revision,
+                connection(true),
+                observed.clone(),
+                || Ok(true),
+                || panic!("pending publication must block native config writes")
+            )
+            .is_err()
+    );
+    let before = fs::read(private.join("repository-remotes.json")).unwrap();
+    assert!(
+        selection
+            .configure_original(
+                discovered.revision,
+                connection(true),
+                observed.clone(),
+                || Ok(false),
+                || Err(std::io::Error::other("synthetic native save failure"))
+            )
+            .is_err()
+    );
+    assert_eq!(
+        fs::read(private.join("repository-remotes.json")).unwrap(),
+        before
+    );
+    let saved = selection
+        .configure_original(
+            discovered.revision,
+            connection(true),
+            observed,
+            || Ok(false),
+            || {
+                assert!(
+                    second.advance(discovered.revision).is_err(),
+                    "another process must not interleave with the native config write"
+                );
+                Ok(next.clone())
+            },
+        )
+        .unwrap();
+    assert_eq!(saved.original_observed, Some(next));
+    assert_eq!(
+        saved.original_binding.as_deref(),
+        Some("a".repeat(64).as_str())
+    );
+    assert!(!saved.automatic_sync);
+    assert_eq!(saved.original.as_ref().unwrap().name, "origin");
+}

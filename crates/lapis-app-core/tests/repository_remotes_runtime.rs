@@ -195,3 +195,260 @@ async fn cancelled_response_keeps_accepted_work_until_close_drains_then_reopens_
     assert_eq!(reopened.status().unwrap().work, 0);
     f.close().await;
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn original_discovery_is_passive_sanitized_and_never_chooses_origin() {
+    use std::process::Command;
+    let f = Fixture::new();
+    let root = f.temp.path().join("notes");
+    for args in [
+        vec!["git", "init", "--no-colocate", "."],
+        vec![
+            "git",
+            "remote",
+            "add",
+            "origin",
+            "https://example.invalid/notes.git",
+        ],
+        vec![
+            "git",
+            "remote",
+            "add",
+            "unsafe",
+            "https://fixture:synthetic@example.invalid/private.git",
+        ],
+    ] {
+        let result = Command::new("jj")
+            .current_dir(&root)
+            .env("JJ_CONFIG", "/dev/null")
+            .args([
+                "--no-pager",
+                "--config",
+                "user.name='Fixture'",
+                "--config",
+                "user.email='fixture@invalid'",
+            ])
+            .args(args)
+            .output()
+            .unwrap();
+        assert!(result.status.success(), "JJ fixture setup failed");
+    }
+    let config_path = root.join(".jj/repo/store/git/config");
+    let config = fs::read(&config_path).unwrap();
+    let checkout = fs::read(root.join(".jj/working_copy/checkout")).unwrap();
+    let tree = fs::read(root.join(".jj/working_copy/tree_state")).unwrap();
+    let initial = f.client.repository_remote_settings().await.unwrap();
+    let value = serde_json::to_value(&initial).unwrap();
+    let original = value["settings"]["targets"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|t| t["target"] == "original")
+        .expect("an existing original must be discoverable");
+    assert!(
+        original["connection"].is_null(),
+        "discovery must not choose origin"
+    );
+    assert_eq!(original["canFetch"], false);
+    assert_eq!(original["canPush"], false);
+    let remotes = original["remotes"].as_array().unwrap();
+    assert!(
+        remotes
+            .iter()
+            .any(|r| r["name"] == "origin" && r["url"] == "https://example.invalid/notes.git")
+    );
+    assert!(
+        remotes
+            .iter()
+            .any(|r| r["name"] == "unsafe" && r["url"].is_null())
+    );
+    assert!(!serde_json::to_string(&value).unwrap().contains("synthetic"));
+    assert_eq!(fs::read(&config_path).unwrap(), config);
+    assert_eq!(
+        fs::read(root.join(".jj/working_copy/checkout")).unwrap(),
+        checkout
+    );
+    assert_eq!(
+        fs::read(root.join(".jj/working_copy/tree_state")).unwrap(),
+        tree
+    );
+    let again = f.client.repository_remote_settings().await.unwrap();
+    assert_eq!(
+        again.revision, initial.revision,
+        "stable passive observations retain their revision"
+    );
+    assert!(!again.settings.automatic_sync);
+    f.close().await;
+}
+
+fn fixture_jj(root: &std::path::Path, args: &[&str]) {
+    let result = std::process::Command::new("jj")
+        .current_dir(root)
+        .env("JJ_CONFIG", "/dev/null")
+        .args([
+            "--no-pager",
+            "--config",
+            "user.name='Fixture'",
+            "--config",
+            "user.email='fixture@invalid'",
+            "--config",
+            "signing.behavior='drop'",
+        ])
+        .args(args)
+        .output()
+        .unwrap();
+    assert!(result.status.success(), "JJ fixture command failed");
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn original_save_requires_the_discovered_revision_and_never_transfers() {
+    let f = Fixture::new();
+    let root = f.temp.path().join("notes");
+    fixture_jj(&root, &["git", "init", "--no-colocate", "."]);
+    fixture_jj(&root, &["commit", "-m", "Saved fixture"]);
+    fixture_jj(&root, &["bookmark", "create", "main", "-r", "@-"]);
+    fixture_jj(
+        &root,
+        &[
+            "git",
+            "remote",
+            "add",
+            "origin",
+            "https://example.invalid/original.git",
+        ],
+    );
+    fixture_jj(
+        &root,
+        &[
+            "git",
+            "remote",
+            "add",
+            "other",
+            "https://example.invalid/other.git",
+        ],
+    );
+    let initial = f.client.repository_remote_settings().await.unwrap();
+    let connection = RemoteConnection {
+        name: "origin".into(),
+        url: "https://unreachable.invalid/chosen.git".into(),
+        branch: "publish".into(),
+        bookmark: "main".into(),
+        authentication: RemoteAuthentication::Anonymous,
+        credential: String::new(),
+    };
+    let save = |revision, connection| RepositoryRemotesCommand::SaveConnection {
+        expected_revision: revision,
+        target: RemoteRepositoryTarget::Original,
+        connection,
+    };
+    fixture_jj(
+        &root,
+        &[
+            "git",
+            "remote",
+            "set-url",
+            "origin",
+            "https://example.invalid/externally-changed.git",
+        ],
+    );
+    let config_path = root.join(".jj/repo/store/git/config");
+    let config = fs::read(&config_path).unwrap();
+    let stale = f
+        .client
+        .control_repository_remotes(save(initial.revision, connection.clone()))
+        .await
+        .unwrap_err();
+    assert_eq!(stale.code(), lapis_app_protocol::ErrorCode::Conflict);
+    assert_eq!(
+        fs::read(&config_path).unwrap(),
+        config,
+        "stale saves must not overwrite an external remote edit"
+    );
+    let discovered = f.client.repository_remote_settings().await.unwrap();
+    let checkout = fs::read(root.join(".jj/working_copy/checkout")).unwrap();
+    let tree = fs::read(root.join(".jj/working_copy/tree_state")).unwrap();
+    let saved = f
+        .client
+        .control_repository_remotes(save(discovered.revision, connection.clone()))
+        .await
+        .unwrap();
+    let original = saved
+        .settings
+        .targets
+        .iter()
+        .find(|t| t.target == RemoteRepositoryTarget::Original)
+        .unwrap();
+    assert_eq!(original.connection.as_ref(), Some(&connection));
+    assert!(
+        !original.can_fetch && !original.can_push,
+        "save alone admits no network operation"
+    );
+    assert!(!saved.settings.automatic_sync);
+    let native = fs::read_to_string(&config_path).unwrap();
+    assert!(native.contains("https://unreachable.invalid/chosen.git"));
+    assert!(native.contains("https://example.invalid/other.git"));
+    assert_eq!(
+        fs::read(root.join(".jj/working_copy/checkout")).unwrap(),
+        checkout
+    );
+    assert_eq!(
+        fs::read(root.join(".jj/working_copy/tree_state")).unwrap(),
+        tree
+    );
+    assert!(
+        !f.temp
+            .path()
+            .join("private")
+            .join(f.vault.id().to_string())
+            .join("original-transport")
+            .exists()
+    );
+    let mut wrong = connection;
+    wrong.authentication = RemoteAuthentication::Token;
+    wrong.credential = Uuid::new_v4().to_string();
+    let before = fs::read(&config_path).unwrap();
+    assert!(
+        f.client
+            .control_repository_remotes(save(saved.revision, wrong))
+            .await
+            .is_err()
+    );
+    assert_eq!(
+        fs::read(&config_path).unwrap(),
+        before,
+        "credential admission must precede Git config writes"
+    );
+    let mut ssh = original.connection.clone().unwrap();
+    ssh.name = "host-ssh".into();
+    ssh.url = "ssh://git@unreachable.invalid/notes.git".into();
+    ssh.authentication = RemoteAuthentication::SshDefault;
+    ssh.credential.clear();
+    let saved_ssh = f
+        .client
+        .control_repository_remotes(save(saved.revision, ssh.clone()))
+        .await
+        .unwrap();
+    assert_eq!(
+        saved_ssh
+            .settings
+            .targets
+            .iter()
+            .find(|t| t.target == RemoteRepositoryTarget::Original)
+            .unwrap()
+            .connection
+            .as_ref(),
+        Some(&ssh)
+    );
+    assert!(
+        matches!(saved_ssh.settings.storage, RemoteStorageState::Locked),
+        "host SSH selection requires no unlocked token/forge store"
+    );
+    assert!(
+        !f.temp
+            .path()
+            .join("private")
+            .join(f.vault.id().to_string())
+            .join("original-transport")
+            .exists()
+    );
+    f.close().await;
+}

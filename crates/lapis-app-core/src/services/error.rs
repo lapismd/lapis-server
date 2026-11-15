@@ -40,6 +40,14 @@ impl From<io::Error> for Error {
         {
             return Self::new(ErrorCode::Conflict, "File changed since it was read");
         }
+        if error.get_ref().is_some_and(|cause| {
+            cause.is::<crate::repository::remotes::selection::SelectionConflict>()
+        }) {
+            return Self::new(
+                ErrorCode::Conflict,
+                "Repository connection changed; refresh before continuing",
+            );
+        }
         match error.kind() {
             io::ErrorKind::AlreadyExists => {
                 Self::new(ErrorCode::AlreadyExists, "File already exists")

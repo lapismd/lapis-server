@@ -36,6 +36,13 @@ impl SourceAccess {
             root,
         }))
     }
+    pub(in crate::services) fn fingerprint(&self) -> String {
+        self.source
+            .fingerprint()
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect()
+    }
     pub fn root(&self) -> &Path {
         &self.root
     }

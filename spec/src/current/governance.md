@@ -349,3 +349,15 @@ Shared working-copy qualification compares physical unsnapshotted file counts
 with unchanged native operation heads and checkout bytes. It reuses jj-store's
 owned observer rather than copying its scanner or diff algorithm. Unsupported
 no-original cases and stale client admission retain explicit refusal evidence.
+
+Original settings discovery qualifies passive remote inventory, credential URL
+redaction and unchanged original configuration/checkout metadata. Reader grants
+must remain immutable through the owning jj-store read-only constructor. Shared
+Protocol generation and existing accepted-work lifecycle tests remain required;
+these source checks do not qualify guarded save or any network transfer.
+
+Guarded original-save qualification includes a real native configuration change,
+stale external config refusal, preservation of unrelated remotes and checkout
+bytes, cross-process private-lock ordering, failure rollback of private selection,
+credential admission before Git writes, and host SSH setup with locked token
+storage. Native source, transfer and cold application gates remain distinct.

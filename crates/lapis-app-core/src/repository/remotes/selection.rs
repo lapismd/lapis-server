@@ -14,6 +14,23 @@ const PATH: &str = "repository-remotes.json";
 const MAX_REVISION: u64 = 9_007_199_254_740_991;
 const MAX_BYTES: usize = 64 * 1024;
 
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct OriginalObservation {
+    pub source: String,
+    pub configuration: String,
+}
+impl OriginalObservation {
+    fn valid(&self) -> bool {
+        digest(&self.source) && digest(&self.configuration)
+    }
+}
+fn digest(value: &str) -> bool {
+    value.len() == 64
+        && value
+            .bytes()
+            .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
+}
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SelectionState {
@@ -23,6 +40,10 @@ pub struct SelectionState {
     pub original: Option<RemoteConnection>,
     pub automatic_sync: bool,
     pub migrated: bool,
+    #[serde(default)]
+    pub original_observed: Option<OriginalObservation>,
+    #[serde(default)]
+    pub original_binding: Option<String>,
 }
 impl Default for SelectionState {
     fn default() -> Self {
@@ -33,6 +54,8 @@ impl Default for SelectionState {
             original: None,
             automatic_sync: false,
             migrated: false,
+            original_observed: None,
+            original_binding: None,
         }
     }
 }
@@ -45,7 +68,7 @@ impl SelectionState {
     }
     pub fn expect(&self, revision: u64) -> io::Result<()> {
         if self.revision != revision {
-            return Err(invalid("Connection changed; refresh before continuing"));
+            return Err(io::Error::other(SelectionConflict));
         }
         Ok(())
     }
@@ -53,6 +76,14 @@ impl SelectionState {
 pub struct Selection {
     private: VaultRoot,
 }
+#[derive(Debug)]
+pub(crate) struct SelectionConflict;
+impl std::fmt::Display for SelectionConflict {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Repository connection changed; refresh before continuing")
+    }
+}
+impl std::error::Error for SelectionConflict {}
 fn invalid(message: &'static str) -> io::Error {
     io::Error::other(message)
 }
@@ -102,6 +133,14 @@ impl Selection {
             if let Some(connection) = connection {
                 validate(target, connection)?;
             }
+        }
+        if state.original_observed.as_ref().is_some_and(|o| !o.valid())
+            || state
+                .original_binding
+                .as_ref()
+                .is_some_and(|s| !digest(s) || state.original.is_none())
+        {
+            return Err(invalid("Original source observation is invalid"));
         }
         if state.automatic_sync && state.backup.is_none() {
             return Err(invalid(
@@ -195,6 +234,61 @@ impl Selection {
                 }
                 Target::Original => state.original = Some(connection),
             }
+            state.migrated = true;
+            Ok(())
+        })
+    }
+    /// Private discovery fencing; it does not choose a connection or touch Git.
+    pub fn observe_original(
+        &self,
+        observed: Option<OriginalObservation>,
+    ) -> io::Result<SelectionState> {
+        if observed.as_ref().is_some_and(|o| !o.valid()) {
+            return Err(invalid("Original source observation is invalid"));
+        }
+        let current = self.read()?;
+        if current.original_observed == observed {
+            return Ok(current);
+        }
+        self.update(current.revision, move |state| {
+            state.original_observed = observed;
+            Ok(())
+        })
+    }
+    pub(crate) fn private_path(&self) -> &std::path::Path {
+        self.private.path()
+    }
+    /// The native config transaction is explicit and runs under the private
+    /// selection lock. If the final private write fails, endpoint/source checks
+    /// keep the previous selection from authorizing the changed configuration.
+    pub fn configure_original(
+        &self,
+        expected: u64,
+        connection: RemoteConnection,
+        observed: OriginalObservation,
+        pending: impl FnOnce() -> io::Result<bool>,
+        save: impl FnOnce() -> io::Result<OriginalObservation>,
+    ) -> io::Result<SelectionState> {
+        validate(Target::Original, &connection)?;
+        if !observed.valid() {
+            return Err(invalid("Original source observation is invalid"));
+        }
+        self.update(expected, move |state| {
+            if state.original_observed.as_ref() != Some(&observed) {
+                return Err(io::Error::other(SelectionConflict));
+            }
+            if pending()? {
+                return Err(invalid(
+                    "Observe or stop the earlier publication before changing this connection",
+                ));
+            }
+            let saved = save()?;
+            if !saved.valid() || saved.source != observed.source {
+                return Err(invalid("Original source changed while saving"));
+            }
+            state.original_binding = Some(saved.source.clone());
+            state.original_observed = Some(saved);
+            state.original = Some(connection);
             state.migrated = true;
             Ok(())
         })

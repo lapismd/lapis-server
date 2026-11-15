@@ -375,6 +375,7 @@ export type RemoteConnection = {
   authentication: RemoteAuthentication;
   credential: string;
 };
+export type RemoteEndpoint = { name: string; url: string | null };
 export type RemoteCapabilities = {
   targets: Array<RemoteRepositoryTarget>;
   anonymousHttps: boolean;
@@ -414,6 +415,7 @@ export type RemoteRepositorySettings = {
   connection: RemoteConnection | null;
   status: RemoteConnectionState;
   bookmarks: Array<string>;
+  remotes?: Array<RemoteEndpoint>;
   canFetch: boolean;
   canPush: boolean;
   observation?: RemoteObservation;

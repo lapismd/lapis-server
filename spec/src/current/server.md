@@ -70,7 +70,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`7ac5b142fdbb4378dfc48b60cfbb7324bea1c5a0`. This repository MUST NOT use a
+`2f8f9ec484f02a8d46f08578f1d18302e0867cf1`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 
@@ -259,3 +259,24 @@ unsupported or unstable observations remain unavailable rather than invented
 zeros. A vault with no original MUST remain uninitialized by this read. Native
 source witnesses remain independent of mutation capabilities and client-owned
 history handles.
+
+Passive original remote discovery MUST use the immutable native constructor,
+without obtaining a mutation capability from a history/source reader. It lists
+existing remote names and sanitized optional URLs and eligible local bookmarks;
+credential-bearing or unsupported URLs never cross the host boundary. Discovery
+neither selects `origin` nor writes Git configuration, initializes transport,
+enables synchronization or advertises fetch/push authority. Existing clients
+may omit the additive discovered-remotes field.
+
+Explicit original connection saves MUST bind private selection to the witnessed
+physical source and exact discovered Git configuration revision. External
+configuration changes advance the private observation epoch and refuse stale
+settings writes. The native Git configuration transaction runs under the private
+selection process lock, after credential scope and pending-publication checks.
+If Git config succeeds but private persistence fails, the previous selection
+cannot authorize a mismatched endpoint or source. Unrelated remotes survive;
+saving does not initialize transport, transfer data or change working-copy state.
+Anonymous HTTPS and host SSH remain valid with locked token storage; missing,
+wrong-host or unavailable token/account references refuse before Git writes.
+Only an explicit accepted save constructs the separate native writer capability;
+passive source witnesses and History handles never acquire it.

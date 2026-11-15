@@ -3925,6 +3925,16 @@
       "required": ["id", "label", "host", "username", "method", "available"],
       "type": "object"
     },
+    "RemoteEndpoint": {
+      "additionalProperties": false,
+      "description": "Discovered existing configuration. Unsafe endpoints retain only their name.",
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": ["string", "null"] }
+      },
+      "required": ["name"],
+      "type": "object"
+    },
     "RemoteHost": { "enum": ["desktop", "server"], "type": "string" },
     "RemoteObservation": {
       "additionalProperties": false,
@@ -3977,6 +3987,10 @@
         },
         "publication": {
           "anyOf": [{ "$ref": "#/$defs/RemotePublication" }, { "type": "null" }]
+        },
+        "remotes": {
+          "items": { "$ref": "#/$defs/RemoteEndpoint" },
+          "type": ["array", "null"]
         },
         "review": {
           "anyOf": [{ "$ref": "#/$defs/RemotePushReview" }, { "type": "null" }]

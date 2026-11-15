@@ -92,6 +92,9 @@ pub struct RemoteRepositorySettings {
     pub connection: Option<RemoteConnection>,
     pub status: RemoteConnectionState,
     pub bookmarks: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub remotes: Option<Vec<RemoteEndpoint>>,
     pub can_fetch: bool,
     pub can_push: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -103,4 +106,13 @@ pub struct RemoteRepositorySettings {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
     pub publication: Option<RemotePublication>,
+}
+
+/// Discovered existing configuration. Unsafe endpoints retain only their name.
+#[derive(Clone, Debug, Deserialize, Serialize, JsonSchema, TS)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[ts(rename_all = "camelCase")]
+pub struct RemoteEndpoint {
+    pub name: String,
+    pub url: Option<String>,
 }

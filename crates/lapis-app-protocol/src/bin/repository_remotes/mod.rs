@@ -12,6 +12,7 @@ pub(super) fn declarations(config: &Config) -> Vec<String> {
         RemoteRepositoryTarget::decl(config),
         RemoteAuthentication::decl(config),
         RemoteConnection::decl(config),
+        RemoteEndpoint::decl(config),
         RemoteCapabilities::decl(config),
         RemoteCredentialSummary::decl(config),
         RemotePushReview::decl(config),

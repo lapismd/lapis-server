@@ -1,4 +1,5 @@
 //! Accepted native remote work survives waiter cancellation; hosts retain custody.
+mod original;
 mod snapshot;
 mod storage;
 use super::{Client, Error, Result, VaultService};
@@ -36,24 +37,48 @@ impl Client {
                 let storage = vault.remotes_storage.as_ref().ok_or_else(unsupported)?;
                 let _gate = storage.gate.lock().map_err(|_| Error::busy())?;
                 let selection = storage.selection(&vault)?;
+                let executor = tokio::runtime::Builder::new_current_thread()
+                    .enable_all()
+                    .build()?;
+                let discovered = executor.block_on(original::read(&vault))?;
+                selection.observe_original(discovered.as_ref().map(|d| d.observed.clone()))?;
                 if let Some(command) = command {
                     match command {
                         RepositoryRemotesCommand::SaveConnection {
                             expected_revision,
-                            target: RemoteRepositoryTarget::Backup,
+                            target,
                             connection,
                         } => {
-                            selection.configure(
-                                expected_revision,
-                                RemoteRepositoryTarget::Backup,
-                                connection,
-                                || pending_backup(&vault).map_err(std::io::Error::other),
-                            )?;
+                            // Credential scope admission precedes either private or Git config writes.
+                            admit_connection(storage, &connection)?;
+                            match target {
+                                RemoteRepositoryTarget::Backup => {
+                                    selection.configure(
+                                        expected_revision,
+                                        target,
+                                        connection,
+                                        || pending_backup(&vault).map_err(std::io::Error::other),
+                                    )?;
+                                }
+                                RemoteRepositoryTarget::Original => {
+                                    original::save(
+                                        &vault,
+                                        &selection,
+                                        expected_revision,
+                                        connection,
+                                        discovered.as_ref(),
+                                        &executor,
+                                    )?;
+                                }
+                            }
                         }
                         _ => return Err(unsupported()),
                     }
                 }
-                snapshot::read(storage, selection.read()?)
+                let original = executor.block_on(original::read(&vault))?;
+                let state =
+                    selection.observe_original(original.as_ref().map(|d| d.observed.clone()))?;
+                snapshot::read(storage, state, original.map(|d| d.snapshot))
             })
             .await;
         // Detach fences delivery, while the accepted worker keeps its own lease.
@@ -74,4 +99,47 @@ fn pending_backup(vault: &VaultService) -> Result<bool> {
         .pending_publication()
         .map(|v| v.is_some())
         .map_err(|_| Error::new(ErrorCode::Io, "Earlier repository publication needs review"))
+}
+
+fn admit_connection(storage: &RemoteStorage, connection: &RemoteConnection) -> Result<()> {
+    use RemoteAuthentication as Auth;
+    if connection.authentication == Auth::Anonymous {
+        return Ok(());
+    }
+    let inventory = storage.credentials.inventory()?;
+    if matches!(connection.authentication, Auth::SshAgent | Auth::SshDefault) {
+        return if inventory.ssh_available {
+            Ok(())
+        } else {
+            Err(unsupported())
+        };
+    }
+    if !matches!(inventory.storage, RemoteStorageState::Available) {
+        return Err(Error::new(
+            ErrorCode::PermissionDenied,
+            "Credential storage is locked or unavailable",
+        ));
+    }
+    let url = reqwest::Url::parse(&connection.url).map_err(|_| unsupported())?;
+    let host = match (url.host_str(), url.port()) {
+        (Some(host), Some(port)) => format!("{host}:{port}"),
+        (Some(host), None) => host.to_owned(),
+        _ => return Err(unsupported()),
+    };
+    if !inventory.credentials.iter().any(|c| {
+        c.id == connection.credential
+            && c.available
+            && c.host.eq_ignore_ascii_case(&host)
+            && matches!(
+                (connection.authentication, c.method),
+                (Auth::Token, RemoteCredentialMethod::Token)
+                    | (Auth::Forge, RemoteCredentialMethod::Forge)
+            )
+    }) {
+        return Err(Error::new(
+            ErrorCode::PermissionDenied,
+            "Choose an available credential for this remote host",
+        ));
+    }
+    Ok(())
 }
