@@ -7,12 +7,13 @@ Desktop. Sync is optional and disabled until a vault explicitly enrolls this
 server destination and participant.
 
 The first source-qualified foundation implements the Server-owned encrypted
-object repository and opaque operation journal under SRV-SYNC-004/005. They bind
-an admitted physical profile, logical vault and destination, publish verified
-ciphertext atomically, reuse stable retry bytes, refuse corruption, stream
-through a 256 KiB buffer and retain staged, accepted, applied and unknown work
-across cold reopen. Events, HEADs, enrollment, scheduling, working-file apply,
-HTTP and application selection remain unavailable.
+object repository, opaque operation journal and dependency-ordered event/HEAD
+repository under SRV-SYNC-004/005. They bind an admitted physical profile,
+logical vault and destination, publish verified ciphertext atomically, reuse
+stable retry bytes, refuse corruption, stream through a 256 KiB buffer, retain
+explicit operation outcomes and expose a device HEAD only after its durable
+revision graph. Protocol admission, enrollment, paging, scheduling,
+working-file apply, HTTP and application selection remain unavailable.
 
 ## SRV-SYNC-001 — One explicit destination per vault
 
@@ -73,6 +74,8 @@ an uncertain write MUST expose inspection instead of automatic replay.
 
 - Missing dependencies prevent HEAD discovery.
 - Lost acknowledgements retain the original durable bytes and identity.
+- A stale conditional HEAD does not replace the previously discoverable device tip.
+- A stale conditional HEAD retains the new signed event as durable undiscoverable work.
 
 ## SRV-SYNC-005 — Native repository and filesystem isolation
 

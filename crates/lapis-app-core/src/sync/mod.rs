@@ -1,7 +1,11 @@
 //! Durable, profile-private storage used by native Sync services.
 
+mod events;
 mod journal;
 
+pub use events::{
+    AcceptedEvent, EventKind, EventRepository, HeadSnapshot, PublishedHead, StoredEvent,
+};
 pub use journal::{OperationJournal, OperationKind, OperationPhase, OperationRecord, StageOutcome};
 
 use crate::vault::{staged::StagedFile, sync_directory};
@@ -96,6 +100,12 @@ impl ObjectRepository {
             ));
         }
         Ok(size)
+    }
+
+    pub fn verify(&self, object_id: &str) -> io::Result<u64> {
+        self.verify_profile()?;
+        validate_object_id(object_id)?;
+        self.verify_existing(object_id)
     }
 
     fn verify_existing(&self, object_id: &str) -> io::Result<u64> {
