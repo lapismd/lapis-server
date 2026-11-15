@@ -7,7 +7,7 @@ use self::storage::corrupt;
 use self::types::{
     EventRecord, MAX_EVENT_DEPENDENCIES, MAX_EVENT_PAYLOAD_BYTES, MAX_HEAD_REVISIONS, validate_ids,
 };
-use super::{ObjectRepository, invalid, open_private_leaf, refused, validate_id};
+use super::{ObjectRepository, invalid, private::open_private_leaf, refused, validate_id};
 use crate::vault::VaultRoot;
 use base64::{Engine as _, engine::general_purpose::STANDARD_NO_PAD};
 use same_file::Handle;

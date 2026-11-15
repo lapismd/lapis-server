@@ -264,6 +264,19 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - Cancellation and redemption serialize so a cancelled handoff cannot leave a usable credential.
 - A lost redemption or cancellation response is inspected before further action; cancellation retries reuse the same handoff and proof.
 
+## SRV-SYNC-017 — Protected native account state
+
+<a id="srv-sync-017"></a>
+
+**Requirement.** Native account state MUST use explicitly selected host custody, bound to admitted physical profile/vault roots, logical identities and one server origin. A single native owner MUST retain protected-write uncertainty, inspect before retrying identical bytes and block teardown until custody is confirmed. Missing, locked, corrupt or foreign protected state MUST NOT select plaintext persistence or reset identity.
+
+### Acceptance details
+
+- Profile-private metadata and ownership remain outside captured vault content and indexes.
+- Secret payloads are bounded and absent from filesystem metadata and public snapshots.
+- Independent owners, replaced roots and foreign records are refused; an existing ownership file without metadata or custody requires recovery instead of a replacement identity.
+- Native OS custody and Tauri qualification remain distinct from portable source tests.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple

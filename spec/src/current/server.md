@@ -1,5 +1,9 @@
 # Hosted server
 
+SRV-SYNC-017 governs native account protected state and original-scope custody.
+The portable store requires an explicit host custody port; no platform fallback
+or application activation is introduced by its source foundation.
+
 Proof-bound native handoff inspection and cancellation follow SRV-SYNC-016.
 The shared native account transport follows SRV-SYNC-015; its bounded
 handoff/discovery client grants no endpoint or working-vault authority.

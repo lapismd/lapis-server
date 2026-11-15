@@ -4,6 +4,7 @@ pub mod account;
 mod arrivals;
 mod events;
 mod journal;
+mod private;
 
 pub use arrivals::{
     ArrivalCursor, ArrivalItem, ArrivalKind, ArrivalPage, ArrivalRepository, CatchUpOutcome,
@@ -15,7 +16,7 @@ pub use events::{
 pub use journal::{OperationJournal, OperationKind, OperationPhase, OperationRecord, StageOutcome};
 
 use crate::vault::{staged::StagedFile, sync_directory};
-use cap_std::{ambient_authority, fs::Dir};
+use cap_std::fs::Dir;
 use same_file::Handle;
 use sha2::{Digest, Sha256};
 use std::{
@@ -41,7 +42,7 @@ pub struct ObjectRepository {
 impl ObjectRepository {
     pub fn open(profile: &Path, vault_id: &str, destination_id: &str) -> io::Result<Self> {
         let (profile, profile_identity, objects, _) =
-            open_private_leaf(profile, vault_id, destination_id, "objects")?;
+            private::open_private_leaf(profile, vault_id, destination_id, "objects")?;
         Ok(Self {
             profile,
             profile_identity,
@@ -141,94 +142,6 @@ impl ObjectRepository {
         }
         Ok(())
     }
-}
-
-fn open_private_leaf(
-    profile: &Path,
-    vault_id: &str,
-    destination_id: &str,
-    leaf: &'static str,
-) -> io::Result<(PathBuf, Handle, Dir, PathBuf)> {
-    validate_id(vault_id)?;
-    validate_id(destination_id)?;
-    if !profile.is_absolute() {
-        return Err(invalid("Sync profile must be absolute"));
-    }
-    let metadata = std::fs::symlink_metadata(profile)?;
-    if !metadata.is_dir() || metadata.file_type().is_symlink() {
-        return Err(refused("Sync profile must be a regular directory"));
-    }
-    let profile = profile.canonicalize()?;
-    let profile_identity = Handle::from_path(&profile)?;
-    let components = [
-        "sync",
-        "v1",
-        "vaults",
-        vault_id,
-        "destinations",
-        destination_id,
-        leaf,
-    ];
-    let mut directory = Dir::open_ambient_dir(&profile, ambient_authority())?;
-    let mut path = profile.clone();
-    for component in components {
-        directory = private_child(&directory, component)?;
-        path.push(component);
-    }
-    Ok((profile, profile_identity, directory, path))
-}
-
-fn private_child(parent: &Dir, name: &str) -> io::Result<Dir> {
-    let mut created = false;
-    match parent.symlink_metadata(name) {
-        Ok(metadata) if metadata.file_type().is_symlink() || !metadata.is_dir() => {
-            return Err(refused("Sync repository components must be directories"));
-        }
-        Ok(_) => {}
-        Err(error) if error.kind() == io::ErrorKind::NotFound => match parent.create_dir(name) {
-            Ok(()) => created = true,
-            Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {}
-            Err(error) => return Err(error),
-        },
-        Err(error) => return Err(error),
-    }
-    let metadata = parent.symlink_metadata(name)?;
-    if metadata.file_type().is_symlink() || !metadata.is_dir() {
-        return Err(refused("Sync repository components must be directories"));
-    }
-    #[cfg(unix)]
-    {
-        use cap_std::fs::PermissionsExt;
-        parent.set_permissions(name, cap_std::fs::Permissions::from_mode(0o700))?;
-    }
-    if created {
-        sync_directory(parent)?;
-    }
-    let child = parent.open_dir(name)?;
-    verify_opened_child(&child, &parent.symlink_metadata(name)?)?;
-    Ok(child)
-}
-
-#[cfg(unix)]
-fn verify_opened_child(child: &Dir, expected: &cap_std::fs::Metadata) -> io::Result<()> {
-    use cap_std::fs::MetadataExt;
-    let actual = child.dir_metadata()?;
-    if actual.dev() != expected.dev() || actual.ino() != expected.ino() {
-        return Err(refused(
-            "Sync repository component changed during admission",
-        ));
-    }
-    Ok(())
-}
-
-#[cfg(not(unix))]
-fn verify_opened_child(child: &Dir, _: &cap_std::fs::Metadata) -> io::Result<()> {
-    if !child.dir_metadata()?.is_dir() {
-        return Err(refused(
-            "Sync repository component changed during admission",
-        ));
-    }
-    Ok(())
 }
 
 fn validate_id(value: &str) -> io::Result<()> {
