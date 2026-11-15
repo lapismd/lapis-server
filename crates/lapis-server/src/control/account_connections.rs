@@ -65,15 +65,27 @@ impl Control {
         let id = Uuid::new_v4();
         let expires_at = now + ACCOUNT_CONNECTION_LIFETIME_MS;
         let guard = self.connection.lock().await;
-        guard
-            .as_ref()
-            .ok_or_else(unavailable)?
+        let connection = guard.as_ref().ok_or_else(unavailable)?;
+        connection
             .execute(
-                "INSERT INTO sync_account_connections(id,client_id,client_name,s256_challenge,requested_at,expires_at) VALUES(?,?,?,?,?,?)",
+                "DELETE FROM sync_account_connections WHERE expires_at<=?",
+                turso::params![now],
+            )
+            .await
+            .map_err(engine)?;
+        let changed = connection
+            .execute(
+                "INSERT INTO sync_account_connections(id,client_id,client_name,s256_challenge,requested_at,expires_at) SELECT ?,?,?,?,?,? WHERE (SELECT COUNT(*) FROM sync_account_connections)<128",
                 turso::params![id.to_string(),client_id.to_string(),client_name,s256_challenge,now,expires_at],
             )
             .await
             .map_err(engine)?;
+        if changed != 1 {
+            return Err(io::Error::new(
+                io::ErrorKind::WouldBlock,
+                "Account connection capacity reached",
+            ));
+        }
         Ok(AccountConnection {
             id,
             client_id,

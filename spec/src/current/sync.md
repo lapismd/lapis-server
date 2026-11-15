@@ -16,10 +16,13 @@ its durable revision graph and provide stable bounded catch-up snapshots.
 Protocol admission, enrollment, scheduling, working-file apply, HTTP and
 application selection remain unavailable.
 
-The first account-connection source slice adds durable S256 consent requests
-and revocable discovery-only credentials to the server control store. It does
-not expose an HTTP route, grant endpoint enrollment or unlock encrypted
-content.
+Account connection uses durable S256 consent requests and revocable
+discovery-only credentials in the server control store. Bounded native HTTP
+initiation and redemption require protocol version 3 and reject ambient
+cookies and authorization headers. Browser decisions require an active owner
+cookie, same-origin admission and CSRF verification. These routes grant no
+endpoint enrollment or encrypted-content authority. Browser consent presentation
+and Desktop handoff integration remain open.
 
 ## SRV-SYNC-001 — One explicit destination per vault
 
@@ -208,6 +211,19 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 
 - A-to-Server-to-B and Server-Web-to-Desktop use independent stores and keys.
 - Cold restarts and corrupted dependencies are exercised without warm-state reuse.
+
+## SRV-SYNC-013 — Bounded account handoff
+
+<a id="srv-sync-013"></a>
+
+**Requirement.** Account handoff MUST require S256 redemption and active owner-cookie consent. Discovery credentials MUST expose only active managed-vault identities and names, and MUST support revocation through sign-out. They MUST NOT authorize working-vault access or endpoint enrollment.
+
+### Acceptance details
+
+- Native initiation and redemption accept at most 4 KiB within ten seconds and reject foreign origins or ambient credentials.
+- At most 128 unexpired connection requests may be retained; expired requests are removed before new admission.
+- Installation tokens cannot substitute for an owner cookie when approving a connection.
+- Discovery returns at most 4,096 managed vaults and refuses overflow; sign-out invalidates the presented credential without modifying vault history.
 
 ## Deferred destinations
 

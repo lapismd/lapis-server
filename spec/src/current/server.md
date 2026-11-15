@@ -21,8 +21,9 @@ in Plugins and host admission remains unimplemented.
 The disabled Sync account-connection store is an internal `lapis-server`
 control module under SRV-SRV-004 and [SRV-SYNC-002](sync.md). It retains only
 S256 challenges and bearer hashes, binds approval to an active owner session,
-and grants no host route, vault attachment, endpoint enrollment or content
-authority.
+and grants no vault attachment, endpoint enrollment or content authority.
+Its bounded native initiation/redemption routes and owner-cookie decision route
+are governed by SRV-SYNC-002; browser presentation and Desktop integration remain open.
 
 <!-- Unchanged contract for the participant profile receipt comparison: each delivery is Completed and its outcome is published before the receipts are compared. Validation is `cargo test -p lapis-app-core --test participant_profiles --locked`. -->
 
