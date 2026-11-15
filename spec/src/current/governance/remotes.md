@@ -3,6 +3,10 @@
 These acceptance rules belong to SRV-GOV-001. Native source, host adoption and
 release evidence remain independent.
 
+The [native account transport intake](../../../records/2026-11-15-remotes-native-account-main-intake.md)
+retains concurrent Lapis Sync policy separately from Git backup synchronization,
+with duplicate-manifest and bounded-chapter regression evidence.
+
 Synchronization qualification starts with the admitted opt-out command's missing-
 capability regression. Prove explicit opt-in, idle work count, detach survival,
 successful close drain and refused-close continuity. Use native merge/conflict
@@ -123,3 +127,28 @@ Native backup synchronization follows the same [repository qualification rules](
 Keep its source orchestration, passive authenticated status, explicit recovery,
 actual SSH/HTTPS transport and cold host UI evidence distinct. The scheduler's
 idle lifetime must not hold a vault work lease or a renderer dependency.
+
+Repository remotes source qualification separates shared selection policy and
+generated path-free Protocol commands from native transport and host admission.
+The Core extraction preserves version-one Desktop backup selection and pending
+publication records. Source receipts cannot qualify host adoption or custody.
+
+Repository remote qualification is retained in the linked
+[remotes governance topic](remotes.md), under SRV-GOV-001.
+Credential mutation additionally qualifies cross-vault observation epochs,
+accepted custody lifetime and retained publication references in that topic.
+Native-executor custody tests include the existing SDK's single-threaded futures.
+
+The [native provider composition receipt](../../../records/2026-11-15-remotes-native-provider.md)
+qualifies shared credential policy and owner-bound encrypted Server custody
+under SRV-SRV-004/015/016. Accepted-work fences remain independent of storage;
+provider source qualification does not enable routes or promote cold host gates.
+
+The native provider SDK pin now has exact-head hosted CI and an identical-tree
+PR #87 merge receipt. This source intake proof does not qualify application host
+admission or release; SRV-GOV-001 keeps those gates separate.
+
+The [recorded-backup status receipt](../../../records/2026-11-15-recorded-backup-status.md)
+qualifies the no-original footer data path through immutable native checkpoint
+and diff reads. It retains original physical-observer semantics, explicit source
+identity and separate cold host gates under SRV-SRV-004.

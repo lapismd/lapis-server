@@ -10,6 +10,9 @@ SRV-MOD-006. Strict failure and explicit best-effort behavior remain unchanged;
 the original ARM64 lifecycle failure and its successful unchanged-head rerun
 remain recorded separately from diagnostic-patch qualification.
 
+SRV-SYNC-015 adds bounded native account transport without changing release,
+application admission or OS custody gates.
+
 The Lapis Sync contract intake adds its canonical chapter, verification table,
 Storybook mirror and exact spec-first mapping. SRV-GOV-001 and SRV-GOV-002 stay
 unchanged: all authored files remain within existing limits, protected Sync
@@ -343,11 +346,6 @@ acceptance. Source tests use temporary private storage and synthetic secrets;
 HTTP admission, consumer visibility and real Git transport remain required at
 host adoption. No test opens a user's profile, vault or credential namespace.
 
-Repository remotes source qualification separates shared selection policy and
-generated path-free Protocol commands from native transport and host admission.
-The Core extraction preserves version-one Desktop backup selection and pending
-publication records. Source receipts cannot qualify host adoption or custody.
-
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
 
 CLI host adoption first qualified UI's built `/cli` export separately from its
@@ -369,26 +367,6 @@ The first hosted registry-adoption run passed specification validation before
 one CLI verification page failed formatting and cancelled the remaining jobs.
 The replacement formats that page and retains its SRV-GOV-001 mapping; local
 format and three-lane specification checks pass before the new hosted run.
-
-Repository remote qualification is retained in the linked
-[remotes governance topic](governance/remotes.md), under SRV-GOV-001.
-Credential mutation additionally qualifies cross-vault observation epochs,
-accepted custody lifetime and retained publication references in that topic.
-Native-executor custody tests include the existing SDK's single-threaded futures.
-
-The [native provider composition receipt](../../records/2026-11-15-remotes-native-provider.md)
-qualifies shared credential policy and owner-bound encrypted Server custody
-under SRV-SRV-004/015/016. Accepted-work fences remain independent of storage;
-provider source qualification does not enable routes or promote cold host gates.
-
-The native provider SDK pin now has exact-head hosted CI and an identical-tree
-PR #87 merge receipt. This source intake proof does not qualify application host
-admission or release; SRV-GOV-001 keeps those gates separate.
-
-The [recorded-backup status receipt](../../records/2026-11-15-recorded-backup-status.md)
-qualifies the no-original footer data path through immutable native checkpoint
-and diff reads. It retains original physical-observer semantics, explicit source
-identity and separate cold host gates under SRV-SRV-004.
 
 CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
 The alternate-source fixture is copied by a completed child process so parallel

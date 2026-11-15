@@ -239,6 +239,19 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - Keyboard users can approve or reject; narrow presentation and accessibility use the retained hosted UI primitives.
 - Teardown aborts outstanding inspection and prevents late results from reactivating a retired screen.
 
+## SRV-SYNC-015 — Native account transport admission
+
+<a id="srv-sync-015"></a>
+
+**Requirement.** The shared native account client MUST bind handoff and discovery to one validated server origin, require HTTPS except explicitly selected loopback development, and refuse redirects. It MUST bound requests, response bytes and time, validate response scope and identity, and sanitize transport errors. Discovery credentials and S256 verifiers MUST remain host-owned; this client MUST NOT grant enrollment or working-vault authority.
+
+### Acceptance details
+
+- Foreign approval origins, duplicate or invalid managed-vault identities and non-discovery credentials are refused.
+- Expiry validation permits at most one minute of server clock skew beyond the protocol lifetime.
+- Account mutations are attempted once; a lost acknowledgement is returned to the owning service without automatic replay.
+- The real current server proves native initiation, owner consent, S256 redemption, managed-vault discovery and revocation; OS custody and application admission remain separate gates.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple
