@@ -16,3 +16,4 @@
 - [Verification](verification.md)
   - [OCI Mods verification](verification/mods.md)
   - [CLI verification](verification/cli.md)
+  - [Repository credential verification](verification/repository.md)

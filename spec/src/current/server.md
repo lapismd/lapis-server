@@ -177,6 +177,32 @@ reconnections; the browser yields connection capacity to editor commands.
 
 [SRV-HST-021](hosted.md#srv-hst-021) owns native file-change observation, replacing recursive browser filesystem polling without changing file-byte routes, admission or durable writers.
 
+The source adapter is private host state, separate from repository connections.
+Host route admission, shared remote-service integration and cold acceptance remain
+in the native-services backlog until independently qualified.
+
+## SRV-SRV-015 — Encrypted repository credential custody
+
+<a id="srv-srv-015"></a>
+
+**Requirement.** Server repository tokens MUST use authenticated encryption at rest with a separately operator-mounted 32-byte key. Missing or incorrect keys and corrupted stores MUST remain locked without plaintext fallback. Authenticated records MUST bind installation, authenticated owner and credential identity.
+
+### Acceptance details
+
+- Verify locked states for absent, malformed, incorrect and installation-mismatched keys, without rewriting encrypted records.
+- Prove authenticated owner/record identity binding, tamper rejection and encrypted restart persistence using disposable private storage.
+
+## SRV-SRV-016 — Scoped repository credential lifecycle
+
+<a id="srv-srv-016"></a>
+
+**Requirement.** Native credential custody MUST support durable save, replacement and forgetting through opaque references. Secret-free inventory MUST omit stored tokens, and resolution MUST enforce the approved HTTPS endpoint/account scope and owner. Browser requests MUST NOT select key files or storage locations; vault checkpoints and exports MUST exclude credential storage.
+
+### Acceptance details
+
+- Save, replace and forget retain opaque references across restart; native inventory never includes stored tokens.
+- Wrong-owner and wrong-endpoint resolution fail, while HTTP adapters retain authenticated admission and never accept custody paths.
+
 CLI registration is owned by [SRV-CLI-001](cli.md#srv-cli-001). Runtime bundling qualification is tracked separately from standalone registration and release archives.
 
 The runtime image includes `lapis` on the unprivileged runtime user's PATH.

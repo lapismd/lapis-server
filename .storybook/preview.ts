@@ -96,6 +96,7 @@ const preview: Preview = {
             "Verification",
             "OCI Mods verification",
             "CLI verification",
+            "Repository credential verification",
           ],
           "Shell",
           "*",

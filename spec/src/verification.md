@@ -1,6 +1,7 @@
 # Verification
 
 [Content automation](backlog/content-automation.md) records remaining scope.
+[Repository credential verification](verification/repository.md).
 Hosted access and plugin operations have source acceptance; Desktop intake and
 CLI distribution remain unqualified.
 

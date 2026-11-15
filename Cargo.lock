@@ -51,6 +51,7 @@ dependencies = [
  "ctr",
  "ghash",
  "subtle",
+ "zeroize",
 ]
 
 [[package]]
@@ -3710,8 +3711,10 @@ dependencies = [
 name = "lapis-server"
 version = "0.1.0"
 dependencies = [
+ "aes-gcm",
  "axum",
  "base64 0.22.1",
+ "cap-std",
  "futures-util",
  "getrandom 0.4.3",
  "jj-store-jj",
@@ -3732,7 +3735,9 @@ dependencies = [
  "tokio",
  "tokio-util",
  "turso",
+ "url",
  "uuid",
+ "zeroize",
  "zip",
 ]
 
