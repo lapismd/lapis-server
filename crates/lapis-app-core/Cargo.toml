@@ -13,6 +13,7 @@ default = ["local-sibling-projections"]
 local-sibling-projections = []
 
 [dependencies]
+jj-store-service = { git = "https://github.com/stevejuma/jj-store", rev = "7ac5b142fdbb4378dfc48b60cfbb7324bea1c5a0", version = "0.2.0" }
 lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "e240ad5f8e891a3b30336aca49926992a08bde42", version = "0.1.0" }
 lapis-plugin-services = { git = "https://github.com/lapismd/lapis-plugins", rev = "879581d1549187bdbac2d75b40d02e0df46e721a", version = "0.1.0" }
 lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439", version = "0.1.0" }

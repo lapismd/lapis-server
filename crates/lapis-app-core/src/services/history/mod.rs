@@ -4,8 +4,10 @@ mod original;
 mod owner;
 mod policy;
 mod source;
+pub(in crate::services) mod source_access;
 #[cfg(test)]
 mod tests;
+mod working_copy;
 use super::{Client, VaultService, Work};
 pub use jj_history_service::Error as HistoryError;
 use jj_history_service::{Error, Result, wire};

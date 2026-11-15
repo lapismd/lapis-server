@@ -344,3 +344,8 @@ Remote work-lifetime qualification distinguishes accepted native completion from
 response delivery. Test cancelled waiters, detached clients, subsequent clients,
 restart persistence and vault closure using the real Core runtime. This source
 boundary does not enable HTTP/Tauri adapters or qualify network transfers.
+
+Shared working-copy qualification compares physical unsnapshotted file counts
+with unchanged native operation heads and checkout bytes. It reuses jj-store's
+owned observer rather than copying its scanner or diff algorithm. Unsupported
+no-original cases and stale client admission retain explicit refusal evidence.

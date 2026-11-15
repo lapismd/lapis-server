@@ -251,3 +251,11 @@ completion. A later admitted client MUST use the same vault state without being
 bound to the retired client. No per-vault remote owner may retain a permanent
 work lease that prevents vault closure. Settings projection grants no transport
 or original mutation authority.
+
+Working-copy status MUST read an admitted existing Git-backed JJ original
+without snapshotting files, changing checkout metadata or moving history pins.
+Its frame identifies that source and includes complete bounded file/line totals;
+unsupported or unstable observations remain unavailable rather than invented
+zeros. A vault with no original MUST remain uninitialized by this read. Native
+source witnesses remain independent of mutation capabilities and client-owned
+history handles.
