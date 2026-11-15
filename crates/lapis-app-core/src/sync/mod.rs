@@ -1,5 +1,9 @@
 //! Durable, profile-private storage used by native Sync services.
 
+mod journal;
+
+pub use journal::{OperationJournal, OperationKind, OperationPhase, OperationRecord, StageOutcome};
+
 use crate::vault::{staged::StagedFile, sync_directory};
 use cap_std::{ambient_authority, fs::Dir};
 use same_file::Handle;
@@ -26,33 +30,12 @@ pub struct ObjectRepository {
 
 impl ObjectRepository {
     pub fn open(profile: &Path, vault_id: &str, destination_id: &str) -> io::Result<Self> {
-        validate_id(vault_id)?;
-        validate_id(destination_id)?;
-        if !profile.is_absolute() {
-            return Err(invalid("Sync profile must be absolute"));
-        }
-        let metadata = std::fs::symlink_metadata(profile)?;
-        if !metadata.is_dir() || metadata.file_type().is_symlink() {
-            return Err(refused("Sync profile must be a regular directory"));
-        }
-        let profile = profile.canonicalize()?;
-        let profile_identity = Handle::from_path(&profile)?;
-        let mut directory = Dir::open_ambient_dir(&profile, ambient_authority())?;
-        for component in [
-            "sync",
-            "v1",
-            "vaults",
-            vault_id,
-            "destinations",
-            destination_id,
-            "objects",
-        ] {
-            directory = private_child(&directory, component)?;
-        }
+        let (profile, profile_identity, objects, _) =
+            open_private_leaf(profile, vault_id, destination_id, "objects")?;
         Ok(Self {
             profile,
             profile_identity,
-            objects: directory,
+            objects,
         })
     }
 
@@ -142,6 +125,41 @@ impl ObjectRepository {
         }
         Ok(())
     }
+}
+
+fn open_private_leaf(
+    profile: &Path,
+    vault_id: &str,
+    destination_id: &str,
+    leaf: &'static str,
+) -> io::Result<(PathBuf, Handle, Dir, PathBuf)> {
+    validate_id(vault_id)?;
+    validate_id(destination_id)?;
+    if !profile.is_absolute() {
+        return Err(invalid("Sync profile must be absolute"));
+    }
+    let metadata = std::fs::symlink_metadata(profile)?;
+    if !metadata.is_dir() || metadata.file_type().is_symlink() {
+        return Err(refused("Sync profile must be a regular directory"));
+    }
+    let profile = profile.canonicalize()?;
+    let profile_identity = Handle::from_path(&profile)?;
+    let components = [
+        "sync",
+        "v1",
+        "vaults",
+        vault_id,
+        "destinations",
+        destination_id,
+        leaf,
+    ];
+    let mut directory = Dir::open_ambient_dir(&profile, ambient_authority())?;
+    let mut path = profile.clone();
+    for component in components {
+        directory = private_child(&directory, component)?;
+        path.push(component);
+    }
+    Ok((profile, profile_identity, directory, path))
 }
 
 fn private_child(parent: &Dir, name: &str) -> io::Result<Dir> {
