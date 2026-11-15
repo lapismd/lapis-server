@@ -5,9 +5,13 @@ description: Use the Lapis CLI to discover admitted vaults, read notes, inspect 
 
 # Lapis CLI
 
-Run `lapis --help` and `lapis help` before choosing commands. Help and plugin
-operations reflect the installed CLI and selected host. This is a Lapis client;
-Obsidian CLI commands and `key=value` arguments do not apply.
+Use the Lapis command contract rather than translating Obsidian CLI syntax.
+Run `lapis --help` for grammar and `lapis help` for bundled guides; invocation
+checks the selected host and current grants. Read only the relevant detail:
+
+- [Commands and outcomes](references/commands.md): discovery, pagination, plugin help, JSON replies and exit codes.
+- [Hosts and credentials](references/hosts-and-credentials.md): exact origins, protected credential input and MCP stdio.
+- [Skill management](references/skill-management.md): explicit install/update, receipts, nested references and protected skips.
 
 Select the exact host with `--target https://your-lapis-host` (HTTP is allowed
 only for loopback). Supply scoped credentials through `--token-file` or

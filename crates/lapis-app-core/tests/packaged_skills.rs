@@ -15,6 +15,52 @@ fn bundle(body: &str) -> PackagedSkill {
     }
 }
 #[test]
+fn cli_skill_installs_its_linked_reference_resources() {
+    let cli = lapis_app_core::skills::provider::cli_skill();
+    for path in [
+        "references/commands.md",
+        "references/hosts-and-credentials.md",
+        "references/skill-management.md",
+    ] {
+        assert!(
+            cli.files.contains_key(path),
+            "missing packaged reference {path}"
+        );
+        assert!(
+            cli.files["SKILL.md"].contains(path),
+            "unlinked reference {path}"
+        );
+    }
+    let temp = tempfile::tempdir().unwrap();
+    let root = VaultRoot::open(temp.path()).unwrap();
+    manage(&root, std::slice::from_ref(&cli), "install", None).unwrap();
+    for (path, body) in &cli.files {
+        assert_eq!(
+            root.read_text(&format!(".agents/skills/lapis-cli/{path}"))
+                .unwrap(),
+            *body,
+        );
+    }
+    root.write(
+        ".agents/skills/lapis-cli/references/commands.md",
+        b"local command guidance",
+        &WriteOptions::default(),
+    )
+    .unwrap();
+    let mut next = cli.clone();
+    next.version = "next-test-version".into();
+    assert_eq!(
+        manage(&root, &[next], "update", None).unwrap()[0]
+            .reason
+            .as_deref(),
+        Some("locally-modified")
+    );
+    assert_eq!(
+        root.read_text(".agents/skills/lapis-cli/SKILL.md").unwrap(),
+        cli.files["SKILL.md"]
+    );
+}
+#[test]
 fn fresh_install_clean_update_and_cold_modified_skip() {
     let temp = tempfile::tempdir().unwrap();
     let root = VaultRoot::open(temp.path()).unwrap();

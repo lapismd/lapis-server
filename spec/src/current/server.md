@@ -313,3 +313,7 @@ intent bridge even when Tasks is unselected. Opted-in native backup merging
 cannot rely on a Tasks feature flag to learn about unsaved editor buffers.
 
 Packaged skill source and installation contracts are defined in [SRV-OPS-005–007](plugin-operations.md). Native services own their writes; host adapters supply immutable packaged resources.
+
+The native CLI skill contribution embeds its linked command, credential and
+skill-management references. Nested resources are owned by the same versioned
+receipt and complete-directory update guard as the entrypoint.

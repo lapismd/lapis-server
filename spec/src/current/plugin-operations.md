@@ -47,6 +47,7 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 ### Acceptance details
 
 - Disabled or unverified plugin sources are excluded.
+- The host CLI contribution includes its linked command, credential and protected skill-management references as packaged assets; installed references receive the same full-directory edit protection as SKILL.md.
 - Existing read-only grants cannot install or update skills.
 
 ## SRV-OPS-006 — Protected skill updates

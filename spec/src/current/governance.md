@@ -414,3 +414,8 @@ Native skill byte preservation and embedding-cache lease release retain the
 [exact failures and source qualification](../../records/2026-11-15-skill-bytes-cache-lease.md).
 Complete Core/Protocol/CLI qualification passes 651 cases and strict Clippy;
 hosted package and Desktop adoption remain separate registry-intake gates.
+
+Packaged CLI documentation qualification includes actual help grammar, native
+resource installation and preservation after a nested reference edit.
+[Reference evidence](../../records/2026-11-15-cli-skill-references.md) records
+the exact failing/passing source regression independently of host delivery.

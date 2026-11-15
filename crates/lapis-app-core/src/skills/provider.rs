@@ -21,10 +21,24 @@ pub fn cli_skill() -> PackagedSkill {
         name: "lapis-cli".into(),
         source: "lapis-cli".into(),
         version: env!("CARGO_PKG_VERSION").into(),
-        files: BTreeMap::from([(
-            "SKILL.md".into(),
-            include_str!("../../skills/lapis-cli/SKILL.md").into(),
-        )]),
+        files: BTreeMap::from([
+            (
+                "SKILL.md".into(),
+                include_str!("../../skills/lapis-cli/SKILL.md").into(),
+            ),
+            (
+                "references/commands.md".into(),
+                include_str!("../../skills/lapis-cli/references/commands.md").into(),
+            ),
+            (
+                "references/hosts-and-credentials.md".into(),
+                include_str!("../../skills/lapis-cli/references/hosts-and-credentials.md").into(),
+            ),
+            (
+                "references/skill-management.md".into(),
+                include_str!("../../skills/lapis-cli/references/skill-management.md").into(),
+            ),
+        ]),
     }
 }
 impl SkillsProvider {
