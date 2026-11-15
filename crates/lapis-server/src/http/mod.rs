@@ -24,6 +24,7 @@ mod participants;
 mod plugins;
 mod queues;
 mod repository_backup;
+mod repository_remotes;
 mod repository_restore;
 mod repository_sources;
 mod routes;
@@ -131,6 +132,21 @@ fn configured_router(
         .route("/api/v3/vaults/{vault}/clients", post(routes::attach))
         .route("/api/v3/vaults/{vault}", delete(routes::close))
         .route("/api/v3/clients/{client}/commands", post(routes::execute))
+        .route(
+            "/api/v3/clients/{client}/repository-remotes",
+            get(repository_remotes::settings)
+                .post(repository_remotes::control)
+                .layer(DefaultBodyLimit::max(64 * 1024)),
+        )
+        .route(
+            "/api/v3/clients/{client}/repository-working-copy",
+            get(repository_remotes::working_copy),
+        )
+        .route(
+            "/api/v3/clients/{client}/repository-synchronization",
+            get(repository_remotes::synchronization).post(repository_remotes::control_synchronization)
+                .layer(DefaultBodyLimit::max(1024 * 1024 + 16 * 1024)),
+        )
         .route(
             "/api/v3/clients/{client}/database",
             post(database::call).layer(DefaultBodyLimit::max(database::JSON_LIMIT)),

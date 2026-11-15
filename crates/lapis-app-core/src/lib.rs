@@ -8,6 +8,7 @@ pub mod database;
 pub mod embedding;
 pub mod plugins;
 mod record_store;
+pub mod repository;
 pub mod services;
 pub mod sync;
 mod text;

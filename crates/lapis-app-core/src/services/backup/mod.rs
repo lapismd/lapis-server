@@ -4,12 +4,13 @@ mod commands;
 mod configuration;
 mod control;
 mod diagnostics;
-mod dto;
+pub(in crate::services) mod dto;
 pub(super) mod history;
 #[cfg(test)]
 mod history_tests;
 mod initialization;
 mod provider;
+pub(in crate::services) mod remote;
 mod restore;
 mod slot;
 pub(in crate::services) use slot::Slot;
@@ -27,7 +28,7 @@ pub use storage::BackupStorage;
 use tokio::sync::{Mutex as AsyncMutex, watch::Receiver};
 
 pub(super) struct Owner {
-    engine: AsyncMutex<Backup>,
+    pub(in crate::services) engine: AsyncMutex<Backup>,
     status: Receiver<Status>,
     watch: Mutex<Option<notify::RecommendedWatcher>>,
 }

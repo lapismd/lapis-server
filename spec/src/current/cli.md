@@ -45,3 +45,11 @@
 
 - Archive tests unpack standard TAR members and verify exact-byte metadata, reproducibility and source/checksum refusal before upload.
 - Release metadata contains every supported target exactly once, and macOS remains build-only under the existing preview limits.
+
+## Executable fixture qualification
+
+SRV-CLI-001 retains every installation, repair, source-switch and tamper refusal
+assertion. The source-switch subprocess fixture prepares its alternate executable
+in a completed child process. No executable writer descriptor remains in the
+multithreaded test runner where concurrent process creation could inherit it.
+This harness repair changes no production registration, credentials or lease.

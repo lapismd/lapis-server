@@ -166,3 +166,36 @@ and in its integration-test group on ARM64, preserving first failures and
 bounded diagnostics. Diagnose the reported owning stage, fix the demonstrated
 cause and qualify the unchanged scenario before removing the quarantine. Never
 include unrelated ignored subprocess helpers.
+
+## Repository remotes and credentials
+
+Disposition: approved shared UI preview; native transport and encrypted custody
+foundations are in progress under SRV-SRV-015/016. Integrate both targets through
+Core/Protocol and authenticated host adapters, keeping desktop OS custody and
+server encrypted custody separate. Saving never transfers; anonymous HTTPS and
+host-managed SSH do not require a forge account. Preserve original JJ bookmark
+semantics and existing backup recovery records.
+
+Shared manual original transfers now have source and real SSH acceptance in
+[the Core receipt](../../records/2026-11-15-original-transfer-orchestration.md).
+Shared backup operations additionally have real SSH proof for immutable reviews
+across capture, standby fetch and restart/stop recovery in
+[the backup receipt](../../records/2026-11-15-backup-transfer-orchestration.md).
+Shared credential-provider mutation/sign-in and the encrypted Server adapter
+now have source qualification. Server installation startup and guarded native
+HTTP routes have encrypted restart and real HTTP/SSH qualification. The [cold compiled HTTPS receipt](../../records/2026-11-15-cold-server-https-remotes.md)
+qualifies actual binary token/anonymous transport, one branch, detach, restart and
+locked-key custody. Browser/forge UI and Desktop cold acceptance remain separate. Native automatic
+backup scheduling, passive status and explicit recovery now have [Core/HTTP and
+actual SSH qualification](../../records/2026-11-15-native-backup-synchronization.md).
+Complete the Desktop OS adapter and routes, shared observer intake and both browser/native application
+compositions, then qualify the approved production components. The SDK intake must retain its
+capture-independent transfer qualification and merge proof; do not add consumer
+Busy retries.
+
+Acceptance: qualify credential replacement/forgetting, locked/mismatched keys,
+restart persistence, endpoint/owner isolation, redaction and key provisioning;
+then real HTTPS/SSH fetch and one reviewed branch push, rejection and uncertain
+outcome recovery in each cold host. Native source tests do not enable routes or
+qualify Desktop/hosted delivery. GitHub publication follows completed owner and
+consumer qualification with the user's standing release approval.

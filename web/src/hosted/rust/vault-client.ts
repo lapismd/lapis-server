@@ -28,6 +28,8 @@ import {
   type RepositoryBackupSnapshot,
   type RepositorySourcesCommand,
   type RepositorySources,
+  type RepositoryRemotesCommand,
+  type RepositoryRemotesSnapshot,
 } from "../../../../crates/lapis-app-protocol/bindings/protocol";
 import { RustHostError, type RustHttpClient } from "./client";
 
@@ -211,6 +213,35 @@ export class RustVaultClient {
     )
       throw new Error("Invalid repository source state");
     return result;
+  }
+
+  private repositoryPath(
+    feature: "repository-remotes" | "repository-working-copy",
+  ): string {
+    this.requireOpen();
+    const { vault_id, generation } = this.descriptor;
+    return `${this.path}/${feature}?vault=${encodeURIComponent(vault_id)}&generation=${encodeURIComponent(generation)}`;
+  }
+
+  async repositoryRemotes(
+    command?: RepositoryRemotesCommand,
+  ): Promise<RepositoryRemotesSnapshot> {
+    const result = await this.host.json<RepositoryRemotesSnapshot>(
+      this.repositoryPath("repository-remotes"),
+      command ? "POST" : "GET",
+      command,
+    );
+    this.requireOpen();
+    return result;
+  }
+
+  async repositoryWorkingCopy(): Promise<string> {
+    const response = await this.host.response(
+      this.repositoryPath("repository-working-copy"),
+    );
+    const text = await response.text();
+    this.requireOpen();
+    return text;
   }
 
   async history(command: Command, frame: string): Promise<string> {

@@ -27,7 +27,7 @@ pub(in crate::services) struct Slot {
     value: Mutex<Option<Arc<Owner>>>,
     order: Arc<Order>,
 }
-pub(super) struct Turn {
+pub(in crate::services) struct Turn {
     order: Arc<Order>,
     sequence: u64,
 }
@@ -36,7 +36,7 @@ impl Slot {
         self.value.lock()
     }
     /// Reserve synchronously before an accepted operation yields to its worker.
-    pub(super) fn reserve(&self) -> Result<Turn> {
+    pub(in crate::services) fn reserve(&self) -> Result<Turn> {
         let mut state = self.order.state.lock().map_err(|_| failure())?;
         let sequence = state.issued;
         state.issued = sequence.checked_add(1).ok_or_else(failure)?;

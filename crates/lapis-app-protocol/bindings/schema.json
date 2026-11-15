@@ -3821,6 +3821,228 @@
         }
       ]
     },
+    "RemoteAuthentication": {
+      "enum": ["anonymous", "token", "forge", "ssh-agent", "ssh-default"],
+      "type": "string"
+    },
+    "RemoteAuthorization": {
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "state": { "$ref": "#/$defs/RemoteAuthorizationState" },
+        "url": { "type": "string" }
+      },
+      "required": ["code", "url", "state"],
+      "type": "object"
+    },
+    "RemoteAuthorizationState": {
+      "enum": ["pending", "expired"],
+      "type": "string"
+    },
+    "RemoteCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "anonymousHttps": { "type": "boolean" },
+        "forgejoTokens": { "type": "boolean" },
+        "githubDeviceSignIn": { "type": "boolean" },
+        "hostSshAgent": { "type": "boolean" },
+        "hostSshDefault": { "type": "boolean" },
+        "httpsTokens": { "type": "boolean" },
+        "targets": {
+          "items": { "$ref": "#/$defs/RemoteRepositoryTarget" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "targets",
+        "anonymousHttps",
+        "httpsTokens",
+        "hostSshAgent",
+        "hostSshDefault",
+        "githubDeviceSignIn",
+        "forgejoTokens"
+      ],
+      "type": "object"
+    },
+    "RemoteConnection": {
+      "additionalProperties": false,
+      "properties": {
+        "authentication": { "$ref": "#/$defs/RemoteAuthentication" },
+        "bookmark": { "type": "string" },
+        "branch": { "type": "string" },
+        "credential": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string" }
+      },
+      "required": [
+        "name",
+        "url",
+        "branch",
+        "bookmark",
+        "authentication",
+        "credential"
+      ],
+      "type": "object"
+    },
+    "RemoteConnectionState": {
+      "enum": [
+        "disconnected",
+        "connected",
+        "read-only",
+        "credentials-required"
+      ],
+      "type": "string"
+    },
+    "RemoteCredentialInput": {
+      "additionalProperties": false,
+      "properties": {
+        "host": { "type": "string" },
+        "label": { "type": "string" },
+        "provider": { "$ref": "#/$defs/RemoteCredentialProvider" },
+        "replace": { "type": ["string", "null"] },
+        "token": { "type": "string" },
+        "username": { "type": "string" }
+      },
+      "required": ["label", "host", "username", "token", "provider"],
+      "type": "object"
+    },
+    "RemoteCredentialMethod": { "enum": ["token", "forge"], "type": "string" },
+    "RemoteCredentialProvider": {
+      "enum": ["https", "github", "forgejo"],
+      "type": "string"
+    },
+    "RemoteCredentialSummary": {
+      "additionalProperties": false,
+      "description": "Public inventory has opaque identities and labels, never stored token bytes.",
+      "properties": {
+        "available": { "type": "boolean" },
+        "host": { "type": "string" },
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "method": { "$ref": "#/$defs/RemoteCredentialMethod" },
+        "username": { "type": "string" }
+      },
+      "required": ["id", "label", "host", "username", "method", "available"],
+      "type": "object"
+    },
+    "RemoteEndpoint": {
+      "additionalProperties": false,
+      "description": "Discovered existing configuration. Unsafe endpoints retain only their name.",
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": ["string", "null"] }
+      },
+      "required": ["name"],
+      "type": "object"
+    },
+    "RemoteHost": { "enum": ["desktop", "server"], "type": "string" },
+    "RemoteObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "fetchedAt": { "type": "string" },
+        "incoming": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "outgoing": { "format": "uint32", "minimum": 0, "type": "integer" }
+      },
+      "required": ["incoming", "outgoing", "fetchedAt"],
+      "type": "object"
+    },
+    "RemotePublication": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": { "type": "string" },
+        "id": { "type": "string" },
+        "outcome": { "$ref": "#/$defs/RemotePublicationState" }
+      },
+      "required": ["id", "commit", "outcome"],
+      "type": "object"
+    },
+    "RemotePublicationState": {
+      "enum": ["unknown", "stopped"],
+      "type": "string"
+    },
+    "RemotePushReview": {
+      "additionalProperties": false,
+      "description": "Full immutable destination and commit are retained in the native review.",
+      "properties": {
+        "commit": { "type": "string" },
+        "id": { "type": "string" },
+        "outgoing": { "format": "uint32", "minimum": 0, "type": "integer" },
+        "remoteCommit": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      },
+      "required": ["id", "commit", "summary", "outgoing"],
+      "type": "object"
+    },
+    "RemoteRepositorySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "bookmarks": { "items": { "type": "string" }, "type": "array" },
+        "canFetch": { "type": "boolean" },
+        "canPush": { "type": "boolean" },
+        "connection": {
+          "anyOf": [{ "$ref": "#/$defs/RemoteConnection" }, { "type": "null" }]
+        },
+        "observation": {
+          "anyOf": [{ "$ref": "#/$defs/RemoteObservation" }, { "type": "null" }]
+        },
+        "publication": {
+          "anyOf": [{ "$ref": "#/$defs/RemotePublication" }, { "type": "null" }]
+        },
+        "remotes": {
+          "items": { "$ref": "#/$defs/RemoteEndpoint" },
+          "type": ["array", "null"]
+        },
+        "review": {
+          "anyOf": [{ "$ref": "#/$defs/RemotePushReview" }, { "type": "null" }]
+        },
+        "status": { "$ref": "#/$defs/RemoteConnectionState" },
+        "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+      },
+      "required": ["target", "status", "bookmarks", "canFetch", "canPush"],
+      "type": "object"
+    },
+    "RemoteRepositoryTarget": {
+      "enum": ["backup", "original"],
+      "type": "string"
+    },
+    "RemoteSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization": {
+          "anyOf": [
+            { "$ref": "#/$defs/RemoteAuthorization" },
+            { "type": "null" }
+          ]
+        },
+        "automaticSync": { "type": "boolean" },
+        "credentials": {
+          "items": { "$ref": "#/$defs/RemoteCredentialSummary" },
+          "type": "array"
+        },
+        "deviceSignInAvailable": { "type": "boolean" },
+        "host": { "$ref": "#/$defs/RemoteHost" },
+        "sshAvailable": { "type": "boolean" },
+        "storage": { "$ref": "#/$defs/RemoteStorageState" },
+        "targets": {
+          "items": { "$ref": "#/$defs/RemoteRepositorySettings" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "host",
+        "storage",
+        "sshAvailable",
+        "deviceSignInAvailable",
+        "credentials",
+        "targets",
+        "automaticSync"
+      ],
+      "type": "object"
+    },
+    "RemoteStorageState": {
+      "enum": ["available", "locked", "unavailable"],
+      "type": "string"
+    },
     "Reply": {
       "additionalProperties": false,
       "properties": {
@@ -3947,6 +4169,203 @@
       "required": ["request_id", "checkpoint", "path", "expected"],
       "type": "object"
     },
+    "RepositoryRemotesCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "connection": { "$ref": "#/$defs/RemoteConnection" },
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "save_connection", "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target", "connection"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "test_connection", "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "fetch", "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "review_push", "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "push", "type": "string" },
+            "reviewId": { "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target", "reviewId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "observe_push", "type": "string" },
+            "requestId": { "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target", "requestId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "stop_push", "type": "string" },
+            "requestId": { "type": "string" },
+            "target": { "$ref": "#/$defs/RemoteRepositoryTarget" }
+          },
+          "required": ["kind", "expectedRevision", "target", "requestId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "set_automatic_sync", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision", "enabled"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "input": { "$ref": "#/$defs/RemoteCredentialInput" },
+            "kind": { "const": "save_credential", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision", "input"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "id": { "type": "string" },
+            "kind": { "const": "forget_credential", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision", "id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "begin_sign_in", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "check_sign_in", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expectedRevision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "cancel_sign_in", "type": "string" }
+          },
+          "required": ["kind", "expectedRevision"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositoryRemotesSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": { "$ref": "#/$defs/RemoteCapabilities" },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "settings": { "$ref": "#/$defs/RemoteSettings" }
+      },
+      "required": ["revision", "capabilities", "settings"],
+      "type": "object"
+    },
     "RepositoryRestoreCommand": {
       "oneOf": [
         {
@@ -4029,6 +4448,194 @@
           "type": "object"
         }
       ]
+    },
+    "RepositorySyncCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "run", "type": "string" }
+          },
+          "required": ["kind", "expected_revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resume_apply", "type": "string" },
+            "request_id": { "type": "string" }
+          },
+          "required": ["kind", "expected_revision", "request_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "keep_current", "type": "string" }
+          },
+          "required": ["kind", "expected_revision"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "candidate": { "type": "string" },
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "inspect", "type": "string" },
+            "path": { "type": "string" }
+          },
+          "required": ["kind", "expected_revision", "candidate", "path"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "candidate": { "type": "string" },
+            "expected_revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "resolve", "type": "string" },
+            "path": { "type": "string" },
+            "resolution": { "$ref": "#/$defs/RepositorySyncResolution" }
+          },
+          "required": [
+            "kind",
+            "expected_revision",
+            "candidate",
+            "path",
+            "resolution"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositorySyncConflict": {
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "terms": {
+          "items": { "$ref": "#/$defs/RepositorySyncTerm" },
+          "type": "array"
+        }
+      },
+      "required": ["path", "terms"],
+      "type": "object"
+    },
+    "RepositorySyncPhase": {
+      "enum": [
+        "ready",
+        "fetching",
+        "applying",
+        "publishing",
+        "conflicts",
+        "attention",
+        "paused"
+      ],
+      "type": "string"
+    },
+    "RepositorySyncProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositoryCheckpoint" },
+            { "type": "null" }
+          ]
+        },
+        "conflicts": { "items": { "type": "string" }, "type": "array" },
+        "incoming": { "$ref": "#/$defs/RepositoryCheckpoint" },
+        "local": { "$ref": "#/$defs/RepositoryCheckpoint" }
+      },
+      "required": ["local", "incoming", "conflicts"],
+      "type": "object"
+    },
+    "RepositorySyncResolution": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "id": { "format": "uint", "minimum": 0, "type": "integer" },
+            "kind": { "const": "term", "type": "string" }
+          },
+          "required": ["kind", "id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "executable": { "type": "boolean" },
+            "kind": { "const": "text", "type": "string" },
+            "text": { "type": "string" }
+          },
+          "required": ["kind", "text", "executable"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "delete", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        }
+      ]
+    },
+    "RepositorySyncSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "busy": { "type": "boolean" },
+        "conflict": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositorySyncConflict" },
+            { "type": "null" }
+          ]
+        },
+        "enabled": { "type": "boolean" },
+        "lastSuccess": { "format": "int64", "type": ["integer", "null"] },
+        "pendingApply": { "type": ["string", "null"] },
+        "phase": { "$ref": "#/$defs/RepositorySyncPhase" },
+        "proposal": {
+          "anyOf": [
+            { "$ref": "#/$defs/RepositorySyncProposal" },
+            { "type": "null" }
+          ]
+        },
+        "recovery": { "type": "boolean" },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" }
+      },
+      "required": ["revision", "enabled", "busy", "phase", "recovery"],
+      "type": "object"
+    },
+    "RepositorySyncTerm": {
+      "additionalProperties": false,
+      "properties": {
+        "executable": { "type": ["boolean", "null"] },
+        "id": { "format": "uint", "minimum": 0, "type": "integer" },
+        "kind": { "type": "string" },
+        "role": { "type": "string" },
+        "text": { "type": ["string", "null"] }
+      },
+      "required": ["id", "role", "kind"],
+      "type": "object"
     },
     "RepositoryVaultRestorePreview": {
       "additionalProperties": false,
@@ -5699,6 +6306,12 @@
     "repository_backup_snapshot": {
       "$ref": "#/$defs/RepositoryBackupSnapshot"
     },
+    "repository_remotes_command": {
+      "$ref": "#/$defs/RepositoryRemotesCommand"
+    },
+    "repository_remotes_snapshot": {
+      "$ref": "#/$defs/RepositoryRemotesSnapshot"
+    },
     "repository_restore_command": {
       "$ref": "#/$defs/RepositoryRestoreCommand"
     },
@@ -5707,6 +6320,8 @@
     "repository_sources_command": {
       "$ref": "#/$defs/RepositorySourcesCommand"
     },
+    "repository_sync_command": { "$ref": "#/$defs/RepositorySyncCommand" },
+    "repository_sync_snapshot": { "$ref": "#/$defs/RepositorySyncSnapshot" },
     "request": { "$ref": "#/$defs/Request" },
     "search_document": { "$ref": "#/$defs/SearchDocumentRecord" },
     "search_embedding_config": {
@@ -5739,6 +6354,10 @@
     "vault_name": { "$ref": "#/$defs/VaultName" }
   },
   "required": [
+    "repository_sync_command",
+    "repository_sync_snapshot",
+    "repository_remotes_command",
+    "repository_remotes_snapshot",
     "operation_catalog",
     "operation_request",
     "operation_reply",

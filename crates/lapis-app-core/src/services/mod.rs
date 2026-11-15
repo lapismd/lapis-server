@@ -24,6 +24,11 @@ mod indexing;
 mod operations;
 mod plugins;
 mod protocol;
+mod remotes;
+pub use remotes::{
+    NativeRemoteCredentials, RemoteCredentialAction, RemoteCredentialFuture, RemoteCredentials,
+    RemoteStorage, RemoteTokenStore,
+};
 mod runtime;
 mod state;
 mod streams;

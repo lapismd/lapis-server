@@ -365,6 +365,11 @@ It changes dependency manifests and the registry lockfile, without changing
 server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
 
+Repository credential custody under SRV-SRV-015/016 has separate source and host
+acceptance. Source tests use temporary private storage and synthetic secrets;
+HTTP admission, consumer visibility and real Git transport remain required at
+host adoption. No test opens a user's profile, vault or credential namespace.
+
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
 
 CLI host adoption first qualified UI's built `/cli` export separately from its
@@ -386,3 +391,13 @@ The first hosted registry-adoption run passed specification validation before
 one CLI verification page failed formatting and cancelled the remaining jobs.
 The replacement formats that page and retains its SRV-GOV-001 mapping; local
 format and three-lane specification checks pass before the new hosted run.
+
+CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
+The alternate-source fixture is copied by a completed child process so parallel
+process starts cannot inherit its executable writer descriptor. All existing
+source-switch, repair and tamper-refusal assertions remain unchanged.
+
+Native remote and synchronization qualification follows the
+[repository rules](governance/remotes.md) under SRV-GOV-001. See [combined remotes/history intake](../../records/2026-11-15-remotes-current-main-sdk-intake.md).
+
+The [cold Server HTTPS receipt](../../records/2026-11-15-cold-server-https-remotes.md) distinguishes real compiled-host transport from injected custody and browser fixtures. Disposable trust cannot be installed in an operator host. SRV-GOV-001 retains separate UI and release gates.

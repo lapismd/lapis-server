@@ -36,7 +36,7 @@ impl Host {
         profile: &Path,
         agents: Vec<super::turns::AgentConfig>,
     ) -> io::Result<Self> {
-        Self::profile(config, profile, agents, false)
+        Self::profile(config, profile, agents, false, None)
     }
     /// Explicit installation selection. Browser commands cannot select storage.
     pub fn with_indexed_history(
@@ -44,13 +44,24 @@ impl Host {
         profile: &Path,
         agents: Vec<super::turns::AgentConfig>,
     ) -> io::Result<Self> {
-        Self::profile(config, profile, agents, true)
+        Self::profile(config, profile, agents, true, None)
+    }
+    /// Executable startup explicitly selects credential custody and host transport.
+    pub fn with_remote_profile(
+        config: Config,
+        profile: &Path,
+        agents: Vec<super::turns::AgentConfig>,
+        indexed_history: bool,
+        remotes: super::RemoteInstallation,
+    ) -> io::Result<Self> {
+        Self::profile(config, profile, agents, indexed_history, Some(remotes))
     }
     fn profile(
         config: Config,
         profile: &Path,
         agents: Vec<super::turns::AgentConfig>,
         indexed_history: bool,
+        remotes: Option<super::RemoteInstallation>,
     ) -> io::Result<Self> {
         if !config.vaults.is_empty() {
             config.validate()?;
@@ -61,6 +72,9 @@ impl Host {
             .with_tasks(super::tasks::storage::select(profile)?);
         if let Some(storage) = super::turns::storage::select(profile, &config, agents)? {
             runtime = runtime.with_turns(storage);
+        }
+        if let Some(remotes) = remotes {
+            runtime = runtime.with_remotes(remotes.select(profile, &config)?);
         }
         let mut host = Self::with_runtime(config, runtime)?;
         host.automatic_backup = true;

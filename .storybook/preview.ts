@@ -82,6 +82,7 @@ const preview: Preview = {
           [
             "Current specification",
             "Hosted server",
+            "Repository remote operations",
             "Lapis Sync server",
             "OCI runtime Mods",
             "Content automation",
@@ -90,6 +91,7 @@ const preview: Preview = {
             "Hosted contract",
             "Static delivery",
             "Governance",
+            "Repository remotes qualification",
             "Backlog",
             "Native application services",
             "Content API, MCP and CLI",
@@ -98,6 +100,7 @@ const preview: Preview = {
             "Lapis Sync verification",
             "OCI Mods verification",
             "CLI verification",
+            "Repository credential verification",
           ],
           "Shell",
           "*",

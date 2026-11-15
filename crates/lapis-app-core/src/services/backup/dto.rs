@@ -1,6 +1,6 @@
 use lapis_app_protocol::{repository_backup::*, repository_restore::*};
 
-pub(super) fn checkpoint(value: jj_vault::Checkpoint) -> RepositoryCheckpoint {
+pub(in crate::services) fn checkpoint(value: jj_vault::Checkpoint) -> RepositoryCheckpoint {
     RepositoryCheckpoint {
         operation: value.operation,
         commit: value.commit,

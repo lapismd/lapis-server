@@ -14,6 +14,7 @@ docker_slim run --rm --entrypoint /bin/sh "$image" -c '
   test -x /app/lapis-server
   lapis --help >/dev/null
   lapis --version
+  ssh -V
   ! test -w /usr/local/bin/lapis
   test ! -e /home/linuxbrew/.linuxbrew
   test ! -e /app/install-homebrew-packages

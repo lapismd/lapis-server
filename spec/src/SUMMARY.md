@@ -2,6 +2,7 @@
 
 - [Current specification](current/index.md)
 - [Hosted server](current/server.md)
+  - [Repository remote operations](current/repository-remotes.md)
 - [Lapis Sync server](current/sync.md)
 - [OCI runtime Mods](current/mods.md)
 - [Content automation](current/content.md)
@@ -10,6 +11,7 @@
 - [Hosted contract](current/hosted.md)
 - [Static delivery](current/delivery.md)
 - [Governance](current/governance.md)
+  - [Repository remotes qualification](current/governance/remotes.md)
 - [Backlog](backlog.md)
   - [Native application services](backlog/native-services.md)
   - [Content API, MCP and CLI](backlog/content-automation.md)
@@ -18,3 +20,4 @@
   - [Lapis Sync verification](verification/sync.md)
   - [OCI Mods verification](verification/mods.md)
   - [CLI verification](verification/cli.md)
+  - [Repository credential verification](verification/repository.md)

@@ -349,6 +349,210 @@ export type RepositorySourcesCommand =
   | { kind: "discover" }
   | { kind: "open_original" };
 export type RepositorySources = { original: boolean; token: string | null };
+export type RemoteHost = "desktop" | "server";
+export type RemoteStorageState = "available" | "locked" | "unavailable";
+export type RemoteConnectionState =
+  | "disconnected"
+  | "connected"
+  | "read-only"
+  | "credentials-required";
+export type RemoteCredentialMethod = "token" | "forge";
+export type RemoteCredentialProvider = "https" | "github" | "forgejo";
+export type RemotePublicationState = "unknown" | "stopped";
+export type RemoteAuthorizationState = "pending" | "expired";
+export type RemoteRepositoryTarget = "backup" | "original";
+export type RemoteAuthentication =
+  | "anonymous"
+  | "token"
+  | "forge"
+  | "ssh-agent"
+  | "ssh-default";
+export type RemoteConnection = {
+  name: string;
+  url: string;
+  branch: string;
+  bookmark: string;
+  authentication: RemoteAuthentication;
+  credential: string;
+};
+export type RemoteEndpoint = { name: string; url: string | null };
+export type RemoteCapabilities = {
+  targets: Array<RemoteRepositoryTarget>;
+  anonymousHttps: boolean;
+  httpsTokens: boolean;
+  hostSshAgent: boolean;
+  hostSshDefault: boolean;
+  githubDeviceSignIn: boolean;
+  forgejoTokens: boolean;
+};
+export type RemoteCredentialSummary = {
+  id: string;
+  label: string;
+  host: string;
+  username: string;
+  method: RemoteCredentialMethod;
+  available: boolean;
+};
+export type RemotePushReview = {
+  id: string;
+  commit: string;
+  summary: string;
+  outgoing: number;
+  remoteCommit: string | null;
+};
+export type RemoteObservation = {
+  incoming: number;
+  outgoing: number;
+  fetchedAt: string;
+};
+export type RemotePublication = {
+  id: string;
+  commit: string;
+  outcome: RemotePublicationState;
+};
+export type RemoteRepositorySettings = {
+  target: RemoteRepositoryTarget;
+  connection: RemoteConnection | null;
+  status: RemoteConnectionState;
+  bookmarks: Array<string>;
+  remotes?: Array<RemoteEndpoint>;
+  canFetch: boolean;
+  canPush: boolean;
+  observation?: RemoteObservation;
+  review?: RemotePushReview;
+  publication?: RemotePublication;
+};
+export type RemoteCredentialInput = {
+  label: string;
+  host: string;
+  username: string;
+  token: string;
+  provider: RemoteCredentialProvider;
+  replace?: string;
+};
+export type RepositoryRemotesCommand =
+  | {
+      kind: "save_connection";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+      connection: RemoteConnection;
+    }
+  | {
+      kind: "test_connection";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+    }
+  | { kind: "fetch"; expectedRevision: number; target: RemoteRepositoryTarget }
+  | {
+      kind: "review_push";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+    }
+  | {
+      kind: "push";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+      reviewId: string;
+    }
+  | {
+      kind: "observe_push";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+      requestId: string;
+    }
+  | {
+      kind: "stop_push";
+      expectedRevision: number;
+      target: RemoteRepositoryTarget;
+      requestId: string;
+    }
+  | { kind: "set_automatic_sync"; expectedRevision: number; enabled: boolean }
+  | {
+      kind: "save_credential";
+      expectedRevision: number;
+      input: RemoteCredentialInput;
+    }
+  | { kind: "forget_credential"; expectedRevision: number; id: string }
+  | { kind: "begin_sign_in"; expectedRevision: number }
+  | { kind: "check_sign_in"; expectedRevision: number }
+  | { kind: "cancel_sign_in"; expectedRevision: number };
+export type RemoteAuthorization = {
+  code: string;
+  url: string;
+  state: RemoteAuthorizationState;
+};
+export type RemoteSettings = {
+  host: RemoteHost;
+  storage: RemoteStorageState;
+  sshAvailable: boolean;
+  deviceSignInAvailable: boolean;
+  authorization?: RemoteAuthorization;
+  credentials: Array<RemoteCredentialSummary>;
+  targets: Array<RemoteRepositorySettings>;
+  automaticSync: boolean;
+};
+export type RepositoryRemotesSnapshot = {
+  revision: number;
+  capabilities: RemoteCapabilities;
+  settings: RemoteSettings;
+};
+export type RepositorySyncCommand =
+  | { kind: "run"; expected_revision: number }
+  | { kind: "resume_apply"; expected_revision: number; request_id: string }
+  | { kind: "keep_current"; expected_revision: number }
+  | {
+      kind: "inspect";
+      expected_revision: number;
+      candidate: string;
+      path: string;
+    }
+  | {
+      kind: "resolve";
+      expected_revision: number;
+      candidate: string;
+      path: string;
+      resolution: RepositorySyncResolution;
+    };
+export type RepositorySyncResolution =
+  | { kind: "term"; id: number }
+  | { kind: "text"; text: string; executable: boolean }
+  | { kind: "delete" };
+export type RepositorySyncPhase =
+  | "ready"
+  | "fetching"
+  | "applying"
+  | "publishing"
+  | "conflicts"
+  | "attention"
+  | "paused";
+export type RepositorySyncProposal = {
+  local: RepositoryCheckpoint;
+  incoming: RepositoryCheckpoint;
+  candidate: RepositoryCheckpoint | null;
+  conflicts: Array<string>;
+};
+export type RepositorySyncTerm = {
+  id: number;
+  role: string;
+  kind: string;
+  text: string | null;
+  executable: boolean | null;
+};
+export type RepositorySyncConflict = {
+  path: string;
+  terms: Array<RepositorySyncTerm>;
+};
+export type RepositorySyncSnapshot = {
+  revision: number;
+  enabled: boolean;
+  busy: boolean;
+  phase: RepositorySyncPhase;
+  proposal?: RepositorySyncProposal;
+  conflict?: RepositorySyncConflict;
+  lastSuccess?: number;
+  recovery: boolean;
+  pendingApply?: string;
+};
 export type ProjectionContribution = {
   projection_id: string;
   owner_plugin_id: string;
