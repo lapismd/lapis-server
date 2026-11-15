@@ -60,6 +60,12 @@ impl ProtectedAccountState {
             ));
         }
         let mut owner = Owner::open(profile, vault, profile_id, vault_id, endpoint.origin())?;
+        // Reserve the public client/binding before the first fallible custody
+        // lookup. A locked provider must not strand a fresh ownership witness.
+        // An established lock without metadata still requires recovery below.
+        if owner.fresh_lock && owner.marker_bytes.is_none() {
+            owner.commit_marker(&owner.marker.clone())?;
+        }
         let raw = custody.read(&owner.key).map_err(custody_error)?;
         if let Some(raw) = &raw {
             let envelope = codec::decode(raw)?;

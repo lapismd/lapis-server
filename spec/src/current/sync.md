@@ -272,7 +272,7 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 
 ### Acceptance details
 
-- Profile-private metadata and ownership remain outside captured vault content and indexes.
+- Profile-private metadata and ownership remain outside captured vault content and indexes, and a fresh owner MUST reserve its public identity before the first custody lookup so unlock can recover that identity without a credential write.
 - Secret payloads are bounded and absent from filesystem metadata and public snapshots.
 - Independent owners, replaced roots and foreign records are refused; an existing ownership file without metadata or custody requires recovery instead of a replacement identity.
 - Native OS custody and Tauri qualification remain distinct from portable source tests.
