@@ -11,7 +11,8 @@ The first Sync Core source slices retain those limits: each production module is
 below 300 lines, each exact test is below 500, and the stack adds a Changeset
 without publishing. The guarded [object repository](../../records/2026-11-15-sync-object-repository.md),
 [operation journal](../../records/2026-11-15-sync-operation-journal.md) and
-[dependency-ordered event storage](../../records/2026-11-15-sync-event-ordering.md)
+[dependency-ordered event storage](../../records/2026-11-15-sync-event-ordering.md),
+and [stable arrival catch-up](../../records/2026-11-15-sync-arrival-catch-up.md)
 record their exact source evidence. Exact tests, strict affected Clippy, the
 complete Core and workspace suites and specification gates qualify source only;
 Docker, image, HTTP, protocol admission, Desktop and visual acceptance remain
