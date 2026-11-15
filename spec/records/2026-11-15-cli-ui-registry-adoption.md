@@ -13,6 +13,17 @@ version and export; `pnpm check` passed with zero Svelte diagnostics and the App
 ownership audit passed. `pnpm spec:check` passed all three policy lanes, and
 `pnpm build` completed the production hosted-UI bundle.
 
+The first hosted Server CI run passed `pnpm spec:check`, then found one
+formatting failure in `spec/src/verification/cli.md` and cancelled the remaining
+jobs by policy. Formatting that page repaired the exact failure; local
+`pnpm format:check` and `pnpm spec:check` then passed with zero findings before
+the replacement push.
+
+The first repair check then reported one `SPEC-FIRST-MISSING` finding because
+the verification-page correction had not yet updated its mapped governance
+chapter. The follow-up governance record restores that mapping; the repeated
+specification check passes all three lanes.
+
 This closes the shared-UI registry-adoption gate only. Published CLI archives,
 ARM64 image acceptance and the remaining supported-platform release gates stay
 pending.

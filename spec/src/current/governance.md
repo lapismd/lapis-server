@@ -308,3 +308,8 @@ cleanup; PATH-only cleanup follows the same source-qualified concurrency rule.
 Runtime-image CLI qualification exercises the actual packaged command under the
 unprivileged runtime user, including held-lease cleanup refusal. It retains the
 original image gates and separate platform/publication qualification.
+
+The first hosted registry-adoption run passed specification validation before
+one CLI verification page failed formatting and cancelled the remaining jobs.
+The replacement formats that page and retains its SRV-GOV-001 mapping; local
+format and three-lane specification checks pass before the new hosted run.
