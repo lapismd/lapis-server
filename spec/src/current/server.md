@@ -87,7 +87,7 @@ without requiring source-build memory.
 
 **Requirement.** History, vault, and repository crates MUST use the Cargo git
 dependency `https://github.com/stevejuma/jj-store` revision
-`076e418cecbe204925aea874bef8aa8a680269a9`. This repository MUST NOT use a
+`87be3ad68530653c6c6fd1e5a2463a217cf3f044`. This repository MUST NOT use a
 jj-store path, a crate tag, or pull request 22 head
 `35356e655765143b29a6c9b1518ef3b91d04837d`.
 

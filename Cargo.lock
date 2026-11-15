@@ -139,7 +139,7 @@ version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -150,7 +150,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
 dependencies = [
  "anstyle",
  "once_cell_polyfill",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -567,7 +567,7 @@ dependencies = [
  "cap-primitives",
  "cap-std",
  "io-lifetimes 3.0.1",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -584,7 +584,7 @@ dependencies = [
  "maybe-owned",
  "rustix 1.1.6",
  "rustix-linux-procfs",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
  "winx",
 ]
 
@@ -611,7 +611,7 @@ dependencies = [
  "rustix 1.1.6",
  "rustix-linux-procfs",
  "uuid",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -1321,7 +1321,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -3153,7 +3153,7 @@ dependencies = [
 [[package]]
 name = "jj-agent"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "hex",
  "jj-store-model",
@@ -3167,7 +3167,7 @@ dependencies = [
 [[package]]
 name = "jj-collab"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "async-trait",
  "emojis",
@@ -3230,7 +3230,7 @@ dependencies = [
 [[package]]
 name = "jj-history-service"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "async-trait",
  "jj-store-jj",
@@ -3290,7 +3290,7 @@ dependencies = [
 [[package]]
 name = "jj-review"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "hex",
  "jj-agent",
@@ -3305,7 +3305,7 @@ dependencies = [
 [[package]]
 name = "jj-store-core"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "async-trait",
  "futures",
@@ -3323,7 +3323,7 @@ dependencies = [
 [[package]]
 name = "jj-store-git"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "async-trait",
  "base64 0.23.1",
@@ -3345,7 +3345,7 @@ dependencies = [
 [[package]]
 name = "jj-store-jj"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "async-trait",
  "base64 0.23.1",
@@ -3379,7 +3379,7 @@ dependencies = [
 [[package]]
 name = "jj-store-model"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "hex",
  "schemars",
@@ -3391,7 +3391,7 @@ dependencies = [
 [[package]]
 name = "jj-vault"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "jj-store-jj",
  "regex",
@@ -3406,7 +3406,7 @@ dependencies = [
 [[package]]
 name = "jj-work"
 version = "0.2.0"
-source = "git+https://github.com/stevejuma/jj-store?rev=076e418cecbe204925aea874bef8aa8a680269a9#076e418cecbe204925aea874bef8aa8a680269a9"
+source = "git+https://github.com/stevejuma/jj-store?rev=87be3ad68530653c6c6fd1e5a2463a217cf3f044#87be3ad68530653c6c6fd1e5a2463a217cf3f044"
 dependencies = [
  "hex",
  "jj-store-model",
@@ -4280,7 +4280,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -4890,7 +4890,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -5072,9 +5072,9 @@ dependencies = [
 
 [[package]]
 name = "redb"
-version = "4.4.0"
+version = "4.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "39178e0a867f9e3eaa6292a4ab1dd3613f2519c5b564341e1e7b29b270736cc4"
+checksum = "8b317ef681e18f6091efbfab532eaf924a135c492d9d0299d0fbfae07e92a39b"
 dependencies = [
  "libc",
 ]
@@ -5377,7 +5377,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys 0.12.1",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -5445,7 +5445,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -5905,7 +5905,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d1e2c7f27f8d4cb10542a02c49005dbd6e93095799d6f3be745fae9f8fedd4"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -5955,7 +5955,7 @@ dependencies = [
  "cfg-if 1.0.5",
  "libc",
  "psm",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -6339,7 +6339,7 @@ dependencies = [
  "getrandom 0.4.3",
  "once_cell",
  "rustix 1.1.6",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -7397,7 +7397,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
@@ -7661,7 +7661,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7d6f32a0ff4a9f6f01231eb2059cc85479330739333e0e58cadf03b6af2cca10"
 dependencies = [
  "cfg-if 1.0.5",
- "windows-sys 0.61.2",
+ "windows-sys 0.60.2",
 ]
 
 [[package]]
