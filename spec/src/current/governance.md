@@ -339,3 +339,8 @@ merged source tree separately. Portable Cargo pins and configure checks select
 the merged revision. Adapter/cold-key tests qualify injected encrypted custody;
 they do not qualify host manager startup, HTTP/Tauri admission or application
 publication.
+
+Remote work-lifetime qualification distinguishes accepted native completion from
+response delivery. Test cancelled waiters, detached clients, subsequent clients,
+restart persistence and vault closure using the real Core runtime. This source
+boundary does not enable HTTP/Tauri adapters or qualify network transfers.

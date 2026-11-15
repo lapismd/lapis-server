@@ -9,6 +9,7 @@ use std::{
 use uuid::Uuid;
 
 pub struct VaultService {
+    pub(super) remotes_storage: Option<Arc<super::RemoteStorage>>,
     pub(super) file_changes: Mutex<Option<super::file_changes::Owner>>,
     pub(super) terminals: Mutex<super::terminal::Owners>,
     pub(super) skills: Mutex<super::agent_skills::State>,
@@ -105,6 +106,7 @@ impl State {
 impl VaultService {
     pub(super) fn new(id: Uuid, root: VaultRoot, storage: Option<Arc<DatabaseStorage>>) -> Self {
         Self {
+            remotes_storage: None,
             file_changes: Mutex::new(None),
             terminals: Mutex::new(HashMap::new()),
             skills: Mutex::new(super::agent_skills::State::default()),

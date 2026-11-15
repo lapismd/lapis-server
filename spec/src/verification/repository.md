@@ -23,3 +23,8 @@ sign-in/remote acceptance remain outstanding.
 The [merged engine/adapter intake](../../records/2026-11-15-remotes-native-intake.md)
 qualifies portable merged Git pins, host-SSH selection and owner-bound injection
 through jj-forge's SecretStore. Host startup and actual sign-in remain separate.
+
+The [accepted settings-work receipt](../../records/2026-11-15-remotes-accepted-settings-work.md)
+qualifies the shared native work lifetime for private read/save operations,
+including cancellation, detach, drain and restart. It does not qualify the
+remaining remote manager, host routes or transport.

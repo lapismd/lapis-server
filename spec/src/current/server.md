@@ -243,3 +243,11 @@ and token inventory remain independent. Replacing/forgetting forge secrets
 preserves the stable account identity; no stored secret crosses into browser
 inventory. Missing keys and authentication failures never create plaintext
 fallback records. Host forge-manager and route adoption remain separate gates.
+
+Shared remote commands MUST acquire native accepted-work ownership before
+waiting for their serialized turn. Discarding a response or detaching its client
+cannot abandon an accepted private configuration write; delivery is fenced after
+completion. A later admitted client MUST use the same vault state without being
+bound to the retired client. No per-vault remote owner may retain a permanent
+work lease that prevents vault closure. Settings projection grants no transport
+or original mutation authority.
