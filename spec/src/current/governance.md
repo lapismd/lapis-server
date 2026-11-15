@@ -1,5 +1,12 @@
 # Governance
 
+The Lapis Sync contract intake adds its canonical chapter, verification table,
+Storybook mirror and exact spec-first mapping. SRV-GOV-001 and SRV-GOV-002 stay
+unchanged: all authored files remain within existing limits, protected Sync
+source must map to both the Sync and hosted-server chapters, and Storybook order
+continues to follow `SUMMARY.md`. This documentation slice changes no runtime,
+release, image, dependency or visual baseline.
+
 Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.

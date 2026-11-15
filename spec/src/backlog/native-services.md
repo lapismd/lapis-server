@@ -6,6 +6,21 @@ server/companion architecture. lapis-server owns portable application policy and
 its core/protocol crates; generic engines remain in lapis-ai, jj-store and
 lapis-plugins. Shared App/API contracts remain in Notes.
 
+## Lapis Sync native service and destination
+
+Disposition: contract established in [Lapis Sync server](../current/sync.md);
+implementation and every native/application acceptance boundary remain open.
+The discarded Stage 3 through Stage 7 draft stack is provenance only: its
+process-relative object writes, incomplete authorization, missing HTTP
+destination, oversized modules and absent canonical mapping do not qualify a
+source foundation.
+
+Acceptance: implement the shared durable repository, protected working-vault
+participant, scoped enrollment and destination API in bounded slices. Prove the
+exact security, retry, paging, scheduler, writer, recovery and independent-store
+journeys in SRV-SYNC-001 through SRV-SYNC-012 before hosted activation. Desktop
+custody/admission and Notes/plugin consumption remain separately owned.
+
 ## Logical participants and rich queue workflows
 
 Disposition: remaining implementation and host qualification. Native publication,
