@@ -79,3 +79,5 @@ exact cold apply recovery and receive-free lost-response reconciliation. Full
 native workspace, strict Clippy/build and all four real SSH scenarios pass.
 Both credential rows remain Partial until the remaining host UI, HTTPS/forge
 and cold application acceptance completes.
+
+[Cold compiled HTTPS acceptance](../../records/2026-11-15-cold-server-https-remotes.md) adds actual Server-process token, anonymous read, one-branch publication, detach, restart and encrypted-key qualification. Browser and Desktop delivery remain independent.

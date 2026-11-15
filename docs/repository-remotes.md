@@ -59,3 +59,14 @@ working files and selected history pins remain untouched. New backup connections
 remain manual. Automatic remote synchronization and full browser/Desktop
 qualification remain pending; installing these native routes alone does not
 qualify the overall feature.
+
+## Repeatable HTTPS acceptance
+
+In a disposable Linux validation container, build the Server with
+`cargo build --locked -p lapis-server`, then run
+`LAPIS_SERVER_DISPOSABLE_HTTPS=1 node scripts/test-repository-remotes-https.mjs`
+as its root test user. This test installs a short-lived CA only inside that
+container and removes it afterward. Never run it on an operator machine. The
+script starts the compiled binary with fresh private owner/vault/credential
+state; it checks real authenticated Git HTTPS, anonymous reads, exact publication,
+restart, detach and locked encryption storage. It uses no real account or vault.

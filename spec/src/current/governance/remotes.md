@@ -152,3 +152,10 @@ The [recorded-backup status receipt](../../../records/2026-11-15-recorded-backup
 qualifies the no-original footer data path through immutable native checkpoint
 and diff reads. It retains original physical-observer semantics, explicit source
 identity and separate cold host gates under SRV-SRV-004.
+
+Cold compiled-Server HTTPS qualification uses a disposable TLS smart-HTTP
+endpoint and separate mounted encryption key. Prove token replacement/forget,
+anonymous reads, cross-target isolation, explicit single-branch publication,
+unchanged unsnapshotted original files, restart persistence and locked-key
+refusal through the actual binary. Trust installation is confined to the
+disposable Linux worker; disabling TLS verification cannot qualify this gate.

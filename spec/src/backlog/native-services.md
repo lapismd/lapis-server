@@ -177,8 +177,9 @@ across capture, standby fetch and restart/stop recovery in
 [the backup receipt](../../records/2026-11-15-backup-transfer-orchestration.md).
 Shared credential-provider mutation/sign-in and the encrypted Server adapter
 now have source qualification. Server installation startup and guarded native
-HTTP routes have encrypted restart and real HTTP/SSH qualification. Browser,
-HTTPS/forge and cold application acceptance remain separate. Native automatic
+HTTP routes have encrypted restart and real HTTP/SSH qualification. The [cold compiled HTTPS receipt](../../records/2026-11-15-cold-server-https-remotes.md)
+qualifies actual binary token/anonymous transport, one branch, detach, restart and
+locked-key custody. Browser/forge UI and Desktop cold acceptance remain separate. Native automatic
 backup scheduling, passive status and explicit recovery now have [Core/HTTP and
 actual SSH qualification](../../records/2026-11-15-native-backup-synchronization.md).
 Complete the Desktop OS adapter and routes, shared observer intake and both browser/native application
