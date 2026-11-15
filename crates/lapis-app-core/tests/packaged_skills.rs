@@ -109,6 +109,27 @@ fn pending_corrupt_duplicate_and_traversal_fail_closed() {
     .unwrap();
     assert!(manage(&root, &[bundle("two")], "update", None).is_err());
 }
+
+#[test]
+fn binary_local_changes_skip_the_entire_skill() {
+    for file in ["mine.png", "references/example.md"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = VaultRoot::open(temp.path()).unwrap();
+        manage(&root, &[bundle("one")], "install", None).unwrap();
+        let path = format!(".agents/skills/lapis-example/{file}");
+        let bytes = [0xff, 0x00, 0xfe];
+        root.write(&path, &bytes, &WriteOptions::default()).unwrap();
+        let result = manage(&root, &[bundle("two")], "update", None).unwrap();
+        assert_eq!(result[0].status, "skipped");
+        assert_eq!(result[0].reason.as_deref(), Some("locally-modified"));
+        assert_eq!(root.read(&path).unwrap(), bytes);
+        assert_eq!(
+            root.read_text(".agents/skills/lapis-example/SKILL.md")
+                .unwrap(),
+            "one"
+        );
+    }
+}
 #[cfg(unix)]
 #[test]
 fn symlinks_including_untracked_children_are_rejected() {

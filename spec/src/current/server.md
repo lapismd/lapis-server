@@ -141,6 +141,13 @@ jj-store path, a crate tag, or pull request 22 head
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
 
+## Native embedding cache lease
+
+Native embedding-cache installers retain one exclusive lease through verified
+publication. Releasing the owner explicitly unlocks the lease before closing
+its descriptor, including when a concurrent process has inherited a duplicate.
+This preserves the existing wait deadline and immediate busy refusal.
+
 ## Native engine source intake
 
 Native Markdown/Search algorithms use lapis-plugins commit

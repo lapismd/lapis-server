@@ -140,7 +140,7 @@ pub fn manage(
                 root.write_if_unchanged(
                     &destination,
                     body.as_bytes(),
-                    current.get(file).map(String::as_bytes),
+                    current.get(file).map(Vec::as_slice),
                     &WriteOptions::default(),
                 )?;
             }
@@ -149,7 +149,7 @@ pub fn manage(
                 .filter(|(file, _)| !bundle.files.contains_key(*file))
             {
                 let destination = format!("{directory}/{file}");
-                if root.read_text(&destination)? != *body {
+                if root.read(&destination)? != *body {
                     return Err(invalid("Skill changed during installation"));
                 }
                 root.remove_file(&destination)?;

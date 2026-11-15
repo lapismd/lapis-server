@@ -57,16 +57,16 @@ fn path(value: &str) -> bool {
             .split('/')
             .all(|part| !matches!(part, "" | "." | ".."))
 }
-fn digest(value: &str) -> String {
-    format!("{:x}", Sha256::digest(value.as_bytes()))
+fn digest(value: &[u8]) -> String {
+    format!("{:x}", Sha256::digest(value))
 }
-fn hashes(files: &BTreeMap<String, String>) -> BTreeMap<String, String> {
+fn hashes<T: AsRef<[u8]>>(files: &BTreeMap<String, T>) -> BTreeMap<String, String> {
     files
         .iter()
-        .map(|(path, body)| (path.clone(), digest(body)))
+        .map(|(path, body)| (path.clone(), digest(body.as_ref())))
         .collect()
 }
-fn snapshot(root: &VaultRoot, directory: &str) -> io::Result<BTreeMap<String, String>> {
+fn snapshot(root: &VaultRoot, directory: &str) -> io::Result<BTreeMap<String, Vec<u8>>> {
     let mut files = BTreeMap::new();
     if root.stat(directory)?.is_none() {
         return Ok(files);
@@ -75,7 +75,7 @@ fn snapshot(root: &VaultRoot, directory: &str) -> io::Result<BTreeMap<String, St
         root: &VaultRoot,
         directory: &str,
         prefix: &str,
-        files: &mut BTreeMap<String, String>,
+        files: &mut BTreeMap<String, Vec<u8>>,
     ) -> io::Result<()> {
         let dir = root.open_directory(directory)?;
         for entry in dir.entries()? {
@@ -99,7 +99,7 @@ fn snapshot(root: &VaultRoot, directory: &str) -> io::Result<BTreeMap<String, St
                 if files.len() >= 128 {
                     return Err(invalid("Skill exceeds file limit"));
                 }
-                let body = root.read_text(&full)?;
+                let body = root.read(&full)?;
                 if body.len() > 1024 * 1024 {
                     return Err(invalid("Skill file exceeds limit"));
                 }

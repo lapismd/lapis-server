@@ -56,6 +56,7 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 ### Acceptance details
 
 - Edited, added and deleted files preserve the directory.
+- Binary edits and additions report local modification and preserve their exact bytes.
 - Clean updates install the packaged file set without retaining obsolete resources.
 
 ## SRV-OPS-007 — Durable skill installation

@@ -409,3 +409,8 @@ so every canonical page retains the existing 32 KiB limit. SUMMARY navigation
 and its metadata-only Storybook mirror retain identical chapter order.
 [CI regression evidence](../../records/2026-11-14-skills-verification-page-split.md)
 retains the failure, cancellation cause and unchanged verification requirements.
+
+Native skill byte preservation and embedding-cache lease release retain the
+[exact failures and source qualification](../../records/2026-11-15-skill-bytes-cache-lease.md).
+Complete Core/Protocol/CLI qualification passes 651 cases and strict Clippy;
+hosted package and Desktop adoption remain separate registry-intake gates.

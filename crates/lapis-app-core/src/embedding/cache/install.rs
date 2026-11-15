@@ -8,8 +8,18 @@ use std::{
     time::{Duration, Instant},
 };
 
+pub(super) struct CacheLease(pub(super) File);
+
+impl Drop for CacheLease {
+    fn drop(&mut self) {
+        // Close alone leaves flock held by any descriptor inherited by a
+        // concurrently spawning child. Only the installing owner owns this lease.
+        let _ = self.0.unlock();
+    }
+}
+
 impl Cache {
-    pub(super) fn lease(&self, timeout: Duration) -> Result<File> {
+    pub(super) fn lease(&self, timeout: Duration) -> Result<CacheLease> {
         self.root.verify_physical_root()?;
         let name = self.root.checked("install.lock", false)?;
         let mut options = cap_std::fs::OpenOptions::new();
@@ -37,7 +47,7 @@ impl Cache {
         let deadline = Instant::now() + timeout;
         loop {
             match lease.try_lock() {
-                Ok(()) => return Ok(lease),
+                Ok(()) => return Ok(CacheLease(lease)),
                 Err(std::fs::TryLockError::WouldBlock) if Instant::now() < deadline => {
                     std::thread::sleep(Duration::from_millis(20));
                 }
