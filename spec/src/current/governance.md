@@ -1,7 +1,8 @@
 # Governance
 
 SRV-SYNC-019 account ownership keeps blocking transport off async executors,
-retains uncertain sessions after refused close and bounds command admission.
+retains uncertain sessions after failed close and bounds command admission,
+including one native drain that fences later work without a renderer retry loop.
 Native source tests do not qualify Desktop or OS custody.
 
 SRV-SYNC-018 adds a native-only account coordinator within existing source and

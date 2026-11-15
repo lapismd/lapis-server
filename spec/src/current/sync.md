@@ -297,14 +297,16 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 **Requirement.** Shared Core MUST own bounded account command execution off the
 async executor and retain accepted work independently of response waiters.
 Hosts MUST retain the owner through view detach and refused teardown; successful
-explicit close alone releases its session and custody scope.
+explicit close alone releases its session and custody scope. Close MUST admit
+at most one native drain, fence later commands and await accepted work without
+holding an async executor or blocking worker while waiting for admission.
 
 ### Acceptance details
 
-- Synchronous single-flight admission refuses busy work without effects or a queued command backlog.
+- Ordinary synchronous single-flight admission refuses busy work without effects or a queued command backlog.
 - Passive latest-value observers retain no session or custody ownership and begin explicitly uninspected.
 - Failed inspection replaces successful snapshots with recovery-required status without selecting a fallback.
-- Refused close retains the same uncertain session and protected bytes for explicit inspection and identical-byte custody retry.
+- A failed drained close retains the same uncertain session and protected bytes for explicit inspection and identical-byte custody retry.
 
 ## Deferred destinations
 
