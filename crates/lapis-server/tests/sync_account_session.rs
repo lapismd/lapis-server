@@ -9,29 +9,52 @@ use support::{Device, Server, now};
 async fn protected_native_account_restores_in_cold_process_and_signs_out() {
     const COLD: &str = "LAPIS_SYNC_ACCOUNT_SESSION_TEST_SCOPE";
     if let Some(path) = std::env::var_os(COLD) {
-        tokio::task::spawn_blocking(move || {
+        use lapis_app_core::sync::account::owner::{AccountCommand, AccountOwner, AccountReply};
+        let (owner, client, managed) = tokio::task::spawn_blocking(move || {
             let scope: serde_json::Value =
                 serde_json::from_slice(&std::fs::read(path).unwrap()).unwrap();
             let root = std::path::PathBuf::from(scope["root"].as_str().unwrap());
             std::env::set_current_dir(std::env::temp_dir()).unwrap();
             let id = |key| serde_json::from_value(scope[key].clone()).unwrap();
-            let mut session = support::open(
+            let session = support::open(
                 &root,
                 id("profile"),
                 id("vault"),
                 scope["origin"].as_str().unwrap(),
                 std::sync::Arc::new(support::FileCustody::new(root.join("fake-custody.json"))),
             );
-            let snapshot = session.snapshot().unwrap();
-            assert_eq!(snapshot.phase, AccountPhase::Connected);
-            assert_eq!(snapshot.client_id, id("client"));
-            let vaults = session.discover(now()).unwrap();
-            assert_eq!(vaults.len(), 1);
-            assert_eq!(vaults[0].vault_id, id("managed"));
-            session.close().unwrap();
+            (AccountOwner::new(session), id("client"), id("managed"))
         })
         .await
         .unwrap();
+        let AccountReply::Snapshot(snapshot) = owner
+            .submit(AccountCommand::Snapshot)
+            .unwrap()
+            .wait()
+            .await
+            .unwrap()
+        else {
+            panic!("snapshot")
+        };
+        assert_eq!(snapshot.phase, AccountPhase::Connected);
+        assert_eq!(snapshot.client_id, client);
+        let AccountReply::Vaults(vaults) = owner
+            .submit(AccountCommand::Discover { now: now() })
+            .unwrap()
+            .wait()
+            .await
+            .unwrap()
+        else {
+            panic!("discovery")
+        };
+        assert_eq!(vaults.len(), 1);
+        assert_eq!(vaults[0].vault_id, managed);
+        owner
+            .submit(AccountCommand::Close)
+            .unwrap()
+            .wait()
+            .await
+            .unwrap();
         return;
     }
     let mut server = Server::start().await;
@@ -299,5 +322,104 @@ async fn lost_cancellation_acknowledgement_does_not_replay_a_confirmed_mutation(
     .unwrap();
     assert_eq!(server.faults.cancellations.load(Ordering::SeqCst), 1);
     assert_eq!(server.faults.redemptions.load(Ordering::SeqCst), 0);
+    server.finish().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn retained_account_owner_completes_detached_handoff_and_recovers_lost_redemption() {
+    use lapis_app_core::sync::account::owner::{
+        AccountCommand, AccountObservation, AccountOwner, AccountReply,
+    };
+    let mut server = Server::start().await;
+    let origin = server.origin.clone();
+    let (device, owner) = tokio::task::spawn_blocking(move || {
+        let device = Device::new();
+        let owner = AccountOwner::new(device.session(&origin));
+        (device, owner)
+    })
+    .await
+    .unwrap();
+    let mut observations = owner.subscribe();
+    drop(
+        owner
+            .submit(AccountCommand::Begin {
+                name: "Detached Desktop".into(),
+                now: now(),
+            })
+            .unwrap(),
+    );
+    let waiting = tokio::time::timeout(std::time::Duration::from_secs(15), async {
+        loop {
+            observations.changed().await.unwrap();
+            if let AccountObservation::Ready { snapshot } = &*observations.borrow_and_update()
+                && snapshot.phase == AccountPhase::AwaitingApproval
+            {
+                break snapshot.clone();
+            }
+        }
+    })
+    .await
+    .unwrap();
+    server.approve(waiting.connection_id.unwrap()).await;
+    server.faults.lose.store(1, Ordering::SeqCst);
+    assert!(
+        owner
+            .submit(AccountCommand::Redeem { now: now() })
+            .unwrap()
+            .wait()
+            .await
+            .is_err()
+    );
+    let AccountObservation::Ready { snapshot } = observations.borrow().clone() else {
+        panic!("durable redemption intent")
+    };
+    assert_eq!(snapshot.phase, AccountPhase::Redeeming);
+    assert!(
+        owner
+            .submit(AccountCommand::Redeem { now: now() })
+            .unwrap()
+            .wait()
+            .await
+            .is_err()
+    );
+    let AccountReply::Inspection(inspection) = owner
+        .submit(AccountCommand::Inspect)
+        .unwrap()
+        .wait()
+        .await
+        .unwrap()
+    else {
+        panic!("inspection")
+    };
+    assert_eq!(
+        inspection.credential_status,
+        DiscoveryCredentialStatus::Active
+    );
+    owner
+        .submit(AccountCommand::Disconnect { now: now() })
+        .unwrap()
+        .wait()
+        .await
+        .unwrap();
+    owner
+        .submit(AccountCommand::Close)
+        .unwrap()
+        .wait()
+        .await
+        .unwrap();
+    assert_eq!(*observations.borrow(), AccountObservation::Closed);
+    let origin = server.origin.clone();
+    tokio::task::spawn_blocking(move || {
+        let mut restored = device.session(&origin);
+        let snapshot = restored.snapshot().unwrap();
+        assert_eq!(snapshot.client_id, waiting.client_id);
+        assert_eq!(snapshot.phase, AccountPhase::Disconnected);
+        restored.close().unwrap();
+    })
+    .await
+    .unwrap();
+    assert_eq!(server.faults.initiations.load(Ordering::SeqCst), 1);
+    assert_eq!(server.faults.redemptions.load(Ordering::SeqCst), 1);
+    assert_eq!(server.faults.cancellations.load(Ordering::SeqCst), 1);
     server.finish().await;
 }

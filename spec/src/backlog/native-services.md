@@ -40,8 +40,10 @@ keyboard decisions and explicit unknown-outcome recovery. Desktop custody and
 intake plus every endpoint/content enrollment boundary remain open. The shared
 native account HTTP client now has fixed-origin HTTPS admission, bounded
 handoff/discovery, secret-bearing host-only values and real current-server
-qualification under SRV-SYNC-015. Protected credential restoration, durable
-unknown-outcome orchestration and Tauri consumption remain open. Proof-bound
+qualification under SRV-SYNC-015. Protected credential restoration and durable unknown-outcome orchestration now
+have source evidence under SRV-SYNC-017/018. Shared Core account ownership adds
+single-flight bounded blocking execution and passive observations; Desktop
+admission, Tauri consumption and actual OS qualification remain open. Proof-bound
 handoff inspection and exact cancellation under SRV-SYNC-016 now preserve a
 consumed credential association through consent-request cleanup and restart;
 legacy missing associations stay explicitly unavailable. These account-only

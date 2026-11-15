@@ -1,5 +1,9 @@
 # Hosted server
 
+Shared Core retains SRV-SYNC-019 account actions beyond response-waiter lifetime,
+with single-flight admission, passive observations and explicit successful close.
+Desktop remains responsible for profile/window admission and OS custody.
+
 SRV-SYNC-018 owns the protected native account coordinator, persisted mutation
 intent and proof-bound recovery; native source qualification grants no content
 authority or application activation.

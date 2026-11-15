@@ -1,5 +1,9 @@
 # Governance
 
+SRV-SYNC-019 account ownership keeps blocking transport off async executors,
+retains uncertain sessions after refused close and bounds command admission.
+Native source tests do not qualify Desktop or OS custody.
+
 SRV-SYNC-018 adds a native-only account coordinator within existing source and
 test limits, preserving separate OS custody, Tauri and publication gates.
 
