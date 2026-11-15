@@ -9,6 +9,7 @@ import {
   type HostedScenario,
 } from "./fixtures/hosted-backend";
 import { expectShellFillsViewport } from "./shell-layout";
+import { createRepositoryHostedFixture } from "./fixtures/repository-backend";
 
 const renderScenario =
   (scenario: HostedScenario, restoreVaultId?: string) => () => ({
@@ -77,17 +78,27 @@ async function openWorkspace(canvasElement: HTMLElement) {
   await waitFor(
     () =>
       expect(
-        canvasElement.querySelector('[data-app-shell-ready="true"]'),
+        canvasElement.querySelector(
+          '[data-notes-session-ready="true"] [data-app-shell-ready="true"]',
+        ),
       ).toBeInTheDocument(),
     { timeout: 20_000 },
   );
   expectShellFillsViewport(canvasElement);
-  expect(canvas.getByText("Server DB", { exact: true })).toBeVisible();
+  const narrow = canvasElement.ownerDocument.documentElement.clientWidth < 600;
+  if (narrow) {
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Open left sidebar" }),
+    );
+    expect(canvas.getByRole("button", { name: /^Welcome\.md$/ })).toBeVisible();
+  } else {
+    expect(canvas.getByText("Server DB", { exact: true })).toBeVisible();
+  }
   const noteRow = canvasElement.querySelector<HTMLElement>(
     '[data-path="Welcome.md"]',
   )!;
   await userEvent.click(noteRow);
-  if (canvasElement.ownerDocument.documentElement.clientWidth < 600) {
+  if (narrow) {
     for (const side of ["left", "right"]) {
       const close = canvas.queryByRole("button", {
         name: `Close ${side} sidebar`,
@@ -264,7 +275,9 @@ export const StartupRetry: Story = {
     await waitFor(
       () =>
         expect(
-          canvasElement.querySelector('[data-app-shell-ready="true"]'),
+          canvasElement.querySelector(
+            '[data-notes-session-ready="true"] [data-app-shell-ready="true"]',
+          ),
         ).toBeInTheDocument(),
       { timeout: 20_000 },
     );
@@ -298,6 +311,166 @@ export const Settings: Story = {
 };
 export const SettingsDark: Story = {
   ...Settings,
+  globals: { colorMode: "dark" },
+};
+
+export const RepositoryRemotes: Story = {
+  render: () => ({
+    Component: ServerHostFixture,
+    props: { backend: createRepositoryHostedFixture().backend },
+  }),
+  play: async ({ canvasElement }) => {
+    await openWorkspace(canvasElement);
+    const canvas = within(canvasElement);
+    await canvas.findByRole("button", { name: "Expand repository status" });
+    await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      await page.findByRole("button", {
+        name: "Repository History",
+      }),
+    );
+    await page.findByRole("heading", { name: "Remotes and credentials" });
+    for (const target of ["Vault backup", "Original repository"]) {
+      expect(await page.findByRole("region", { name: target })).toBeVisible();
+      const label = target.toLowerCase();
+      expect(
+        page.getByRole("button", { name: `Fetch ${label}` }),
+      ).toBeEnabled();
+      expect(
+        page.getByRole("button", {
+          name: `Review push to ${label}`,
+        }),
+      ).toBeEnabled();
+    }
+    const original = within(
+      page.getByRole("region", { name: "Original repository" }),
+    );
+    await userEvent.click(
+      original.getByRole("button", {
+        name: "Fetch original repository",
+      }),
+    );
+    await waitFor(() =>
+      expect(original.getByLabelText("Incoming commits")).toHaveTextContent(
+        "0",
+      ),
+    );
+    const backup = within(page.getByRole("region", { name: "Vault backup" }));
+    expect(backup.getByLabelText("Incoming commits")).toHaveTextContent("2");
+    expect(
+      page.getByRole("switch", {
+        name: "Synchronize the vault backup automatically",
+      }),
+    ).not.toBeChecked();
+    expect(
+      page.queryByRole("button", { name: "Pull from upstream" }),
+    ).not.toBeInTheDocument();
+  },
+};
+export const RepositoryRemotesDark: Story = {
+  ...RepositoryRemotes,
+  globals: { colorMode: "dark" },
+};
+
+export const RepositoryNativeRecovery: Story = {
+  render: () => ({
+    Component: ServerHostFixture,
+    props: {
+      backend: createRepositoryHostedFixture({
+        revision: 11,
+        enabled: false,
+        busy: false,
+        phase: "attention",
+        recovery: true,
+        pendingApply: "retained-native-apply",
+      }).backend,
+    },
+  }),
+  play: async ({ canvasElement }) => {
+    await openWorkspace(canvasElement);
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      await page.findByRole("button", { name: "Repository History" }),
+    );
+    await page.findByRole("heading", { name: "Remotes and credentials" });
+    expect(
+      await page.findByText("Automatic synchronization", { exact: true }),
+    ).toBeVisible();
+    const resume = await page.findByRole("button", {
+      name: "Retry applying merged files",
+    });
+    expect(resume).toBeEnabled();
+    expect(page.getByRole("button", { name: "Sync now" })).toBeDisabled();
+    await userEvent.click(resume);
+    await waitFor(() =>
+      expect(
+        page.queryByRole("button", { name: "Retry applying merged files" }),
+      ).not.toBeInTheDocument(),
+    );
+  },
+};
+export const RepositoryNativeRecoveryDark: Story = {
+  ...RepositoryNativeRecovery,
+  globals: { colorMode: "dark" },
+};
+
+export const RepositoryFooterStatus: Story = {
+  render: RepositoryRemotes.render,
+  play: async ({ canvasElement }) => {
+    await openWorkspace(canvasElement);
+    const canvas = within(canvasElement);
+    await userEvent.click(
+      await canvas.findByRole("button", { name: "Expand repository status" }),
+    );
+    const footer = within(canvas.getByLabelText("Repository working copy"));
+    expect(footer.getByText("Saved locally", { exact: true })).toBeVisible();
+    expect(footer.getByText("+7", { exact: true })).toBeVisible();
+    expect(footer.getByText("-2", { exact: true })).toBeVisible();
+    expect(footer.getByLabelText("Incoming commits")).toHaveTextContent("2");
+    expect(footer.getByLabelText("Outgoing commits")).toHaveTextContent("1");
+    await userEvent.click(
+      footer.getByRole("button", { name: /^Working copy details:/ }),
+    );
+    const page = within(canvasElement.ownerDocument.body);
+    const details = await page.findByRole("region", {
+      name: "Working copy details",
+    });
+    const content = within(details);
+    expect(
+      content.getByRole("button", {
+        name: "Fetch original repository",
+      }),
+    ).toBeEnabled();
+    expect(
+      content.getByRole("button", {
+        name: "Review push to original repository",
+      }),
+    ).toBeEnabled();
+    expect(
+      content.getByRole("button", {
+        name: "Manage remotes for original repository",
+      }),
+    ).toBeEnabled();
+    expect(content.queryByRole("combobox")).not.toBeInTheDocument();
+    const box = details.getBoundingClientRect();
+    expect(box.left).toBeGreaterThanOrEqual(0);
+    expect(box.right).toBeLessThanOrEqual(
+      canvasElement.ownerDocument.documentElement.clientWidth,
+    );
+    await userEvent.keyboard("{Escape}");
+    await userEvent.click(
+      footer.getByRole("button", { name: "Collapse repository status" }),
+    );
+    expect(
+      footer.getByText("Saved locally", { exact: true }),
+    ).not.toBeVisible();
+  },
+};
+export const RepositoryFooterStatusDark: Story = {
+  ...RepositoryFooterStatus,
   globals: { colorMode: "dark" },
 };
 

@@ -17,6 +17,52 @@ async function fixture() {
 }
 const path =
   "/api/v3/clients/client%2Fid/repository-remotes?vault=vault%2Fid&generation=gen%2Fid";
+it("scopes passive native synchronization and exact apply recovery without replay", async () => {
+  const { client, fetch } = await fixture();
+  try {
+    expect(client.repositorySynchronization).toBeTypeOf("function");
+    fetch.mockResolvedValueOnce(
+      Response.json({
+        revision: 11,
+        phase: "attention",
+        recovery: true,
+        pendingApply: "native-request",
+      }),
+    );
+    expect(await client.repositorySynchronization()).toMatchObject({
+      pendingApply: "native-request",
+    });
+    const command = {
+      kind: "resume_apply",
+      expected_revision: 11,
+      request_id: "native-request",
+    } as const;
+    fetch.mockRejectedValueOnce(new Error("Lost response"));
+    await expect(client.repositorySynchronization(command)).rejects.toThrow(
+      "Lost response",
+    );
+    expect(
+      fetch.mock.calls
+        .slice(1)
+        .map(([url, init]) => [url, init?.method, init?.body]),
+    ).toEqual([
+      [
+        path.replace("repository-remotes", "repository-synchronization"),
+        "GET",
+        undefined,
+      ],
+      [
+        path.replace("repository-remotes", "repository-synchronization"),
+        "POST",
+        JSON.stringify(command),
+      ],
+    ]);
+    await client.close();
+    await expect(client.repositorySynchronization()).rejects.toThrow("closed");
+  } finally {
+    await client.close();
+  }
+});
 it("scopes remote reads and exact commands to the admitted vault and generation", async () => {
   const { client, fetch } = await fixture();
   try {

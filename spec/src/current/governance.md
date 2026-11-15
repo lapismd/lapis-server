@@ -393,7 +393,4 @@ The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
 
-Native remote and synchronization qualification follows the
-[repository rules](governance/remotes.md) under SRV-GOV-001. See [combined remotes/history intake](../../records/2026-11-15-remotes-current-main-sdk-intake.md).
-
-The [cold Server HTTPS receipt](../../records/2026-11-15-cold-server-https-remotes.md) distinguishes real compiled-host transport from injected custody and browser fixtures. Disposable trust cannot be installed in an operator host. SRV-GOV-001 retains separate UI and release gates.
+Repository qualification follows [the remotes topic](governance/remotes.md).

@@ -261,6 +261,13 @@ query. It fences delivery after detach and never replays a remote mutation after
 a lost response. Working-copy transport preserves raw native JSON. This port
 does not itself enable shared settings or credential/browser handoff.
 
+The separate browser remotes adapter forwards native command/snapshot shapes
+and retains its admitted lifetime. Sign-in handoff reads the current pending
+authorization, copies its code before opening the HTTPS device page and refuses
+delivery after detach or repository-observer retirement. It adds no renderer
+credential persistence or native-work cancellation. Production composition and
+real OAuth acceptance remain separate from private adapter qualification.
+
 Core owns the device-private backup remote selection policy extracted from
 Desktop. Existing version-one records, configuration revisions, fetched anchors
 and native-derived pending-publication identities remain compatible. Saving
@@ -293,3 +300,7 @@ CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
 The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
+
+The hosted native History composition MUST supply the admitted native editing-
+intent bridge even when Tasks is unselected. Opted-in native backup merging
+cannot rely on a Tasks feature flag to learn about unsaved editor buffers.

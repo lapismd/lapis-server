@@ -30,6 +30,8 @@ import {
   type RepositorySources,
   type RepositoryRemotesCommand,
   type RepositoryRemotesSnapshot,
+  type RepositorySyncCommand,
+  type RepositorySyncSnapshot,
 } from "../../../../crates/lapis-app-protocol/bindings/protocol";
 import { RustHostError, type RustHttpClient } from "./client";
 
@@ -216,7 +218,10 @@ export class RustVaultClient {
   }
 
   private repositoryPath(
-    feature: "repository-remotes" | "repository-working-copy",
+    feature:
+      | "repository-remotes"
+      | "repository-working-copy"
+      | "repository-synchronization",
   ): string {
     this.requireOpen();
     const { vault_id, generation } = this.descriptor;
@@ -242,6 +247,17 @@ export class RustVaultClient {
     const text = await response.text();
     this.requireOpen();
     return text;
+  }
+  async repositorySynchronization(
+    command?: RepositorySyncCommand,
+  ): Promise<RepositorySyncSnapshot> {
+    const result = await this.host.json<RepositorySyncSnapshot>(
+      this.repositoryPath("repository-synchronization"),
+      command ? "POST" : "GET",
+      command,
+    );
+    this.requireOpen();
+    return result;
   }
 
   async history(command: Command, frame: string): Promise<string> {

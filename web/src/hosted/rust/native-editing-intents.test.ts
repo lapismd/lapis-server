@@ -2,7 +2,12 @@ import { describe, expect, it, vi } from "vitest";
 import { createRustHostedBackend } from "./backend";
 import { RustHttpClient } from "./client";
 
-async function fixture(outcome: (command: unknown) => unknown) {
+async function fixture(
+  outcome: (command: unknown) => unknown,
+  selection: { nativeTasks?: boolean; nativeHistory?: boolean } = {
+    nativeTasks: true,
+  },
+) {
   const fetch = vi.fn<typeof globalThis.fetch>(async (url, init) => {
     if (String(url).endsWith("/auth/current"))
       return Response.json({ csrf_token: "csrf" });
@@ -22,9 +27,7 @@ async function fixture(outcome: (command: unknown) => unknown) {
   });
   const host = new RustHttpClient("https://notes.test", fetch);
   await host.current();
-  const resources = await createRustHostedBackend(host, {
-    nativeTasks: true,
-  }).prepare({
+  const resources = await createRustHostedBackend(host, selection).prepare({
     id: "vault",
     name: "Notes",
     kind: "server-hosted",
@@ -117,4 +120,26 @@ describe("Rust hosted editing-intent binding", () => {
       }
     },
   );
+});
+
+it("supplies native editing guards when Repository synchronization is selected without Tasks", async () => {
+  const f = await fixture(
+    () => ({
+      status: "ok",
+      value: { kind: "editing_intents", value: { kind: "missing" } },
+    }),
+    { nativeHistory: true },
+  );
+  try {
+    expect(f.resources.nativeTasks).toBeUndefined();
+    expect(f.resources.nativeEditingIntents).toBeDefined();
+    await expect(
+      f.resources.nativeEditingIntents!.call({
+        kind: "inspect",
+        editor_id: "d5ab7890-0000-4000-8000-000000000001",
+      }),
+    ).resolves.toEqual({ kind: "missing" });
+  } finally {
+    await f.resources.release();
+  }
 });
