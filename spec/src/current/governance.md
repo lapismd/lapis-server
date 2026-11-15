@@ -5,6 +5,9 @@ before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
 required; navigation cannot await asynchronous App teardown.
 
+SRV-SYNC-018 adds a native-only account coordinator within existing source and
+test limits, preserving separate OS custody, Tauri and publication gates.
+
 SRV-SYNC-017 adds explicit protected account custody injection and guarded
 profile metadata within the existing source limits. Portable tests use a RAM
 fake; OS custody, native application and release gates remain separate.

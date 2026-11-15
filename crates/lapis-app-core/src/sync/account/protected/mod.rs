@@ -88,6 +88,9 @@ impl ProtectedAccountState {
             pending: None,
         })
     }
+    pub fn origin(&self) -> &str {
+        &self.owner.marker.scope.origin
+    }
     pub fn client_id(&self) -> Uuid {
         self.owner.marker.scope.client
     }

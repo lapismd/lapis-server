@@ -1,5 +1,9 @@
 # Hosted server
 
+SRV-SYNC-018 owns the protected native account coordinator, persisted mutation
+intent and proof-bound recovery; native source qualification grants no content
+authority or application activation.
+
 SRV-SYNC-017 governs native account protected state and original-scope custody.
 The portable store requires an explicit host custody port; no platform fallback
 or application activation is introduced by its source foundation.

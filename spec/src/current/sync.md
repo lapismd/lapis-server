@@ -277,6 +277,19 @@ hosted image, Desktop and installed-application evidence MUST remain distinct.
 - Independent owners, replaced roots and foreign records are refused; an existing ownership file without metadata or custody requires recovery instead of a replacement identity.
 - Native OS custody and Tauri qualification remain distinct from portable source tests.
 
+## SRV-SYNC-018 — Protected native account orchestration
+
+<a id="srv-sync-018"></a>
+
+**Requirement.** A native account coordinator MUST persist protected intent before account mutations, restore the original client and handoff, and expose only secret-free observations. Unknown redemption MUST require proof-bound inspection and revocation instead of replay. Uncertain custody MUST fence network work and teardown until inspected; sign-out MUST retain recovery authority until revocation is confirmed.
+
+### Acceptance details
+
+- An initiation with no returned request identity remains quarantined through its bounded possible lifetime before explicit abandonment.
+- Pending consent and discovery credentials survive owner recreation without browser credentials or another identity.
+- A lost sign-out response is inspected before retry; missing, foreign or corrupt state never selects another provider.
+- Real current-server, cold native process and fault-injection evidence remain distinct from OS custody and Tauri qualification.
+
 ## Deferred destinations
 
 Nostr, Blossom and S3 destinations, automatic legacy migration, multiple
