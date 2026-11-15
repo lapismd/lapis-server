@@ -85,3 +85,12 @@ no vault metadata initialization. An invalid original must refuse instead of
 falling back to backup. Native hunks supply statistics; application code must
 not implement a scanner or diff algorithm. Missing/complex observations stay
 unavailable, and source status does not qualify either host composition.
+
+Host route/startup qualification exercises actual HTTP authentication and private
+encrypted storage. Retain the initial missing-route regression, then test vault/
+generation/principal isolation, protocol/origin/CSRF, bounded secret input and
+retired clients. Cold host reconstruction must retain private identity, selection
+and opaque credentials across correct, absent and incorrect keys. Key/trust and
+identity location/symlink failures must refuse before a host is exposed. Actual
+HTTP transport/custody evidence does not substitute for browser UI or native
+HTTPS/SSH acceptance, automatic scheduling or either application release gate.

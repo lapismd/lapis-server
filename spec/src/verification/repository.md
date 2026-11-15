@@ -60,3 +60,9 @@ The [recorded-backup status receipt](../../records/2026-11-15-recorded-backup-st
 adds real saved-checkpoint statistics for vaults without an original under
 SRV-SRV-004. No-source initialization, invalid-original refusal and binary
 unknown counts are distinct from cold host and transport qualification.
+
+The [Server startup and route receipt](../../records/2026-11-15-server-remotes-routes.md)
+qualifies admitted HTTP composition, encrypted restart and operator provisioning,
+plus both targets through real SSH with wrong-host-key refusal, detach and lost
+response/restart recovery. Both credential rows remain Partial until actual
+browser, HTTPS/forge and cold application acceptance complete.

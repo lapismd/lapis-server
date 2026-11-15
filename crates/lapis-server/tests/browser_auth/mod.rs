@@ -2,6 +2,7 @@ use super::support::Fixture;
 mod database;
 mod guards;
 mod ownership;
+mod remotes;
 mod support;
 
 use lapis_app_protocol::{PROTOCOL_MAJOR, browser::SessionInfo};

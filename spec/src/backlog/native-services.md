@@ -139,8 +139,11 @@ Shared backup operations additionally have real SSH proof for immutable reviews
 across capture, standby fetch and restart/stop recovery in
 [the backup receipt](../../records/2026-11-15-backup-transfer-orchestration.md).
 Shared credential-provider mutation/sign-in and the encrypted Server adapter
-now have source qualification. Complete admitted startup, the Desktop OS adapter
-and both host routes, then wire the approved production components. The SDK intake must retain its
+now have source qualification. Server installation startup and guarded native
+HTTP routes have encrypted restart and real HTTP/SSH qualification. Browser,
+HTTPS/forge and cold application acceptance remain separate. Complete the Desktop OS adapter
+and routes, automatic backup scheduling and both browser/native application
+compositions, then qualify the approved production components. The SDK intake must retain its
 capture-independent transfer qualification and merge proof; do not add consumer
 Busy retries.
 

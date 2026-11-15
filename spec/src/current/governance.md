@@ -344,6 +344,11 @@ qualifies the no-original footer data path through immutable native checkpoint
 and diff reads. It retains original physical-observer semantics, explicit source
 identity and separate cold host gates under SRV-SRV-004.
 
+Server remote startup and authenticated-route qualification follows the
+[repository rules](governance/remotes.md) under SRV-GOV-001. Actual HTTP custody
+and source-level transport evidence remain distinct from browser adoption,
+Desktop integration, native automatic synchronization and release acceptance.
+
 CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
 The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing

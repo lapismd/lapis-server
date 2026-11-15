@@ -178,8 +178,20 @@ reconnections; the browser yields connection capacity to editor commands.
 [SRV-HST-021](hosted.md#srv-hst-021) owns native file-change observation, replacing recursive browser filesystem polling without changing file-byte routes, admission or durable writers.
 
 The source adapter is private host state, separate from repository connections.
-Host route admission, shared remote-service integration and cold acceptance remain
-in the native-services backlog until independently qualified.
+Native profile startup selects installation-private remote storage. Authenticated
+remote inventory/controls and working-copy routes require the attached vault and
+generation in addition to existing protocol/owner/origin/CSRF admission. Accepted
+work remains Core-owned after response cancellation; retirement fences delivery.
+The single installation owner has a stable private identity independent of login
+sessions. Token-only and browser authentication refer to that same owner.
+
+Operator configuration selects `LAPIS_SERVER_REPOSITORY_KEY_FILE` outside the
+profile and every vault, optional GitHub client ID and SSH known-hosts path.
+Missing/wrong keys expose locked custody; SSH remains independently available.
+The runtime includes `openssh-client` and preserves host-key verification.
+[Operator instructions](../../../docs/repository-remotes.md) define provisioning,
+persistence and key recovery. Browser adoption and cold transport acceptance
+remain in the native-services backlog until independently qualified.
 
 ## SRV-SRV-015 — Encrypted repository credential custody
 

@@ -287,3 +287,6 @@ The [content automation plan](spec/src/backlog/content-automation.md) tracks
 the shared content API, MCP and CLI work. Native read sessions and scoped plugin
 operations power the optional hosted endpoints described above. Desktop integration,
 general note writes, OAuth and CLI packaging remain separate delivery gates.
+
+Repository remote credentials, the separate encryption-key mount, SSH trust and
+recovery are described in [repository remote operations](docs/repository-remotes.md).

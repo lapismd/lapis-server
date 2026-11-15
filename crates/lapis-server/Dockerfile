@@ -79,7 +79,7 @@ JS
 
 # The default and compatibility -slim tags share one Homebrew-free runtime.
 FROM ubuntu:24.04 AS runtime-slim
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git libgcc-s1 \
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git openssh-client libgcc-s1 \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --gid 1993 lapis \
     && useradd --uid 1993 --gid 1993 --home-dir /data --shell /bin/sh lapis \

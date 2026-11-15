@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Adapted from jj-store scripts/test-vault-ssh.mjs at 2f8f9ec4 (Apache-2.0).
-// Real Core acceptance; keys, trust, HOME and server state are disposable.
+// Real Core/HTTP acceptance; keys, trust, HOME and server state are disposable.
 import { spawn, execFileSync } from "node:child_process";
 import {
   mkdtempSync,
@@ -17,8 +17,9 @@ import { createServer, connect } from "node:net";
 if (!["darwin", "linux"].includes(process.platform))
   throw Error("SSH fixture requires macOS or Linux");
 const backupOnly = process.argv[2] === "--backup-only";
-if (process.argv.length !== (backupOnly ? 3 : 2))
-  throw Error("Use --backup-only or no arguments");
+const serverOnly = process.argv[2] === "--server-only";
+if (process.argv.length !== (backupOnly || serverOnly ? 3 : 2))
+  throw Error("Use --backup-only, --server-only or no arguments");
 // OpenSSH StrictModes rejects a Linux authorized_keys path beneath world-writable /tmp.
 // Only fresh disposable fixture state is created here; host profiles are never read.
 const base = realpathSync(
@@ -111,6 +112,13 @@ const original=process.env.SSH_ORIGINAL_COMMAND;
 const kind=['git-upload-pack','git-receive-pack'].find(kind=>original===kind+" '"+remote+"'");
 if(!kind) process.exit(70);
 if(kind==='git-upload-pack'&&existsSync(base+'/block-one-observation')) {unlinkSync(base+'/block-one-observation');process.exit(71);}
+if(kind==='git-upload-pack'&&existsSync(base+'/hold-next-observation')) {
+ writeFileSync(base+'/observation-held','fixture');
+ const deadline=Date.now()+15000;
+ while(existsSync(base+'/hold-next-observation')&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,25));
+ if(existsSync(base+'/hold-next-observation'))process.exit(75);
+ unlinkSync(base+'/observation-held');
+}
 const dropping=kind==='git-receive-pack'&&existsSync(base+'/drop-next-response');
 if(kind==='git-receive-pack')appendFileSync(base+'/receive-count','receive\\n');
 const child=spawn(tools+'/'+kind,[remote],{stdio:['pipe','pipe','inherit']});
@@ -188,17 +196,23 @@ child.on('close',code=>{if(dropping&&code===0){unlinkSync(base+'/drop-next-respo
     ...testEnv,
     GIT_SSH_COMMAND: `ssh -F /dev/null -oBatchMode=yes -oStrictHostKeyChecking=yes -oIdentityFile=none -oGlobalKnownHostsFile=/dev/null '-oUserKnownHostsFile="${trust}"'`,
   });
-  const targets = backupOnly
-    ? ["repository_backup_remotes_ssh"]
-    : ["repository_remotes_ssh", "repository_backup_remotes_ssh"];
-  for (const target of targets) {
+  const targets = serverOnly
+    ? [["lapis-server", "repository_remotes"]]
+    : backupOnly
+      ? [["lapis-app-core", "repository_backup_remotes_ssh"]]
+      : [
+          ["lapis-app-core", "repository_remotes_ssh"],
+          ["lapis-app-core", "repository_backup_remotes_ssh"],
+          ["lapis-server", "repository_remotes"],
+        ];
+  for (const [owner, target] of targets) {
     const test = spawn(
       "cargo",
       [
         "test",
         "--locked",
         "-p",
-        "lapis-app-core",
+        owner,
         "--test",
         target,
         "--",
