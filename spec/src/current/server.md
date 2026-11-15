@@ -317,3 +317,7 @@ Packaged skill source and installation contracts are defined in [SRV-OPS-005–0
 The native CLI skill contribution embeds its linked command, credential and
 skill-management references. Nested resources are owned by the same versioned
 receipt and complete-directory update guard as the entrypoint.
+
+The hosted skill-management integration consumes public App Profile `^0.2.1`,
+API `^0.6.5` and their compatible registry cohort. Source/archive acceptance
+and final frozen-registry acceptance remain separate release gates.

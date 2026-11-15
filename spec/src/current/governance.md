@@ -419,3 +419,14 @@ Packaged CLI documentation qualification includes actual help grammar, native
 resource installation and preservation after a nested reference edit.
 [Reference evidence](../../records/2026-11-15-cli-skill-references.md) records
 the exact failing/passing source regression independently of host delivery.
+
+The API/profile intake retains the exact `pnpm check` baseline: four duplicate-App
+type errors with the older registry graph. Temporary acceptance archives are
+confined to the documented validation consumer; publishable manifests retain
+normal semver and the committed lockfile must resolve registry packages.
+
+Host-browser qualification runs after local Docker workers finish: bridge/network
+changes can cancel Chromium imports and in-flight fetches with ERR_NETWORK_CHANGED.
+The [environment record](../../records/2026-11-15-hosted-task-recovery-quarantine.md)
+retains failed attempts and the withdrawn provisional quarantine. All Task
+assertions remain enabled for the stable-network exact/full rerun.

@@ -8,7 +8,7 @@ host admission, application ownership, persistence or release authority.
 These requirements moved from the Notes hosted-server chapter. Shared client
 behavior and observation streams stay in the Notes specification.
 
-[Native file observation](#srv-hst-021) uses released API `^0.2.8` for user-file
+[Native file observation](#srv-hst-021) uses the API `^0.6.5` release boundary for user-file
 discovery and observation scopes. Installed plugin payloads and registry caches
 stay outside the user-file tree; configuration remains owned by its targeted
 reload without mirroring external observations back into compatibility files.

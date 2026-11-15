@@ -112,8 +112,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.5(4e41c61d583ade16c2ad3006e0f97bdc))(@lapismd/design-core@0.13.4(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)
       '@lapismd/spec-validator':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       '@playwright/test':
         specifier: 1.61.1
         version: 1.61.1
@@ -1251,8 +1251,8 @@ packages:
       '@lezer/markdown': ^1.4.3
       svelte: ^5.0.0
 
-  '@lapismd/spec-validator@0.2.0':
-    resolution: {integrity: sha512-fUMh7fpoZXuMRAc5Jdo+Y2sUhAPeO5o5R5AIdwKEs/xNLS2W3mSSHimscxI58JuUEFPPk/SI+jE0Vcvv7gXdlw==}
+  '@lapismd/spec-validator@0.2.1':
+    resolution: {integrity: sha512-aHLByppZkay1axSm8KvCwOJz0si8aDyZBXDGWW+d2VQw+66f1KLimw2rEMjYIpLdoSG9+yN5Kd1MKlAJw7xUVw==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -6100,7 +6100,7 @@ snapshots:
       - supports-color
       - tailwindcss
 
-  '@lapismd/spec-validator@0.2.0':
+  '@lapismd/spec-validator@0.2.1':
     dependencies:
       jiti: 2.7.0
       typescript: 5.9.3

@@ -154,11 +154,22 @@ test(
         ).status,
         200,
       );
+      const ownerOperations = (
+        await request(`/api/v3/clients/${client}/operations`)
+      ).body.operations;
       assert.equal(
-        (await request(`/api/v3/clients/${client}/operations`)).body.operations
+        ownerOperations.filter((operation) => operation.plugin_id === "tasks")
           .length,
         17,
       );
+      assert.deepEqual(
+        ownerOperations
+          .filter((operation) => operation.plugin_id === "skills")
+          .map((operation) => operation.id)
+          .sort(),
+        ["install", "list", "update"],
+      );
+      assert.equal(ownerOperations.length, 20);
       assert.equal(
         (await request("/api/v3/content-access", { enabled: true })).status,
         200,
