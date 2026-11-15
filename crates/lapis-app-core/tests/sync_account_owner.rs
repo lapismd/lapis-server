@@ -24,6 +24,7 @@ struct Custody {
     fail: AtomicBool,
     locked: AtomicBool,
     pause: AtomicBool,
+    pause_read: AtomicBool,
     entered: Option<Arc<Barrier>>,
     released: (Mutex<bool>, Condvar),
 }
@@ -34,6 +35,14 @@ impl HostAccountCustody for Custody {
     fn read(&self, key: &str) -> io::Result<Option<HostSecretBytes>> {
         if self.locked.load(Ordering::SeqCst) {
             return Err(io::Error::other("private-custody-detail"));
+        }
+        if self.pause_read.swap(false, Ordering::SeqCst) {
+            self.entered.as_ref().unwrap().wait();
+            let (lock, wake) = &self.released;
+            let mut released = lock.lock().unwrap();
+            while !*released {
+                released = wake.wait(released).unwrap();
+            }
         }
         self.values
             .lock()
@@ -357,4 +366,111 @@ fn locked_custody_replaces_ready_observation_without_fallback_or_identity_reset(
             .await
             .unwrap();
     });
+}
+
+#[test]
+fn close_fences_later_work_and_drains_the_accepted_action_even_after_waiter_detaches() {
+    for fail_write in [false, true] {
+        let entered = Arc::new(Barrier::new(2));
+        let custody = Arc::new(Custody {
+            entered: Some(entered.clone()),
+            ..Default::default()
+        });
+        let f = Fixture::new(custody.clone());
+        let owner = AccountOwner::new(f.session().unwrap());
+        let mut observations = owner.subscribe();
+        if fail_write {
+            custody.fail.store(true, Ordering::SeqCst);
+            custody.pause.store(true, Ordering::SeqCst);
+        } else {
+            custody.pause_read.store(true, Ordering::SeqCst);
+        }
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .max_blocking_threads(1)
+            .enable_all()
+            .build()
+            .unwrap();
+        runtime.block_on(async {
+            let action = if fail_write {
+                AccountCommand::Begin {
+                    name: "Desktop".into(),
+                    now: 1,
+                }
+            } else {
+                AccountCommand::Snapshot
+            };
+            let accepted = owner.submit(action).unwrap();
+            entered.wait();
+            let close = owner.submit(AccountCommand::Close);
+            assert_eq!(
+                owner.submit(AccountCommand::Snapshot).err().unwrap().kind(),
+                io::ErrorKind::WouldBlock
+            );
+            assert_eq!(
+                owner.submit(AccountCommand::Close).err().unwrap().kind(),
+                io::ErrorKind::WouldBlock
+            );
+            // Always release the real blocking worker before asserting admission,
+            // including on the old implementation's expected refusal.
+            *custody.released.0.lock().unwrap() = true;
+            custody.released.1.notify_all();
+            let result = accepted.wait().await;
+            assert_eq!(result.is_err(), fail_write);
+            let close = close
+                .expect("native close must own a bounded drain instead of refusing accepted work");
+            if fail_write {
+                assert!(close.wait().await.is_err());
+                assert_eq!(
+                    *observations.borrow(),
+                    AccountObservation::RecoveryRequired {
+                        custody_pending: true
+                    }
+                );
+                owner
+                    .submit(AccountCommand::RetryCustody)
+                    .unwrap()
+                    .wait()
+                    .await
+                    .unwrap();
+                owner
+                    .submit(AccountCommand::Close)
+                    .unwrap()
+                    .wait()
+                    .await
+                    .unwrap();
+                assert!(matches!(
+                    owner
+                        .submit(AccountCommand::Close)
+                        .unwrap()
+                        .wait()
+                        .await
+                        .unwrap(),
+                    AccountReply::Closed
+                ));
+            } else {
+                drop(close);
+                tokio::time::timeout(Duration::from_secs(5), async {
+                    loop {
+                        if *observations.borrow_and_update() == AccountObservation::Closed {
+                            break;
+                        }
+                        observations.changed().await.unwrap();
+                    }
+                })
+                .await
+                .unwrap();
+            }
+        });
+        assert_eq!(*observations.borrow(), AccountObservation::Closed);
+        let mut restored = f.session().unwrap();
+        assert_eq!(
+            restored.snapshot().unwrap().phase,
+            if fail_write {
+                AccountPhase::Prepared
+            } else {
+                AccountPhase::Disconnected
+            }
+        );
+        restored.close().unwrap();
+    }
 }

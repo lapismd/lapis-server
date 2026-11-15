@@ -1,7 +1,8 @@
 # Hosted server
 
 Shared Core retains SRV-SYNC-019 account actions beyond response-waiter lifetime,
-with single-flight admission, passive observations and explicit successful close.
+with single-flight admission, passive observations and one native close drain
+that fences later work before releasing custody on confirmed success.
 Desktop remains responsible for profile/window admission and OS custody.
 
 SRV-SYNC-018 owns the protected native account coordinator, persisted mutation

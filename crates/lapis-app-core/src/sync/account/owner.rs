@@ -7,10 +7,13 @@ use super::{
 use serde::Serialize;
 use std::{
     io,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 use tokio::{
-    sync::{Semaphore, watch},
+    sync::{OwnedSemaphorePermit, Semaphore, watch},
     task::JoinHandle,
 };
 
@@ -50,7 +53,15 @@ pub enum AccountObservation {
 struct State {
     session: Mutex<Option<AccountSession>>,
     single_flight: Arc<Semaphore>,
+    closing: AtomicBool,
     observation: watch::Sender<AccountObservation>,
+}
+
+struct Closing(Arc<State>);
+impl Drop for Closing {
+    fn drop(&mut self) {
+        self.0.closing.store(false, Ordering::Release);
+    }
 }
 
 /// Not Clone: the host explicitly owns service lifetime; subscriptions are passive.
@@ -72,6 +83,7 @@ impl AccountOwner {
         Self(Arc::new(State {
             session: Mutex::new(Some(session)),
             single_flight: Arc::new(Semaphore::new(1)),
+            closing: AtomicBool::new(false),
             observation,
         }))
     }
@@ -80,8 +92,10 @@ impl AccountOwner {
         self.0.observation.subscribe()
     }
 
-    /// Admission is synchronous and single-flight, with no queued commands or
-    /// blocked-worker backlog. Busy means no work accepted and is safe to retry.
+    /// Ordinary admission is single-flight with no queued command backlog.
+    /// Close admits one native drain, fencing later commands before awaiting
+    /// the previously accepted action without occupying a blocking worker.
+    /// Busy means no work accepted and is safe to retry.
     /// After acceptance, dropping an async caller never replays or aborts work.
     pub fn submit(&self, command: AccountCommand) -> io::Result<AccountWork> {
         if let AccountCommand::Begin { name, .. } = &command
@@ -93,44 +107,90 @@ impl AccountOwner {
             ));
         }
         let runtime = tokio::runtime::Handle::try_current().map_err(|_| unavailable())?;
+        if matches!(command, AccountCommand::Close) {
+            return self.close(runtime);
+        }
+        if self.0.closing.load(Ordering::Acquire) {
+            return Err(busy());
+        }
         let permit = self
             .0
             .single_flight
             .clone()
             .try_acquire_owned()
-            .map_err(|_| {
-                io::Error::new(
-                    io::ErrorKind::WouldBlock,
-                    "Native Sync account work is active",
-                )
-            })?;
+            .map_err(|_| busy())?;
+        // Close may have fenced admission between the first check and permit.
+        if self.0.closing.load(Ordering::Acquire) {
+            return Err(busy());
+        }
         let state = self.0.clone();
-        Ok(AccountWork(runtime.spawn_blocking(move || {
-            let _permit = permit;
-            let mut slot = state.session.lock().map_err(|_| unavailable())?;
-            let session = slot.as_mut().ok_or_else(|| {
-                io::Error::new(
-                    io::ErrorKind::NotConnected,
-                    "Native Sync account owner is closed",
-                )
-            })?;
-            let closing = matches!(command, AccountCommand::Close);
-            let result = execute(session, command);
-            let observation = if closing && result.is_ok() {
-                *slot = None;
-                AccountObservation::Closed
-            } else {
-                match session.snapshot() {
-                    Ok(snapshot) => AccountObservation::Ready { snapshot },
-                    Err(_) => AccountObservation::RecoveryRequired {
-                        custody_pending: session.custody_pending(),
-                    },
-                }
-            };
-            state.observation.send_replace(observation);
-            result
+        Ok(AccountWork(
+            runtime.spawn_blocking(move || run(state, command, permit)),
+        ))
+    }
+
+    fn close(&self, runtime: tokio::runtime::Handle) -> io::Result<AccountWork> {
+        self.0
+            .closing
+            .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
+            .map_err(|_| busy())?;
+        let closing = Closing(self.0.clone());
+        let state = self.0.clone();
+        Ok(AccountWork(runtime.spawn(async move {
+            // RAII also removes the fence if the host runtime cancels an
+            // unstarted drain; accepted blocking effects are never aborted.
+            let _closing = closing;
+            let permit = state
+                .single_flight
+                .clone()
+                .acquire_owned()
+                .await
+                .map_err(|_| unavailable())?;
+            tokio::task::spawn_blocking(move || run(state, AccountCommand::Close, permit))
+                .await
+                .map_err(|_| unavailable())?
         })))
     }
+}
+
+fn run(
+    state: Arc<State>,
+    command: AccountCommand,
+    _permit: OwnedSemaphorePermit,
+) -> io::Result<AccountReply> {
+    let mut slot = state.session.lock().map_err(|_| unavailable())?;
+    let closing = matches!(command, AccountCommand::Close);
+    let Some(session) = slot.as_mut() else {
+        return if closing {
+            Ok(AccountReply::Closed)
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::NotConnected,
+                "Native Sync account owner is closed",
+            ))
+        };
+    };
+    let result = execute(session, command);
+    let observation = if closing && result.is_ok() {
+        *slot = None;
+        AccountObservation::Closed
+    } else {
+        match session.snapshot() {
+            Ok(snapshot) => AccountObservation::Ready { snapshot },
+            Err(_) => AccountObservation::RecoveryRequired {
+                custody_pending: session.custody_pending(),
+            },
+        }
+    };
+    state.observation.send_replace(observation);
+    result
+}
+
+fn busy() -> io::Error {
+    io::Error::new(
+        io::ErrorKind::WouldBlock,
+        "Native Sync account work or close is active",
+    )
 }
 
 fn execute(session: &mut AccountSession, command: AccountCommand) -> io::Result<AccountReply> {
