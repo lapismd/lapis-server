@@ -25,8 +25,10 @@ impl RemoteCredentials for Paused {
     }
     fn control(&self, action: RemoteCredentialAction) -> RemoteCredentialFuture<'_> {
         Box::pin(async move {
+            let context = std::rc::Rc::new(());
             self.entered.send(()).unwrap();
             self.resume.notified().await;
+            assert_eq!(std::rc::Rc::strong_count(&context), 1);
             self.custody.control(action).await
         })
     }

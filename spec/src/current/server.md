@@ -337,3 +337,5 @@ Replacement MUST preserve endpoint/account scope. An unresolved publication MUST
 retain its referenced credentials; terminal native outcomes retire its review
 hold without permitting replay. Sign-in completion that could replace a retained
 account MUST wait for observation or explicit local stop.
+Custody futures MAY be single-threaded inside the accepted native executor;
+they MUST NOT cross the worker/task boundary or retain a renderer lifetime.

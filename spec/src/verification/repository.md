@@ -45,3 +45,8 @@ adds backend-only custody actions, cross-vault epoch fencing, retained credentia
 holds and cancelled-waiter completion. The full native workspace and both real
 SSH scenarios pass. Actual provider startup and admitted host custody/sign-in
 remain separate; neither credential row advances.
+
+The [single-threaded custody receipt](../../records/2026-11-15-remotes-single-threaded-custody.md)
+qualifies existing SDK futures inside Core's native executor, including
+cancelled-waiter completion and both real SSH regressions. It adds no host
+startup or actual store qualification.

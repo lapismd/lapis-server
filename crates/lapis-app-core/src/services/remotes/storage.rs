@@ -4,7 +4,8 @@ use cap_std::fs::MetadataExt as _;
 use std::{future::Future, pin::Pin};
 use std::{io, path::Path, sync::Mutex};
 
-pub type RemoteCredentialFuture<'a, T = ()> = Pin<Box<dyn Future<Output = Result<T>> + Send + 'a>>;
+/// Polled only inside the accepted native executor; SDK futures need not be Send.
+pub type RemoteCredentialFuture<'a, T = ()> = Pin<Box<dyn Future<Output = Result<T>> + 'a>>;
 /// Backend-only custody commands; neither printable nor serializable.
 pub enum RemoteCredentialAction {
     Save(RemoteCredentialInput),
