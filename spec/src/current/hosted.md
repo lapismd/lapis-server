@@ -245,7 +245,7 @@ reload without mirroring external observations back into compatibility files.
 - Scope checks cover owner, vault, generation, origin and expiry throughout a bounded response lease; events contain relative paths without file bytes or credentials.
 - Bounded cursors replay retained events; gaps, overflow and watcher errors require reconciliation rather than silently dropping changes.
 - The user-file observer excludes app-state trees; the configuration owner retains a targeted file reload, while external user writes, rename, deletion, reconnect and teardown remain covered.
-- Cold enabled-plugin and idle tests supplement the unchanged 600-dormant-assets startup budget and exercise the real hosted transport.
+- Cold enabled-plugin and idle tests supplement the unchanged 600-dormant-assets startup budget and exercise the real hosted transport after guarded original-client release on fixture reopen.
 
 ## SRV-HST-022 — Restore the authenticated workspace
 

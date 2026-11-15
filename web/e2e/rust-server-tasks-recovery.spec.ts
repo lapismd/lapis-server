@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import { buildTasksArtifact } from "./tasks-installed-plugin";
 import { createHostedTasksFixture } from "./rust-tasks-fixture";
 import { inspectRetainedTaskUpdate } from "./tasks-recovery-controls";
-import { manageVaults } from "./tasks-editor-controls";
+import { signOutHostedWorkspace } from "./rust-hosted-session";
 
 test.use({ locale: "en-GB", timezoneId: "Europe/London" });
 let artifact: string;
@@ -14,10 +14,16 @@ test.beforeAll(async () => {
 
 test("another App saving ordinary settings preserves interrupted native Task references", async ({
   page,
-  context,
+  browser,
 }, info) => {
   const f = await createHostedTasksFixture(page, artifact);
-  const other = await context.newPage();
+  // Independent account sessions let each App await guarded logout without
+  // revoking the other App's authentication while it still owns observers.
+  const otherContext = await browser.newContext({
+    locale: "en-GB",
+    timezoneId: "Europe/London",
+  });
+  const other = await otherContext.newPage();
   let requestId: string | undefined;
   try {
     await f.open();
@@ -62,7 +68,24 @@ test("another App saving ordinary settings preserves interrupted native Task ref
         settings: { planner: { navigationColumnState: "collapsed" } },
       });
     await page.unroute("**/api/v3/clients/*/tasks");
+    const previousClient = f.client().client_id;
+    const lifetime: string[] = [];
+    page.on("response", (response) => {
+      if (
+        response.url() === `${f.origin}/api/v3/clients/${previousClient}` &&
+        response.request().method() === "DELETE" &&
+        response.ok()
+      )
+        lifetime.push("released");
+      if (
+        response.url().endsWith(`/vaults/${f.service.vaultId}/clients`) &&
+        response.request().method() === "POST" &&
+        response.ok()
+      )
+        lifetime.push("admitted");
+    });
     await f.open();
+    expect(lifetime).toEqual(["released", "admitted"]);
     await inspectRetainedTaskUpdate(page, requestId!);
     expect(
       f.calls.filter(({ command }) => command.kind === "submit"),
@@ -88,17 +111,18 @@ test("another App saving ordinary settings preserves interrupted native Task ref
     });
     throw error;
   } finally {
-    // Await this App's guarded departure before destroying its browser frame.
-    // Navigation alone cannot await Svelte's asynchronous session disposal.
-    if (
-      !other.isClosed() &&
-      (await other
-        .getByRole("button", { name: /Current workspace:/ })
-        .isVisible())
-    )
-      await manageVaults(other);
-    await other.goto("about:blank");
-    await other.close();
-    await f.stop(info);
+    // Both Apps leave through their own session's guarded logout boundary.
+    try {
+      if (!other.isClosed()) {
+        await signOutHostedWorkspace(other);
+        await other.goto("about:blank");
+      }
+    } finally {
+      try {
+        await otherContext.close();
+      } finally {
+        await f.stop(info);
+      }
+    }
   }
 });

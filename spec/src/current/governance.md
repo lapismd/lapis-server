@@ -1,5 +1,10 @@
 # Governance
 
+SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
+before navigation, and qualification MUST observe original native-client release
+before fresh admission. Runtime-error and retained-recovery assertions remain
+required; navigation cannot await asynchronous App teardown.
+
 The SRV-SRV-002 candidate dependency intake retains one consistent owning JJ
 Store revision, manifest admission and registry lockfile. Its original hosted
 backup regression and complete consumer lanes must qualify before acceptance;
