@@ -142,3 +142,16 @@ ARM64 default-user browser custody/restart acceptance. Earlier native HTTPS/SSH
 receipts remain separate. Live external forge/device sign-in is still an
 independent acceptance item; Desktop owns its distribution gate. This does not
 close unrelated provider/model, metadata or existing opt-in recovery journeys.
+
+## Version-runtime and dependency preparation
+
+SRV-GOV-001 retains production KaTeX GHSA-238p-pmpm-9mq7 as a blocking dependency
+finding until supported source remediation. Notes owns the Language Service /
+markdownlint / micromark math path; the latest math package still admits only
+KaTeX0.16. The distinct Mermaid renderer path can adopt the already released
+Mira Editor/plugin0.0.5 through the existing supported ranges. Source fixes,
+registry intake, actual-host acceptance and any release/image proof remain
+separate. Development-only deepmerge requires an exact separately documented
+expiring decision after functional acceptance; no production finding is waived.
+Whole source-owned CLI3/Node24 recipe proof and pre-App guard adoption follow
+qualified source inputs and genuine release intent, without a dummy bump.
