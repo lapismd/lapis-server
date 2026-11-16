@@ -190,10 +190,12 @@ backup scheduling, passive status and explicit recovery now have [Core/HTTP and
 actual SSH qualification](../../records/2026-11-15-native-backup-synchronization.md).
 The shared observer and Server browser composition have released registry and
 cold compiled-host [UI qualification](../../records/2026-11-15-hosted-remotes-presentation.md).
-Complete final Server hosted CI/release and Desktop OS adapter/cold composition
-qualification, then release the approved production components. The SDK intake must retain its
-capture-independent transfer qualification and merge proof; do not add consumer
-Busy retries.
+Server manual token/SSH delivery is complete in the
+[v2.3.0 public-image receipt](../../records/2026-11-16-remotes-v230-publication.md).
+Desktop OS/cold composition has its own owner evidence; Desktop GitHub
+publication and live external forge/device sign-in retain independent gates.
+The SDK intake must retain capture-independent transfer qualification and merge
+proof; do not add consumer Busy retries.
 
 Acceptance: qualify credential replacement/forgetting, locked/mismatched keys,
 restart persistence, endpoint/owner isolation, redaction and key provisioning;

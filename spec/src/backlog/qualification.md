@@ -132,3 +132,13 @@ catalog checks and 33 default real hosted journeys (metadata, backup,
 original-source and model screens are explicit opt-ins). Registry dependency adoption and independent frozen-install/image
 proof follow the separately authorized profile release. Local archive checks
 retain their source revisions/checksums and are not registry release evidence.
+
+## Repository remotes delivery
+
+The [v2.3.0 public-image receipt](../../records/2026-11-16-remotes-v230-publication.md)
+completes the manual token/host-SSH hosted delivery slice: released ranges,
+exact-main CI, GitHub CLI assets, both published image architectures and cold
+ARM64 default-user browser custody/restart acceptance. Earlier native HTTPS/SSH
+receipts remain separate. Live external forge/device sign-in is still an
+independent acceptance item; Desktop owns its distribution gate. This does not
+close unrelated provider/model, metadata or existing opt-in recovery journeys.

@@ -81,3 +81,13 @@ Both credential rows remain Partial until the remaining host UI, HTTPS/forge
 and cold application acceptance completes.
 
 [Cold compiled HTTPS acceptance](../../records/2026-11-15-cold-server-https-remotes.md) adds actual Server-process token, anonymous read, one-branch publication, detach, restart and encrypted-key qualification. Browser and Desktop delivery remain independent.
+
+The [v2.3.0 publication receipt](../../records/2026-11-16-remotes-v230-publication.md)
+qualifies merged hosted presentation, exact-main CI, GitHub CLI downloads and
+the exact public ARM64 image at its default UID 1993. Both settings targets,
+encrypted token save/forget, restart persistence, detach, guarded closure and
+redaction pass with a separate read-only operator-key volume. Manual HTTPS/SSH
+transport and locked-key evidence remain in the merged backend receipts. The
+manual token/SSH delivery gate is complete; the rows retain Partial specifically
+for independently unqualified live external forge/device authorization. Desktop
+distribution remains owned by Desktop.
