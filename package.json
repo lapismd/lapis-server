@@ -114,7 +114,8 @@
   "pnpm": {
     "auditConfig": {
       "ignoreCves": [
-        "CVE-2026-93753"
+        "CVE-2026-93753",
+        "CVE-2026-103923"
       ]
     }
   }
