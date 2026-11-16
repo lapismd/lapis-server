@@ -394,3 +394,5 @@ process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
 
 Repository qualification follows [the remotes topic](governance/remotes.md).
+
+[Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate.
