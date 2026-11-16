@@ -1,5 +1,29 @@
 # @lapismd/lapis-server
 
+## 2.2.0
+
+### Minor Changes
+
+- [#68](https://github.com/lapismd/lapis-server/pull/68) [`861c348`](https://github.com/lapismd/lapis-server/commit/861c348f4bf62636e50ed3e1ae4173d19d2e9d3e) Thanks [@stevejuma](https://github.com/stevejuma)! - Bundle the Lapis CLI, provide safe per-user registration and removal, and expose versioned CLI downloads in General → Advanced settings.
+
+- [#71](https://github.com/lapismd/lapis-server/pull/71) [`3a9d06e`](https://github.com/lapismd/lapis-server/commit/3a9d06ed3bc89f8586e06121113438030d4c9277) Thanks [@stevejuma](https://github.com/stevejuma)! - Add the first disabled-by-default Lapis Sync native foundation: guarded encrypted objects, an opaque operation journal, dependency-ordered signed-event storage with conditional per-device HEAD discovery, stable bounded arrival catch-up with immutable membership history, and durable S256 account consent with revocable discovery credentials.
+
+### Patch Changes
+
+- [#82](https://github.com/lapismd/lapis-server/pull/82) [`43abcc4`](https://github.com/lapismd/lapis-server/commit/43abcc4926e1f405bacdd343519f68ae4f9ebcbb) Thanks [@stevejuma](https://github.com/stevejuma)! - Keep immutable vault history readable during native ancestral-head publication by consuming the qualified owning JJ Store repair.
+
+- [#79](https://github.com/lapismd/lapis-server/pull/79) [`f963abe`](https://github.com/lapismd/lapis-server/commit/f963abe0f5ffb2b32730895378a80ae2d79bbfb4) Thanks [@lapismd-dependency-bot](https://github.com/apps/lapismd-dependency-bot)! - Refresh first-party Lapis dependencies to the published versions recorded in this pull request.
+
+- [#85](https://github.com/lapismd/lapis-server/pull/85) [`7bb15e4`](https://github.com/lapismd/lapis-server/commit/7bb15e45d3f590f0f92111efbbe1f5228f231e0a) Thanks [@stevejuma](https://github.com/stevejuma)! - Add explicitly selected scoped native Sync account custody with exclusive ownership and inspect-before-retry recovery for uncertain protected writes.
+
+- [#84](https://github.com/lapismd/lapis-server/pull/84) [`5ed5769`](https://github.com/lapismd/lapis-server/commit/5ed5769ec9607b23f95b5aef42f31efe88f3eed3) Thanks [@stevejuma](https://github.com/stevejuma)! - Add bounded native Sync account transport and proof-bound inspection and cancellation of uncertain discovery-credential handoffs, preserving outcomes through consent-request cleanup and restart.
+
+- [#86](https://github.com/lapismd/lapis-server/pull/86) [`907e647`](https://github.com/lapismd/lapis-server/commit/907e647283a0e3981a2c5aa31e43cde9a92732f1) Thanks [@stevejuma](https://github.com/stevejuma)! - Coordinate protected native Sync account connection, restore and sign-out with persisted intent and inspect-before-retry recovery for uncertain network or custody outcomes.
+
+- [#78](https://github.com/lapismd/lapis-server/pull/78) [`0de44fc`](https://github.com/lapismd/lapis-server/commit/0de44fc67974b5f09ac12e7e4d315d108993e749) Thanks [@stevejuma](https://github.com/stevejuma)! - Add an explicit browser consent screen for native Sync account connections, preserving sign-in, request inspection and uncertain decision outcomes.
+
+- [#77](https://github.com/lapismd/lapis-server/pull/77) [`4739af2`](https://github.com/lapismd/lapis-server/commit/4739af2cf38ef5e7e8fc7665894928e69967ea0a) Thanks [@stevejuma](https://github.com/stevejuma)! - Add bounded S256 account handoff, owner consent inspection, managed-vault discovery and discovery-credential sign-out.
+
 ## 2.1.0
 
 ### Minor Changes
