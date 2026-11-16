@@ -1,5 +1,10 @@
 # Hosted contract
 
+SRV-GOV-003 registry dependency acceptance retains actual Rust workspace Mermaid
+math rendering, saved note bytes and cold session restoration through the public
+Markdown/Mira packages. Generic rendering stays owned upstream; this changes no
+host admission, application ownership, persistence or release authority.
+
 These requirements moved from the Notes hosted-server chapter. Shared client
 behavior and observation streams stay in the Notes specification.
 

@@ -44,8 +44,6 @@ export const rendererInclusions = [
   "@lapismd/mira > tailwind-merge",
   "@lapis-notes/markdown > @lapismd/mira-plugin-mermaid > @braintree/sanitize-url",
   "@lapis-notes/markdown > @lapismd/mira-plugin-mermaid > dayjs",
-  "@lapis-notes/markdown > @lapismd/mira-plugin-mermaid > fastdom",
-  "@lapis-notes/markdown > @lapismd/mira-plugin-mermaid > fastdom/extensions/fastdom-promised.js",
   "@lapis-notes/api > @huggingface/transformers",
   "@lapis-notes/api > @iconify-json/lucide",
   "@lapis-notes/api > @iconify/utils",

@@ -1,5 +1,7 @@
 # Governance
 
+[Dependency preparation](../../records/2026-11-16-version-runtime-preparation.md) preserves SRV-GOV-001/003 and release/native/image gates; remaining audit and recipe qualification stays explicit.
+
 SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
 before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
