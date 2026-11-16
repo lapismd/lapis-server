@@ -22,6 +22,8 @@ reload without mirroring external observations back into compatibility files.
 ### Acceptance details
 
 - The runtime process is the compiled `lapis-server` executable.
+- Hosted acceptance builds both `lapis-server` and `lapis` before browser journeys.
+- Same-vault CLI checks MUST NOT depend on a pre-existing developer binary.
 - Static files and native HTTP routes are served by that process.
 
 ## SRV-HST-002 — Authoritative Markdown

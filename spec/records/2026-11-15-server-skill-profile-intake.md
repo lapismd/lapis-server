@@ -154,3 +154,21 @@ approved deepmerge exception. Main already records this source dependency as
 a release gate in backlog/qualification.md. The earlier audit summary must not
 be taken as current clearance. Keep this PR draft and do not merge/release until
 supported source remediation and consumer acceptance remove this finding.
+
+## Hosted CI CLI prerequisite
+
+CI job 133679882368 fails one hosted skill case and passes six; the absent CLI
+produces ENOENT at the expected permission-denial assertion. The full local
+hosted run on the same dependency graph passes 41 enabled cases with five existing
+opt-ins skipped, because the local CLI binary already exists. Removing that
+binary reproduces the exact case as 1/1 failure without changing its assertions.
+The hosted runner must build both lapis-server and lapis-cli before browser
+execution, independently of other CI jobs or the later plugin-operation lane.
+
+After removing the developer CLI binary, the explicit two-package Cargo build
+recreates it and the unchanged hosted skill case passes 1/1 in 9.7 seconds.
+The preceding complete corrected-Markdown hosted run passes all 41 enabled
+cases with five existing opt-ins skipped. The complete updated-runner rerun
+is in progress; required CI remains a separate gate. The first specification
+attempt rejects wrapped acceptance-detail bullets; splitting them into atomic
+bullets restores all specification lanes without weakening the validator.

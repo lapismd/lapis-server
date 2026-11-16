@@ -10,7 +10,7 @@ function run(command, args) {
 }
 
 // These fixtures own fresh server profiles; real providers retain their opt-in lane.
-run("cargo", ["build", "-p", "lapis-server", "--locked"]);
+run("cargo", ["build", "-p", "lapis-server", "-p", "lapis-cli", "--locked"]);
 for (const name of [
   "hosted-notes",
   "server",

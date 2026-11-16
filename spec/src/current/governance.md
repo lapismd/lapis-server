@@ -397,4 +397,4 @@ source-switch, repair and tamper-refusal assertions remain unchanged.
 
 Repository qualification follows [the remotes topic](governance/remotes.md).
 
-[Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate. Skills qualification and release intake follow [SRV-OPS-005–007](plugin-operations.md); the bundled Markdown dependency floor includes its linked references.
+[Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate. Hosted acceptance builds server and CLI prerequisites explicitly. Skills qualification and release intake follow [SRV-OPS-005–007](plugin-operations.md); the bundled Markdown dependency floor includes its linked references.

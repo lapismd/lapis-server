@@ -328,3 +328,5 @@ separates earlier source proofs from the combined release candidate.
 
 The bundled Markdown skill intake requires `@lapis-notes/markdown@^0.3.2`
 or newer compatible releases; 0.3.1 has no supporting reference resources.
+
+Hosted qualification builds the CLI alongside the server before app/CLI journeys.
