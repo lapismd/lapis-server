@@ -110,5 +110,12 @@
     "vite": "^6.4.5",
     "vitest": "5.0.5",
     "yaml": "2.9.1"
+  },
+  "pnpm": {
+    "auditConfig": {
+      "ignoreCves": [
+        "CVE-2026-93753"
+      ]
+    }
   }
 }

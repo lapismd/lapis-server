@@ -111,3 +111,25 @@ Task skip ships. Upgrading the Deno-free spec-validator to 0.2.1 passes doctor
 (14 checks, one existing script-alias warning), QMD search, canonical spec checks,
 source checks and audit. Hosted deployment and image qualification remain
 separate gates after this source commit.
+
+## Current-main integration
+
+Server main advanced to b3900923 (v2.3.0) during qualification. The rebased
+candidate preserves its remote-profile startup, newer registry package cohort,
+release-workflow tests and security source fixes. The earlier KaTeX override
+is removed in favor of main's supported source remediation; the only remaining
+audit exception is the explicitly approved deepmerge CVE. Rebased checks pass
+with 212 unit cases and 76 interaction/accessibility cases. Earlier 874/139/64
+counts describe the prior base and are not transferred to this revision.
+
+The live registry index and Bases/Canvas/Markdown detail signatures verify with
+the pinned lapis-registry-2026-06 key. Registry PR164 is merged; production retains
+our versions 0.4.1/0.4.1/0.3.2 alongside newer 0.4.2/0.4.2/0.3.3 releases.
+
+The combined native workspace passes 965 tests with zero failures and eleven
+existing ignores: five qualified-model cases, four disposable SSH/remote cases
+and two crash-process helpers. Strict workspace/all-target Clippy passes.
+Real plugin-operation HTTP/MCP/CLI acceptance passes 1/1. Rebuilt static catalog
+acceptance passes 5/5. The full hosted rerun is in progress at branch publication;
+its completion, required hosted CI and image qualification remain merge/release
+gates. No new opt-in, skip or assertion relaxation is introduced by this intake.

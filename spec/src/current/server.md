@@ -321,3 +321,7 @@ receipt and complete-directory update guard as the entrypoint.
 The hosted skill-management integration consumes public App Profile `^0.2.1`,
 API `^0.6.5` and their compatible registry cohort. Source/archive acceptance
 and final frozen-registry acceptance remain separate release gates.
+
+Current-main skill intake preserves remote-profile startup and public registry
+packages; [qualification evidence](../../records/2026-11-15-server-skill-profile-intake.md)
+separates earlier source proofs from the combined release candidate.
