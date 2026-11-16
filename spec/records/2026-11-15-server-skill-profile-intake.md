@@ -133,3 +133,24 @@ Real plugin-operation HTTP/MCP/CLI acceptance passes 1/1. Rebuilt static catalog
 acceptance passes 5/5. The full hosted rerun is in progress at branch publication;
 its completion, required hosted CI and image qualification remain merge/release
 gates. No new opt-in, skip or assertion relaxation is introduced by this intake.
+
+## Rebase dependency-floor regression
+
+The first combined hosted rerun fails one skill case and passes six others.
+The current-main manifest/lock selected Markdown 0.3.1, which predates the rich
+reference assets; the missing RICH_SYNTAX.md assertion correctly refuses it.
+The rebase mistakenly retained this older dependency floor. Raise the normal
+registry range to ^0.3.2 (resolving 0.3.3), retaining all five packaged Markdown
+references. The test and its file/content assertions remain unchanged and enabled.
+
+The unchanged exact hosted skill case passes 1/1 in 9.8 seconds after registry
+Markdown 0.3.3 intake. Checks and all 212 units pass on that graph. Broader
+hosted/catalog/static reruns remain in progress.
+
+The follow-up audit reports the distinct low-severity KaTeX advisory
+GHSA-238p-pmpm-9mq7 / CVE-2026-103923 through Language Service -> markdownlint ->
+micromark-extension-math -> KaTeX 0.16.47. This advisory is not covered by the
+approved deepmerge exception. Main already records this source dependency as
+a release gate in backlog/qualification.md. The earlier audit summary must not
+be taken as current clearance. Keep this PR draft and do not merge/release until
+supported source remediation and consumer acceptance remove this finding.

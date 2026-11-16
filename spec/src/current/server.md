@@ -325,3 +325,6 @@ and final frozen-registry acceptance remain separate release gates.
 Current-main skill intake preserves remote-profile startup and public registry
 packages; [qualification evidence](../../records/2026-11-15-server-skill-profile-intake.md)
 separates earlier source proofs from the combined release candidate.
+
+The bundled Markdown skill intake requires `@lapis-notes/markdown@^0.3.2`
+or newer compatible releases; 0.3.1 has no supporting reference resources.
