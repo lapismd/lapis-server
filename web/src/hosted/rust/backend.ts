@@ -4,6 +4,8 @@ import { HistoryClient } from "@lapismd/jj-history";
 import { createHostedRepository } from "../../history/services";
 import { createHostedRestore } from "../../history/restore";
 import { createHostedBackup } from "../../history/backup";
+import { createHostedRemotes } from "../../history/remotes";
+import { parseWorkingCopyStatus } from "@lapis-notes/history/repository/controllers/working-copy-status";
 import type { HostedBackend } from "../backend";
 import { RustHostError, RustHttpClient } from "./client";
 import { RustDatabaseProvider } from "./database-provider";
@@ -89,9 +91,10 @@ export function createRustHostedBackend(
         nativeTasks: nativeTasks
           ? { call: (command) => client.tasks(command) }
           : undefined,
-        nativeEditingIntents: nativeTasks
-          ? createRustNativeEditingIntents(client)
-          : undefined,
+        nativeEditingIntents:
+          nativeTasks || nativeHistory
+            ? createRustNativeEditingIntents(client)
+            : undefined,
         repositoryFactory: nativeHistory
           ? (app) =>
               createHostedRepository(
@@ -116,6 +119,18 @@ export function createRustHostedBackend(
                         client.history(command, frame),
                     });
                   },
+                },
+                {
+                  remotes: createHostedRemotes(
+                    (command) => client.repositoryRemotes(command),
+                    client.signal,
+                    undefined,
+                    (command) => client.repositorySynchronization(command),
+                  ),
+                  workingCopy: async () =>
+                    parseWorkingCopyStatus(
+                      await client.repositoryWorkingCopy(),
+                    ),
                 },
               )
           : undefined,

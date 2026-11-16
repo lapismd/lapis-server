@@ -188,8 +188,10 @@ qualifies actual binary token/anonymous transport, one branch, detach, restart a
 locked-key custody. Browser/forge UI and Desktop cold acceptance remain separate. Native automatic
 backup scheduling, passive status and explicit recovery now have [Core/HTTP and
 actual SSH qualification](../../records/2026-11-15-native-backup-synchronization.md).
-Complete the Desktop OS adapter and routes, shared observer intake and both browser/native application
-compositions, then qualify the approved production components. The SDK intake must retain its
+The shared observer and Server browser composition have released registry and
+cold compiled-host [UI qualification](../../records/2026-11-15-hosted-remotes-presentation.md).
+Complete final Server hosted CI/release and Desktop OS adapter/cold composition
+qualification, then release the approved production components. The SDK intake must retain its
 capture-independent transfer qualification and merge proof; do not add consumer
 Busy retries.
 

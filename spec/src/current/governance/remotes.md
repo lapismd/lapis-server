@@ -160,6 +160,33 @@ unchanged unsnapshotted original files, restart persistence and locked-key
 refusal through the actual binary. Trust installation is confined to the
 disposable Linux worker; disabling TLS verification cannot qualify this gate.
 
+The browser service additionally qualifies current-code clipboard-before-URL
+handoff, expired/missing authorization refusal, HTTPS device-page validation,
+clipboard failure and detach/observer-close fences. It forwards native target,
+revision and review identities without replay or a second account manager.
+Private adapter cases alone do not qualify host composition or live OAuth.
+
+The browser synchronization port forwards passive status and explicit exact
+recovery through the admitted native endpoint. Observer close joins pending
+responses and rejects late delivery without cancelling or replaying native work.
+
+Cold browser remotes qualification MUST use the compiled host with fresh private
+storage and the final built registry-based renderer. Prove both target settings,
+manual saves without publication, credential redaction/persistence, browser detach
+and guarded vault closure. Retain fixture failures and distinguish real transport
+from presentation-only operations.
+
+Native remote and synchronization qualification follows the
+[repository rules](remotes.md) under SRV-GOV-001. See [combined remotes/history intake](../../../records/2026-11-15-remotes-current-main-sdk-intake.md).
+
+The [cold Server HTTPS receipt](../../../records/2026-11-15-cold-server-https-remotes.md) distinguishes real compiled-host transport from injected custody and browser fixtures. Disposable trust cannot be installed in an operator host. SRV-GOV-001 retains separate UI and release gates.
+
+Browser adoption of SRV-SRV-004 MUST forward native synchronization status and
+explicit recovery through the same admitted client and lifetime as remotes.
+Qualify production shell settings/footer composition, passive reads, exact
+request forwarding and closure fences separately from real transport and cold
+host acceptance. Temporary public archives remain private qualification inputs.
+
 ## Lapis Sync source qualification
 
 SRV-SYNC-020 keeps cancellable leave admission and custody preflight in Core;

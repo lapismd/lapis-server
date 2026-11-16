@@ -1,75 +1,26 @@
 import type { HistoryClient, Handle } from "@lapismd/jj-history";
 import { PreparationQueue } from "./preparation-queue";
 
-export type BackupCheckpoint = {
-  operation: string;
-  commit: string;
-  change_id: string;
-  description: string;
-  timestamp_millis: number;
-};
-
-export type BackupStatus = {
-  phase: "saving" | "ready" | "failed" | "closed";
-  checkpoint: BackupCheckpoint | null;
-  error: string | null;
-};
-
-export interface BackupService {
-  setEnabled?(enabled: boolean): Promise<void>;
-  start(changed: (status: BackupStatus) => void): Promise<BackupStatus>;
-  capture(): Promise<BackupStatus>;
-  stop(): Promise<void>;
-}
-
-export type RestorePreview = {
-  checkpoint: string;
-  path: string;
-  expected: string;
-  bytes: number;
-  deleted: boolean;
-};
-
-export type VaultRestorePreview = {
-  checkpoint: string;
-  expected: string;
-  added: number;
-  modified: number;
-  deleted: number;
-};
-
-export type FileRestoreRequest = {
-  request_id: string;
-  checkpoint: string;
-  path: string;
-  expected: string;
-};
-
-export type VaultRestoreRequest = {
-  request_id: string;
-  checkpoint: string;
-  expected: string;
-};
-
-export interface RestoreService {
-  preview(checkpoint: string, path: string): Promise<RestorePreview>;
-  apply(request: FileRestoreRequest): Promise<unknown>;
-  previewVault?(checkpoint: string): Promise<VaultRestorePreview>;
-  applyVault?(request: VaultRestoreRequest): Promise<unknown>;
-  keepCurrent?(): Promise<unknown>;
-}
-
-type RepositoryReader = Pick<
-  HistoryClient,
-  "heads" | "open" | "status" | "read" | "blame" | "close"
+import type {
+  RepositoryServices,
+  RepositoryRemotesService,
+} from "@lapis-notes/history/repository";
+export type { RepositoryServices } from "@lapis-notes/history/repository";
+export type BackupService = NonNullable<RepositoryServices["backup"]>;
+export type BackupStatus = Awaited<ReturnType<BackupService["capture"]>>;
+export type BackupCheckpoint = NonNullable<BackupStatus["checkpoint"]>;
+export type RestoreService = NonNullable<RepositoryServices["restore"]>;
+export type RestorePreview = Awaited<ReturnType<RestoreService["preview"]>>;
+export type FileRestoreRequest = Parameters<RestoreService["apply"]>[0];
+export type VaultRestorePreview = Awaited<
+  ReturnType<NonNullable<RestoreService["previewVault"]>>
 >;
-export type RepositoryServices = {
-  reader: RepositoryReader;
-  backup?: BackupService;
-  restore?: RestoreService;
-  sources?: () => Promise<{ original: boolean }>;
-  original?: RepositoryReader;
-  close(mode?: string): Promise<void>;
+export type VaultRestoreRequest = Parameters<
+  NonNullable<RestoreService["applyVault"]>
+>[0];
+type RemotePorts = {
+  remotes: RepositoryRemotesService & { close(): void };
+  workingCopy: NonNullable<RepositoryServices["workingCopy"]>;
 };
 
 type OriginalSource = {
@@ -83,6 +34,7 @@ export function createHostedRepository(
   restore?: RestoreService,
   backup?: BackupService,
   source?: OriginalSource,
+  remote?: RemotePorts,
 ): RepositoryServices {
   const preparations = new PreparationQueue(reader);
   const pending = new Set<Promise<unknown>>();
@@ -98,6 +50,13 @@ export function createHostedRepository(
     pending.add(job);
     void job.finally(() => pending.delete(job)).catch(() => {});
     return job;
+  }
+  function observe<T>(action: () => Promise<T>): Promise<T> {
+    return track(async () => {
+      const result = await action();
+      if (closed) throw new Error("Repository history is closed");
+      return result;
+    });
   }
   async function closeHandle(handle: Handle, current: HistoryClient) {
     await preparations.close(handle, current);
@@ -139,6 +98,24 @@ export function createHostedRepository(
     };
   }
   return {
+    remotes: remote
+      ? {
+          synchronization: remote.remotes.synchronization
+            ? {
+                read: () =>
+                  observe(() => remote.remotes.synchronization!.read()),
+                execute: (command) =>
+                  observe(() =>
+                    remote.remotes.synchronization!.execute(command),
+                  ),
+              }
+            : undefined,
+          read: () => observe(() => remote.remotes.read()),
+          execute: (command) => observe(() => remote.remotes.execute(command)),
+          openSignIn: () => observe(() => remote.remotes.openSignIn()),
+        }
+      : undefined,
+    workingCopy: remote ? () => observe(remote.workingCopy) : undefined,
     backup: backup
       ? {
           start: (changed) => track(() => backup.start(changed)),
@@ -182,6 +159,7 @@ export function createHostedRepository(
     reader: scoped(() => reader, track),
     close() {
       closed = true;
+      remote?.remotes.close();
       preparations.stop();
       return (closing ??= (async () => {
         while (pending.size) await Promise.allSettled([...pending]);
