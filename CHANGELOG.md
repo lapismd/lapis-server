@@ -1,5 +1,14 @@
 # @lapismd/lapis-server
 
+## 2.3.0
+
+### Minor Changes
+
+- [#93](https://github.com/lapismd/lapis-server/pull/93) [`da8f541`](https://github.com/lapismd/lapis-server/commit/da8f541cfe530221bb492e16b936a442f7ad04ff) Thanks [@stevejuma](https://github.com/stevejuma)! - Expose shared Repository History remotes and credentials settings, targeted log
+  and footer actions, and passive native backup synchronization with explicit
+  recovery. Consume released framework and History packages; keep credential
+  custody and accepted operations in the native host.
+
 ## 2.2.0
 
 ### Minor Changes
