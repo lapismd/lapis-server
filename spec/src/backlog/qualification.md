@@ -101,6 +101,14 @@ the focused test passes in CI.
 
 ## Consumer and deployment boundaries
 
+The [Node version guard](../../records/2026-11-17-node-version-runtime.md)
+has read-only hosted whole-recipe qualification for the genuine private
+2.3.0 to 2.4.0 plan. Owner guard adoption still requires hosted final-head/main
+acceptance. The existing approved KaTeX exception stays source-scoped; this
+workflow change grants no additional audit exception. Actual version PR,
+GitHub tag/release, dual-architecture image/CLI publication and public runtime
+acceptance remain independent. No npm or crate publication is permitted.
+
 Notes owns standalone local/offline browser qualification. Desktop owns Tauri,
 ordinary/e2e bundle equality and native/provider integration. Source-only
 qualification never closes those owners' gaps. Deployment, image publication,

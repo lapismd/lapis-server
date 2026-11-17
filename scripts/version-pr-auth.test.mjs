@@ -13,6 +13,48 @@ const version = workflow.jobs.changesets;
 const writer = version.steps.find((step) =>
   step.uses?.startsWith("changesets/action@"),
 );
+const intent = "${{ steps.runtime.outputs.hasChangesets == 'true' }}";
+
+test("source-bound Node qualification and actual intent precede all version PR authority", () => {
+  const guard = version.steps.find((step) => step.id === "runtime");
+  assert.ok(guard, "Version PR authority requires a source runtime guard");
+  assert.equal(
+    guard.uses,
+    "lapismd/lapis-ci/actions/guard-version-runtime@121359a245a334da31bc138933595a5f00f5ba8b",
+  );
+  assert.deepEqual(guard.with, {
+    "qualification-file":
+      "scripts/dependency-automation/versioning-runtime.json",
+    "detect-release-intent": "true",
+  });
+  assert.equal(guard.if, undefined);
+  assert.equal(guard["continue-on-error"], undefined);
+  const install = version.steps.find(
+    (step) => step.run === "pnpm install --frozen-lockfile",
+  );
+  const app = version.steps.find((step) => step.id === "app");
+  assert(version.steps.indexOf(install) < version.steps.indexOf(guard));
+  assert(version.steps.indexOf(guard) < version.steps.indexOf(app));
+  assert.equal(app.if, intent);
+  assert.equal(writer.if, intent);
+});
+
+test("a qualified empty plan retains GitHub publication without minting the version PR App", () => {
+  const publish = version.steps.find(
+    (step) => step.run === "pnpm release:github",
+  );
+  assert.ok(
+    publish,
+    "An empty Changesets plan must retain tag/release and image/CLI publication",
+  );
+  assert.equal(
+    publish.if,
+    "${{ steps.runtime.outputs.hasChangesets == 'false' }}",
+  );
+  assert.deepEqual(publish.env, { GH_TOKEN: "${{ github.token }}" });
+  assert.equal(publish["continue-on-error"], undefined);
+  assert.equal(publish.uses, undefined);
+});
 
 test("version PRs fail closed on canonical main with a repository-scoped App", () => {
   assert.equal(
@@ -24,7 +66,7 @@ test("version PRs fail closed on canonical main with a repository-scoped App", (
   );
   assert.ok(app, "version PR writes require an App token");
   assert.equal(app.id, "app");
-  assert.equal(app.if, undefined);
+  assert.equal(app.if, intent);
   assert.equal(app["continue-on-error"], undefined);
   assert.deepEqual(app.with, {
     "client-id": "${{ vars.LAPIS_DEPENDENCY_APP_CLIENT_ID }}",
