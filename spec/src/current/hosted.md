@@ -5,6 +5,8 @@ math rendering, saved note bytes and cold session restoration through the public
 Markdown/Mira packages. Generic rendering stays owned upstream; this changes no
 host admission, application ownership, persistence or release authority.
 
+Hosted queue reload qualification retains the [single-case diagnostic quarantine](../../records/2026-11-17-hosted-queue-quarantine.md); no new product behavior or weakened assertion is claimed.
+
 These requirements moved from the Notes hosted-server chapter. Shared client
 behavior and observation streams stay in the Notes specification.
 

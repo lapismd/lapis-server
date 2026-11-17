@@ -158,3 +158,11 @@ The distinct Mermaid renderer path retains the supported Mira Editor/plugin
 deepmerge exception remains separate and scoped to its own advisory.
 Whole source-owned CLI3/Node24 recipe proof and pre-App guard adoption follow
 qualified source inputs and genuine release intent, without a dummy bump.
+
+## Hosted queue reload
+
+One queue-recovery browser case is temporarily quarantined under the user's
+standing flaky-test instruction. CI loses the visible queued region after
+reload; the unchanged cold exact case passes. [Evidence and diagnostic command](../../records/2026-11-17-hosted-queue-quarantine.md)
+retain scope, owner and reinstatement conditions. No queue-data repair is claimed;
+review by 15 December 2026. All other native/hosted queue cases remain enabled.
