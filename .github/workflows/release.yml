@@ -39,7 +39,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Guard source-owned Node version inputs and release intent
+        id: runtime
+        uses: lapismd/lapis-ci/actions/guard-version-runtime@121359a245a334da31bc138933595a5f00f5ba8b
+        with:
+          qualification-file: scripts/dependency-automation/versioning-runtime.json
+          detect-release-intent: "true"
+
       - name: Mint repository-scoped version PR token
+        if: ${{ steps.runtime.outputs.hasChangesets == 'true' }}
         id: app
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3
         with:
@@ -51,6 +59,7 @@ jobs:
           permission-pull-requests: write
 
       - name: Create or update the version pull request
+        if: ${{ steps.runtime.outputs.hasChangesets == 'true' }}
         uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         with:
           version: pnpm release:version
@@ -61,4 +70,10 @@ jobs:
           createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Publish the existing GitHub release when no version intent remains
+        if: ${{ steps.runtime.outputs.hasChangesets == 'false' }}
+        run: pnpm release:github
+        env:
           GH_TOKEN: ${{ github.token }}

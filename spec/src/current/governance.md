@@ -1,6 +1,6 @@
 # Governance
 
-[Dependency preparation](../../records/2026-11-16-version-runtime-preparation.md) preserves SRV-GOV-001/003 and release/native/image gates; remaining audit and recipe qualification stays explicit.
+[Node version qualification](../../records/2026-11-17-node-version-runtime.md) preserves SRV-GOV-001/003 and independent release/native/image gates.
 
 SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
 before navigation, and qualification MUST observe original native-client release
@@ -10,14 +10,14 @@ required; navigation cannot await asynchronous App teardown.
 Concurrent Sync qualification remains under SRV-GOV-001 in the
 [Lapis Sync source qualification](governance/remotes.md#lapis-sync-source-qualification) topic.
 
-Version PR authentication uses the existing dependency App on canonical main,
-scoped to this repository with contents and pull-request write permissions only;
-missing credentials MUST fail closed and checkout MUST NOT persist credentials.
-Changesets MUST NOT create GitHub releases directly. The existing release helper
-MUST retain the workflow token through `GH_TOKEN` for tag/release creation and
-image/CLI dispatch. SRV-GOV-001 native, image, specification and publication
-requirements remain unchanged. Parsed workflow regression checks run in normal
-check, test and specification lanes.
+Version preparation MUST validate the pinned source-owned Node runtime and actual
+Changesets plan before minting the repository-scoped App on canonical main.
+Only a nonempty plan admits contents/pull-request writes; missing inputs MUST
+fail closed and checkout MUST NOT persist credentials. Without release intent,
+the existing GitHub release helper MUST retain the workflow token through
+`GH_TOKEN` for tag/release and image/CLI dispatch. Changesets MUST NOT create
+GitHub releases directly. SRV-GOV-001 native/image/specification/publication
+gates and parsed workflow checks in check, test and spec lanes stay required.
 
 The SRV-SRV-002 candidate dependency intake retains one consistent owning JJ
 Store revision, manifest admission and registry lockfile. Its original hosted
