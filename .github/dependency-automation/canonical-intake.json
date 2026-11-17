@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "kind": "single-development-dependency",
+  "repository": "lapismd/lapis-server",
+  "dependency": "@lapismd/spec-validator",
+  "slot": "validator-development",
+  "chapters": [
+    "spec/src/current/governance/dependency-automation.md",
+    "spec/src/current/governance/dependency-toolchain.md"
+  ]
+}

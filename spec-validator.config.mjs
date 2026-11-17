@@ -41,12 +41,20 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|sync|content|cli|governance|hosted|delivery|mods)\\.md$",
+        "^spec/src/current/(?:server|sync|content|cli|governance(?:/(?:dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [
+        {
+          pattern:
+            "^(?:package\\.json|pnpm-workspace\\.yaml|pnpm-lock\\.yaml|\\.github/dependency-automation/canonical-intake\\.json|scripts/dependency-automation/(?:check-canonical-intake|source-intake-reader)\\.mjs)$",
+          chapters: [
+            "spec/src/current/governance/dependency-automation.md",
+            "spec/src/current/governance/dependency-toolchain.md",
+          ],
+        },
         {
           pattern:
             "^crates/(?:lapis-app-(?:core|protocol)/src/sync|lapis-server/src/(?:control|http)/sync)(?:/|\\.rs$)",

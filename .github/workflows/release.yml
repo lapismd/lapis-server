@@ -41,7 +41,7 @@ jobs:
 
       - name: Guard source-owned Node version inputs and release intent
         id: runtime
-        uses: lapismd/lapis-ci/actions/guard-version-runtime@121359a245a334da31bc138933595a5f00f5ba8b
+        uses: lapismd/lapis-ci/actions/guard-version-runtime@dc81ff65ba812bf005fb2a806eb3308bb8b5f71f
         with:
           qualification-file: scripts/dependency-automation/versioning-runtime.json
           detect-release-intent: "true"
