@@ -12,6 +12,10 @@ and policy, verifies the exact source workflow and current revision before App
 minting, and executes no candidate code or artifacts. Publication remains Server
 owned; registration and callbacks do not activate a repository.
 
+One exact managed dependency Changeset may accompany a development patch only
+when its YAML release map is empty. Nonempty, malformed, multiple or arbitrary
+notes remain rejected; no product version intent is added.
+
 <!-- dependency-intake:validator-development:start -->
 
 ```json

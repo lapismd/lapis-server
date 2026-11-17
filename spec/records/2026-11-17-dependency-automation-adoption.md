@@ -95,3 +95,30 @@ Existing KaTeX/deepmerge/coordinator decisions do not grant a new HIGH exception
 Read-only hosted existing-App probe44191995973 passes on reviewed shared
 registration73282218; metadata-only source names and owner/install qualification
 are distinct from candidate/main, publication and replay evidence.
+
+## Actual generated maintenance-note regression
+
+A full source fixture starts at the actual released SDK0.2.0 control with no
+Changesets, then applies the frozen0.2.1 pin/override/lock and both factual slots.
+The independent catalog check passes. CLI3 actual candidate status rejects the
+changed private package with no note, so this source needs central
+`emptyChangeset:true` after existing maintenance notes have been consumed.
+This is distinct from Terminal's private-policy CLI2 no-note acceptance.
+
+The actual coordinator `writeChangeset(..., {empty:true})` produces one
+`.changeset/lapis-dependencies-f235813775ce.md` with empty YAML release map.
+That exact output exposed one positive-test/source failure: the v1 guard's
+five-path scope omitted its supported maintenance note. The owner fix accepts
+at most one exact managed filename and requires an empty release map; malformed,
+nonempty/null-header, multiple, arbitrary or missing notes reject without mutation. The
+positive target goes1 failure→1 pass; all21 intake cases and25 combined
+intake/callback cases pass. The actual generated candidate now passes both
+independent source intake and shared runtime/false-intent inspection. No product
+release, new exception, publisher authority or unrelated path is admitted.
+
+The fixture initially omitted two large existing Rust JSON fixtures from JJ's
+snapshot limit. A command-local 10MiB snapshot allowance added only those
+unchanged files to its baseline; source/catalog tests retain the complete
+tracked tree without editing configuration. No root/user fixture is modified.
+These proofs are retained under operator cache `server-no-note-sdk-patch` and
+`native-logs/server-*generated*`; source runtime/resolved graph remains unchanged.

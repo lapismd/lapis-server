@@ -49,7 +49,7 @@ export default defineConfig(headingRequirements(), {
       rules: [
         {
           pattern:
-            "^(?:package\\.json|pnpm-workspace\\.yaml|pnpm-lock\\.yaml|\\.github/dependency-automation/canonical-intake\\.json|scripts/dependency-automation/(?:check-canonical-intake|source-intake-reader)\\.mjs)$",
+            "^(?:package\\.json|pnpm-workspace\\.yaml|pnpm-lock\\.yaml|\\.github/dependency-automation/canonical-intake\\.json|scripts/dependency-automation/(?:check-canonical-intake|source-intake-reader|maintenance-note)\\.mjs)$",
           chapters: [
             "spec/src/current/governance/dependency-automation.md",
             "spec/src/current/governance/dependency-toolchain.md",

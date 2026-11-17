@@ -8,6 +8,10 @@ An empty actual release plan does not mint a version-PR App token, while existin
 GitHub/tag/image/CLI authority and gates remain distinct. No npm package is
 published by this private root, and this intake changes no product version.
 
+One exact managed dependency Changeset may accompany a development patch only
+when its YAML release map is empty. Nonempty, malformed, multiple or arbitrary
+notes remain rejected; no product version intent is added.
+
 <!-- dependency-intake:validator-development:start -->
 
 ```json

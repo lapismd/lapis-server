@@ -1,4 +1,8 @@
 import { sourceIntakeReader } from "./source-intake-reader.mjs";
+import {
+  managedMaintenanceNote,
+  verifyMaintenanceScope,
+} from "./maintenance-note.mjs";
 import { readFileSync, realpathSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual as equal } from "node:util";
@@ -202,18 +206,12 @@ export function verifyValidatorCanonicalIntake({
     Number(facts.version.split(".")[2]) <= Number(old.split(".")[2])
   )
     fail("missing, changed or stale source opt-in");
-  if (
-    changedFiles.some(
-      (p) =>
-        ![
-          "package.json",
-          "pnpm-workspace.yaml",
-          "pnpm-lock.yaml",
-          ...chapters,
-        ].includes(p),
-    )
-  )
-    fail("unexpected Validator intake scope");
+  verifyMaintenanceScope(changedFiles, files, [
+    "package.json",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    ...chapters,
+  ]);
   const strip = (value, section) => {
     const copy = structuredClone(value);
     delete copy[section][core];
@@ -268,6 +266,9 @@ export function checkValidatorCanonicalIntake(root = process.cwd()) {
     basePolicyBytes = base(policyPath);
     baseDocuments = Object.fromEntries(chapters.map((p) => [p, base(p)]));
   }
+  const changedFiles = changesFromVcs({}, root).map((c) => c.path);
+  for (const path of changedFiles.filter(managedMaintenanceNote))
+    files[path] = read(path);
   return verifyValidatorCanonicalIntake({
     files,
     policyBytes: read(policyPath),
@@ -275,7 +276,7 @@ export function checkValidatorCanonicalIntake(root = process.cwd()) {
     before,
     basePolicyBytes,
     baseDocuments,
-    changedFiles: changesFromVcs({}, root).map((c) => c.path),
+    changedFiles,
   });
 }
 if (
