@@ -98,6 +98,7 @@ const preview: Preview = {
             "Hosted qualification and delivery",
             "Verification",
             "Lapis Sync verification",
+            "Plugin skills verification",
             "OCI Mods verification",
             "CLI verification",
             "Repository credential verification",

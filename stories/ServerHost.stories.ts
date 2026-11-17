@@ -94,10 +94,9 @@ async function openWorkspace(canvasElement: HTMLElement) {
   } else {
     expect(canvas.getByText("Server DB", { exact: true })).toBeVisible();
   }
-  const noteRow = canvasElement.querySelector<HTMLElement>(
-    '[data-path="Welcome.md"]',
-  )!;
-  await userEvent.click(noteRow);
+  await userEvent.click(
+    await canvas.findByRole("button", { name: /^Welcome\.md$/ }),
+  );
   if (narrow) {
     for (const side of ["left", "right"]) {
       const close = canvas.queryByRole("button", {

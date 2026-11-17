@@ -141,6 +141,13 @@ jj-store path, a crate tag, or pull request 22 head
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
 
+## Native embedding cache lease
+
+Native embedding-cache installers retain one exclusive lease through verified
+publication. Releasing the owner explicitly unlocks the lease before closing
+its descriptor, including when a concurrent process has inherited a duplicate.
+This preserves the existing wait deadline and immediate busy refusal.
+
 ## Native engine source intake
 
 Native Markdown/Search algorithms use lapis-plugins commit
@@ -304,3 +311,22 @@ source-switch, repair and tamper-refusal assertions remain unchanged.
 The hosted native History composition MUST supply the admitted native editing-
 intent bridge even when Tasks is unselected. Opted-in native backup merging
 cannot rely on a Tasks feature flag to learn about unsaved editor buffers.
+
+Packaged skill source and installation contracts are defined in [SRV-OPS-005–007](plugin-operations.md). Native services own their writes; host adapters supply immutable packaged resources.
+
+The native CLI skill contribution embeds its linked command, credential and
+skill-management references. Nested resources are owned by the same versioned
+receipt and complete-directory update guard as the entrypoint.
+
+The hosted skill-management integration consumes public App Profile `^0.2.1`,
+API `^0.6.5` and their compatible registry cohort. Source/archive acceptance
+and final frozen-registry acceptance remain separate release gates.
+
+Current-main skill intake preserves remote-profile startup and public registry
+packages; [qualification evidence](../../records/2026-11-15-server-skill-profile-intake.md)
+separates earlier source proofs from the combined release candidate.
+
+The bundled Markdown skill intake requires `@lapis-notes/markdown@^0.3.2`
+or newer compatible releases; 0.3.1 has no supporting reference resources.
+
+Hosted qualification builds the CLI alongside the server before app/CLI journeys.

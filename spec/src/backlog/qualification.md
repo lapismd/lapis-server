@@ -145,13 +145,24 @@ close unrelated provider/model, metadata or existing opt-in recovery journeys.
 
 ## Version-runtime and dependency preparation
 
-SRV-GOV-001 retains production KaTeX GHSA-238p-pmpm-9mq7 as a blocking dependency
-finding until supported source remediation. Notes owns the Language Service /
-markdownlint / micromark math path; the latest math package still admits only
-KaTeX0.16. The distinct Mermaid renderer path can adopt the already released
-Mira Editor/plugin0.0.5 through the existing supported ranges. Source fixes,
-registry intake, actual-host acceptance and any release/image proof remain
-separate. Development-only deepmerge requires an exact separately documented
-expiring decision after functional acceptance; no production finding is waived.
+SRV-GOV-001 tracks upstream remediation for KaTeX GHSA-238p-pmpm-9mq7
+(CVE-2026-103923) through Language Service / markdownlint / micromark math.
+The user explicitly accepted this one low-severity advisory for the retained
+KaTeX 0.16.47 dependency path. [Scoped exception](../../records/2026-11-16-katex-audit-exception.md)
+owns the decision, risk and review by 15 December 2026. It removes this audit
+release blocker only; all functional, image and CI gates remain required.
+Notes owns supported dependency remediation; remove the exception when a
+compatible published chain uses patched KaTeX (0.18.2 or newer).
+The distinct Mermaid renderer path retains the supported Mira Editor/plugin
+0.0.5 release boundary and independent actual-host qualification. The existing
+deepmerge exception remains separate and scoped to its own advisory.
 Whole source-owned CLI3/Node24 recipe proof and pre-App guard adoption follow
 qualified source inputs and genuine release intent, without a dummy bump.
+
+## Hosted queue reload
+
+One queue-recovery browser case is temporarily quarantined under the user's
+standing flaky-test instruction. CI loses the visible queued region after
+reload; the unchanged cold exact case passes. [Evidence and diagnostic command](../../records/2026-11-17-hosted-queue-quarantine.md)
+retain scope, owner and reinstatement conditions. No queue-data repair is claimed;
+review by 15 December 2026. All other native/hosted queue cases remain enabled.

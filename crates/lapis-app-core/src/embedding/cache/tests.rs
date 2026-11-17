@@ -1,15 +1,15 @@
 use super::{
+    Cache,
     catalog::{self, Asset},
     remote::Fetch,
-    Cache,
 };
 use crate::services::Result;
 use sha2::{Digest, Sha256};
 use std::{
     io::{Cursor, Read},
     sync::{
-        atomic::{AtomicUsize, Ordering},
         Arc, Barrier,
+        atomic::{AtomicUsize, Ordering},
     },
     time::Duration,
 };
@@ -87,9 +87,11 @@ fn corrupted_cache_is_not_loaded_offline_and_is_repaired_atomically_online() {
     let path = root.path().join(model.filename());
     std::fs::write(&path, b"evil").unwrap();
     let mut fetch = Fixture::new(b"good");
-    assert!(cache
-        .install(std::slice::from_ref(&model), false, &mut fetch, &mut |_| {})
-        .is_err());
+    assert!(
+        cache
+            .install(std::slice::from_ref(&model), false, &mut fetch, &mut |_| {})
+            .is_err()
+    );
     assert_eq!(fetch.calls.load(Ordering::SeqCst), 0);
     assert_eq!(std::fs::read(&path).unwrap(), b"evil");
     cache
@@ -106,9 +108,11 @@ fn incomplete_excess_and_wrong_digest_bodies_never_publish() {
         let cache = Cache::open(root.path()).unwrap();
         let model = asset(b"good");
         let mut fetch = Fixture::new(body);
-        assert!(cache
-            .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
-            .is_err());
+        assert!(
+            cache
+                .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
+                .is_err()
+        );
         assert!(!root.path().join(model.filename()).exists());
         assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 1);
     }
@@ -146,10 +150,12 @@ fn competing_installers_download_once_and_expired_lock_wait_is_explicit() {
         assert_eq!(calls.load(Ordering::SeqCst), 1);
         let cache = Cache::open(root.path()).unwrap();
         let _lease = cache.lease(Duration::ZERO).unwrap();
-        assert!(Cache::open(root.path())
-            .unwrap()
-            .lease(Duration::ZERO)
-            .is_err());
+        assert!(
+            Cache::open(root.path())
+                .unwrap()
+                .lease(Duration::ZERO)
+                .is_err()
+        );
     }
 }
 
@@ -167,9 +173,11 @@ fn unadmitted_model_revision_and_dtype_do_not_start_installation() {
             .as_object_mut()
             .unwrap()
             .extend(extra.as_object().unwrap().clone());
-        assert!(cache
-            .prepare(&serde_json::from_value(config).unwrap(), &mut |_| {})
-            .is_err());
+        assert!(
+            cache
+                .prepare(&serde_json::from_value(config).unwrap(), &mut |_| {})
+                .is_err()
+        );
         assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
     }
 }
@@ -211,20 +219,39 @@ fn cache_rejects_symlink_roots_assets_leases_and_replaced_physical_roots() {
     std::fs::write(&original, b"model").unwrap();
     symlink(&original, path.join(model.filename())).unwrap();
     let mut fetch = Fixture::new(b"model");
-    assert!(cache
-        .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
-        .is_err());
+    assert!(
+        cache
+            .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
+            .is_err()
+    );
     std::fs::remove_file(path.join(model.filename())).unwrap();
     std::fs::remove_file(path.join("install.lock")).unwrap();
     symlink(&original, path.join("install.lock")).unwrap();
-    assert!(cache
-        .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
-        .is_err());
+    assert!(
+        cache
+            .install(std::slice::from_ref(&model), true, &mut fetch, &mut |_| {})
+            .is_err()
+    );
     std::fs::rename(&path, root.path().join("old-cache")).unwrap();
     std::fs::create_dir(&path).unwrap();
-    assert!(cache
-        .install(&[model], true, &mut fetch, &mut |_| {})
-        .is_err());
+    assert!(
+        cache
+            .install(&[model], true, &mut fetch, &mut |_| {})
+            .is_err()
+    );
     assert_eq!(std::fs::read(original).unwrap(), b"model");
     assert_eq!(fetch.calls.load(Ordering::SeqCst), 0);
+}
+
+#[test]
+fn completed_cache_lease_releases_lock_despite_a_duplicated_descriptor() {
+    let root = tempfile::tempdir().unwrap();
+    let cache = Cache::open(root.path()).unwrap();
+    let lease = cache.lease(Duration::ZERO).unwrap();
+    // A concurrently spawning process can inherit this same open-file description.
+    let duplicate = lease.0.try_clone().unwrap();
+    drop(lease);
+    let next = cache.lease(Duration::ZERO).unwrap();
+    drop(next);
+    drop(duplicate);
 }

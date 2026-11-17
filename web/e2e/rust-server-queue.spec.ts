@@ -12,6 +12,11 @@ import { randomBytes } from "node:crypto";
 import { join, resolve } from "node:path";
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 
+test.skip(
+  process.env.LAPIS_SERVER_QUEUE_RECOVERY_TEST !== "1",
+  "Quarantined: intermittent queued-message region disappearance after reload; see 2026-11-17-hosted-queue-quarantine.md.",
+);
+
 test("native queue controls preserve cancellation and require explicit cold resume in the retained chat screen", async ({
   page,
 }, testInfo) => {

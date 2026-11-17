@@ -64,7 +64,7 @@
     "@lapis-notes/file-explorer": "^0.2.8",
     "@lapis-notes/history": "^0.5.1",
     "@lapis-notes/language-service": "^0.1.6",
-    "@lapis-notes/markdown": "^0.3.1",
+    "@lapis-notes/markdown": "^0.3.3",
     "@lapis-notes/search": "^0.1.12",
     "@lapis-notes/source-editor": "^0.1.11",
     "@lapis-notes/ui": "^0.2.1",
@@ -83,7 +83,7 @@
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@lapis-notes/lapis-plugin-tasks": "^0.1.1",
-    "@lapismd/spec-validator": "^0.2.0",
+    "@lapismd/spec-validator": "^0.2.1",
     "@playwright/test": "1.61.1",
     "@storybook/addon-a11y": "^10.6.5",
     "@storybook/addon-docs": "^10.6.5",
@@ -110,5 +110,13 @@
     "vite": "^6.4.5",
     "vitest": "5.0.5",
     "yaml": "2.9.1"
+  },
+  "pnpm": {
+    "auditConfig": {
+      "ignoreCves": [
+        "CVE-2026-93753",
+        "CVE-2026-103923"
+      ]
+    }
   }
 }

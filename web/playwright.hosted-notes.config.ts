@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "./e2e",
   testMatch: [
     "hosted-notes-ui.spec.ts",
+    "hosted-skills.spec.ts",
     "hosted-content-access.spec.ts",
     "hosted-sync-consent.spec.ts",
   ],

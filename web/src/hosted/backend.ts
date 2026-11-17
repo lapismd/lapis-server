@@ -18,6 +18,7 @@ export type HostedVault = {
   archivedAt?: number;
 };
 export type HostedResources = {
+  skillManagement?: import("@lapis-notes/api").SkillManagementHost;
   nativeTasks?: NativeTasks;
   nativeEditingIntents?: NativeEditingIntents;
   repositoryFactory?: (app: App) => RepositoryServices;

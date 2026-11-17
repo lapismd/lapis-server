@@ -5,10 +5,12 @@ math rendering, saved note bytes and cold session restoration through the public
 Markdown/Mira packages. Generic rendering stays owned upstream; this changes no
 host admission, application ownership, persistence or release authority.
 
+Hosted queue reload qualification retains the [single-case diagnostic quarantine](../../records/2026-11-17-hosted-queue-quarantine.md); no new product behavior or weakened assertion is claimed.
+
 These requirements moved from the Notes hosted-server chapter. Shared client
 behavior and observation streams stay in the Notes specification.
 
-[Native file observation](#srv-hst-021) uses released API `^0.2.8` for user-file
+[Native file observation](#srv-hst-021) uses the API `^0.6.5` release boundary for user-file
 discovery and observation scopes. Installed plugin payloads and registry caches
 stay outside the user-file tree; configuration remains owned by its targeted
 reload without mirroring external observations back into compatibility files.
@@ -22,6 +24,8 @@ reload without mirroring external observations back into compatibility files.
 ### Acceptance details
 
 - The runtime process is the compiled `lapis-server` executable.
+- Hosted acceptance builds both `lapis-server` and `lapis` before browser journeys.
+- Same-vault CLI checks MUST NOT depend on a pre-existing developer binary.
 - Static files and native HTTP routes are served by that process.
 
 ## SRV-HST-002 — Authoritative Markdown

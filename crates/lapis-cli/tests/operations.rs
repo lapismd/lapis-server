@@ -65,3 +65,21 @@ fn keyword_help_and_all_seventeen_command_paths_are_available() {
         );
     }
 }
+
+#[test]
+fn packaged_skill_help_is_offline_and_describes_safe_updates() {
+    for action in ["list", "install", "update"] {
+        let result = Command::new(env!("CARGO_BIN_EXE_lapis"))
+            .args(["help", "skills", action])
+            .output()
+            .unwrap();
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        let help = String::from_utf8(result.stdout).unwrap();
+        assert!(help.contains("--skill"));
+        assert!(help.contains("skip edited"));
+    }
+}

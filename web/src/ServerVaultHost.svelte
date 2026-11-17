@@ -239,6 +239,7 @@
           profile,
           appDatabaseProvider: resources.database,
         });
+        session.skillManagement = resources.skillManagement;
         session.nativeTasks = resources.nativeTasks;
         session.nativeEditingIntents = resources.nativeEditingIntents;
         session.backgroundIndexing = resources.backgroundIndexing;

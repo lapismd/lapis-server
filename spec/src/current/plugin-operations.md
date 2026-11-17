@@ -39,3 +39,67 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 - Offline help includes argument descriptions and authored examples.
 - Invocations use live discovery and never replay a failed write.
 - Input files are bounded JSON data; MCP writes retain a caller-known invocation UUID.
+
+## SRV-OPS-005 — Packaged skill sources
+
+**Requirement.** Native hosts MUST discover skill contributions from admitted package files without loading renderer code and expose explicit vault-scoped list, install and update operations. Writes MUST require skill-management permission.
+
+### Acceptance details
+
+- Disabled or unverified plugin sources are excluded.
+- The host CLI contribution includes its linked command, credential and protected skill-management references as packaged assets; installed references receive the same full-directory edit protection as SKILL.md.
+- Existing read-only grants cannot install or update skills.
+- Hosted acceptance MUST exercise the real app commands and CLI against the same isolated vault, including packaged references, local edits and a cold restart.
+
+## SRV-OPS-006 — Protected skill updates
+
+**Requirement.** Updates MUST preserve an entire skill directory when its files differ from its recorded installation. Unmanaged directories MUST remain untouched and skipped results MUST identify the skill and reason.
+
+### Acceptance details
+
+- Edited, added and deleted files preserve the directory.
+- Binary edits and additions report local modification and preserve their exact bytes.
+- Clean updates install the packaged file set without retaining obsolete resources.
+
+## SRV-OPS-007 — Durable skill installation
+
+**Requirement.** Native serialization MUST own skill writes independently of renderer lifetime. Versioned receipts MUST record source versions, file hashes and pending operations; interrupted operations MUST remain fenced until explicitly resolved.
+
+### Acceptance details
+
+- Cold reopen retains installation ownership and local-edit detection.
+- Interrupted writes cannot be mistaken for completed updates or automatically replayed.
+
+## Qualification and release intake
+
+Skill package preparation and CLI qualification follow [SRV-OPS-005–007](plugin-operations.md); source checks and consumer adoption remain separate.
+
+[Final skill qualification](../../records/2026-11-14-skills-final-source-acceptance.md)
+records the final Core and public-package acceptance separately from release intake.
+
+Plugin-skill verification lives in its [own table](../verification/plugin-skills.md)
+so every canonical page retains the existing 32 KiB limit. SUMMARY navigation
+and its metadata-only Storybook mirror retain identical chapter order.
+[CI regression evidence](../../records/2026-11-14-skills-verification-page-split.md)
+retains the failure, cancellation cause and unchanged verification requirements.
+
+Native skill byte preservation and embedding-cache lease release retain the
+[exact failures and source qualification](../../records/2026-11-15-skill-bytes-cache-lease.md).
+Complete Core/Protocol/CLI qualification passes 651 cases and strict Clippy;
+hosted package and Desktop adoption remain separate registry-intake gates.
+
+Packaged CLI documentation qualification includes actual help grammar, native
+resource installation and preservation after a nested reference edit.
+[Reference evidence](../../records/2026-11-15-cli-skill-references.md) records
+the exact failing/passing source regression independently of host delivery.
+
+The API/profile intake retains the exact `pnpm check` baseline: four duplicate-App
+type errors with the older registry graph. Temporary acceptance archives are
+confined to the documented validation consumer; publishable manifests retain
+normal semver and the committed lockfile must resolve registry packages.
+
+Host-browser qualification runs after local Docker workers finish: bridge/network
+changes can cancel Chromium imports and in-flight fetches with ERR_NETWORK_CHANGED.
+The [environment record](../../records/2026-11-15-hosted-task-recovery-quarantine.md)
+retains failed attempts and the withdrawn provisional quarantine. All Task
+assertions remain enabled for the stable-network exact/full rerun.

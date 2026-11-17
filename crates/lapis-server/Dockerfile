@@ -54,6 +54,7 @@ RUN set -eu; \
 WORKDIR /work/lapis-server
 ENV NODE_OPTIONS=--max-old-space-size=8192 GOMAXPROCS=2 UV_THREADPOOL_SIZE=2
 RUN --mount=type=cache,id=lapis-server-rust-pnpm-${TARGETARCH},target=/cache/pnpm pnpm install --frozen-lockfile --store-dir /cache/pnpm
+RUN node scripts/prepare-bundled-skills.mjs .local/bundled-skills.json
 RUN pnpm exec vite build --config web/vite.config.ts
 
 # Download target-platform JJ using the same checked upstream pins as CI.
@@ -88,8 +89,10 @@ COPY --from=mod-loader /usr/local/bin/mod-loader /usr/local/bin/mod-loader
 COPY --from=native --chmod=0555 /lapis-server /app/lapis-server
 COPY --from=native --chmod=0555 /lapis /usr/local/bin/lapis
 COPY --from=web --chmod=0555 /work/lapis-server/web/dist /app/static
+COPY --from=web --chmod=0444 /work/lapis-server/.local/bundled-skills.json /app/bundled-skills.json
 COPY --from=jj-tool --chmod=0555 /out/jj /usr/local/bin/jj
 COPY --chmod=0555 crates/lapis-server/container-entrypoint.sh /app/container-entrypoint
+ENV LAPIS_SERVER_BUNDLED_SKILLS=/app/bundled-skills.json
 ENV HOME=/data LAPIS_SERVER_DATA_ROOT=/data LAPIS_SERVER_STATIC_ROOT=/app/static LAPIS_SERVER_NATIVE_HISTORY=1
 USER lapis
 WORKDIR /app

@@ -1,0 +1,146 @@
+[
+  {
+    "plugin_id": "skills",
+    "id": "list",
+    "version": 1,
+    "description": "list packaged agent skills in the selected vault",
+    "permission": "skills:read",
+    "effect": "read_only",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "skill": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "help": {
+      "command": [
+        "skills",
+        "list"
+      ],
+      "summary": "list packaged skills",
+      "markdown": "Explicitly manage vault .agents/skills. Updates skip edited, unmanaged and interrupted directories. Plugin upgrades supply newer skill content.",
+      "examples": [
+        "lapis skills list --vault <vault-id>"
+      ],
+      "keywords": [
+        "skills",
+        "agents"
+      ],
+      "arguments": [
+        {
+          "flag": "skill",
+          "field": "skill",
+          "description": "Select one available skill by name",
+          "required": false,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "skills",
+    "id": "install",
+    "version": 1,
+    "description": "install packaged agent skills in the selected vault",
+    "permission": "skills:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "skill": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "help": {
+      "command": [
+        "skills",
+        "install"
+      ],
+      "summary": "install packaged skills",
+      "markdown": "Explicitly manage vault .agents/skills. Updates skip edited, unmanaged and interrupted directories. Plugin upgrades supply newer skill content.",
+      "examples": [
+        "lapis skills install --vault <vault-id>"
+      ],
+      "keywords": [
+        "skills",
+        "agents"
+      ],
+      "arguments": [
+        {
+          "flag": "skill",
+          "field": "skill",
+          "description": "Select one available skill by name",
+          "required": false,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "skills",
+    "id": "update",
+    "version": 1,
+    "description": "update packaged agent skills in the selected vault",
+    "permission": "skills:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "skill": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "help": {
+      "command": [
+        "skills",
+        "update"
+      ],
+      "summary": "update packaged skills",
+      "markdown": "Explicitly manage vault .agents/skills. Updates skip edited, unmanaged and interrupted directories. Plugin upgrades supply newer skill content.",
+      "examples": [
+        "lapis skills update --vault <vault-id>"
+      ],
+      "keywords": [
+        "skills",
+        "agents"
+      ],
+      "arguments": [
+        {
+          "flag": "skill",
+          "field": "skill",
+          "description": "Select one available skill by name",
+          "required": false,
+          "json": false
+        }
+      ]
+    }
+  }
+]

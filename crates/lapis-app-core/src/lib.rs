@@ -14,3 +14,5 @@ pub mod sync;
 mod text;
 pub mod turns;
 pub mod vault;
+
+pub mod skills;

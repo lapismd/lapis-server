@@ -4,6 +4,8 @@ import { mkdir, mkdtemp } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 
+test.use({ trace: "retain-on-failure" });
+
 test("compiled server consent survives restart and grants only revocable discovery", async ({
   page,
   playwright,
@@ -27,7 +29,15 @@ test("compiled server consent survives restart and grants only revocable discove
   });
   const verifier = randomBytes(32).toString("base64url");
   const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("pageerror", (error) => {
+    errors.push(error.message);
+    console.info(
+      "consent page error:",
+      error.message
+        .replaceAll(password, "[fixture password]")
+        .replaceAll(verifier, "[fixture verifier]"),
+    );
+  });
   try {
     await runtime.start();
     const initiated = await native.post(`${origin}/api/v3/sync/account`, {
@@ -48,6 +58,11 @@ test("compiled server consent survives restart and grants only revocable discove
     await runtime.start();
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(connection.approval_url);
+    console.info(
+      "consent initial page:",
+      await page.locator("body").ariaSnapshot(),
+    );
+    await expect(page.getByLabel("Username")).toBeVisible();
     await page.getByLabel("Username").fill("owner");
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Sign in", exact: true }).click();
