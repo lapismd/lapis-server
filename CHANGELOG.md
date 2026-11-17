@@ -1,5 +1,15 @@
 # @lapismd/lapis-server
 
+## 2.4.0
+
+### Minor Changes
+
+- [#62](https://github.com/lapismd/lapis-server/pull/62) [`1170e99`](https://github.com/lapismd/lapis-server/commit/1170e99c5ba13a1c9a14c1782456be698a16dc49) Thanks [@stevejuma](https://github.com/stevejuma)! - Expose scoped skill list/install/update commands, native package discovery and durable protection of locally edited skills. Keep stdin credentials available across operation discovery and invocation.
+
+### Patch Changes
+
+- [#96](https://github.com/lapismd/lapis-server/pull/96) [`83add62`](https://github.com/lapismd/lapis-server/commit/83add62b95b4e1f7274da9608ef658916f01f517) Thanks [@stevejuma](https://github.com/stevejuma)! - Patch HTTP tooling dependencies and refresh Mermaid math rendering to the supported release with patched KaTeX.
+
 ## 2.3.0
 
 ### Minor Changes
