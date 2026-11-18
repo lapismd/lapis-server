@@ -9,7 +9,6 @@ import { isDeepStrictEqual as equal } from "node:util";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parse } from "yaml";
-import { changesFromVcs } from "@lapismd/spec-validator";
 
 const core = "@lapismd/spec-validator";
 const policyPath = ".github/dependency-automation/canonical-intake.json";
@@ -266,7 +265,7 @@ export function checkValidatorCanonicalIntake(root = process.cwd()) {
     basePolicyBytes = base(policyPath);
     baseDocuments = Object.fromEntries(chapters.map((p) => [p, base(p)]));
   }
-  const changedFiles = changesFromVcs({}, root).map((c) => c.path);
+  const changedFiles = base.changedFiles();
   for (const path of changedFiles.filter(managedMaintenanceNote))
     files[path] = read(path);
   return verifyValidatorCanonicalIntake({

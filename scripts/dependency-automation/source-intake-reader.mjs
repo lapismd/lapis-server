@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
+import { changesFromVcs } from "@lapismd/spec-validator";
 export function sourceIntakeReader(
   root,
   execute = execFileSync,
@@ -29,7 +30,7 @@ export function sourceIntakeReader(
     .split("\n")[0];
   if (!/^[a-f0-9]{40}$/.test(parent))
     throw Error("Source intake ancestry unavailable");
-  return (path) =>
+  const read = (path) =>
     hasJj
       ? run("jj", [
           "--ignore-working-copy",
@@ -41,4 +42,12 @@ export function sourceIntakeReader(
           path,
         ])
       : run("git", ["show", `${parent}:${path}`]);
+  read.sourceSha = parent;
+  read.changedFiles = () =>
+    changesFromVcs(
+      { base: parent, head: hasJj ? "@" : "HEAD" },
+      root,
+      (binary, args) => run(binary, args),
+    ).map((change) => change.path);
+  return read;
 }

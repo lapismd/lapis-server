@@ -1,6 +1,6 @@
 # Governance
 
-[Node version qualification](../../records/2026-11-17-node-version-runtime.md) and [bounded dependency intake](governance/dependency-automation.md) preserve SRV-GOV-001/003 and independent release/native/image gates; managed development notes carry no release intent.
+[Node version qualification](../../records/2026-11-17-node-version-runtime.md) and [bounded source/range intake](governance/dependency-automation.md) preserve SRV-GOV-001/003 and independent release/native/image gates; managed development notes carry no release intent.
 
 SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
 before navigation, and qualification MUST observe original native-client release

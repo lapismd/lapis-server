@@ -107,6 +107,14 @@ This is a documented delivery quarantine, not a product or assertion waiver;
 restore the default gate after the Word Count release asset is available and
 the focused test passes in CI.
 
+## Development intake transport qualification
+
+The [owning source-range repair](../../records/2026-11-18-development-intake-source-range.md)
+retains immutable baseline selection across Git/Jujutsu and bounds the optional
+empty managed note without waiving catalog, source-scope or runtime-intent gates.
+Controlled SDK-pair/real-main observations remain distinct from future generated
+candidate/main delivery. Production HIGH99 retains its separate owner and gate.
+
 ## Consumer and deployment boundaries
 
 The [Node version guard](../../records/2026-11-17-node-version-runtime.md)
