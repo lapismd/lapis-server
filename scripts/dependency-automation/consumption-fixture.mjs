@@ -1,5 +1,6 @@
 import {
   readFileSync,
+  realpathSync,
   mkdtempSync,
   mkdirSync,
   writeFileSync,
@@ -33,7 +34,9 @@ const deletion =
   "\n";
 
 export function consumptionFixture({ changed = false, hasJj = false } = {}) {
-  const root = mkdtempSync(join(tmpdir(), "server-note-consumption-"));
+  const root = realpathSync(
+    mkdtempSync(join(tmpdir(), "server-note-consumption-")),
+  );
   mkdirSync(join(root, ".changeset"));
   const data = structuredClone(fixture);
   const current = changed ? data.files : data.before;

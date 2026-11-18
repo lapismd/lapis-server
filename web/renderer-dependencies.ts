@@ -2,6 +2,7 @@
 export const rendererExclusions = [
   "@lapis-notes/api",
   "@lapis-notes/app-profile",
+  "@lapis-notes/lapis-plugin-terminal",
   "@lapis-notes/ui",
   "@lapis-notes/workspace",
   "@lapis-notes/file-explorer",
@@ -10,6 +11,7 @@ export const rendererExclusions = [
   "@tursodatabase/database-wasm/vite",
 ];
 export const rendererInclusions = [
+  "@lapis-notes/lapis-plugin-terminal > ghostty-web",
   "@codemirror/autocomplete",
   "@codemirror/commands",
   "@codemirror/language",

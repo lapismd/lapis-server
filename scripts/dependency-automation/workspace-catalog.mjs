@@ -95,11 +95,15 @@ export function verifyCatalogTransition(
         "optionalDependencies",
         "devDependencies",
       ])
-        for (const name of policy.dependencies)
+        for (const name of policy.dependencies) {
           if (row[type]?.[name]) row[type][name].specifier = "<range>";
+          if (reviewed?.added === name) delete row[type]?.[name];
+        }
     const packages = {};
     for (const [key, row] of Object.entries(lock.packages ?? {}))
       if (firstParty(key)) {
+        const name = key.slice(0, key.lastIndexOf("@"));
+        if (reviewed?.added === name) continue;
         // The exact source-bound transition admits only Tasks' reviewed peer
         // declaration evolution. Identity, integrity, registry shape and all
         // snapshot/direct-edge checks still run independently.
@@ -111,7 +115,6 @@ export function verifyCatalogTransition(
             "@lapismd/design-core": "^0.7.4",
           };
         }
-        const name = key.slice(0, key.lastIndexOf("@"));
         if (policy.dependencies.includes(name))
           normalized.resolution = {
             ...normalized.resolution,
@@ -140,6 +143,8 @@ export function verifyCatalogTransition(
         owner = firstParty(primary)
           ? text(primary)
           : primary.slice(0, primary.lastIndexOf("@"));
+      const primaryName = primary.slice(0, primary.lastIndexOf("@"));
+      if (reviewed?.added === primaryName) continue;
       edges.push(
         JSON.stringify([
           owner,

@@ -10,6 +10,7 @@ import {
 } from "./workspace-catalog.mjs";
 
 import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
+import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
 
 const sections = [
   "dependencies",
@@ -22,28 +23,30 @@ const fail = (reason) => {
   throw Error(`Server dependency intake: ${reason}`);
 };
 export function intakeFacts(policy, files) {
-  assert.deepEqual(policy, {
+  const dependencies = [
+    "@lapis-notes/api",
+    "@lapis-notes/app-profile",
+    "@lapis-notes/file-explorer",
+    "@lapis-notes/history",
+    "@lapis-notes/language-service",
+    "@lapis-notes/lapis-plugin-terminal",
+    "@lapis-notes/lapis-plugin-tasks",
+    "@lapis-notes/markdown",
+    "@lapis-notes/search",
+    "@lapis-notes/source-editor",
+    "@lapis-notes/ui",
+    "@lapis-notes/workspace",
+    "@lapismd/design-core",
+    "@lapismd/jj-history",
+    "@lapismd/mira",
+    "@lapismd/spec-validator",
+  ];
+  const expected = (selected) => ({
     schemaVersion: 2,
     kind: "workspace-dependency-intake",
     repository: "lapismd/lapis-server",
     slot: "server-registry",
-    dependencies: [
-      "@lapis-notes/api",
-      "@lapis-notes/app-profile",
-      "@lapis-notes/file-explorer",
-      "@lapis-notes/history",
-      "@lapis-notes/language-service",
-      "@lapis-notes/lapis-plugin-tasks",
-      "@lapis-notes/markdown",
-      "@lapis-notes/search",
-      "@lapis-notes/source-editor",
-      "@lapis-notes/ui",
-      "@lapis-notes/workspace",
-      "@lapismd/design-core",
-      "@lapismd/jj-history",
-      "@lapismd/mira",
-      "@lapismd/spec-validator",
-    ],
+    dependencies: selected,
     manifests: ["package.json"],
     chapters: [
       "spec/src/current/governance/dependency-automation.md",
@@ -51,6 +54,18 @@ export function intakeFacts(policy, files) {
     ],
     lockClosure: "registry-transitives",
   });
+  assert(
+    equal(policy, expected(dependencies)) ||
+      equal(
+        policy,
+        expected(
+          dependencies.filter(
+            (name) => name !== "@lapis-notes/lapis-plugin-terminal",
+          ),
+        ),
+      ),
+    "Unsupported Server dependency intake policy",
+  );
   const lock = YAML.parse(files["pnpm-lock.yaml"]),
     workspace = YAML.parse(files["pnpm-workspace.yaml"]);
   const facts = {
@@ -191,7 +206,18 @@ export function verifyIntake({
     if (slot(documents[path], policy).managed !== intakeSlot(policy, facts))
       fail("managed source facts differ from actual inputs");
   if (!before) return facts;
-  const old = intakeFacts(policy, before);
+  const terminal = reviewedTerminalTransition({
+    policyBytes,
+    files,
+    documents,
+    before,
+    basePolicyBytes,
+    baseDocuments,
+    changedFiles,
+    sourceSha,
+  });
+  const basePolicy = JSON.parse(basePolicyBytes ?? policyBytes);
+  const old = intakeFacts(terminal ? basePolicy : policy, before);
   for (const [path, groups] of Object.entries(old.manifests))
     for (const [type, entries] of Object.entries(groups))
       for (const [name, previous] of Object.entries(entries)) {
@@ -205,17 +231,20 @@ export function verifyIntake({
       }
   verifyImmutablePackages(policy, before, files, old, facts);
   if (equal(old, facts)) return facts;
-  if (policyBytes !== basePolicyBytes) fail("missing or changed source opt-in");
-  const reviewed = reviewedTasksTransition({
-    sourceSha,
-    policyBytes,
-    basePolicyBytes,
-    before,
-    files,
-    documents,
-    baseDocuments,
-    changedFiles,
-  });
+  if (policyBytes !== basePolicyBytes && !terminal)
+    fail("missing or changed source opt-in");
+  const reviewed =
+    terminal ??
+    reviewedTasksTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    });
   const allowed = new Set([
     ...(reviewed ? reviewed.paths : []),
     ...policy.manifests,
@@ -241,6 +270,7 @@ export function verifyIntake({
         for (const name of policy.dependencies)
           if (Object.hasOwn(result[type] ?? {}, name))
             result[type][name] = "<selected>";
+      if (reviewed?.added) delete result.dependencies?.[reviewed.added];
       return result;
     };
     if (!equal(strip(a), strip(b)))
@@ -250,7 +280,17 @@ export function verifyIntake({
         const x = old.manifests[path][type]?.[name],
           y = facts.manifests[path][type]?.[name];
         if (!x && !y) continue;
-        if (!x || !y) fail("selected edge added or removed");
+        if (!x || !y) {
+          if (
+            reviewed?.added === name &&
+            !x &&
+            y &&
+            path === "package.json" &&
+            type === "dependencies"
+          )
+            continue;
+          fail("selected edge added or removed");
+        }
         const reviewedEdge =
           reviewed &&
           path === "package.json" &&
@@ -294,7 +334,7 @@ export function verifyIntake({
     const a = slot(baseDocuments?.[path], policy),
       b = slot(documents[path], policy);
     if (
-      a.managed !== intakeSlot(policy, old) ||
+      a.managed !== intakeSlot(terminal ? basePolicy : policy, old) ||
       (!reviewed && a.outside !== b.outside)
     )
       fail("manual canonical prose or stale baseline");

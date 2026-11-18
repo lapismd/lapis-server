@@ -23,6 +23,8 @@ export function checkWorkspaceIntake(
     policy.chapters.map((p) => [p, read(p)]),
   );
   const base = sourceReader(root);
+  const basePolicyBytes = base(policyPath);
+  const basePolicy = JSON.parse(basePolicyBytes);
   const before = Object.fromEntries(inputs.map((p) => [p, base(p)]));
   const changedFiles = base.changedFiles();
   const presentNotes = [];
@@ -38,7 +40,7 @@ export function checkWorkspaceIntake(
   // Server's fixed private-root policy permits only empty managed release maps.
   verifyWorkspaceNotes(presentNotes, files, {});
   const changed = !equal(
-    intakeFacts(policy, before),
+    intakeFacts(basePolicy, before),
     intakeFacts(policy, files),
   );
   return verifyIntake({
@@ -50,7 +52,7 @@ export function checkWorkspaceIntake(
     sourceSha: base.sourceSha,
     ...(changed
       ? {
-          basePolicyBytes: base(policyPath),
+          basePolicyBytes,
           baseDocuments: Object.fromEntries(
             policy.chapters.map((p) => [p, base(p)]),
           ),
