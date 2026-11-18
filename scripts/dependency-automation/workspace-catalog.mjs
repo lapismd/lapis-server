@@ -18,7 +18,14 @@ export function verifyImmutablePackages(policy, before, files, old, facts) {
 const fail = (reason) => {
   throw Error(`Server dependency catalog: ${reason}`);
 };
-export function verifyCatalogTransition(policy, before, files, old, facts) {
+export function verifyCatalogTransition(
+  policy,
+  before,
+  files,
+  old,
+  facts,
+  reviewed,
+) {
   const a = YAML.parse(before["pnpm-lock.yaml"]),
     b = YAML.parse(files["pnpm-lock.yaml"]);
   const workspace = (bytes) => {
@@ -93,7 +100,17 @@ export function verifyCatalogTransition(policy, before, files, old, facts) {
     const packages = {};
     for (const [key, row] of Object.entries(lock.packages ?? {}))
       if (firstParty(key)) {
+        // The exact source-bound transition admits only Tasks' reviewed peer
+        // declaration evolution. Identity, integrity, registry shape and all
+        // snapshot/direct-edge checks still run independently.
         const normalized = walk(row);
+        if (reviewed && key === "@lapis-notes/lapis-plugin-tasks@0.2.1") {
+          normalized.peerDependencies = {
+            ...normalized.peerDependencies,
+            "@lapis-notes/api": "^0.2.3",
+            "@lapismd/design-core": "^0.7.4",
+          };
+        }
         const name = key.slice(0, key.lastIndexOf("@"));
         if (policy.dependencies.includes(name))
           normalized.resolution = {

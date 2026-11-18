@@ -32,6 +32,18 @@ gates; unchanged first-party identities, metadata, peers and direct edges remain
 immutable. Unavailable Profile/Tasks publication waits and production HIGH issue99
 are not waived by this source capability.
 
+One atomic source-reviewed Tasks0.1.1 to published0.2.1 transition MAY change
+its devDependency range and registry peer metadata. The source-owned receipt
+MUST match the immutable first parent, unchanged intake policy, exact before and
+after manifest/workspace/lock bytes, canonical documents and complete changed
+path set. Candidate input, actor identity and environment MUST NOT authorize it.
+Reuse from another parent or any extra path, metadata, advisory setting or
+unrelated dependency change MUST fail. Independent structural, registry,
+unchanged-package, catalog/direct-edge and empty-note checks MUST still run.
+This grants no coordinator minor/major capability; ordinary automated intake
+remains compatible-forward-patch only. Both Tasks releases are Node/ESM and
+Deno-free; unchanged root declarations/runtime ID do not waive host acceptance.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.
@@ -47,14 +59,14 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
 | `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
-| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.1` | `0.2.1` |
+| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.5` | `0.2.5` |
 | `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.6` | `0.4.6` |
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.4` | `0.13.4` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapismd/mira` | `~0.2.0` | `0.2.0` |
-| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.1.1` | `0.1.1` |
+| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `917dfb007485824f24c0b11ce068aa13cb7fb9363e7ffbbfddd58c3be331ff42`.
+Manifest, peer and integrity facts SHA256: `e18f173b3ccdaa53ea97676bd3c75bae89a84bfbdd1680340dadfa9820374b0c`.
 
 <!-- dependency-intake:server-registry:end -->
