@@ -1,0 +1,5 @@
+# CI verification
+
+| ID          | Status  | Evidence                                                                                                                                                                                                                                                                                                            |
+| ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SRV-GOV-005 | Partial | [Affected CI and toolchain implementation](../../records/2026-11-18-affected-ci-toolchain.md): planner, reverse dependency closure, required aggregation, bounded cache writes and multi-architecture image source pass locally. Hosted affected/full runs and CI-image publication/digest adoption remain pending. |

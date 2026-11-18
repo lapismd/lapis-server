@@ -41,12 +41,17 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|sync|content|cli|governance(?:/(?:dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
+        "^spec/src/current/(?:server|sync|content|cli|governance(?:/(?:ci|dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [
+        {
+          pattern:
+            "^(?:\\.ci/|\\.github/workflows/(?:ci|container-mods|publish-ci-image)\\.yml$|scripts/ci-(?:image|plan|required|rust))",
+          chapters: ["spec/src/current/governance/ci.md"],
+        },
         {
           pattern:
             "^(?:package\\.json|pnpm-workspace\\.yaml|pnpm-lock\\.yaml|\\.github/dependency-automation/canonical-intake\\.json|scripts/dependency-automation/(?:check-canonical-intake|source-intake-reader|maintenance-note|check-workspace-intake|workspace-intake|workspace-catalog|workspace-note)\\.mjs)$",

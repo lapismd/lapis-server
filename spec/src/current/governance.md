@@ -202,21 +202,10 @@ a manual scan of `spec/src`, use `--semantic` for a conceptual query, and use
 `main` MUST publish that image tagged with the 7-character git short hash, and
 the published image MUST provide `linux/amd64` and `linux/arm64` manifests.
 The image web stage MUST build the Vite application in `web/` after a frozen lockfile install.
-Every pull request MUST build and smoke-test the default runtime for
-`linux/amd64` and `linux/arm64`, including checksum-pinned jj version and real
-repository initialization/status. Those lanes MUST build the native server
-stage for both target architectures without running the ARM64 Rust compiler
-through QEMU. Both lanes MUST retain the size limit, read-only application,
-writable data, Mod lifecycle and obsolete Homebrew request rejection checks.
-The reusable OCI Mods crate has isolated registry,
-archive and lifecycle regressions; container acceptance proves Mod execution
-and unchanged entrypoint signal delivery without Docker socket access.
+Affected pull-request selection, full qualification and the source-free CI
+toolchain are governed by [SRV-GOV-005](governance/ci.md).
 Changesets MUST record the release note and create that version tag and GitHub
-release. This repository MUST NOT publish an npm package. Every pull request MUST run
-`cargo test --workspace --locked` with the ordinary Rust dependency cache, and
-that command MUST resolve without a Cargo path dependency outside this repository.
-The Rust job MUST install checksum-verified upstream jj 0.45.1, then run
-`cargo clippy --workspace --all-targets --locked -- -D warnings`, before those tests.
+release. This repository MUST NOT publish an npm package.
 
 Pages deployments MUST finish before newer runs deploy. One failed deployment
 attempt MUST retry the same artifact once within a 25-minute job budget; a second
@@ -228,7 +217,7 @@ and cancellation handling.
 - Spec-validator enforces the line and byte limits.
 - CI installs mdbook 0.5.4 before the specification check, and Notes CI does not run server acceptance.
 - GitHub Pages publishes Storybook at `/lapis-server/storybook/`, including these specification chapters, and does not publish a separate specification site.
-- The server mounts published `@lapis-notes/workspace`; pull requests install checksum-verified jj 0.45.1, deny Rust warnings, run cached workspace tests, cross-build the server and smoke-test the Homebrew-free runtime and jj on both architectures; `main` publishes the multi-architecture image through Changesets without npm; and retained Tasks restarts drain guarded sign-out before host shutdown without weakening lost-response recovery.
+- The server mounts published `@lapis-notes/workspace`; selected Rust changes install checksum-verified jj 0.45.1 and deny warnings, full qualification cross-builds and smoke-tests both runtime architectures, `main` publishes through Changesets without npm, and retained Tasks restarts drain guarded sign-out before host shutdown without weakening lost-response recovery.
 
 ## SRV-GOV-002 — Published shell styles
 
