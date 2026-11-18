@@ -253,3 +253,11 @@ jobs:
       - run: pnpm test:storybook:static
       - run: pnpm test:hosted
       - run: pnpm test:plugin-operations
+      - name: Retain hosted Tasks failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: hosted-tasks-failure-diagnostics
+          path: test-results/rust-hosted-tasks/
+          if-no-files-found: ignore
+          retention-days: 7

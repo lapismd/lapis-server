@@ -5,7 +5,7 @@
 SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
 before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
-required; navigation cannot await asynchronous App teardown.
+required; navigation cannot await asynchronous App teardown. [Hosted failure ownership](hosted.md).
 
 Concurrent Sync qualification remains under SRV-GOV-001 in the
 [Lapis Sync source qualification](governance/remotes.md#lapis-sync-source-qualification) topic.
