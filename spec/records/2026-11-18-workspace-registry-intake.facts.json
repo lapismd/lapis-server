@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "dependencyBaseline": "230537c0c48eb393e5c4267dd8d5f2add3733e89",
+    "source102Merge": "09eeb2004aa98c60ab9c0612b4dd1e90d3fe620a",
+    "fixtureSha256": "ae30f5d68855c3944631d8709faa348d3701d56e214229e97938d3cca27f0539",
+    "policySha256": "533633aab653b99790892bf91a1a76155ed59a6ccbe0c12d6f13d19673b527b0",
+    "existingInputHashes": {
+      "package.json": "ae2345bce95a9c104a0b9172802f3e6bc85dd8f099001dbc529c2bc66c24f7dc",
+      "pnpm-workspace.yaml": "bc64c4693f5c606e687b564e60700659ab0e32ca92d3a0a44c2c223e62f20458",
+      "pnpm-lock.yaml": "316c3b36ae6117f6750580b72666641a0f4e73c9aa508016886d846871c607d0"
+    },
+    "manifestLockWorkspaceChanged": false
+  },
+  "native": {
+    "sourceSha": "230537c0c48eb393e5c4267dd8d5f2add3733e89",
+    "nativeCommand": "node <official-pnpm10.34.5> update @lapismd/design-core@^0.13.5 --lockfile-only --ignore-scripts --ignore-pnpmfile --config.manage-package-manager-versions=false",
+    "node": "24.15.0",
+    "pnpm": "10.34.5",
+    "nativeLogSha256": "93271102e5fa91ed67e8b1ca7e42d033c4027025d59401943324cbb4f02471ea",
+    "baseInputHashes": {
+      "package.json": "ae2345bce95a9c104a0b9172802f3e6bc85dd8f099001dbc529c2bc66c24f7dc",
+      "pnpm-workspace.yaml": "bc64c4693f5c606e687b564e60700659ab0e32ca92d3a0a44c2c223e62f20458",
+      "pnpm-lock.yaml": "316c3b36ae6117f6750580b72666641a0f4e73c9aa508016886d846871c607d0"
+    },
+    "note": "Actual immutable Server input exported to credential-free data fixture. Real registry Core update; canonical opt-in is the separately reviewed proposed source policy. Not a live bot E2E."
+  },
+  "version": {
+    "denoAbsent": true,
+    "no-note": {
+      "status": 1
+    },
+    "empty-note": {
+      "status": 0
+    },
+    "beforeMacro": {
+      "package.json": "dcb6b9ba58d54d3da7c65963caa2b98bb665578ab97d63a411f57ac2584f9dc1",
+      "pnpm-lock.yaml": "0af59109ab35a34b3cbe805000f3a3467676e75ae310a0397fadd793f60a8ca3",
+      "pnpm-workspace.yaml": "bc64c4693f5c606e687b564e60700659ab0e32ca92d3a0a44c2c223e62f20458",
+      "CHANGELOG.md": "caad95dfe31d4e13841344f4b073f3b776e52e1df216392eb61b347c30cb6490",
+      ".changeset/config.json": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
+      "scripts/dependency-automation/versioning-runtime.json": "8c30e07edd64b9e67f4780c9b008db6a6dd4ad0ca80176055bf9c2e4e6da30ca"
+    },
+    "whole-empty-macro": {
+      "status": 0
+    },
+    "afterMacro": {
+      "package.json": "dcb6b9ba58d54d3da7c65963caa2b98bb665578ab97d63a411f57ac2584f9dc1",
+      "pnpm-lock.yaml": "0af59109ab35a34b3cbe805000f3a3467676e75ae310a0397fadd793f60a8ca3",
+      "pnpm-workspace.yaml": "bc64c4693f5c606e687b564e60700659ab0e32ca92d3a0a44c2c223e62f20458",
+      "CHANGELOG.md": "caad95dfe31d4e13841344f4b073f3b776e52e1df216392eb61b347c30cb6490",
+      ".changeset/config.json": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
+      "scripts/dependency-automation/versioning-runtime.json": "8c30e07edd64b9e67f4780c9b008db6a6dd4ad0ca80176055bf9c2e4e6da30ca"
+    }
+  },
+  "audit": {
+    "full": {
+      "exit": 1,
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 1,
+          "moderate": 0,
+          "high": 1,
+          "critical": 0
+        },
+        "dependencies": 1016,
+        "devDependencies": 0,
+        "optionalDependencies": 0,
+        "totalDependencies": 1016
+      },
+      "advisories": [
+        {
+          "id": "GHSA-fc5q-39xc-vjpf",
+          "module": "picomatch",
+          "severity": "high",
+          "patched": "<0.0.0",
+          "findings": [
+            {
+              "version": "4.0.7",
+              "paths": [".>@changesets/cli>@changesets/config>picomatch"]
+            }
+          ]
+        }
+      ]
+    },
+    "production": {
+      "exit": 1,
+      "metadata": {
+        "vulnerabilities": {
+          "info": 0,
+          "low": 1,
+          "moderate": 0,
+          "high": 1,
+          "critical": 0
+        },
+        "dependencies": 780,
+        "devDependencies": 0,
+        "optionalDependencies": 0,
+        "totalDependencies": 780
+      },
+      "advisories": [
+        {
+          "id": "GHSA-fc5q-39xc-vjpf",
+          "module": "picomatch",
+          "severity": "high",
+          "patched": "<0.0.0",
+          "findings": [
+            {
+              "version": "4.0.7",
+              "paths": [".>@lapis-notes/app-profile>vite>picomatch"]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "validation": {
+    "focused": {
+      "passed": 35,
+      "failed": 0
+    },
+    "dependencyIntake": {
+      "passed": 70,
+      "failed": 0
+    },
+    "sourceCheck": {
+      "svelteErrors": 0,
+      "svelteWarnings": 0
+    },
+    "unit": {
+      "files": 37,
+      "passed": 218,
+      "failed": 0
+    },
+    "cliWorkflow": {
+      "passed": 8,
+      "failed": 0
+    },
+    "build": "pass;existing chunk-size warning",
+    "canonical": "validate/build/first pass",
+    "format": "pass",
+    "doctor": "pass;existing custom-alias warning",
+    "candidate": "real native Core.4→.5 frozen install; source JJ/SDK range and shared v2 canonical output pass",
+    "hosted": "pending",
+    "main": "source102 merged; newv2source+futurecurrentcandidate qualification pending"
+  },
+  "boundaries": {
+    "privateRootVersion": "2.4.0 unchanged",
+    "automaticProductReleaseIntent": false,
+    "noNewAuditException": true,
+    "sourceIssue99": "OPEN;productionHIGH remains",
+    "excludedDenoAndFrozenInputsChanged": false,
+    "liveCoordinatorActivation": false
+  }
+}
