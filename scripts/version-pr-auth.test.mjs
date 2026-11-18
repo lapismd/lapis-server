@@ -20,7 +20,7 @@ test("source-bound Node qualification and actual intent precede all version PR a
   assert.ok(guard, "Version PR authority requires a source runtime guard");
   assert.equal(
     guard.uses,
-    "lapismd/lapis-ci/actions/guard-version-runtime@121359a245a334da31bc138933595a5f00f5ba8b",
+    "lapismd/lapis-ci/actions/guard-version-runtime@dc81ff65ba812bf005fb2a806eb3308bb8b5f71f",
   );
   assert.deepEqual(guard.with, {
     "qualification-file":

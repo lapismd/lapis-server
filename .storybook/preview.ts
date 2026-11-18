@@ -92,6 +92,8 @@ const preview: Preview = {
             "Static delivery",
             "Governance",
             "Repository remotes qualification",
+            "Dependency automation",
+            "Dependency toolchain",
             "Backlog",
             "Native application services",
             "Content API, MCP and CLI",

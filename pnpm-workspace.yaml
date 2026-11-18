@@ -1,0 +1,4 @@
+packages:
+  - .
+overrides:
+  "@lapismd/spec-validator": 0.2.1

@@ -9,5 +9,14 @@
   "files": {
     ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
     ".prettierignore": "dadea660708c19187c391a1d361a1663563bab996063811aacc65563a0710d1e"
+  },
+  "workspacePolicy": {
+    "schemaVersion": 1,
+    "sha256": "f6d1b12368a1382a2802a5d602b1a014476a251ee598ea458c5dd7bed4692f42",
+    "developmentOverride": {
+      "dependency": "@lapismd/spec-validator",
+      "series": "0.2",
+      "minimumPatch": 1
+    }
   }
 }
