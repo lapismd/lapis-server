@@ -198,3 +198,11 @@ distinguishes actual Changesets deletion from unsafe current files. Source facts
 15-input policy, private false intent, whole recipe and audit99 remain separate
 and unchanged. Fresh exact-head CI is still required after this source follow-up;
 no bot branch, native lifecycle, image publication or audit approval changes.
+
+## Reviewed Tasks registry transition
+
+Tasks0.1.1 to published0.2.1 is an owning manual source transition, not a Deno
+migration or coordinator capability. Exact-source guard and native frozen
+installation evidence remain distinct from complete hosted Tasks/editor/recovery,
+HTTP/MCP/CLI, image/main/Pages/release/callback qualification. Production HIGH99
+remains an independent Profile/Vite prerequisite; no audit waiver is granted.

@@ -69,7 +69,7 @@
     "@lapis-notes/markdown": "^0.3.3",
     "@lapis-notes/search": "^0.1.12",
     "@lapis-notes/source-editor": "^0.1.11",
-    "@lapis-notes/ui": "^0.2.1",
+    "@lapis-notes/ui": "^0.2.5",
     "@lapis-notes/workspace": "^0.4.6",
     "@lapismd/design-core": "^0.13.4",
     "@lapismd/jj-history": "~0.1.0",
@@ -84,7 +84,7 @@
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
-    "@lapis-notes/lapis-plugin-tasks": "^0.1.1",
+    "@lapis-notes/lapis-plugin-tasks": "^0.2.1",
     "@lapismd/spec-validator": "0.2.1",
     "@playwright/test": "1.61.1",
     "@storybook/addon-a11y": "^10.6.5",

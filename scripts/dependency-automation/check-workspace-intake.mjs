@@ -47,6 +47,7 @@ export function checkWorkspaceIntake(
     documents,
     before,
     changedFiles,
+    sourceSha: base.sourceSha,
     ...(changed
       ? {
           basePolicyBytes: base(policyPath),

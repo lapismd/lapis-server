@@ -9,6 +9,8 @@ import {
   verifyImmutablePackages,
 } from "./workspace-catalog.mjs";
 
+import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
+
 const sections = [
   "dependencies",
   "optionalDependencies",
@@ -181,6 +183,7 @@ export function verifyIntake({
   basePolicyBytes,
   baseDocuments,
   changedFiles = [],
+  sourceSha,
 }) {
   const policy = JSON.parse(policyBytes),
     facts = intakeFacts(policy, files);
@@ -203,7 +206,18 @@ export function verifyIntake({
   verifyImmutablePackages(policy, before, files, old, facts);
   if (equal(old, facts)) return facts;
   if (policyBytes !== basePolicyBytes) fail("missing or changed source opt-in");
+  const reviewed = reviewedTasksTransition({
+    sourceSha,
+    policyBytes,
+    basePolicyBytes,
+    before,
+    files,
+    documents,
+    baseDocuments,
+    changedFiles,
+  });
   const allowed = new Set([
+    ...(reviewed ? reviewed.paths : []),
     ...policy.manifests,
     "pnpm-workspace.yaml",
     "pnpm-lock.yaml",
@@ -237,7 +251,17 @@ export function verifyIntake({
           y = facts.manifests[path][type]?.[name];
         if (!x && !y) continue;
         if (!x || !y) fail("selected edge added or removed");
+        const reviewedEdge =
+          reviewed &&
+          path === "package.json" &&
+          type === "devDependencies" &&
+          name === "@lapis-notes/lapis-plugin-tasks" &&
+          x.version === "0.1.1" &&
+          y.version === "0.2.1" &&
+          x.declared === "^0.1.1" &&
+          y.declared === "^0.2.1";
         if (
+          !reviewedEdge &&
           y.version &&
           (semver.lt(y.version, x.version) ||
             ![null, "patch"].includes(semver.diff(x.version, y.version)))
@@ -248,7 +272,8 @@ export function verifyIntake({
             type === "peerDependencies" ||
             x.declared.startsWith("catalog:") !==
               y.declared.startsWith("catalog:") ||
-            (!semver.subset(y.range, x.range) &&
+            (!reviewedEdge &&
+              !semver.subset(y.range, x.range) &&
               !(
                 name === "@lapismd/spec-validator" &&
                 type === "devDependencies" &&
@@ -264,11 +289,14 @@ export function verifyIntake({
       }
   }
   verifyWorkspaceNotes(changesets, files, release);
-  verifyCatalogTransition(policy, before, files, old, facts);
+  verifyCatalogTransition(policy, before, files, old, facts, reviewed);
   for (const path of policy.chapters) {
     const a = slot(baseDocuments?.[path], policy),
       b = slot(documents[path], policy);
-    if (a.managed !== intakeSlot(policy, old) || a.outside !== b.outside)
+    if (
+      a.managed !== intakeSlot(policy, old) ||
+      (!reviewed && a.outside !== b.outside)
+    )
       fail("manual canonical prose or stale baseline");
   }
   return facts;
