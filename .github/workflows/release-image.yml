@@ -19,6 +19,8 @@ concurrency:
 jobs:
   qualify-mod-loader:
     uses: ./.github/workflows/container-mods.yml
+    with:
+      source: ${{ github.sha }}
   publish-mod-loader:
     needs: qualify-mod-loader
     runs-on: ubuntu-latest

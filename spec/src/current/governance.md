@@ -279,8 +279,9 @@ One idempotent App-owned registration retains required Content Access beside opt
 Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
 turn engine. Other failures retain uncertain-cleanup semantics and propagate.
 This keeps default-enabled AI compatible with startup Retry on unconfigured hosts.
-The reusable Mod qualification caller grants read-only package access explicitly;
-its artifact publication remains in the separate image release workflow.
+The reusable Mod qualification caller binds its required source input to the
+exact release revision and grants read-only package access explicitly; its
+artifact publication remains in the separate image release workflow.
 
 The [command-lease repair](../../records/2026-11-10-vault-backup-lease-release.md)
 updates the exact owning Git revision without changing SRV-GOV-001 release,

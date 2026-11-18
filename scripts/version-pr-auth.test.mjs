@@ -9,6 +9,18 @@ const workflow = YAML.parse(
     "utf8",
   ),
 );
+const imageWorkflow = YAML.parse(
+  readFileSync(
+    new URL("../.github/workflows/release-image.yml", import.meta.url),
+    "utf8",
+  ),
+);
+const modsWorkflow = YAML.parse(
+  readFileSync(
+    new URL("../.github/workflows/container-mods.yml", import.meta.url),
+    "utf8",
+  ),
+);
 const version = workflow.jobs.changesets;
 const writer = version.steps.find((step) =>
   step.uses?.startsWith("changesets/action@"),
@@ -94,4 +106,15 @@ test("release publication retains the workflow token and existing tag/image/CLI 
   assert.equal(version.permissions.contents, "write");
   for (const step of version.steps.filter((step) => step.uses))
     assert.match(step.uses, /@[a-f0-9]{40}$/);
+});
+
+test("image release binds reusable Mod qualification to its exact source", () => {
+  assert.deepEqual(modsWorkflow.on.workflow_call.inputs.source, {
+    required: true,
+    type: "string",
+  });
+  assert.deepEqual(imageWorkflow.jobs["qualify-mod-loader"], {
+    uses: "./.github/workflows/container-mods.yml",
+    with: { source: "${{ github.sha }}" },
+  });
 });
