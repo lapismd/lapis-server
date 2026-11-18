@@ -6,7 +6,7 @@ import { parse, stringify } from "yaml";
 import {
   validatorFacts,
   verifyValidatorCanonicalIntake,
-} from "./check-canonical-intake.mjs";
+} from "./legacy-validator-fixture.mjs";
 import { sourceIntakeReader } from "./source-intake-reader.mjs";
 const fixture = JSON.parse(
   gunzipSync(
@@ -15,13 +15,14 @@ const fixture = JSON.parse(
     ),
   ),
 );
-const policyBytes = readFileSync(
-  new URL(
-    "../../.github/dependency-automation/canonical-intake.json",
-    import.meta.url,
+// Preserve the exact legacy v1 fixture contract separately from current schema2.
+const policyBytes = JSON.parse(
+  gunzipSync(
+    readFileSync(
+      new URL("../fixtures/validator-generated-scope.json.gz", import.meta.url),
+    ),
   ),
-  "utf8",
-);
+).policyBytes;
 const { chapters } = JSON.parse(policyBytes);
 const document = (facts) =>
   "# Source\n\n<!-- dependency-intake:validator-development:start -->\n\n```json\n" +

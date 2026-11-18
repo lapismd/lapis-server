@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { sourceIntakeReader } from "./source-intake-reader.mjs";
-import { verifyValidatorCanonicalIntake } from "./check-canonical-intake.mjs";
+import { verifyValidatorCanonicalIntake } from "./legacy-validator-fixture.mjs";
 
 const frozenBytes = readFileSync(
   new URL("../fixtures/validator-intake.json.gz", import.meta.url),

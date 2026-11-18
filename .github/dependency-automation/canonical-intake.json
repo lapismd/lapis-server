@@ -1,11 +1,29 @@
 {
-  "schemaVersion": 1,
-  "kind": "single-development-dependency",
+  "schemaVersion": 2,
+  "kind": "workspace-dependency-intake",
   "repository": "lapismd/lapis-server",
-  "dependency": "@lapismd/spec-validator",
-  "slot": "validator-development",
+  "slot": "server-registry",
+  "dependencies": [
+    "@lapis-notes/api",
+    "@lapis-notes/app-profile",
+    "@lapis-notes/file-explorer",
+    "@lapis-notes/history",
+    "@lapis-notes/language-service",
+    "@lapis-notes/lapis-plugin-tasks",
+    "@lapis-notes/markdown",
+    "@lapis-notes/search",
+    "@lapis-notes/source-editor",
+    "@lapis-notes/ui",
+    "@lapis-notes/workspace",
+    "@lapismd/design-core",
+    "@lapismd/jj-history",
+    "@lapismd/mira",
+    "@lapismd/spec-validator"
+  ],
+  "manifests": ["package.json"],
   "chapters": [
     "spec/src/current/governance/dependency-automation.md",
     "spec/src/current/governance/dependency-toolchain.md"
-  ]
+  ],
+  "lockClosure": "registry-transitives"
 }
