@@ -50,6 +50,13 @@ This grants no coordinator minor/major capability; ordinary automated intake
 remains compatible-forward-patch only. Both Tasks releases are Node/ESM and
 Deno-free; unchanged root declarations/runtime ID do not waive host acceptance.
 
+One exact source-reviewed addition admits the published
+`@lapis-notes/lapis-plugin-terminal` 0.1.0 package as a normal runtime registry
+dependency. Its one-use receipt binds the immutable parent, policy expansion,
+manifest, lockfile, canonical chapters and complete changed-path set. This does
+not grant generic dependency-addition authority; package qualification, hosted
+acceptance and public-image delivery remain independent gates.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.
@@ -62,6 +69,7 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/file-explorer` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/history` | `^0.5.1` | `0.5.1` |
 | `package.json` (dependencies) | `@lapis-notes/language-service` | `^0.1.6` | `0.1.6` |
+| `package.json` (dependencies) | `@lapis-notes/lapis-plugin-terminal` | `^0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
 | `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
@@ -73,6 +81,6 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `e18f173b3ccdaa53ea97676bd3c75bae89a84bfbdd1680340dadfa9820374b0c`.
+Manifest, peer and integrity facts SHA256: `2f072b005d5c8ebc66c7822b287055dc5c31e98629d8df4accfaeeca8207b8de`.
 
 <!-- dependency-intake:server-registry:end -->

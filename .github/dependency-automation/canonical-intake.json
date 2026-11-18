@@ -9,6 +9,7 @@
     "@lapis-notes/file-explorer",
     "@lapis-notes/history",
     "@lapis-notes/language-service",
+    "@lapis-notes/lapis-plugin-terminal",
     "@lapis-notes/lapis-plugin-tasks",
     "@lapis-notes/markdown",
     "@lapis-notes/search",

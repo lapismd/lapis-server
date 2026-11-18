@@ -7,6 +7,7 @@ export default defineConfig({
     "hosted-skills.spec.ts",
     "hosted-content-access.spec.ts",
     "hosted-sync-consent.spec.ts",
+    "hosted-terminal.spec.ts",
   ],
   timeout: 120_000,
   expect: { timeout: 30_000 },

@@ -66,6 +66,7 @@
     "@lapis-notes/file-explorer": "^0.2.8",
     "@lapis-notes/history": "^0.5.1",
     "@lapis-notes/language-service": "^0.1.6",
+    "@lapis-notes/lapis-plugin-terminal": "^0.1.0",
     "@lapis-notes/markdown": "^0.3.3",
     "@lapis-notes/search": "^0.1.12",
     "@lapis-notes/source-editor": "^0.1.11",

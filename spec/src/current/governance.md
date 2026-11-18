@@ -271,11 +271,10 @@ replace unchanged native assertions or establish a root-cause repair. Fixed
 shutdown categories MUST NOT expose native error text, paths, credentials or
 vault content.
 
-Terminal admission is implemented in Core and HTTP transport, with the UI imported from the first-party Terminal package. Local qualification may use verified packed UI archives; registry publication and ARM64 image acceptance remain separate release gates.
-
+Terminal admission is implemented in Core and HTTP transport. Terminal UI 0.1.0 is public and consumed through its normal registry range; the [intake receipt](../../records/2026-11-18-hosted-terminal-registry-intake.md) keeps local acceptance separate from hosted CI and AMD64/ARM64 public images.
 Native CLI security fixtures create a real POSIX FIFO on macOS and Linux, retaining the same private-token and non-regular-file rejection assertions.
-
 The hosted Vite renderer compiles Terminal public Svelte output directly and prepares Ghostty before first terminal activation, avoiding optimizer-triggered startup reloads.
+One idempotent App-owned registration retains required Content Access beside optional/default Terminal; trust loss, disable and final disposal retire owned PTYs without replacing Content Access.
 
 Native AI cleanup accepts typed 501/UNSUPPORTED when the host has no selected
 turn engine. Other failures retain uncertain-cleanup semantics and propagate.
