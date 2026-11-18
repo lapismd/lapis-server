@@ -12,6 +12,12 @@ One exact managed dependency Changeset may accompany a compatible patch only
 when its YAML release map is empty. Nonempty, malformed, multiple or arbitrary
 notes remain rejected; no product version intent is added.
 
+Changesets version consumption with unchanged dependency facts MUST accept a
+deleted managed note without reading its old path. Only an absent current file
+may be skipped; all existing-file safety/format checks and actual dependency
+intake note requirements remain strict. The version recipe, locks and false
+private-root intent are unchanged.
+
 Git and Jujutsu changed paths MUST use the same captured immutable parent as
 prior input facts. Clean hosted Git checkouts MUST retain tracked managed-note
 and unexpected-file scrutiny; one managed note stays bounded to8192 UTF-8 bytes

@@ -17,6 +17,13 @@ One exact managed dependency Changeset may accompany a compatible patch only
 when its YAML release map is empty. Nonempty, malformed, multiple or arbitrary
 notes remain rejected; no product version intent is added.
 
+Normal version consumption MAY delete a managed note when dependency facts are
+unchanged. The loader MUST skip only a truly absent current file, retaining its
+changed path so actual dependency intake still rejects missing note bytes.
+Existing files MUST retain regular-file/realpath,8192-byte and empty-map checks;
+dangling or external symlinks, directories, malformed notes and I/O errors MUST
+not be treated as consumed notes.
+
 Git and Jujutsu changed paths MUST use the same captured immutable parent as
 prior input facts. Clean hosted Git checkouts MUST retain tracked managed-note
 and unexpected-file scrutiny; one managed note stays bounded to8192 UTF-8 bytes

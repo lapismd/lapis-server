@@ -190,3 +190,11 @@ standing flaky-test instruction. CI loses the visible queued region after
 reload; the unchanged cold exact case passes. [Evidence and diagnostic command](../../records/2026-11-17-hosted-queue-quarantine.md)
 retain scope, owner and reinstatement conditions. No queue-data repair is claimed;
 review by 15 December 2026. All other native/hosted queue cases remain enabled.
+
+## Managed-note consumption boundary
+
+[The owning loader repair](../../records/2026-11-18-managed-note-consumption.md)
+distinguishes actual Changesets deletion from unsafe current files. Source facts,
+15-input policy, private false intent, whole recipe and audit99 remain separate
+and unchanged. Fresh exact-head CI is still required after this source follow-up;
+no bot branch, native lifecycle, image publication or audit approval changes.
