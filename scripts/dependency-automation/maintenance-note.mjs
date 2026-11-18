@@ -13,6 +13,12 @@ export function verifyMaintenanceScope(changedFiles, files, allowedPaths) {
     throw Error("Unexpected development intake source scope");
   for (const path of notes) {
     const bytes = files[path];
+    if (
+      typeof bytes !== "string" ||
+      !bytes.isWellFormed() ||
+      Buffer.byteLength(bytes) > 8192
+    )
+      throw Error("Development intake requires bounded managed note bytes");
     const front =
       typeof bytes === "string" &&
       /^---\r?\n([\s\S]*?)^---[ \t]*(?:\r?\n|$)/m.exec(bytes);

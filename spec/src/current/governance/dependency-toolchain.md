@@ -12,6 +12,11 @@ One exact managed dependency Changeset may accompany a development patch only
 when its YAML release map is empty. Nonempty, malformed, multiple or arbitrary
 notes remain rejected; no product version intent is added.
 
+Git and Jujutsu changed paths MUST use the same captured immutable parent as
+prior input facts. Clean hosted Git checkouts MUST retain tracked managed-note
+and unexpected-file scrutiny; one managed note stays bounded to8192 UTF-8 bytes
+with an empty release map. This changes no source input, version or audit policy.
+
 <!-- dependency-intake:validator-development:start -->
 
 ```json
