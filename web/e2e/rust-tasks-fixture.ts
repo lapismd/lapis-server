@@ -10,6 +10,7 @@ import type {
 import { RustServerRuntime, unusedLoopbackPort } from "./rust-server-runtime";
 import { installTasksArtifact } from "./tasks-installed-plugin";
 import { signOutHostedWorkspace } from "./rust-hosted-session";
+import { withHostedCleanup } from "./hosted-failures";
 
 export const hostedTask =
   "---\ntype: task\nid: hosted\ntask:\n  status: open\n  inbox: true\n  start: anytime\n---\n\n# Review the hosted migration\n";
@@ -230,7 +231,7 @@ export async function createHostedTasksFixture(
           contentType: "application/json",
         });
       }
-      try {
+      await withHostedCleanup(async () => {
         if (!page.isClosed()) {
           if (
             (await page
@@ -243,11 +244,17 @@ export async function createHostedTasksFixture(
             await signOutHostedWorkspace(page);
           await page.goto("about:blank");
         }
-      } finally {
-        await service.stop();
-        expect(runtimeErrors).toEqual([]);
-        expect(pluginFailures).toHaveLength(expectedPluginFailures);
-      }
+      }, [
+        async () => {
+          await service.stop();
+        },
+        async () => {
+          expect(runtimeErrors).toEqual([]);
+        },
+        async () => {
+          expect(pluginFailures).toHaveLength(expectedPluginFailures);
+        },
+      ]);
     },
   };
 }

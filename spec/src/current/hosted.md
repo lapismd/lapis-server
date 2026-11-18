@@ -1,5 +1,11 @@
 # Hosted contract
 
+Concurrent hosted Task recovery acceptance MUST retain the original failure
+alongside subsequent diagnostic and cleanup failures. Cleanup MUST attempt every owned
+release without replacing earlier errors or relaxing guarded leave, runtime or
+recovery assertions. Failed hosted runs retain their Tasks trace, error context
+and attachments through the existing read-only artifact upload boundary.
+
 SRV-GOV-003 registry dependency acceptance retains actual Rust workspace Mermaid
 math rendering, saved note bytes and cold session restoration through the public
 Markdown/Mira packages. Generic rendering stays owned upstream; this changes no

@@ -31,6 +31,14 @@ remain enabled. [UI parity evidence](../../records/2026-11-01-hosted-ui-parity.m
 retains the exact earlier failures; independent release-image/provider gates
 still require their original acceptance.
 
+The later main run44206370737 at `c0bcecb5` fails1/15 in concurrent Task
+recovery. Its final Username timeout comes from teardown and masks an earlier
+scenario failure; the runner uploads no Tasks trace. [Failure ownership](../../records/2026-11-18-hosted-tasks-failure-ownership.md)
+records the exact boundary and source regression. Retained primary/cleanup
+errors and failure artifacts improve diagnosis. The complete local Tasks lane
+passes15/15, which does not establish that the initiating hosted failure is repaired. Fresh hosted
+candidate/main acceptance remains required without a new quarantine.
+
 ## Assets and intentional opt-ins
 
 Five native model tests remain asset-gated in the current core tests. They need
