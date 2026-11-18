@@ -1,0 +1,76 @@
+name: Publish Server CI image
+
+on:
+  workflow_dispatch:
+    inputs:
+      approval:
+        description: Enter PUBLISH_SERVER_CI_IMAGE after source review
+        required: true
+        type: string
+
+permissions:
+  attestations: write
+  contents: read
+  id-token: write
+  packages: write
+
+concurrency:
+  group: publish-server-ci-image
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: inputs.approval == 'PUBLISH_SERVER_CI_IMAGE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.15.0
+      - name: Verify image source contract
+        run: node --test scripts/ci-image-source.test.mjs
+      - name: Build and verify the local image
+        run: |
+          docker build --file .ci/server-ci.Dockerfile --tag lapis-server-ci:verification .
+          docker run --rm lapis-server-ci:verification node \
+            /usr/local/share/lapis-server-ci/ci-image-tools.mjs check \
+            /usr/local/share/lapis-server-ci/server-ci.json
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: image
+        name: Read immutable image tag
+        run: echo "tag=$(node -p 'require(\"./.ci/server-ci.json\").tag')" >> "$GITHUB_OUTPUT"
+      - id: metadata
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/lapismd/lapis-server-ci
+          tags: type=raw,value=${{ steps.image.outputs.tag }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.image.outputs.tag }}
+      - id: build
+        name: Build and publish multi-architecture image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: .ci/server-ci.Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-name: ghcr.io/lapismd/lapis-server-ci
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+      - name: Report immutable consumer reference
+        run: echo "ghcr.io/lapismd/lapis-server-ci@${{ steps.build.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
