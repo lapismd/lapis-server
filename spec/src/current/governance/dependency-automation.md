@@ -66,7 +66,7 @@ metadata, edges and settings remain immutable. Workspace and Design Core stay
 available as the genuine ordinary automation cohort, and no product release is
 implied by this prerequisite.
 
-Server-owned terminal font assets use the ordinary npm manifest and lockfile path. Fontsource is outside the managed Lapis dependency intake group; upstream Terminal and Ghostty registry adoption remain separate release gates.
+Server-owned terminal font assets use the ordinary npm manifest and lockfile path. Fontsource is outside the managed Lapis dependency intake group. Terminal registry adoption includes its maintained private Ghostty build; an upstream Ghostty release is a patch-removal milestone.
 
 <!-- dependency-intake:server-registry:start -->
 

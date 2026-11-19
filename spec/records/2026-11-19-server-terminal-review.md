@@ -182,3 +182,13 @@ passes all 324 upstream tests and the normal JS/WASM build.
 Ghostty upstream publication is now a patch-removal milestone, not a prerequisite
 for Server delivery. Publication/adoption of the new Terminal package remains a
 separate gate; native shell profile work and visual baselines remain unchanged.
+
+## Registry adoption baseline
+
+After Terminal PR #5 merged, an ordinary
+`pnpm install --frozen-lockfile --ignore-pnpmfile` followed by `pnpm check`
+reproduced exactly two TypeScript errors and zero warnings with locked Terminal
+0.1.0: the missing `TerminalAppearanceOptions` export and unsupported fourth
+constructor argument. Terminal 0.1.1 is the minimum registry adoption target;
+the dependency update must qualify the original check and renderer lanes without
+the ignored archive hook. Earlier archive receipts remain historical evidence.

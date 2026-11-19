@@ -12,8 +12,8 @@ acceptance remain separate. Desktop keeps the user's own shell and appearance.
 Server Terminal stories start with both sidebars collapsed and check the actual
 canvas background against the workspace theme. Dedicated cold Storybook reload
 acceptance checks glyph integrity and the collapsed left sidebar repeatedly in
-light and dark mode. Runtime default-colour changes require the qualified
-Ghostty source build; the registry release remains a separate delivery gate.
+light and dark mode. Runtime default-colour changes use Terminal's qualified
+private Ghostty build; registry adoption requires Terminal 0.1.1 or newer.
 
 The Server Terminal review includes independent numbered terminal tabs. Open
 Terminal reveals a retained terminal when no terminal is visible and creates a
@@ -26,4 +26,5 @@ constant backend state must not survive replacement of the owning fixture.
 Terminal now ships a private bundled Ghostty Web 0.4.0 runtime, matching WASM
 and patch provenance. Server therefore has no nested ghostty-web optimizer input
 or Ghostty archive override. The user-authorized maintained patch removes the
-Ghostty release prerequisite; the Terminal package release remains required.
+Ghostty release prerequisite. Server consumes the released Terminal package
+through ordinary registry ranges and a frozen lockfile, without archive hooks.
