@@ -272,6 +272,7 @@ shutdown categories MUST NOT expose native error text, paths, credentials or
 vault content.
 
 Terminal admission is implemented in Core and HTTP transport. Terminal UI 0.1.0 is public and consumed through its normal registry range; the [intake receipt](../../records/2026-11-18-hosted-terminal-registry-intake.md) keeps local acceptance separate from hosted CI and AMD64/ARM64 public images.
+Release intent for this default-enabled user-visible capability MUST remain separate from dependency-maintenance notes and follow exact public image qualification.
 Native CLI security fixtures create a real POSIX FIFO on macOS and Linux, retaining the same private-token and non-regular-file rejection assertions.
 The hosted Vite renderer compiles Terminal public Svelte output directly and prepares Ghostty before first terminal activation, avoiding optimizer-triggered startup reloads.
 One idempotent App-owned registration retains required Content Access beside optional/default Terminal; trust loss, disable and final disposal retire owned PTYs without replacing Content Access.
