@@ -192,3 +192,17 @@ reproduced exactly two TypeScript errors and zero warnings with locked Terminal
 constructor argument. Terminal 0.1.1 is the minimum registry adoption target;
 the dependency update must qualify the original check and renderer lanes without
 the ignored archive hook. Earlier archive receipts remain historical evidence.
+
+Terminal release PR #6 merged at `6bcac68f330ddc9dd775082ff5209ace54fa21be`
+and tag `v0.1.1` points to that source. Its PR/main checks pass. Tagged publish
+run `44638282729` passed source/package qualification but failed publication
+with npm `ENEEDAUTH`; no bootstrap token was present and npm had no trusted
+publisher connection for this package. No 0.1.1 registry package or successful
+release is claimed. Server remains on the portable 0.1.0 lock until publication.
+The intended publisher is GitHub owner `lapismd`, repository
+`lapis-plugin-terminal`, workflow `publish-npm.yml`, environment `npm-production`.
+Account security-key verification currently blocks configuring that connection.
+
+This documentation update initially reported one spec-first diagnostic for the
+mapped governance chapter. Updating its Terminal-topic reference resolved it;
+the complete canonical check and changed-file formatter then passed.

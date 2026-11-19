@@ -26,5 +26,5 @@ constant backend state must not survive replacement of the owning fixture.
 Terminal now ships a private bundled Ghostty Web 0.4.0 runtime, matching WASM
 and patch provenance. Server therefore has no nested ghostty-web optimizer input
 or Ghostty archive override. The user-authorized maintained patch removes the
-Ghostty release prerequisite. Server consumes the released Terminal package
-through ordinary registry ranges and a frozen lockfile, without archive hooks.
+Ghostty release prerequisite. Registry adoption must consume the released Terminal
+package through ordinary registry ranges and a frozen lockfile, without archive hooks.
