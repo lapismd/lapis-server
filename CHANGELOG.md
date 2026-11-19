@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.5.0
+
+### Minor Changes
+
+- [#108](https://github.com/lapismd/lapis-server/pull/108) [`92643b3`](https://github.com/lapismd/lapis-server/commit/92643b3a10503109f4647a0c3c37ebf6306356d2) Thanks [@stevejuma](https://github.com/stevejuma)! - Include Terminal in the default hosted workspace, backed by the native PTY service and the released first-party Terminal UI.
+
 ## 2.4.0
 
 ### Minor Changes
