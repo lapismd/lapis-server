@@ -206,3 +206,13 @@ migration or coordinator capability. Exact-source guard and native frozen
 installation evidence remain distinct from complete hosted Tasks/editor/recovery,
 HTTP/MCP/CLI, image/main/Pages/release/callback qualification. Production HIGH99
 remains an independent Profile/Vite prerequisite; no audit waiver is granted.
+
+## Reviewed Notes peer transition
+
+API 0.6.10 raises its UI peer floor to 0.2.6, so that pair is an owning manual
+source transition rather than an ordinary canonical patch. The exact-source
+receipt covers the two ranges, registry-only lock closure, changed API peer
+metadata and removal of the unused API 0.6.3 lock identity. It grants no generic
+peer-metadata capability and no Server product release intent. Workspace and
+Design Core remain for the subsequent ordinary dependency-automation PR and
+its full current-head, main, completion and replay evidence.
