@@ -104,6 +104,8 @@ export function verifyCatalogTransition(
       if (firstParty(key)) {
         const name = key.slice(0, key.lastIndexOf("@"));
         if (reviewed?.added === name) continue;
+        if (reviewed?.notesPeerTransition && key === "@lapis-notes/api@0.6.3")
+          continue;
         // The exact source-bound transition admits only Tasks' reviewed peer
         // declaration evolution. Identity, integrity, registry shape and all
         // snapshot/direct-edge checks still run independently.
@@ -115,6 +117,11 @@ export function verifyCatalogTransition(
             "@lapismd/design-core": "^0.7.4",
           };
         }
+        if (reviewed?.notesPeerTransition && name === "@lapis-notes/api")
+          normalized.peerDependencies = {
+            ...normalized.peerDependencies,
+            "@lapis-notes/ui": "<reviewed-notes-ui-peer>",
+          };
         if (policy.dependencies.includes(name))
           normalized.resolution = {
             ...normalized.resolution,
@@ -135,7 +142,18 @@ export function verifyCatalogTransition(
         (type) =>
           Object.entries(row[type] ?? {})
             .filter(([name]) => firstParty(name))
-            .map(([name, version]) => [type, name, walk(version, name)]),
+            .map(([name, version]) => [
+              type,
+              name,
+              reviewed?.notesPeerTransition &&
+              name === "@lapis-notes/api" &&
+              version.split("(")[0] === "0.6.3"
+                ? ("<selected>" + version.slice("0.6.3".length)).replace(
+                    /\([a-f0-9]{32}\)/g,
+                    "(<context>)",
+                  )
+                : walk(version, name),
+            ]),
       );
       if (!firstParty(key) && !peers(key).length && !references.length)
         continue;
@@ -145,6 +163,8 @@ export function verifyCatalogTransition(
           : primary.slice(0, primary.lastIndexOf("@"));
       const primaryName = primary.slice(0, primary.lastIndexOf("@"));
       if (reviewed?.added === primaryName) continue;
+      if (reviewed?.notesPeerTransition && primary === "@lapis-notes/api@0.6.3")
+        continue;
       edges.push(
         JSON.stringify([
           owner,
@@ -157,8 +177,14 @@ export function verifyCatalogTransition(
     }
     return { settings, packages, edges: [...new Set(edges)].sort() };
   }
-  if (!equal(graph(a, old), graph(b, facts)))
-    fail("unrelated importer, first-party metadata or edge changed");
+  const previous = graph(a, old);
+  const current = graph(b, facts);
+  if (!equal(previous.settings, current.settings))
+    fail("unrelated importer or workspace lock setting changed");
+  if (!equal(previous.packages, current.packages))
+    fail("unrelated first-party metadata changed");
+  if (!equal(previous.edges, current.edges))
+    fail("unrelated first-party edge changed");
   for (const [key, row] of Object.entries(b.packages ?? {}))
     if (
       !equal(a.packages?.[key], row) &&

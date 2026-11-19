@@ -51,6 +51,15 @@ manifest, lockfile, canonical chapters and complete changed-path set. This does
 not grant generic dependency-addition authority; package qualification, hosted
 acceptance and public-image delivery remain independent gates.
 
+One exact source-reviewed Notes peer transition admits API 0.6.10 and UI 0.2.6
+before ordinary compatible automation resumes. Its one-use receipt binds the
+immutable parent, unchanged policy, manifest, registry lock, canonical chapters
+and complete changed-path set. Only API's reviewed UI peer floor and removal of
+the unused API 0.6.3 lock identity are normalized; unrelated first-party
+metadata, edges and settings remain immutable. Workspace and Design Core stay
+available as the genuine ordinary automation cohort, and no product release is
+implied by this prerequisite.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.
@@ -58,7 +67,7 @@ Current registry dependency coordinates; qualification remains separate.
 <!-- prettier-ignore -->
 | Manifest | Dependency | Range | Locked version |
 | --- | --- | --- | --- |
-| `package.json` (dependencies) | `@lapis-notes/api` | `^0.6.5` | `0.6.5` |
+| `package.json` (dependencies) | `@lapis-notes/api` | `^0.6.10` | `0.6.10` |
 | `package.json` (dependencies) | `@lapis-notes/app-profile` | `^0.2.2` | `0.2.2` |
 | `package.json` (dependencies) | `@lapis-notes/file-explorer` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/history` | `^0.5.1` | `0.5.1` |
@@ -67,7 +76,7 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
 | `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
-| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.5` | `0.2.5` |
+| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.6` | `0.2.6` |
 | `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.6` | `0.4.6` |
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.4` | `0.13.4` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
@@ -75,6 +84,6 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `2f072b005d5c8ebc66c7822b287055dc5c31e98629d8df4accfaeeca8207b8de`.
+Manifest, peer and integrity facts SHA256: `db188507f4a1a8fcc3bd45a1230ca1c6435a866240f701680d610cf38d8879bb`.
 
 <!-- dependency-intake:server-registry:end -->
