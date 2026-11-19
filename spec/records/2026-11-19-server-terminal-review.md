@@ -159,3 +159,26 @@ extension to be published before registry-only CI can qualify it. These are
 explicit delivery prerequisites, not successful registry acceptance.
 
 Ported Terminal archive SHA-256: `bb5249592759fdfd234518248d7041585a2369a160f77f2658a8d7e81bbd36bb`.
+
+## Maintained Ghostty patch follow-up
+
+The user requested a maintained local Ghostty patch. Terminal now backports PR
+#232 to the exact npm 0.4.0 source and privately bundles the verified runtime,
+matching embedded/sidecar WASM, MIT licence and provenance. Its ordinary frozen
+registry install applies the explicit pnpm patch. Server's ignored validation
+hook now replaces only the Terminal package; no Ghostty override or root patch
+is present. The obsolete nested ghostty-web optimizer input was removed because
+it is no longer a runtime dependency of the public Terminal package.
+
+Consumer requalification: 16 focused terminal cases, 227 units, 92 complete
+interaction/accessibility cases, two fresh-process real-keyboard/reload cases and
+five built-static browser cases pass. Check, canonical spec, application build
+and static Storybook build pass. The unit count drops by one because the
+optimizer-resolution test follows the actual dependency list; no product
+assertion was removed or loosened. The owning Terminal lanes pass 38 units, six
+source browser cases and eight source/package browser cases; its 0.4.0 backport
+passes all 324 upstream tests and the normal JS/WASM build.
+
+Ghostty upstream publication is now a patch-removal milestone, not a prerequisite
+for Server delivery. Publication/adoption of the new Terminal package remains a
+separate gate; native shell profile work and visual baselines remain unchanged.

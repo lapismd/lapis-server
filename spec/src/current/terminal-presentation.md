@@ -22,3 +22,8 @@ New Terminal plus button. Canvas geometry fills the panel width, including space
 smaller than a character cell, with the overlay scrollbar at the right edge.
 Terminal fixture backends belong to each rendered App instance; shared loader or
 constant backend state must not survive replacement of the owning fixture.
+
+Terminal now ships a private bundled Ghostty Web 0.4.0 runtime, matching WASM
+and patch provenance. Server therefore has no nested ghostty-web optimizer input
+or Ghostty archive override. The user-authorized maintained patch removes the
+Ghostty release prerequisite; the Terminal package release remains required.
