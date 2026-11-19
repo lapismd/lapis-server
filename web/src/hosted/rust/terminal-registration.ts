@@ -2,6 +2,7 @@ import type { App } from "@lapis-notes/api";
 import { TerminalPlugin } from "@lapis-notes/lapis-plugin-terminal";
 import type { NotesWorkspaceHost } from "@lapis-notes/app-profile/workspace-session";
 import { createHostedTerminal } from "./terminal-client";
+import { HOSTED_TERMINAL_APPEARANCE } from "./terminal-appearance";
 import type { RustVaultClient } from "./vault-client";
 
 type StaticPluginRegistration = Parameters<
@@ -41,7 +42,12 @@ export function hostedTerminalWorkspace(
       );
       class HostedTerminalPlugin extends TerminalPlugin {
         constructor(owner: App) {
-          super(owner, undefined, terminal.sessions);
+          super(
+            owner,
+            undefined,
+            terminal.sessions,
+            HOSTED_TERMINAL_APPEARANCE,
+          );
           instance = this;
         }
         async onload() {

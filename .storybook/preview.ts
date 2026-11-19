@@ -89,6 +89,7 @@ const preview: Preview = {
             "CLI installation",
             "Plugin operations",
             "Hosted contract",
+            "Terminal presentation",
             "Static delivery",
             "Governance",
             "Affected CI and toolchain",
