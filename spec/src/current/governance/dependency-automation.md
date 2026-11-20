@@ -66,6 +66,17 @@ metadata, edges and settings remain immutable. Workspace and Design Core stay
 available as the genuine ordinary automation cohort, and no product release is
 implied by this prerequisite.
 
+One exact source-reviewed Notes cohort transition completes App Profile 0.2.8,
+Search 0.1.15 and Source Editor 0.1.14 after API 0.6.11, UI 0.2.8 and Workspace
+0.4.10 landed. Its one-use receipt binds the immutable first parent, unchanged
+policy, complete manifest/workspace/lock bytes, canonical documents and changed
+path set. Only that receipt may admit the selected packages' reviewed registry
+metadata and edge evolution; unchanged first-party identities remain immutable,
+and this grants no generic peer, metadata, minor or major-update capability.
+Pull-request validation MUST compare candidate bytes with the event's immutable
+base revision, not merely the candidate's preceding repair commit, so a
+multi-commit branch cannot narrow the transition under review.
+
 Server-owned terminal font assets use the ordinary npm manifest and lockfile path. Fontsource is outside the managed Lapis dependency intake group. Terminal registry adoption includes its maintained private Ghostty build; an upstream Ghostty release is a patch-removal milestone.
 
 <!-- dependency-intake:server-registry:start -->
@@ -76,14 +87,14 @@ Current registry dependency coordinates; qualification remains separate.
 | Manifest | Dependency | Range | Locked version |
 | --- | --- | --- | --- |
 | `package.json` (dependencies) | `@lapis-notes/api` | `^0.6.11` | `0.6.11` |
-| `package.json` (dependencies) | `@lapis-notes/app-profile` | `^0.2.2` | `0.2.2` |
+| `package.json` (dependencies) | `@lapis-notes/app-profile` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/file-explorer` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/history` | `^0.5.1` | `0.5.1` |
 | `package.json` (dependencies) | `@lapis-notes/language-service` | `^0.1.6` | `0.1.6` |
 | `package.json` (dependencies) | `@lapis-notes/lapis-plugin-terminal` | `^0.1.1` | `0.1.1` |
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
-| `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
-| `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
+| `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.15` | `0.1.15` |
+| `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.14` | `0.1.14` |
 | `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.10` | `0.4.10` |
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.7` | `0.13.7` |
@@ -92,6 +103,6 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `d67d1080b48959f431237a94d8eae0425c5a06d5e5074b1c204e450ede7d6a95`.
+Manifest, peer and integrity facts SHA256: `3e78d66d80ec1b78abd7e6b16ef8acc6188c02ca3d916a12c7f8a7b9534ff808`.
 
 <!-- dependency-intake:server-registry:end -->
