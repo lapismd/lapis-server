@@ -206,3 +206,7 @@ Account security-key verification currently blocks configuring that connection.
 This documentation update initially reported one spec-first diagnostic for the
 mapped governance chapter. Updating its Terminal-topic reference resolved it;
 the complete canonical check and changed-file formatter then passed.
+
+[Registry adoption on 2026-11-20](2026-11-20-terminal-registry-adoption.md)
+supersedes the publication blocker above: Terminal 0.1.1 is public with
+provenance, Server adopts its registry dependency and the archive hook is retired.

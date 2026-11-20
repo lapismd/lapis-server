@@ -28,3 +28,6 @@ and patch provenance. Server therefore has no nested ghostty-web optimizer input
 or Ghostty archive override. The user-authorized maintained patch removes the
 Ghostty release prerequisite. Registry adoption must consume the released Terminal
 package through ordinary registry ranges and a frozen lockfile, without archive hooks.
+Server locks published Terminal 0.1.1; [registry qualification](../../records/2026-11-20-terminal-registry-adoption.md)
+records the original two missing-contract errors, their resolution and the
+complete catalog/cold reload acceptance through the public package.
