@@ -9,6 +9,7 @@
   - [CLI installation](current/cli.md)
   - [Plugin operations](current/plugin-operations.md)
 - [Hosted contract](current/hosted.md)
+  - [Terminal presentation](current/terminal-presentation.md)
 - [Static delivery](current/delivery.md)
 - [Governance](current/governance.md)
   - [Affected CI and toolchain](current/governance/ci.md)
