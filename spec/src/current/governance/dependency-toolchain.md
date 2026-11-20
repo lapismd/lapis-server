@@ -60,6 +60,8 @@ metadata, edges and settings remain immutable. Workspace and Design Core stay
 available as the genuine ordinary automation cohort, and no product release is
 implied by this prerequisite.
 
+Hosted Terminal bundles Fontsource JetBrains Mono through Vite. Font changes preserve the registry-only toolchain contract; unpublished renderer/plugin qualification uses explicit ignored archives and never becomes a publishable source alias.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.
