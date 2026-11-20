@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.5.2
+
+### Patch Changes
+
+- [#115](https://github.com/lapismd/lapis-server/pull/115) [`d8556bb`](https://github.com/lapismd/lapis-server/commit/d8556bb1fc13052f4e35005eb5851d34d31a7732) Thanks [@stevejuma](https://github.com/stevejuma)! - Apply the reviewed coloured Bash prompt and listings to real Server terminals, abbreviate the managed vault UUID in the prompt, and preserve startup hooks, full paths and a server opt-out.
+
 ## 2.5.1
 
 ### Patch Changes

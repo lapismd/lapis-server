@@ -321,7 +321,7 @@ retains SRV-GOV-003 guarded workspace departure and persistent content-access
 assertions across restart. Browser fixtures retire the old document after
 sign-out and before restarting Vite, so its HMR reconnect reload cannot compete
 with the fixture's next cold navigation. Dependency and fixture qualification
-do not transfer prior public-image acceptance to a new package cohort.
+do not transfer prior public-image acceptance to a new package cohort. Concurrent editor fixtures authenticate each browser independently and await native-client release before destroying its frame; [editor departure evidence](../../records/2026-11-20-hosted-editor-departure.md) retains shutdown guards and dirty-writer assertions.
 
 The [public-image receipt](../../records/2026-11-11-public-image-acceptance.md)
 qualifies the immutable 7563116 slim frontend and original runtime on remote
