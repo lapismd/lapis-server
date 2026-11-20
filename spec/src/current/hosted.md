@@ -242,6 +242,12 @@ reload without mirroring external observations back into compatibility files.
 
 **Requirement.** Terminal commands and bounded output streams MUST authenticate the owning vault client. The Deno-free native PTY engine MUST use the admitted physical vault as cwd authority. Detach, expiry, logout, successful vault close and shutdown MUST stop owned shells, while dirty-editor close refusal MUST preserve them. The bundled UI MUST require trust and optional-plugin admission.
 
+The Server Host selects the managed Bash profile described in
+[Terminal presentation](terminal-presentation.md), including startup hooks,
+coloured listings/status, display-only UUID shortening and
+`LAPIS_SERVER_TERMINAL_PROFILE=0` opt-out. Native application PTY tests qualify
+this policy; Storybook fixtures alone do not.
+
 ### Acceptance details
 
 - Create accepts relative cwd and dimensions, never roots or arbitrary shells.

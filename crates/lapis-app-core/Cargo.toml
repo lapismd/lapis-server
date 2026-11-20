@@ -15,7 +15,7 @@ local-sibling-projections = []
 [dependencies]
 jj-forge = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0", default-features = false }
 jj-store-service = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0", default-features = false }
-lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "e240ad5f8e891a3b30336aca49926992a08bde42", version = "0.1.0" }
+lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "88fae24eb24934bb8dcc8bdf2eb0f1e86ffb39ef", version = "0.1.0" }
 lapis-plugin-services = { git = "https://github.com/lapismd/lapis-plugins", rev = "879581d1549187bdbac2d75b40d02e0df46e721a", version = "0.1.0" }
 lapis-task-services = { git = "https://github.com/lapismd/lapis-plugin-tasks", rev = "bdb1e5834c3b1e335b2fd5e9f96bfd54dc8b2439", version = "0.1.0" }
 lapis-docs-projection = { git = "https://github.com/lapismd/lapis-plugin-docs", rev = "f772f2bacc20a914cef2f0398f294cefbac4ba3c", version = "0.0.0" }

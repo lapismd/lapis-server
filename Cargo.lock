@@ -4232,7 +4232,7 @@ dependencies = [
 [[package]]
 name = "lapis-terminal-service"
 version = "0.1.0"
-source = "git+https://github.com/lapismd/terminal-host?rev=e240ad5f8e891a3b30336aca49926992a08bde42#e240ad5f8e891a3b30336aca49926992a08bde42"
+source = "git+https://github.com/lapismd/terminal-host?rev=88fae24eb24934bb8dcc8bdf2eb0f1e86ffb39ef#88fae24eb24934bb8dcc8bdf2eb0f1e86ffb39ef"
 dependencies = [
  "libc",
  "portable-pty",

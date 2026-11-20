@@ -6,3 +6,4 @@ pub mod credentials;
 pub mod host;
 pub mod http;
 pub mod lifecycle;
+mod terminal_profile;

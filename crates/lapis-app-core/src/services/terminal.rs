@@ -5,10 +5,12 @@ use lapis_app_protocol::{
     terminal::{TerminalCommand, TerminalOutput, TerminalValue},
 };
 use lapis_terminal_service::PtyService;
+pub use lapis_terminal_service::ShellCommand;
 use std::{collections::HashMap, path::Path, sync::Arc, time::Duration};
 use uuid::Uuid;
 
 pub(super) type Owners = HashMap<Uuid, Arc<PtyService>>;
+pub(super) type ShellFactory = Arc<dyn Fn(&Path, Uuid) -> ShellCommand + Send + Sync>;
 fn failure(error: std::io::Error) -> Error {
     let code = match error.kind() {
         std::io::ErrorKind::InvalidInput => ErrorCode::InvalidRequest,
@@ -30,8 +32,12 @@ impl Client {
             if owners.len() >= 8 {
                 return Err(Error::busy());
             }
-            let owner =
-                PtyService::new(state.root.path(), Path::new("/bin/bash")).map_err(failure)?;
+            let root = state.root.path().canonicalize().map_err(failure)?;
+            let shell = self.vault.terminal_shell.as_ref().map_or_else(
+                || ShellCommand::login_interactive(Path::new("/bin/bash")),
+                |factory| factory(&root, self.vault.id),
+            );
+            let owner = PtyService::with_command(&root, shell).map_err(failure)?;
             owners.insert(self.id, Arc::new(owner));
         }
         owners.get(&self.id).cloned().ok_or_else(Error::denied)

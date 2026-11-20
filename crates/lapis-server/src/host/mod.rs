@@ -71,6 +71,12 @@ impl Host {
         Self::with_runtime(config, Runtime::default())
     }
     fn with_runtime(config: Config, runtime: Runtime) -> std::io::Result<Self> {
+        let profile = crate::terminal_profile::enabled(
+            std::env::var_os("LAPIS_SERVER_TERMINAL_PROFILE").as_deref(),
+        );
+        let runtime = runtime.with_terminal_shell(move |root, id| {
+            crate::terminal_profile::command(root, id, profile)
+        });
         if !config.vaults.is_empty() {
             config.validate()?;
         }
