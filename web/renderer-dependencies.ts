@@ -11,7 +11,6 @@ export const rendererExclusions = [
   "@tursodatabase/database-wasm/vite",
 ];
 export const rendererInclusions = [
-  "@lapis-notes/lapis-plugin-terminal > ghostty-web",
   "@codemirror/autocomplete",
   "@codemirror/commands",
   "@codemirror/language",

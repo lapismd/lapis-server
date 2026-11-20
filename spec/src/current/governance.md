@@ -2,6 +2,10 @@
 
 [Node version qualification](../../records/2026-11-17-node-version-runtime.md) and [source-owned workspace registry intake](governance/dependency-automation.md) preserve SRV-GOV-001/003 and independent release/native/image gates; the [reviewed Tasks transition](governance/dependency-automation.md) grants no automated minor capability or production qualification; managed private-root notes carry no release intent; [consumption](../../records/2026-11-18-managed-note-consumption.md) keeps deleted notes distinct from unsafe current files.
 
+Terminal plugin 0.1.1 carries its renderer runtime inside the published package,
+so Server removes the obsolete `ghostty-web` optimizer input. Strict resolution,
+both frozen dependency graphs and cold builds retain SRV-GOV-001/003 contracts.
+
 SRV-GOV-002 hosted fixture reopens MUST await a ready App's guarded departure
 before navigation, and qualification MUST observe original native-client release
 before fresh admission. Runtime-error and retained-recovery assertions remain
