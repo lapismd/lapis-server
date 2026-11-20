@@ -56,3 +56,31 @@ its supported Node-24 production and browser qualification.
 Upstream Ghostty PR #232 remains the patch-removal path and requires maintainer
 review. Native Server Bash profile/listing output, actual image/PTY acceptance
 for that profile, Desktop defaults and visual baselines remain separate.
+
+## Linux canvas colour regression
+
+Hosted run `44650155197` passed specification, Node tooling, types, units,
+application build and startup budget, then failed 12 of 92 catalog cases. All
+12 were Terminal cases at the shared pixel assertion: 76 pixels did not exceed 100. The unchanged focused story family reproduces exactly 12 failures/four
+passes in an isolated Linux container from the frozen registry lockfile.
+
+The old classifier required a channel difference greater than 80. Ghostty's
+actual muted cyan, magenta and blue have differences of 52, 39 and 61, so it
+excluded those visible colours and measured only the green arrow. macOS counted
+128 such pixels; a standalone Linux browser counted 82. Its actual canvas also
+contained 216 exact cyan, 86 magenta, 187 blue and 54 green interior pixels.
+The full Linux story runner reproduced CI's exact count of 76.
+
+The assertion now counts exact pixels for each intended ANSI colour, requires
+every colour independently and retains the aggregate minimum greater than 100.
+Failure stories explicitly require red status pixels. This strengthens the
+cyan-path/magenta-UUID/blue-directory/status contract rather than lowering a
+threshold or changing the renderer. Theme, geometry, glyph and keyboard checks
+remain intact. Product package source and Terminal 0.1.1 are unchanged.
+
+After the assertion repair, the exact frozen Linux focused command passes all
+16 cases (zero failures), as does the local focused command. The complete local
+catalog passes 92/92; 227 units and all 132 tooling cases pass. Check, canonical
+specification, formatter, application/static builds and both fresh-process cold
+reload/real-keyboard cases pass. The owned disposable Linux containers and the
+temporary SSH browser-forwarding connection were removed after qualification.

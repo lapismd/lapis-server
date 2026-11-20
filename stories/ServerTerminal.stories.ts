@@ -32,7 +32,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-async function ready(canvasElement: HTMLElement) {
+async function ready(
+  canvasElement: HTMLElement,
+  status: "success" | "failure" = "success",
+) {
   const canvas = within(canvasElement);
   await userEvent.click(
     await canvas.findByRole("button", {
@@ -92,17 +95,32 @@ async function ready(canvasElement: HTMLElement) {
     const pixels = bitmap
       .getContext("2d")!
       .getImageData(0, 0, bitmap.width, bitmap.height).data;
-    let coloured = 0;
+    // Ghostty's muted cyan/magenta/blue palette has channel differences below
+    // 80. A saturation cutoff measured only the green arrow, whose rasterized
+    // area differs across platforms. Require each intended ANSI colour instead.
+    const expectedColours = [
+      { label: "cyan path", rgb: [138, 190, 183], count: 0 },
+      { label: "magenta UUID", rgb: [178, 148, 187], count: 0 },
+      { label: "blue directory", rgb: [129, 162, 190], count: 0 },
+      {
+        label: `${status} status`,
+        rgb: status === "failure" ? [204, 102, 102] : [181, 189, 104],
+        count: 0,
+      },
+    ];
     for (let i = 0; i < pixels.length; i += 4) {
-      if (
-        pixels[i + 3] > 200 &&
-        Math.max(pixels[i], pixels[i + 1], pixels[i + 2]) -
-          Math.min(pixels[i], pixels[i + 1], pixels[i + 2]) >
-          80
-      )
-        coloured++;
+      if (pixels[i + 3] <= 200) continue;
+      for (const colour of expectedColours)
+        if (
+          colour.rgb.every((channel, offset) => pixels[i + offset] === channel)
+        )
+          colour.count++;
     }
-    expect(coloured).toBeGreaterThan(100);
+    for (const colour of expectedColours)
+      expect(colour.count, `visible ${colour.label} pixels`).toBeGreaterThan(0);
+    expect(
+      expectedColours.reduce((total, colour) => total + colour.count, 0),
+    ).toBeGreaterThan(100);
   });
   await waitFor(() => {
     const surface = canvas.getByTestId("terminal-surface");
@@ -132,7 +150,7 @@ export const CompactPromptDark: Story = {
 };
 export const FailedCommand: Story = {
   render: render("failure"),
-  play: CompactPrompt.play,
+  play: async ({ canvasElement }) => ready(canvasElement, "failure"),
 };
 export const FailedCommandDark: Story = {
   ...FailedCommand,

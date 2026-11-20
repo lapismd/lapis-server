@@ -31,3 +31,8 @@ package through ordinary registry ranges and a frozen lockfile, without archive 
 Server locks published Terminal 0.1.1; [registry qualification](../../records/2026-11-20-terminal-registry-adoption.md)
 records the original two missing-contract errors, their resolution and the
 complete catalog/cold reload acceptance through the public package.
+
+Canvas acceptance requires separate visible cyan path, magenta UUID, blue
+directory and green/red status pixels, plus the existing aggregate pixel minimum.
+A saturation cutoff must not exclude the renderer's muted ANSI palette or
+reduce the colour check to the rasterized area of one prompt glyph.
