@@ -2,6 +2,8 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import type { EditingIntentState } from "@lapis-notes/api/native-editing-intents";
+import { withHostedCleanup } from "./hosted-failures";
+import { signOutHostedWorkspace } from "./rust-hosted-session";
 import { buildTasksArtifact } from "./tasks-installed-plugin";
 import { createHostedTasksFixture, hostedTask } from "./rust-tasks-fixture";
 import {
@@ -17,9 +19,19 @@ test.beforeAll(async () => {
 
 test("another browser's real dirty editor fences Tasks and its owner flushes, yields and rearms", async ({
   page,
+  browser,
 }, info) => {
   const f = await createHostedTasksFixture(page, artifact);
-  const other = await page.context().newPage();
+  // Each App leaves through its own authenticated session, without revoking
+  // its sibling while that sibling still owns native clients or writers.
+  const otherContext = await browser.newContext({
+    locale: "en-GB",
+    timezoneId: "Europe/London",
+    serviceWorkers: "block",
+  });
+  const other = await otherContext.newPage();
+  const lifetime: string[] = [];
+  other.once("close", () => lifetime.push("closed"));
   let releaseSave!: () => void;
   const saveGate = new Promise<void>((resolve) => {
     releaseSave = resolve;
@@ -39,9 +51,17 @@ test("another browser's real dirty editor fences Tasks and its owner flushes, yi
       (state: EditingIntentState) => state.path === "Hosted.md",
     );
   }
-  try {
+  const scenario = async () => {
     await f.open();
     const owner = await f.openOther(other);
+    other.on("response", (response) => {
+      if (
+        response.request().method() === "DELETE" &&
+        response.url().endsWith(`/clients/${owner.client_id}`) &&
+        response.ok()
+      )
+        lifetime.push("released");
+    });
     const editor = await openTaskSource(other);
     let initial: EditingIntentState[] = [];
     await expect
@@ -174,37 +194,58 @@ test("another browser's real dirty editor fences Tasks and its owner flushes, yi
       other.locator('.cm-content[contenteditable="true"]'),
     ).toHaveCount(0);
     await expect.poll(states).toEqual([]);
-  } catch (error) {
+    await signOutHostedWorkspace(other);
+    await other.close();
+    expect(lifetime).toEqual(["released", "closed"]);
+    // Logging out this App must not retire the first browser's native client.
+    await expect.poll(states).toEqual([]);
+  };
+  const onFailure = async (error: unknown) => {
     await info.attach("Editor assertion before teardown", {
       body: String(error),
       contentType: "text/plain",
     });
-    await info.attach("Other editor page before teardown", {
-      body: await other.locator("body").ariaSnapshot(),
-      contentType: "text/yaml",
-    });
+    if (!other.isClosed()) {
+      await info.attach("Other editor page before teardown", {
+        body: await other.locator("body").ariaSnapshot(),
+        contentType: "text/yaml",
+      });
+      await info.attach("Actual editor content before teardown", {
+        body: JSON.stringify(
+          await other.locator(".cm-content").allTextContents(),
+        ),
+        contentType: "application/json",
+      });
+      const problemCount = other.getByRole("button", {
+        name: /^\d+ problems?$/,
+      });
+      if (await problemCount.isVisible()) {
+        await problemCount.click();
+        await info.attach("Close refusal Problems", {
+          body: await other.locator("body").ariaSnapshot(),
+          contentType: "text/yaml",
+        });
+      }
+    }
     await info.attach("Native editor state before teardown", {
       body: JSON.stringify(await states()),
       contentType: "application/json",
     });
-    await info.attach("Actual editor content before teardown", {
-      body: JSON.stringify(
-        await other.locator(".cm-content").allTextContents(),
-      ),
-      contentType: "application/json",
-    });
-    const problemCount = other.getByRole("button", { name: /^\d+ problems?$/ });
-    if (await problemCount.isVisible()) {
-      await problemCount.click();
-      await info.attach("Close refusal Problems", {
-        body: await other.locator("body").ariaSnapshot(),
-        contentType: "text/yaml",
-      });
-    }
-    throw error;
-  } finally {
-    releaseSave();
-    await other.close();
-    await f.stop(info);
-  }
+  };
+  await withHostedCleanup(
+    scenario,
+    [
+      async () => {
+        releaseSave();
+        if (!other.isClosed()) await signOutHostedWorkspace(other);
+      },
+      async () => {
+        await otherContext.close();
+      },
+      async () => {
+        await f.stop(info);
+      },
+    ],
+    onFailure,
+  );
 });
