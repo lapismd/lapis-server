@@ -2,14 +2,14 @@
 
 ## Server terminal profile review
 
-Server-only presentation is under review in `Shell/Server Terminal` Storybook
-stories. Before release, implement the managed Bash profile with coloured GNU
-listings and a cyan path, magenta eight-character UUID and green/red success/failure
-arrow. Retain full `pwd` and file paths, normal startup configuration and a server
-opt-out. Run cold image/real-PTY acceptance; catalog ANSI fixtures do not qualify
-shell startup or path safety. Desktop remains on the user's configured/account
-shell, without this profile or font change. Create PRs only after the requested
-Storybook review.
+The native Server Bash profile is implemented alongside the reviewed
+`Shell/Server Terminal` presentation. Its [application qualification](../../records/2026-11-20-native-terminal-profile.md)
+uses actual Host/Core/PTY tests for coloured listings, compact coloured prompts,
+normal startup hooks, unchanged real paths and a Server opt-out. Desktop retains
+its own shell/defaults. The user selected application tests for this follow-up;
+Docker-image verification is outside its acceptance scope. Review/merge and a
+subsequent Server release remain delivery steps; `350d8e7-slim` predates the native
+profile. Catalog ANSI fixtures remain presentation evidence only.
 
 Runtime replacement is implemented: this repository owns the Rust server/core/
 protocol crates, image, static application and hosted acceptance. The old Notes

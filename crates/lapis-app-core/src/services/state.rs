@@ -9,6 +9,7 @@ use std::{
 use uuid::Uuid;
 
 pub struct VaultService {
+    pub(super) terminal_shell: Option<super::terminal::ShellFactory>,
     pub(super) synchronization: super::remotes::synchronization::Owner,
     pub(super) remotes_storage: Option<Arc<super::RemoteStorage>>,
     pub(super) file_changes: Mutex<Option<super::file_changes::Owner>>,
@@ -111,6 +112,7 @@ impl VaultService {
             remotes_storage: None,
             file_changes: Mutex::new(None),
             terminals: Mutex::new(HashMap::new()),
+            terminal_shell: None,
             skills: Mutex::new(super::agent_skills::State::default()),
             id,
             generation: Uuid::new_v4(),

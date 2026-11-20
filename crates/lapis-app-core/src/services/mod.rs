@@ -60,6 +60,7 @@ pub use tasks::{
     TaskWriteResult,
 };
 pub use tasks::{TaskStorage, TaskWriteError};
+pub use terminal::ShellCommand;
 pub use turns::{
     AgentPolicy, ParticipantDelivery, ParticipantMessage, ParticipantMessageInput,
     ParticipantState, QueueEntry, QueueInput, QueuePhase, TurnQueue, TurnStorage,

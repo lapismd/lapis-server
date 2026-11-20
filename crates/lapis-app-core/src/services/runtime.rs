@@ -10,6 +10,7 @@ use uuid::Uuid;
 
 #[derive(Default)]
 pub struct Runtime {
+    terminal_shell: Option<super::terminal::ShellFactory>,
     remotes: Option<Arc<super::RemoteStorage>>,
     registry: Mutex<Registry>,
     storage: Option<Arc<DatabaseStorage>>,
@@ -24,6 +25,14 @@ struct Registry {
     roots: HashMap<(u64, u64), Uuid>,
 }
 impl Runtime {
+    /// Let the owning application select launch policy for each admitted vault.
+    pub fn with_terminal_shell(
+        mut self,
+        factory: impl Fn(&Path, Uuid) -> super::ShellCommand + Send + Sync + 'static,
+    ) -> Self {
+        self.terminal_shell = Some(Arc::new(factory));
+        self
+    }
     pub fn with_remotes(mut self, storage: super::RemoteStorage) -> Self {
         self.remotes = Some(Arc::new(storage));
         self
@@ -99,6 +108,7 @@ impl Runtime {
             return Err(Error::busy());
         }
         let mut vault = VaultService::new(id, root, self.storage.clone());
+        vault.terminal_shell = self.terminal_shell.clone();
         vault.remotes_storage = self.remotes.clone();
         vault.backup_storage = self.backup.clone();
         vault.turn_storage = self.turns.clone();
