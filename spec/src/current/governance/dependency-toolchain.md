@@ -74,7 +74,7 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/file-explorer` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/history` | `^0.5.1` | `0.5.1` |
 | `package.json` (dependencies) | `@lapis-notes/language-service` | `^0.1.6` | `0.1.6` |
-| `package.json` (dependencies) | `@lapis-notes/lapis-plugin-terminal` | `^0.1.0` | `0.1.0` |
+| `package.json` (dependencies) | `@lapis-notes/lapis-plugin-terminal` | `^0.1.1` | `0.1.1` |
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
 | `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
@@ -86,6 +86,6 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `db188507f4a1a8fcc3bd45a1230ca1c6435a866240f701680d610cf38d8879bb`.
+Manifest, peer and integrity facts SHA256: `897eb9e7754e3f86fe88547fcacd57ae945e208877ed7a4b6b5c20c836c8a31f`.
 
 <!-- dependency-intake:server-registry:end -->
