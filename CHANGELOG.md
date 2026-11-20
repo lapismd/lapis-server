@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.5.1
+
+### Patch Changes
+
+- [#111](https://github.com/lapismd/lapis-server/pull/111) [`f37c08a`](https://github.com/lapismd/lapis-server/commit/f37c08a1c63fb34f908b47b9acde4ab5b3b06b30) Thanks [@stevejuma](https://github.com/stevejuma)! - Use JetBrains Mono for hosted Terminal views and add review scenarios for terminal themes, reloads, and multiple sessions.
+
 ## 2.5.0
 
 ### Minor Changes
