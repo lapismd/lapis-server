@@ -69,7 +69,7 @@ Current registry dependency coordinates; qualification remains separate.
 <!-- prettier-ignore -->
 | Manifest | Dependency | Range | Locked version |
 | --- | --- | --- | --- |
-| `package.json` (dependencies) | `@lapis-notes/api` | `^0.6.10` | `0.6.10` |
+| `package.json` (dependencies) | `@lapis-notes/api` | `^0.6.11` | `0.6.11` |
 | `package.json` (dependencies) | `@lapis-notes/app-profile` | `^0.2.2` | `0.2.2` |
 | `package.json` (dependencies) | `@lapis-notes/file-explorer` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/history` | `^0.5.1` | `0.5.1` |
@@ -78,14 +78,14 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/markdown` | `^0.3.3` | `0.3.3` |
 | `package.json` (dependencies) | `@lapis-notes/search` | `^0.1.12` | `0.1.12` |
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.11` | `0.1.11` |
-| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.6` | `0.2.6` |
-| `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.6` | `0.4.6` |
+| `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.8` | `0.2.8` |
+| `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.10` | `0.4.10` |
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.7` | `0.13.7` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapismd/mira` | `~0.2.0` | `0.2.0` |
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `ad171f0c6883bf1756659c0723592762c93d7c4c2db6464a8c22120510a6cb39`.
+Manifest, peer and integrity facts SHA256: `d67d1080b48959f431237a94d8eae0425c5a06d5e5074b1c204e450ede7d6a95`.
 
 <!-- dependency-intake:server-registry:end -->
