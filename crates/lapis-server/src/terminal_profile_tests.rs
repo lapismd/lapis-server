@@ -100,15 +100,25 @@ impl Drop for Terminal {
 
 #[test]
 fn prompt_colours_and_uuid_are_display_only_and_follow_command_status() {
-    let mut terminal = Terminal::new(true, None, None);
+    // Bash/startup hooks may report the real cwd through non-rendering OSC
+    // metadata. It must retain the full path even when PS1 abbreviates it.
+    let startup = "PROMPT_COMMAND='printf \"\\033]3008;cwd=%s\\033\\\\\" \"$PWD\"'\n";
+    let mut terminal = Terminal::new(true, Some(startup), None);
     let first = terminal.read_until("\x1b[32m❯\x1b[0m");
     assert!(
-        first.contains("\x1b[36m~/vaults/\x1b[35m92b3bbf0\x1b[36m/content"),
-        "{first:?}"
+        first.contains(&format!(
+            "\x1b]3008;cwd={}\x1b\\",
+            terminal.root.canonicalize().unwrap().display()
+        )),
+        "real cwd metadata must remain intact: {first:?}"
     );
-    assert!(
-        !first.contains(ID),
-        "full UUID must not appear in the prompt: {first:?}"
+    let prompt_start = first.find("\x1b[36m").expect("missing cyan prompt");
+    let (prompt, _) = first[prompt_start..]
+        .split_once("\x1b[0m")
+        .expect("missing prompt reset");
+    assert_eq!(
+        prompt, "\x1b[36m~/vaults/\x1b[35m92b3bbf0\x1b[36m/content \x1b[32m❯",
+        "the displayed prompt must abbreviate the UUID: {first:?}"
     );
     terminal.write("false");
     terminal.read_until("\x1b[31m❯\x1b[0m");

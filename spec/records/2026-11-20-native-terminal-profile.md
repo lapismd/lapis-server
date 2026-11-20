@@ -102,3 +102,22 @@ The first canonical check reported two acceptance-detail diagnostics (five bulle
 
 This is application/source qualification for a review PR, not publication. No
 Docker verification was run for this follow-up, as requested.
+
+## Linux CI prompt metadata correction
+
+Server PR #115's first Rust lane reported 37 passed and one failed in the Server
+library. Linux Bash emitted an OSC 3008 shell-metadata sequence containing its
+full physical cwd, followed by the correctly shortened coloured prompt. The
+assertion incorrectly searched the entire transport frame for the full UUID.
+
+The exact failing prompt/status target reproduces locally with a real startup
+hook emitting equivalent OSC metadata: zero passed and one failed before the
+test correction. It now checks the complete visible ANSI prompt for the exact
+compact path and success arrow, while requiring the hidden metadata to retain
+the full physical cwd. Runtime code and terminal metadata are unchanged.
+
+After correction, the exact target passes and all seven profile cases pass on
+Bash 3.2 and 5.3. The complete locked Server suite passes 198 cases with zero
+failures and one existing SSH opt-in. Strict Clippy, native build, specification,
+Prettier and the changed Rust test file's formatting checks pass. Terminal Host
+#5 is merged; its tested exact dependency revision remains on main unchanged.
