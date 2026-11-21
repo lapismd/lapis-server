@@ -5,15 +5,45 @@
   import { RustHttpClient } from "../hosted/rust/client";
   import type { HostedVault } from "../hosted/backend";
 
-  let { requestId, vaults }: { requestId: string; vaults: HostedVault[] } =
-    $props();
-  const host = new RustHttpClient("");
   type Request = {
     client_name: string;
     client_id: string;
     callback_host: string;
     permissions: string[];
   };
+  type Decision = {
+    approve: boolean;
+    vault_ids: string[];
+    permissions: string[];
+  };
+  type ConsentTransport = {
+    load(path: string): Promise<Request>;
+    decide(path: string, decision: Decision): Promise<void>;
+  };
+  const host = new RustHttpClient("");
+  const serverTransport: ConsentTransport = {
+    async load(path) {
+      await host.current();
+      return host.json<Request>(path);
+    },
+    async decide(path, decision) {
+      const { redirect } = await host.json<{ redirect: string }>(
+        path,
+        "POST",
+        decision,
+      );
+      window.location.assign(redirect);
+    },
+  };
+  let {
+    requestId,
+    vaults,
+    transport = serverTransport,
+  }: {
+    requestId: string;
+    vaults: HostedVault[];
+    transport?: ConsentTransport;
+  } = $props();
   let request = $state<Request>();
   let selectedVaults = $state<string[]>([]);
   let selectedPermissions = $state<string[]>([]);
@@ -25,9 +55,8 @@
 
   onMount(() => {
     let alive = true;
-    void host
-      .current()
-      .then(() => host.json<Request>(path))
+    void transport
+      .load(path)
       .then((details) => {
         if (alive) request = details;
       })
@@ -45,12 +74,11 @@
     busy = true;
     error = "";
     try {
-      const result = await host.json<{ redirect: string }>(path, "POST", {
+      await transport.decide(path, {
         approve,
         vault_ids: approve ? selectedVaults : [],
         permissions: approve ? selectedPermissions : [],
       });
-      window.location.assign(result.redirect);
     } catch {
       error =
         "Lapis could not finish this connection. Start again from your MCP client.";
