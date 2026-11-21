@@ -119,6 +119,18 @@ export const Login: Story = {
     await expectLogin(canvasElement);
   },
 };
+export const PasskeyLogin: Story = {
+  name: "Passkey sign-in",
+  render: renderScenario("passkey-login"),
+  play: async ({ canvasElement }) => {
+    await expectLogin(canvasElement);
+    await expect(
+      within(canvasElement).getByRole("button", {
+        name: "Sign in with a passkey",
+      }),
+    ).toBeDisabled();
+  },
+};
 export const LoginDark: Story = { ...Login, globals: { colorMode: "dark" } };
 export const LoginError: Story = {
   play: async ({ canvasElement }) => {
@@ -473,20 +485,36 @@ export const RepositoryFooterStatusDark: Story = {
   globals: { colorMode: "dark" },
 };
 
+async function openContentSettings(canvasElement: HTMLElement) {
+  await openWorkspace(canvasElement);
+  const canvas = within(canvasElement);
+  await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
+  const page = within(canvasElement.ownerDocument.body);
+  const corePlugins = (
+    await page.findByRole("heading", { name: /^Core plugins$/ })
+  ).closest("section")!;
+  await userEvent.click(
+    within(corePlugins).getByRole("button", { name: "Content API and MCP" }),
+  );
+  return page;
+}
+
+export const TokenManagement: Story = {
+  name: "Personal tokens and connected apps",
+  render: renderScenario("token-management"),
+  play: async ({ canvasElement }) => {
+    const page = await openContentSettings(canvasElement);
+    await page.findByText("Notes backup", { exact: true });
+    await page.findByText("Example AI assistant", { exact: true });
+    await page.findByRole("button", { name: "Create a personal access token" });
+  },
+};
+
 export const ContentAccess: Story = {
   name: "Content API and MCP",
   render: renderScenario("vaults"),
   play: async ({ canvasElement }) => {
-    await openWorkspace(canvasElement);
-    const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
-    const page = within(canvasElement.ownerDocument.body);
-    const corePlugins = (
-      await page.findByRole("heading", { name: /^Core plugins$/ })
-    ).closest("section")!;
-    await userEvent.click(
-      within(corePlugins).getByRole("button", { name: "Content API and MCP" }),
-    );
+    const page = await openContentSettings(canvasElement);
     const enabled = await page.findByRole("switch", {
       name: "Enable API and MCP access",
     });

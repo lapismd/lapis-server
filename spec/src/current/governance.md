@@ -260,7 +260,7 @@ The host uses Design Core's public full-width output layout for the Content API 
 ### Acceptance details
 
 - Vault-button accessible names include their visible name, role and status text.
-- Production-component stories exercise keyboard navigation and the real shell geometry with axe failures enabled.
+- Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and personal token management with axe failures enabled.
 - Fixtures remain mounted after their play finishes and release resources when the story unmounts.
 
 ## Backup diagnostic unchanged-contract confirmation

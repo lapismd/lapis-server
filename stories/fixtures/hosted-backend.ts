@@ -20,6 +20,8 @@ export function createFixtureVaultRestoration() {
 
 export type HostedScenario =
   | "login"
+  | "passkey-login"
+  | "token-management"
   | "loading"
   | "protocol"
   | "empty"
@@ -33,7 +35,12 @@ export function releaseHostedFixture(backend: HostedBackend) {
 }
 
 export function createHostedFixture(scenario: HostedScenario) {
-  let authenticated = !["login", "loading", "protocol"].includes(scenario);
+  let authenticated = ![
+    "login",
+    "passkey-login",
+    "loading",
+    "protocol",
+  ].includes(scenario);
   let vaults: HostedVault[] =
     scenario === "empty"
       ? []
@@ -41,21 +48,39 @@ export function createHostedFixture(scenario: HostedScenario) {
           { id: "notes", name: "Notes", role: "owner" },
           { id: "archive", name: "Archive", role: "owner", archivedAt: 1 },
         ];
-  const content = contentFixture(() => vaults);
+  const content = contentFixture(() => vaults, scenario === "token-management");
   let releaseGate!: () => void;
   const gate = new Promise<void>((done) => {
     releaseGate = done;
   });
   const adapters = new Map<string, MemoryVaultAdapter>();
   let failed = false;
+  function unavailable() {
+    return Promise.reject(new Error("Use a hosted server to manage passkeys."));
+  }
+  const security: HostedBackend["security"] =
+    scenario === "passkey-login"
+      ? {
+          signIn: async (username) =>
+            backend.login(username, "fixture-password"),
+          passkeys: async () => [],
+          enroll: unavailable,
+          rename: unavailable,
+          remove: unavailable,
+          verifyPassword: unavailable,
+          verifyPasskey: unavailable,
+        }
+      : undefined;
   const backend: HostedBackend = {
     runtime: "rust-server",
     protocolMajor: 3,
+    security,
     capabilities: { manageVaults: true, transferVaults: true },
     info: async () => {
       if (scenario === "loading") await gate;
       return {
         buildId: "catalog",
+        passkeys: security !== undefined,
         protocolMajor: scenario === "protocol" ? 4 : 3,
       };
     },
