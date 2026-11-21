@@ -24,5 +24,14 @@ pub fn router_with_boundary(
     boundary: Boundary,
     cancellation: CancellationToken,
 ) -> std::io::Result<axum::Router> {
-    transport::router(boundary, cancellation)
+    transport::router(boundary, cancellation, false)
+}
+
+/// Hosted clients can also negotiate initialized stateless Streamable HTTP.
+pub fn hosted_router(
+    boundary: Boundary,
+    cancellation: CancellationToken,
+    initialized_clients: bool,
+) -> std::io::Result<axum::Router> {
+    transport::router(boundary, cancellation, initialized_clients)
 }

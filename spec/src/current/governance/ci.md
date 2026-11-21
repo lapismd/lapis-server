@@ -34,6 +34,8 @@ dependency graph, `node_modules`, Cargo registry or compiled target output; and
 be consumed only by immutable digest after publication. Docker/Compose, OCI Mod
 and runtime-image qualification MUST remain on host runners.
 
+The protocol job checks the generated OpenAPI catalog, including references and documented routes.
+
 ### Acceptance details
 
 - PR104-shaped changes select only governance, tooling and renderer acceptance.

@@ -80,6 +80,12 @@ impl Management {
         if vault.archived_at.is_some() {
             return Ok(vault);
         }
+        let access = host.content.clone();
+        let _access = access.gate.lock().await;
+        self.control
+            .revoke_personal_for_vault(id, crate::control::now_ms().map_err(store)?)
+            .await
+            .map_err(store)?;
         self.catalogue.available(id, false)?;
         let closed = tokio::task::spawn_blocking(move || {
             if host.runtime.get(id).is_ok() {

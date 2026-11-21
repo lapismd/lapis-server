@@ -2,10 +2,20 @@ import type {
   ContentHostStatus,
   CreatedContentGrant,
   ManagedVault,
+  PersonalTokenLifetime,
 } from "../../../crates/lapis-app-protocol/bindings/protocol";
 import { RustHttpClient } from "../hosted/rust/client";
 
 const prefix = "content-access.";
+export const personalTokenLifetimes = [
+  { value: "hour", label: "1 hour" },
+  { value: "day", label: "24 hours" },
+  { value: "week", label: "7 days" },
+  { value: "days30", label: "30 days" },
+  { value: "days90", label: "90 days" },
+  { value: "year", label: "365 days" },
+  { value: "never", label: "Never" },
+] satisfies { value: PersonalTokenLifetime; label: string }[];
 /** Server-owned settings source. Values and one-time secrets never use App persistence. */
 export class ContentAccessModel {
   status?: ContentHostStatus;
@@ -15,6 +25,7 @@ export class ContentAccessModel {
   #label = "CLI client";
   #selected: string[];
   #hours = 1;
+  #personalLifetime: PersonalTokenLifetime = "days90";
   #permissions: string[] = [];
   permissionOptions = async () => {
     const status = await this.#json<ContentHostStatus>("");
@@ -111,7 +122,7 @@ export class ContentAccessModel {
         return this.status?.mcp_url ?? "";
       case "lifetime":
         return this.status?.persistent
-          ? "The enable setting is saved. Credentials expire and become invalid on server restart."
+          ? "Personal access tokens survive server restart. Temporary credentials are valid only until restart or expiry."
           : "This server keeps settings and credentials only until restart.";
       case "label":
         return this.#label;
@@ -123,13 +134,46 @@ export class ContentAccessModel {
         return this.#permissions;
       case "token":
         return this.#token;
+      case "personal-lifetime":
+        return this.#personalLifetime;
+      case "mcp-connections":
+        return (this.status?.mcp_connections ?? []).map((grant) => ({
+          grant_id: grant.grant_id,
+          label: grant.label,
+          client_id: grant.client_id,
+          vaults: this.#vaultNames(grant.vault_ids),
+          permission: ["Read notes", ...grant.permissions].join(", "),
+          expires:
+            grant.expires_at == null
+              ? "Never"
+              : new Date(grant.expires_at).toLocaleString(),
+          last_used:
+            grant.last_used_at == null
+              ? "Unused"
+              : new Date(grant.last_used_at).toLocaleString(),
+          state: grant.active ? "Active" : "Expired or revoked",
+        }));
+      case "personal-tokens":
+        return (this.status?.personal_tokens ?? []).map((grant) => ({
+          grant_id: grant.grant_id,
+          label: grant.label,
+          vaults: this.#vaultNames(grant.vault_ids),
+          permission: ["Read notes", ...grant.permissions].join(", "),
+          expires:
+            grant.expires_at == null
+              ? "Never"
+              : new Date(grant.expires_at).toLocaleString(),
+          last_used:
+            grant.last_used_at == null
+              ? "Unused"
+              : new Date(grant.last_used_at).toLocaleString(),
+          state: grant.active ? "Active" : "Expired or revoked",
+        }));
       case "grants":
         return (this.status?.access.grants ?? []).map((grant) => ({
           grant_id: grant.grant_id,
           label: grant.label,
-          vaults: grant.vault_ids
-            .map((id) => this.vaults.find((v) => v.vault_id === id)?.name ?? id)
-            .join(", "),
+          vaults: this.#vaultNames(grant.vault_ids),
           permission: ["Read notes", ...(grant.permissions ?? [])].join(", "),
           expires: new Date(
             this.#expires.get(grant.grant_id) ?? Date.now(),
@@ -140,6 +184,11 @@ export class ContentAccessModel {
         return undefined;
     }
   };
+  #vaultNames(ids: string[]) {
+    return ids
+      .map((id) => this.vaults.find((v) => v.vault_id === id)?.name ?? id)
+      .join(", ");
+  }
   set = async (id: string, value: unknown) => {
     if (this.#closed || this.busy)
       throw new Error("Wait for the current content request to finish.");
@@ -194,6 +243,14 @@ export class ContentAccessModel {
         )
           throw new Error("Choose 1 to 24 hours.");
         this.#hours = value;
+        break;
+      }
+      case "personal-lifetime": {
+        const option = personalTokenLifetimes.find(
+          (item) => item.value === value,
+        );
+        if (!option) throw new Error("Choose a personal token expiry.");
+        this.#personalLifetime = option.value;
         break;
       }
       case "permissions": {
@@ -264,26 +321,42 @@ export class ContentAccessModel {
     }
   }
   refresh = () => this.#run(() => this.#load());
-  create = () =>
+  create = (personal = false) =>
     this.#run(async () => {
       if (!this.enabled || !this.#selected.length || !this.#label.trim())
         throw new Error("Enable access and select vaults first.");
       this.clearSecret();
-      const result = await this.#json<CreatedContentGrant>("/grants", "POST", {
-        label: this.#label.trim(),
-        vault_ids: this.#selected,
-        lifetime_seconds: this.#hours * 3600,
-        ...(this.#permissions.length ? { permissions: this.#permissions } : {}),
-      });
+      const result = await this.#json<CreatedContentGrant>(
+        personal ? "/tokens" : "/grants",
+        "POST",
+        {
+          label: this.#label.trim(),
+          vault_ids: this.#selected,
+          ...(personal
+            ? { lifetime: this.#personalLifetime }
+            : { lifetime_seconds: this.#hours * 3600 }),
+          ...(this.#permissions.length
+            ? { permissions: this.#permissions }
+            : {}),
+        },
+      );
       if (this.#closed) return;
       this.#token = result.token;
       this.#secretTimer = setTimeout(() => this.clearSecret(), 60_000);
       await this.#load();
     });
-  revoke = (id: string) =>
+  revoke = (id: string, personal = false) =>
     this.#run(async () => {
       this.clearSecret();
-      await this.#json(`/grants/${encodeURIComponent(id)}`, "DELETE");
+      await this.#json(
+        `/${personal ? "tokens" : "grants"}/${encodeURIComponent(id)}`,
+        "DELETE",
+      );
+      await this.#load();
+    });
+  disconnect = (id: string) =>
+    this.#run(async () => {
+      await this.#json(`/mcp/connections/${encodeURIComponent(id)}`, "DELETE");
       await this.#load();
     });
   clearSecret = () => {

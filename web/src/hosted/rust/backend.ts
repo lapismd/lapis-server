@@ -33,11 +33,16 @@ export function createRustHostedBackend(
     runtime: "rust-server",
     protocolMajor: host.protocolMajor,
     capabilities,
+    security: host.security,
     async info() {
       const info = await host.info();
       capabilities.manageVaults = info.manage_vaults;
       capabilities.transferVaults = info.transfer_vaults;
-      return { buildId: info.build_id, protocolMajor: info.protocol_major };
+      return {
+        buildId: info.build_id,
+        protocolMajor: info.protocol_major,
+        ...(info.passkeys ? { passkeys: true } : {}),
+      };
     },
     current: () => host.current(),
     login: (username, password) => host.login(username, password),

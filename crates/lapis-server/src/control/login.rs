@@ -20,6 +20,17 @@ impl Control {
         peer: &str,
         now: i64,
     ) -> Result<IssuedSession, LoginError> {
+        self.verify_password(username, password, peer, now).await?;
+        Ok(self.issue(now).await?)
+    }
+
+    pub(crate) async fn verify_password(
+        &self,
+        username: &str,
+        password: &str,
+        peer: &str,
+        now: i64,
+    ) -> Result<(), LoginError> {
         if username.is_empty()
             || username.encode_utf16().count() > 200
             || password.is_empty()
@@ -53,6 +64,6 @@ impl Control {
             return Err(LoginError::Denied);
         }
         self.clear_failures(&key).await?;
-        Ok(self.issue(now).await?)
+        Ok(())
     }
 }

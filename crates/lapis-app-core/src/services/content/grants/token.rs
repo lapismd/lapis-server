@@ -36,7 +36,9 @@ impl ContentToken {
 
 pub(super) fn verifier(bearer: &str) -> Option<[u8; 32]> {
     if bearer.len() != 47
-        || !bearer.starts_with("lc1_")
+        || !["lc1_", "lp1_", "lo1_"]
+            .iter()
+            .any(|prefix| bearer.starts_with(prefix))
         || !bearer.as_bytes()[4..]
             .iter()
             .all(|b| b.is_ascii_alphanumeric() || *b == b'_' || *b == b'-')

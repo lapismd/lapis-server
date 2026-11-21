@@ -4,7 +4,9 @@ mod grants;
 mod pagination;
 mod plugin_operations;
 mod reads;
-pub use grants::{ContentGrants, ContentToken, IssuedContentGrant, MAX_CONTENT_GRANTS};
+pub use grants::{
+    ContentGrants, ContentToken, IssuedContentGrant, MAX_CONTENT_GRANTS, PersistentGrant,
+};
 #[cfg(test)]
 mod tests;
 

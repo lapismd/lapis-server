@@ -265,13 +265,21 @@
         "access": { "$ref": "#/$defs/ContentAccessStatus" },
         "api_url": { "type": ["string", "null"] },
         "available": { "type": "boolean" },
+        "mcp_connections": {
+          "items": { "$ref": "#/$defs/McpConnectionSummary" },
+          "type": "array"
+        },
         "mcp_url": { "type": ["string", "null"] },
         "operation_permissions": {
           "default": [],
           "items": { "type": "string" },
           "type": "array"
         },
-        "persistent": { "type": "boolean" }
+        "persistent": { "type": "boolean" },
+        "personal_tokens": {
+          "items": { "$ref": "#/$defs/PersonalTokenSummary" },
+          "type": "array"
+        }
       },
       "required": ["access", "available", "persistent"],
       "type": "object"
@@ -1479,6 +1487,7 @@
         "browser_auth": { "type": "boolean" },
         "build_id": { "type": "string" },
         "manage_vaults": { "type": "boolean" },
+        "passkeys": { "default": false, "type": "boolean" },
         "protocol_major": {
           "format": "uint32",
           "minimum": 0,
@@ -1755,6 +1764,32 @@
           "type": "array"
         }
       },
+      "type": "object"
+    },
+    "McpConnectionSummary": {
+      "properties": {
+        "active": { "type": "boolean" },
+        "client_id": { "type": "string" },
+        "created_at": { "format": "int64", "type": "integer" },
+        "expires_at": { "format": "int64", "type": ["integer", "null"] },
+        "grant_id": { "format": "uuid", "type": "string" },
+        "label": { "type": "string" },
+        "last_used_at": { "format": "int64", "type": ["integer", "null"] },
+        "permissions": { "items": { "type": "string" }, "type": "array" },
+        "vault_ids": {
+          "items": { "format": "uuid", "type": "string" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "client_id",
+        "grant_id",
+        "label",
+        "vault_ids",
+        "permissions",
+        "created_at",
+        "active"
+      ],
       "type": "object"
     },
     "MemoryCandidate": {
@@ -3292,6 +3327,56 @@
           "type": "object"
         }
       ]
+    },
+    "PersonalTokenLifetime": {
+      "enum": ["hour", "day", "week", "days30", "days90", "year", "never"],
+      "type": "string"
+    },
+    "PersonalTokenRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "lifetime": {
+          "$ref": "#/$defs/PersonalTokenLifetime",
+          "default": "days90"
+        },
+        "permissions": {
+          "default": [],
+          "items": { "type": "string" },
+          "type": "array"
+        },
+        "vault_ids": {
+          "items": { "format": "uuid", "type": "string" },
+          "type": "array"
+        }
+      },
+      "required": ["label", "vault_ids"],
+      "type": "object"
+    },
+    "PersonalTokenSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "active": { "type": "boolean" },
+        "created_at": { "format": "int64", "type": "integer" },
+        "expires_at": { "format": "int64", "type": ["integer", "null"] },
+        "grant_id": { "format": "uuid", "type": "string" },
+        "label": { "type": "string" },
+        "last_used_at": { "format": "int64", "type": ["integer", "null"] },
+        "permissions": { "items": { "type": "string" }, "type": "array" },
+        "vault_ids": {
+          "items": { "format": "uuid", "type": "string" },
+          "type": "array"
+        }
+      },
+      "required": [
+        "grant_id",
+        "label",
+        "vault_ids",
+        "permissions",
+        "created_at",
+        "active"
+      ],
+      "type": "object"
     },
     "ProjectionCardinality": { "enum": ["one", "many"], "type": "string" },
     "ProjectionComparison": {
@@ -6293,6 +6378,8 @@
     "operation_request": { "$ref": "#/$defs/OperationRequest" },
     "participant_command": { "$ref": "#/$defs/ParticipantCommand" },
     "participant_value": { "$ref": "#/$defs/ParticipantValue" },
+    "personal_token_request": { "$ref": "#/$defs/PersonalTokenRequest" },
+    "personal_token_summary": { "$ref": "#/$defs/PersonalTokenSummary" },
     "projection_definition": { "$ref": "#/$defs/ProjectionDefinition" },
     "projection_error": { "$ref": "#/$defs/ProjectionSourceError" },
     "projection_query": { "$ref": "#/$defs/ProjectionQuery" },
@@ -6366,6 +6453,8 @@
     "terminal_value",
     "terminal_output",
     "content_host_status",
+    "personal_token_request",
+    "personal_token_summary",
     "content_access_setting",
     "content_grant_request",
     "created_content_grant",

@@ -101,6 +101,41 @@ export type ContentReply = {
   request_id: string;
   outcome: ContentOutcome;
 };
+export type PersonalTokenLifetime =
+  | "hour"
+  | "day"
+  | "week"
+  | "days30"
+  | "days90"
+  | "year"
+  | "never";
+export type PersonalTokenRequest = {
+  label: string;
+  vault_ids: Array<string>;
+  permissions: Array<string>;
+  lifetime: PersonalTokenLifetime;
+};
+export type PersonalTokenSummary = {
+  grant_id: string;
+  label: string;
+  vault_ids: Array<string>;
+  permissions: Array<string>;
+  created_at: number;
+  expires_at: number | null;
+  last_used_at: number | null;
+  active: boolean;
+};
+export type McpConnectionSummary = {
+  client_id: string;
+  grant_id: string;
+  label: string;
+  vault_ids: Array<string>;
+  permissions: Array<string>;
+  created_at: number;
+  expires_at: number | null;
+  last_used_at: number | null;
+  active: boolean;
+};
 export type ContentAccessStatus = {
   enabled: boolean;
   grants: Array<ContentGrantSummary>;
@@ -110,6 +145,8 @@ export type ContentHostStatus = {
   access: ContentAccessStatus;
   available: boolean;
   persistent: boolean;
+  personal_tokens?: Array<PersonalTokenSummary>;
+  mcp_connections?: Array<McpConnectionSummary>;
   api_url: string | null;
   mcp_url: string | null;
 };
@@ -1080,6 +1117,7 @@ export type HostInfo = {
   protocol_major: number;
   build_id: string;
   browser_auth: boolean;
+  passkeys?: boolean;
   manage_vaults: boolean;
   transfer_vaults: boolean;
 };

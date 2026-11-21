@@ -25,6 +25,9 @@ pub struct HostInfo {
     pub protocol_major: u32,
     pub build_id: String,
     pub browser_auth: bool,
+    #[serde(default)]
+    #[ts(as = "Option<bool>", optional)]
+    pub passkeys: bool,
     pub manage_vaults: bool,
     pub transfer_vaults: bool,
 }

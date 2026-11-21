@@ -73,6 +73,8 @@ multi-commit branch cannot narrow the transition under review.
 
 Hosted Terminal bundles Fontsource JetBrains Mono through Vite. Font changes preserve the registry-only toolchain contract; unpublished renderer/plugin qualification uses explicit ignored archives and never becomes a publishable source alias.
 
+The OpenAPI scripts use the pinned Node runtime and Cargo lockfile to render the same Rust route catalog shipped by Server.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.

@@ -3,17 +3,40 @@ use axum::{
     Json, Router,
     extract::{Path, Query, Request, State},
     response::{IntoResponse, Response},
-    routing::{get, post},
 };
 use lapis_app_protocol::{content::*, operations::*};
 use serde::Deserialize;
 use uuid::Uuid;
 
+lapis_app_protocol::api_router_extension!();
+use lapis_app_protocol::http_docs::json_body;
+
 pub fn routes() -> Router<Boundary> {
-    Router::new().route("/operations", get(catalog)).route(
-        "/vaults/{vault}/plugins/{plugin}/operations/{operation}",
-        post(invoke),
-    )
+    // These two paths are mounted beneath PREFIX.
+    lapis_app_protocol::api_operation!(
+        "/api/content/v1/operations",
+        Content,
+        "get",
+        "List credential-admitted plugin operations",
+        200,
+        None,
+        json_body::<OperationCatalog>()
+    );
+    lapis_app_protocol::api_operation!(
+        "/api/content/v1/vaults/{vault}/plugins/{plugin}/operations/{operation}",
+        Content,
+        "post",
+        "Invoke a credential-admitted plugin operation",
+        200,
+        json_body::<OperationRequest>(),
+        json_body::<OperationReply>()
+    );
+    Router::new()
+        .api(("/operations", axum::routing::get(catalog)))
+        .api((
+            "/vaults/{vault}/plugins/{plugin}/operations/{operation}",
+            axum::routing::post(invoke),
+        ))
 }
 
 #[derive(Deserialize)]

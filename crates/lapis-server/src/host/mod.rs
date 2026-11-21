@@ -165,6 +165,7 @@ impl Host {
 
     pub fn close(&self, vault: Uuid) -> Result<()> {
         let _admission = self.content.admission()?;
+        self.content.retire_generation();
         self.content
             .grants
             .revoke_vault(vault)

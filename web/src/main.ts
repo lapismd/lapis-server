@@ -28,6 +28,9 @@ export default connectionId !== null
   : mount(ServerVaultHost, {
       target,
       props: {
+        consentId:
+          new URLSearchParams(window.location.search).get("mcp-consent") ??
+          undefined,
         backend: createRustHostedBackend(undefined, {
           nativeMetadata: true,
           nativeHistory: true,

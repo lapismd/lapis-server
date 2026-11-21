@@ -1,5 +1,5 @@
 import type { PluginSettingsDefinition } from "@lapis-notes/api";
-import type { ContentAccessModel } from "./model";
+import { personalTokenLifetimes, type ContentAccessModel } from "./model";
 
 export function definition(
   model: ContentAccessModel,
@@ -86,6 +86,15 @@ export function definition(
             "Read-only access to saved notes and file listings in the selected vaults.",
         },
         {
+          id: id("personal-lifetime"),
+          type: "enum",
+          title: "Personal access token expiry",
+          default: "days90",
+          options: personalTokenLifetimes,
+          description:
+            "Personal tokens are available on servers with a persistent profile.",
+        },
+        {
           id: id("hours"),
           type: "integer",
           default: 1,
@@ -101,6 +110,22 @@ export function definition(
           optionsSource: "content-access.permissions",
           description:
             "Optional native plugin access. Write permissions can change saved Tasks, their configured daily notes and installed agent skills. Existing credentials never gain newly added operations.",
+        },
+        {
+          id: id("create-personal"),
+          type: "action",
+          title: "Create a personal access token",
+          label: "Create personal access token",
+          isDisabled: () => !model.status?.persistent || !model.canCreate,
+          isBusy: () => model.busy,
+          run: async () => {
+            await model.create(true);
+            return {
+              tone: "success",
+              message:
+                "Personal access token created. Copy it before it is hidden.",
+            };
+          },
         },
         {
           id: id("create"),
@@ -138,6 +163,111 @@ export function definition(
             model.clearSecret();
             return { tone: "success", message: "Credential hidden." };
           },
+        },
+        {
+          id: id("mcp-connections"),
+          type: "object-grid",
+          default: [],
+          title: "Connected applications",
+          rowKey: "grant_id",
+          allowAdd: false,
+          allowRemove: false,
+          reorderable: false,
+          properties: [
+            {
+              id: "grant_id",
+              title: "ID",
+              type: "string",
+              readOnly: true,
+              presentation: "hidden",
+            },
+            {
+              id: "label",
+              title: "Application",
+              type: "string",
+              readOnly: true,
+            },
+            { id: "vaults", title: "Vaults", type: "string", readOnly: true },
+            {
+              id: "permission",
+              title: "Permission",
+              type: "string",
+              readOnly: true,
+            },
+            { id: "expires", title: "Expires", type: "string", readOnly: true },
+            {
+              id: "last_used",
+              title: "Last used",
+              type: "string",
+              readOnly: true,
+            },
+            { id: "state", title: "Status", type: "string", readOnly: true },
+          ],
+          rowActions: [
+            {
+              id: "disconnect-mcp",
+              label: "Disconnect",
+              variant: "destructive",
+              disabled: (row) => model.busy || row.state !== "Active",
+              run: async (row) => {
+                await model.disconnect(String(row.grant_id));
+                return {
+                  tone: "success",
+                  message: "Application disconnected.",
+                };
+              },
+            },
+          ],
+        },
+        {
+          id: id("personal-tokens"),
+          type: "object-grid",
+          default: [],
+          title: "Personal access tokens",
+          rowKey: "grant_id",
+          allowAdd: false,
+          allowRemove: false,
+          reorderable: false,
+          properties: [
+            {
+              id: "grant_id",
+              title: "ID",
+              type: "string",
+              readOnly: true,
+              presentation: "hidden",
+            },
+            { id: "label", title: "Label", type: "string", readOnly: true },
+            { id: "vaults", title: "Vaults", type: "string", readOnly: true },
+            {
+              id: "permission",
+              title: "Permission",
+              type: "string",
+              readOnly: true,
+            },
+            { id: "expires", title: "Expires", type: "string", readOnly: true },
+            {
+              id: "last_used",
+              title: "Last used",
+              type: "string",
+              readOnly: true,
+            },
+            { id: "state", title: "Status", type: "string", readOnly: true },
+          ],
+          rowActions: [
+            {
+              id: "revoke-personal",
+              label: "Revoke",
+              variant: "destructive",
+              disabled: (row) => model.busy || row.state !== "Active",
+              run: async (row) => {
+                await model.revoke(String(row.grant_id), true);
+                return {
+                  tone: "success",
+                  message: "Personal access token revoked.",
+                };
+              },
+            },
+          ],
         },
         {
           id: id("grants"),

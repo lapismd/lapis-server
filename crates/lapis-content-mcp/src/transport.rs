@@ -16,16 +16,51 @@ use tokio::sync::Semaphore;
 use tokio_util::sync::CancellationToken;
 use uuid::Uuid;
 
+const MCP_PATH: &str = "/mcp";
+use lapis_app_protocol::http_docs::{json_body, text};
+lapis_app_protocol::api_operation!(
+    MCP_PATH,
+    Mcp,
+    "post",
+    "Send a Streamable HTTP MCP JSON-RPC request",
+    200,
+    json_body::<serde_json::Value>(),
+    json_body::<serde_json::Value>()
+);
+lapis_app_protocol::api_operation!(
+    MCP_PATH,
+    Mcp,
+    "get",
+    "Request an MCP event stream when supported by the transport",
+    405,
+    None,
+    text("text/plain")
+);
+lapis_app_protocol::api_operation!(
+    MCP_PATH,
+    Mcp,
+    "delete",
+    "Close a negotiated MCP transport session when supported",
+    405,
+    None,
+    text("text/plain")
+);
+
 #[derive(Clone)]
 struct StateData {
     boundary: Boundary,
     requests: Arc<Semaphore>,
     cancellation: CancellationToken,
 }
-pub fn router(boundary: Boundary, cancellation: CancellationToken) -> std::io::Result<Router> {
+pub fn router(
+    boundary: Boundary,
+    cancellation: CancellationToken,
+    initialized_clients: bool,
+) -> std::io::Result<Router> {
     let handler = Handler {
         boundary: boundary.clone(),
         catalog: Arc::new(Catalog::new()?),
+        initialized_clients,
     };
     let uri: Uri = boundary
         .origin()
@@ -36,7 +71,7 @@ pub fn router(boundary: Boundary, cancellation: CancellationToken) -> std::io::R
         .with_json_response(true)
         .with_sse_keep_alive(None)
         .with_sse_retry(None)
-        .with_stateless_protocol_metadata_required(true)
+        .with_stateless_protocol_metadata_required(!initialized_clients)
         .with_max_request_body_bytes(MAX_REQUEST_BYTES)
         .with_allowed_hosts([uri.authority().unwrap().as_str().to_owned()])
         .with_allowed_origins([boundary.origin().to_owned()])
@@ -52,7 +87,7 @@ pub fn router(boundary: Boundary, cancellation: CancellationToken) -> std::io::R
         cancellation,
     };
     Ok(Router::new()
-        .route_service("/mcp", service)
+        .route_service(MCP_PATH, service)
         .layer(middleware::from_fn_with_state(state, guard)))
 }
 async fn guard(State(state): State<StateData>, request: Request, next: Next) -> Response {

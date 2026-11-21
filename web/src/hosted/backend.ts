@@ -33,10 +33,15 @@ export type HostedResources = {
   release(): Promise<void>;
 };
 export interface HostedBackend {
+  readonly security?: import("../account/passkeys").AccountSecurity;
   readonly runtime: "node-server" | "rust-server";
   readonly protocolMajor: number;
   readonly capabilities: { manageVaults: boolean; transferVaults: boolean };
-  info(): Promise<{ buildId: string; protocolMajor: number }>;
+  info(): Promise<{
+    buildId: string;
+    protocolMajor: number;
+    passkeys?: boolean;
+  }>;
   current(): Promise<{ username: string }>;
   login(username: string, password: string): Promise<void>;
   logout(): Promise<void>;

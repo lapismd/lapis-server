@@ -1,4 +1,6 @@
 mod credentials;
+#[path = "content_access/oauth.rs"]
+mod oauth;
 #[path = "content_access/security.rs"]
 mod security;
 #[path = "content_access/support.rs"]
@@ -266,6 +268,119 @@ async fn archive_and_native_close_retire_whole_grants_without_reviving_on_restor
             .as_array()
             .unwrap()
             .is_empty()
+    );
+    server.finish().await;
+}
+
+#[tokio::test]
+async fn personal_tokens_survive_cold_restart_and_keep_their_scope() {
+    const TOKENS: &str = "/api/v3/content-access/tokens";
+    let server = Server::start(true, ORIGIN).await;
+    server.enable(true).await;
+    let response = server
+        .owner(Method::POST, TOKENS)
+        .json(&json!({"label":"Reader", "vault_ids":[server.ids[0]], "lifetime":"never"}))
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), 201);
+    let created: Value = response.json().await.unwrap();
+    let token = created["token"].as_str().unwrap();
+    assert!(token.starts_with("lp1_"));
+    let server = server.restart().await;
+    let list: Value = server
+        .owner(Method::GET, TOKENS)
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await
+        .unwrap();
+    assert_eq!(list[0]["grant_id"], created["grant_id"]);
+    assert_eq!(list[0]["active"], true);
+    assert_eq!(list[0]["expires_at"], Value::Null);
+    assert!(!list.to_string().contains(token));
+    let path = format!("/api/content/v1/vaults/{}/note?path=note.md", server.ids[0]);
+    assert_eq!(
+        server
+            .external(&path, token)
+            .send()
+            .await
+            .unwrap()
+            .text()
+            .await
+            .unwrap(),
+        SAVED
+    );
+    let mcp: Value = server
+        .mcp(token, server.ids[0])
+        .send()
+        .await
+        .unwrap()
+        .json()
+        .await
+        .unwrap();
+    assert_eq!(
+        mcp["result"]["structuredContent"]["outcome"]["value"]["text"],
+        SAVED
+    );
+    let foreign = format!("/api/content/v1/vaults/{}/note?path=note.md", server.ids[1]);
+    assert_eq!(
+        server
+            .external(&foreign, token)
+            .send()
+            .await
+            .unwrap()
+            .status(),
+        403
+    );
+    assert_eq!(
+        server
+            .external(TOKENS, token)
+            .send()
+            .await
+            .unwrap()
+            .status(),
+        401
+    );
+    assert_eq!(
+        server
+            .owner(
+                Method::DELETE,
+                &format!("{TOKENS}/{}", created["grant_id"].as_str().unwrap())
+            )
+            .send()
+            .await
+            .unwrap()
+            .status(),
+        204
+    );
+    let mut server = server.restart().await;
+    assert_eq!(
+        server.external(&path, token).send().await.unwrap().status(),
+        401
+    );
+    let issued: Value = server
+        .owner(Method::POST, TOKENS)
+        .json(&json!({"label":"Another reader", "vault_ids":[server.ids[0]]}))
+        .send()
+        .await
+        .unwrap()
+        .error_for_status()
+        .unwrap()
+        .json()
+        .await
+        .unwrap();
+    let fresh = issued["token"].as_str().unwrap();
+    assert_eq!(
+        server.external(&path, fresh).send().await.unwrap().status(),
+        200
+    );
+    server.enable(false).await;
+    server.enable(true).await;
+    assert_eq!(
+        server.external(&path, fresh).send().await.unwrap().status(),
+        401
     );
     server.finish().await;
 }

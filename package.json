@@ -15,6 +15,8 @@
   },
   "scripts": {
     "test:plugin-operations": "cargo build --locked -p lapis-server -p lapis-cli && node --test scripts/plugin-operations.test.mjs",
+    "openapi:generate": "node scripts/openapi.mjs --write",
+    "openapi:check": "node scripts/openapi.mjs --check",
     "protocol:generate": "node scripts/protocol.mjs --write",
     "protocol:check": "node scripts/protocol.mjs --check && tsc -p crates/lapis-app-protocol/tsconfig.json",
     "spec:build": "node scripts/dependency-automation/spec-policy.mjs build",

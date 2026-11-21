@@ -5,12 +5,21 @@ use serde::{Deserialize, de::DeserializeOwned};
 use uuid::Uuid;
 
 /// Paths are relative to `/api/content/v1`; checked against live Core discovery.
-pub const READ_ROUTES: &[(ContentOperation, &str)] = &[
-    (ContentOperation::Capabilities, "/capabilities"),
-    (ContentOperation::ListVaults, "/vaults"),
-    (ContentOperation::ListNotes, "/vaults/{vault_id}/notes"),
-    (ContentOperation::ReadNote, "/vaults/{vault_id}/note"),
-];
+macro_rules! reads {
+    ($(($operation:ident, $path:literal, $summary:literal, $output:expr)),+ $(,)?) => {
+        pub const READ_ROUTES: &[(ContentOperation, &str)] = &[$((ContentOperation::$operation, $path)),+];
+        $(lapis_app_protocol::api_operation!(
+            concat!("/api/content/v1", $path), Content, "get", $summary, 200, None, $output
+        );)+
+    };
+}
+use lapis_app_protocol::http_docs::{json_body, text};
+reads! {
+    (Capabilities, "/capabilities", "List available content operations", json_body::<ContentReply>()),
+    (ListVaults, "/vaults", "List vaults admitted by this token", json_body::<ContentReply>()),
+    (ListNotes, "/vaults/{vault_id}/notes", "List saved notes in an admitted vault", json_body::<ContentReply>()),
+    (ReadNote, "/vaults/{vault_id}/note", "Read a saved Markdown note and its ETag", text("text/plain")),
+}
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Empty {}

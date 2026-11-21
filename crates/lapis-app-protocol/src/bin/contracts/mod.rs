@@ -17,6 +17,8 @@ pub struct Contracts {
     pub terminal_value: lapis_app_protocol::terminal::TerminalValue,
     pub terminal_output: lapis_app_protocol::terminal::TerminalOutput,
     pub content_host_status: lapis_app_protocol::content::ContentHostStatus,
+    pub personal_token_request: lapis_app_protocol::content::PersonalTokenRequest,
+    pub personal_token_summary: lapis_app_protocol::content::PersonalTokenSummary,
     pub content_access_setting: lapis_app_protocol::content::ContentAccessSetting,
     pub content_grant_request: lapis_app_protocol::content::ContentGrantRequest,
     pub created_content_grant: lapis_app_protocol::content::CreatedContentGrant,

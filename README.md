@@ -290,3 +290,23 @@ general note writes, OAuth and CLI packaging remain separate delivery gates.
 
 Repository remote credentials, the separate encryption-key mount, SSH trust and
 recovery are described in [repository remote operations](docs/repository-remotes.md).
+
+## Connecting to Content API and MCP
+
+Sign in as the owner and open **Settings → Core plugins → Content API and MCP**.
+Enable access, then copy the Content API or MCP address. Create a named personal
+access token for scripts and select its vaults, plugin permissions, and expiry.
+Copy the token when it is created. Keep the server data volume mounted to
+preserve the token across restarts. Disable access or revoke a token in settings
+to remove its authority.
+
+- Send a personal token in `Authorization: Bearer <token>`. Content API
+  requests also use `x-lapis-content-api: 1`.
+- For remote MCP, use the configured HTTPS `/mcp` address. Start the OAuth
+  connection in your client, sign into Lapis, and approve the vaults and
+  permissions you want to share. Review or disconnect clients from
+  **Connected applications**.
+- Add a passkey in **Account & security** on the server’s vault chooser.
+  Use your password or a registered passkey to verify sensitive changes.
+- Open `/api/docs` while signed in for Swagger UI, or download the OpenAPI
+  document from `/api/openapi.json`. Both describe the same HTTP route catalog.

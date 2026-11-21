@@ -77,3 +77,66 @@ CREATE TABLE IF NOT EXISTS sync_account_outcomes (
   cancelled_at INTEGER,
   CHECK(credential_id IS NOT NULL OR cancelled_at IS NOT NULL)
 );
+
+CREATE TABLE IF NOT EXISTS personal_access_tokens (
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES installation_owner(id) CHECK(owner_id = 1),
+  verifier TEXT NOT NULL UNIQUE,
+  label TEXT NOT NULL,
+  vault_ids TEXT NOT NULL,
+  permissions TEXT NOT NULL,
+  operations TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER,
+  last_used_at INTEGER,
+  revoked_at INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS owner_passkeys (
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES installation_owner(id) CHECK(owner_id=1),
+  credential_id TEXT NOT NULL UNIQUE,
+  origin TEXT NOT NULL,
+  label TEXT NOT NULL,
+  credential TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  last_used_at INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS session_reauthentication (
+  session_id TEXT PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+  verified_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS mcp_oauth_clients (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  redirects TEXT NOT NULL,
+  auth_method TEXT NOT NULL,
+  secret_verifier TEXT,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS mcp_oauth_grants (
+  id TEXT PRIMARY KEY,
+  owner_id INTEGER NOT NULL REFERENCES installation_owner(id) CHECK(owner_id=1),
+  client_id TEXT NOT NULL,
+  resource TEXT NOT NULL,
+  label TEXT NOT NULL,
+  vault_ids TEXT NOT NULL,
+  permissions TEXT NOT NULL,
+  operations TEXT NOT NULL,
+  scope TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL,
+  last_used_at INTEGER,
+  revoked_at INTEGER,
+  access_verifier TEXT NOT NULL UNIQUE,
+  access_expires_at INTEGER NOT NULL,
+  refresh_verifier TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS mcp_oauth_spent_refresh (
+  verifier TEXT PRIMARY KEY,
+  grant_id TEXT NOT NULL REFERENCES mcp_oauth_grants(id) ON DELETE CASCADE
+);

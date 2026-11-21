@@ -16,6 +16,10 @@ const proxy = {
   "/api/v3": { target: api, changeOrigin: false },
   "/api/content/v1": { target: api, changeOrigin: false },
   "/mcp": { target: api, changeOrigin: false },
+  "/oauth": { target: api, changeOrigin: false },
+  "/.well-known/oauth-": { target: api, changeOrigin: false },
+  "/api/docs": { target: api, changeOrigin: false },
+  "/api/openapi.json": { target: api, changeOrigin: false },
   "/__lapis/plugins": { target: api, changeOrigin: false },
 };
 

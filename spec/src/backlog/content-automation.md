@@ -19,11 +19,12 @@ an operation/scope/effect catalog and generated bindings with a CI drift gate.
 The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
-verifiers and fences/drains revocation, expiry and shutdown. Persistent grants,
-rotation, durable client approvals, general note writes and generic durable receipts
-and Desktop intake remain unimplemented. Hosted owner consent now controls the
-optional read-only API/MCP endpoints and transient named credentials. OAuth selection and consumer contracts remain part of
-the first contract slice below; do not mark that whole slice or either host done.
+verifiers and fences/drains revocation, expiry and shutdown. General note writes,
+generic durable receipts and Desktop intake remain unimplemented. Hosted owner
+consent controls the optional API and MCP endpoints. The
+[integration authorization contract](../current/integration-auth.md) covers
+durable personal tokens and OAuth approvals. ChatGPT web qualification and
+remaining consumer contracts are tracked below.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
 grants, strict Host/Origin checks, typed control responses and direct note bytes.
 It is now mounted by the hosted server under SRV-SRV-014; general note writes and Desktop
@@ -226,8 +227,8 @@ Streamable HTTP and provide `lapis mcp serve --stdio` for subprocess clients,
 delegating to the selected host rather than opening another vault runtime.
 Test modern per-request and any selected legacy initialization paths separately;
 do not confuse an MCP transport session with a Core client or grant lifetime.
-For remote integrations, implement OAuth protected-resource discovery and a
-qualified authorization-server integration with PKCE/resource-bound tokens.
+For remote integrations, the hosted server implements OAuth discovery, PKCE and
+resource-bound tokens, with supported client products tracked in verification.
 Static scoped tokens may serve initial controlled CLI tests, but do not qualify
 general remote MCP connection flows. Keep the existing private agent bridge
 until its original approval/cancellation/provider cases pass through shared code.
