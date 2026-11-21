@@ -15,6 +15,7 @@
   import PenLine from "@lucide/svelte/icons/pen-line";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
   import Search from "@lucide/svelte/icons/search";
+  import ShieldCheck from "@lucide/svelte/icons/shield-check";
   import X from "@lucide/svelte/icons/x";
   import {
     createVaultSession,
@@ -34,7 +35,7 @@
   import * as Dialog from "@lapismd/design-core/shadcn/dialog";
   import * as DropdownMenu from "@lapismd/design-core/shadcn/dropdown-menu";
   import * as Input from "@lapismd/design-core/shadcn/input";
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, type Snippet } from "svelte";
   import {
     archiveServerImportDirectory,
     canPickServerImportDirectory,
@@ -63,10 +64,12 @@
     backend,
     restoration = createVaultRestoration(),
     consentId,
+    accountSecurityPage,
   }: {
     backend: HostedBackend;
     restoration?: VaultRestoration;
     consentId?: string;
+    accountSecurityPage?: Snippet;
   } = $props();
   type HostState =
     | "loading"
@@ -77,11 +80,17 @@
     | "protocol";
   let hostState: HostState = $state("loading");
   let username = $state("");
-  let authenticatedUsername: string | null = null;
+  let authenticatedUsername = $state<string | null>(null);
   let disposed = false;
   let password = $state("");
+  let passkeysEnabled = $state(false);
   let passkeysAvailable = $state(false);
+  const hasAccountSecurity = $derived(
+    Boolean(backend.security || accountSecurityPage),
+  );
   let accountOpen = $state(false);
+  const showAccountSecurityPage = $derived(accountOpen && hasAccountSecurity);
+
   let passkeyBusy = $state(false);
   let newVaultName = $state("");
   let errorMessage = $state("");
@@ -148,7 +157,8 @@
       const info = await backend.info();
       if (disposed) return;
       buildId = info.buildId;
-      passkeysAvailable = info.passkeys === true && supportsPasskeys();
+      passkeysEnabled = info.passkeys === true;
+      passkeysAvailable = passkeysEnabled && supportsPasskeys();
       if (info.protocolMajor !== backend.protocolMajor) {
         hostState = "protocol";
         return;
@@ -340,6 +350,7 @@
 
   function returnToWorkspace(): void {
     if (!prepared) return;
+    accountOpen = false;
     errorMessage = "";
     if (prepared.ready && authenticatedUsername)
       restoration.remember(authenticatedUsername, prepared.profile.id);
@@ -496,6 +507,7 @@
     try {
       await disposeWorkspace(true);
       await backend.logout();
+      accountOpen = false;
       if (authenticatedUsername) restoration.forget(authenticatedUsername);
       authenticatedUsername = null;
       vaults = [];
@@ -668,37 +680,88 @@
             <img src={serverLogo} alt="" class="server-launcher-logo" />
             <div class="server-brand-copy">
               <p class="server-eyebrow">Lapis Notes</p>
-              <h1 class="server-launcher-title">Your vaults</h1>
-              <p class="server-launcher-description">
-                Open a managed server vault or bring an existing project online.
-              </p>
+              <div class:launcher-copy-views={hasAccountSecurity}>
+                <div inert={showAccountSecurityPage}>
+                  <h1 class="server-launcher-title">Your vaults</h1>
+                  <p class="server-launcher-description">
+                    Open a managed server vault or bring an existing project
+                    online.
+                  </p>
+                </div>
+                {#if hasAccountSecurity}
+                  <div inert={!showAccountSecurityPage}>
+                    <h1
+                      id="server-account-security-heading"
+                      class="server-launcher-title"
+                    >
+                      Account &amp; security
+                    </h1>
+                    <p class="server-launcher-description">
+                      Manage how you sign in to your server account.
+                    </p>
+                  </div>
+                {/if}
+              </div>
             </div>
           </div>
           <div class="server-launcher-actions">
-            {#if passkeysAvailable && backend.security}
+            {#if hasAccountSecurity}
               <Button.Root
                 variant="ghost"
                 size="sm"
+                class="account-security-switch"
                 onclick={() => {
-                  accountOpen = true;
+                  accountOpen = !showAccountSecurityPage;
                 }}
               >
-                Account &amp; security
+                {#if showAccountSecurityPage}
+                  <!--
+                    Lucide database-cog, https://lucide.dev/icons/database-cog
+                    Copyright (c) 2026 Lucide Icons and Contributors
+                    Permission to use, copy, modify, and/or distribute this software for any
+                    purpose with or without fee is hereby granted, provided that the above
+                    copyright notice and this permission notice appear in all copies.
+                    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+                    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+                    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+                    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+                    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+                    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+                    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+                  -->
+                  <svg
+                    class="lucide-database-cog"
+                    aria-hidden="true"
+                    data-icon="inline-start"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m14.305 19.53.923-.382" />
+                    <path d="m15.228 16.852-.923-.383" />
+                    <path d="m16.852 15.228-.383-.923" />
+                    <path d="m16.852 20.772-.383.924" />
+                    <path d="m19.148 15.228.383-.923" />
+                    <path d="m19.53 21.696-.382-.924" />
+                    <path d="m20.772 16.852.924-.383" />
+                    <path d="m20.772 19.148.924.383" />
+                    <path d="M21 10.5V5" />
+                    <path d="M3 12a9 3 0 0 0 7.599 2.963" />
+                    <path d="M3 5v14a9 3 0 0 0 8.148 2.987" />
+                    <circle cx="18" cy="18" r="3" />
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                  </svg>
+                  Manage vaults
+                {:else}
+                  <ShieldCheck aria-hidden="true" data-icon="inline-start" />
+                  Account &amp; security
+                {/if}
               </Button.Root>
-              <Dialog.Root bind:open={accountOpen}>
-                <Dialog.Content>
-                  <Dialog.Header>
-                    <Dialog.Title>Account &amp; security</Dialog.Title>
-                    <Dialog.Description
-                      >Manage the passkeys you use to sign in.</Dialog.Description
-                    >
-                  </Dialog.Header>
-                  <a href="/api/docs">Server API documentation</a>
-                  {#if accountOpen}<AccountSecurity
-                      security={backend.security}
-                    />{/if}
-                </Dialog.Content>
-              </Dialog.Root>
             {/if}
             <Button.Root
               variant="ghost"
@@ -729,189 +792,211 @@
             {errorMessage}
           </div>
         {:else if actionMessage}
-          <div class="server-alert" role="status">{actionMessage}</div>
+          <div class="server-alert" role="status">
+            {actionMessage}
+          </div>
         {/if}
 
-        <div class="server-vault-grid">
-          <Card.Root class="server-vault-card">
-            <Card.Header>
-              <Card.Title class="server-card-title">Server Vaults</Card.Title>
-              <Card.Description>
-                Create a managed vault, import a local folder, or upload a ZIP.
-              </Card.Description>
-            </Card.Header>
-            <Card.Content class="server-action-list">
-              <Button.Root
-                class="web-vault-launcher__action"
-                disabled={activeAction !== null ||
-                  !backend.capabilities.manageVaults}
-                onclick={() => {
-                  newVaultName = "";
-                  createDialogOpen = true;
-                }}
-              >
-                <FolderPlus />
-                <span class="server-action-copy">
-                  <span class="server-action-title">Create New Vault</span>
-                  <span class="server-action-description">
-                    Start a private managed vault on this server.
+        <div class="vault-launcher-body">
+          <div class="server-vault-grid" inert={showAccountSecurityPage}>
+            <Card.Root class="server-vault-card">
+              <Card.Header>
+                <Card.Title class="server-card-title">Server Vaults</Card.Title>
+                <Card.Description>
+                  Create a managed vault, import a local folder, or upload a
+                  ZIP.
+                </Card.Description>
+              </Card.Header>
+              <Card.Content class="server-action-list">
+                <Button.Root
+                  class="web-vault-launcher__action"
+                  disabled={activeAction !== null ||
+                    !backend.capabilities.manageVaults}
+                  onclick={() => {
+                    newVaultName = "";
+                    createDialogOpen = true;
+                  }}
+                >
+                  <FolderPlus />
+                  <span class="server-action-copy">
+                    <span class="server-action-title">Create New Vault</span>
+                    <span class="server-action-description">
+                      Start a private managed vault on this server.
+                    </span>
                   </span>
-                </span>
-              </Button.Root>
-              <Button.Root
-                variant="outline"
-                class="web-vault-launcher__action"
-                disabled={activeAction !== null ||
-                  !canImportDirectory ||
-                  !backend.capabilities.transferVaults}
-                onclick={() => void pickImportDirectory()}
-              >
-                <FolderInput />
-                <span class="server-action-copy">
-                  <span class="server-action-title">Import Folder</span>
-                  <span class="server-action-description">
-                    {canImportDirectory
-                      ? "Choose a folder with the File System Access API."
-                      : "Use Import ZIP in browsers without folder access."}
+                </Button.Root>
+                <Button.Root
+                  variant="outline"
+                  class="web-vault-launcher__action"
+                  disabled={activeAction !== null ||
+                    !canImportDirectory ||
+                    !backend.capabilities.transferVaults}
+                  onclick={() => void pickImportDirectory()}
+                >
+                  <FolderInput />
+                  <span class="server-action-copy">
+                    <span class="server-action-title">Import Folder</span>
+                    <span class="server-action-description">
+                      {canImportDirectory
+                        ? "Choose a folder with the File System Access API."
+                        : "Use Import ZIP in browsers without folder access."}
+                    </span>
                   </span>
-                </span>
-              </Button.Root>
-              <Button.Root
-                variant="outline"
-                class="web-vault-launcher__action"
-                disabled={activeAction !== null ||
-                  !backend.capabilities.transferVaults}
-                onclick={() => importInput?.click()}
-              >
-                <Archive />
-                <span class="server-action-copy">
-                  <span class="server-action-title">Import ZIP</span>
-                  <span class="server-action-description">
-                    Upload a portable vault archive from this device.
+                </Button.Root>
+                <Button.Root
+                  variant="outline"
+                  class="web-vault-launcher__action"
+                  disabled={activeAction !== null ||
+                    !backend.capabilities.transferVaults}
+                  onclick={() => importInput?.click()}
+                >
+                  <Archive />
+                  <span class="server-action-copy">
+                    <span class="server-action-title">Import ZIP</span>
+                    <span class="server-action-description">
+                      Upload a portable vault archive from this device.
+                    </span>
                   </span>
-                </span>
-              </Button.Root>
-              <input
-                bind:this={importInput}
-                class="sr-only"
-                type="file"
-                accept=".zip,application/zip"
-                aria-label="Import ZIP"
-                onchange={() => void importZip()}
-              />
-            </Card.Content>
-          </Card.Root>
+                </Button.Root>
+                <input
+                  bind:this={importInput}
+                  class="sr-only"
+                  type="file"
+                  accept=".zip,application/zip"
+                  aria-label="Import ZIP"
+                  onchange={() => void importZip()}
+                />
+              </Card.Content>
+            </Card.Root>
 
-          <Card.Root class="server-vault-card">
-            <Card.Header>
-              <div class="server-card-header-row">
-                <div>
-                  <Card.Title class="server-card-title"
-                    >Managed Vaults</Card.Title
-                  >
-                  <Card.Description>
-                    Vaults available to this account, including archived
-                    projects.
-                  </Card.Description>
-                </div>
-                {#if searchableVaults.length > 1}
-                  <Button.Root
-                    variant="ghost"
-                    size="sm"
-                    class="server-view-all"
-                    onclick={showVaultSearch}
-                  >
-                    View all
-                  </Button.Root>
-                {/if}
-              </div>
-            </Card.Header>
-            <Card.Content class="server-managed-content">
-              <ul class="server-vault-list">
-                {#each vaults as vault (vault.id)}
-                  <li class="server-vault-row" data-server-vault-row>
-                    <button
-                      type="button"
-                      class="web-vault-launcher__recent server-vault-open"
-                      disabled={activeAction !== null ||
-                        vault.archivedAt !== undefined}
-                      aria-label={vault.archivedAt !== undefined
-                        ? `${vault.name} ${vault.role} · archived`
-                        : `Open ${vault.name} ${vault.role} · server-hosted`}
-                      onclick={() => void openVault(vault)}
+            <Card.Root class="server-vault-card">
+              <Card.Header>
+                <div class="server-card-header-row">
+                  <div>
+                    <Card.Title class="server-card-title"
+                      >Managed Vaults</Card.Title
                     >
-                      <FolderOpen />
-                      <span class="server-vault-copy">
-                        <span class="server-vault-name">{vault.name}</span>
-                        <span class="server-vault-meta">
-                          {vault.role}{vault.archivedAt
-                            ? " · archived"
-                            : " · server-hosted"}
-                        </span>
-                      </span>
-                    </button>
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger
-                        class="server-vault-menu-trigger"
-                        aria-label={`Open actions for ${vault.name}`}
-                        title={`Open actions for ${vault.name}`}
-                        disabled={activeAction !== null}
+                    <Card.Description>
+                      Vaults available to this account, including archived
+                      projects.
+                    </Card.Description>
+                  </div>
+                  {#if searchableVaults.length > 1}
+                    <Button.Root
+                      variant="ghost"
+                      size="sm"
+                      class="server-view-all"
+                      onclick={showVaultSearch}
+                    >
+                      View all
+                    </Button.Root>
+                  {/if}
+                </div>
+              </Card.Header>
+              <Card.Content class="server-managed-content">
+                <ul class="server-vault-list">
+                  {#each vaults as vault (vault.id)}
+                    <li class="server-vault-row" data-server-vault-row>
+                      <button
+                        type="button"
+                        class="web-vault-launcher__recent server-vault-open"
+                        disabled={activeAction !== null ||
+                          vault.archivedAt !== undefined}
+                        aria-label={vault.archivedAt !== undefined
+                          ? `${vault.name} ${vault.role} · archived`
+                          : `Open ${vault.name} ${vault.role} · server-hosted`}
+                        onclick={() => void openVault(vault)}
                       >
-                        <Ellipsis />
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content align="end" side="bottom">
-                        {#if vault.archivedAt}
-                          <DropdownMenu.Item
-                            disabled={!backend.capabilities.manageVaults}
-                            onclick={() => void restore(vault)}
-                          >
-                            <RotateCcw />
-                            Restore
-                          </DropdownMenu.Item>
-                        {:else}
-                          <DropdownMenu.Item
-                            onclick={() => void openVault(vault)}
-                          >
-                            <FolderOpen />
-                            Open
-                          </DropdownMenu.Item>
-                          <DropdownMenu.Item
-                            disabled={!backend.capabilities.transferVaults}
-                            onclick={() => downloadVault(vault)}
-                          >
-                            <Download />
-                            Export ZIP
-                          </DropdownMenu.Item>
-                          {#if vault.role === "owner"}
+                        <FolderOpen />
+                        <span class="server-vault-copy">
+                          <span class="server-vault-name">{vault.name}</span>
+                          <span class="server-vault-meta">
+                            {vault.role}{vault.archivedAt
+                              ? " · archived"
+                              : " · server-hosted"}
+                          </span>
+                        </span>
+                      </button>
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger
+                          class="server-vault-menu-trigger"
+                          aria-label={`Open actions for ${vault.name}`}
+                          title={`Open actions for ${vault.name}`}
+                          disabled={activeAction !== null}
+                        >
+                          <Ellipsis />
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content align="end" side="bottom">
+                          {#if vault.archivedAt}
                             <DropdownMenu.Item
                               disabled={!backend.capabilities.manageVaults}
-                              onclick={() => openRenameDialog(vault)}
+                              onclick={() => void restore(vault)}
                             >
-                              <PenLine />
-                              Rename...
+                              <RotateCcw />
+                              Restore
                             </DropdownMenu.Item>
-                            <DropdownMenu.Separator />
+                          {:else}
                             <DropdownMenu.Item
-                              disabled={!backend.capabilities.manageVaults}
-                              onclick={() => void archive(vault)}
+                              onclick={() => void openVault(vault)}
                             >
-                              <Archive />
-                              Archive
+                              <FolderOpen />
+                              Open
                             </DropdownMenu.Item>
+                            <DropdownMenu.Item
+                              disabled={!backend.capabilities.transferVaults}
+                              onclick={() => downloadVault(vault)}
+                            >
+                              <Download />
+                              Export ZIP
+                            </DropdownMenu.Item>
+                            {#if vault.role === "owner"}
+                              <DropdownMenu.Item
+                                disabled={!backend.capabilities.manageVaults}
+                                onclick={() => openRenameDialog(vault)}
+                              >
+                                <PenLine />
+                                Rename...
+                              </DropdownMenu.Item>
+                              <DropdownMenu.Separator />
+                              <DropdownMenu.Item
+                                disabled={!backend.capabilities.manageVaults}
+                                onclick={() => void archive(vault)}
+                              >
+                                <Archive />
+                                Archive
+                              </DropdownMenu.Item>
+                            {/if}
                           {/if}
-                        {/if}
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
-                  </li>
-                {:else}
-                  <li class="server-vault-empty">
-                    Your managed vaults will appear here after you create or
-                    import one.
-                  </li>
-                {/each}
-              </ul>
-            </Card.Content>
-          </Card.Root>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Root>
+                    </li>
+                  {:else}
+                    <li class="server-vault-empty">
+                      Your managed vaults will appear here after you create or
+                      import one.
+                    </li>
+                  {/each}
+                </ul>
+              </Card.Content>
+            </Card.Root>
+          </div>
+          {#if showAccountSecurityPage}
+            {#if accountSecurityPage}
+              {@render accountSecurityPage()}
+            {:else if authenticatedUsername}
+              <AccountSecurity
+                accounts={[
+                  {
+                    id: authenticatedUsername,
+                    label: authenticatedUsername,
+                    description: "Current account",
+                    security: passkeysEnabled ? backend.security : undefined,
+                  },
+                ]}
+                canUsePasskeys={passkeysAvailable}
+              />
+            {/if}
+          {/if}
         </div>
       </div>
     </section>
@@ -1081,3 +1166,28 @@
     </form>
   </Dialog.Content>
 </Dialog.Root>
+
+<style>
+  .launcher-copy-views {
+    display: grid;
+  }
+
+  .launcher-copy-views > div {
+    grid-area: 1 / 1;
+  }
+
+  .vault-launcher-body {
+    position: relative;
+    min-width: 0;
+  }
+
+  .launcher-copy-views > [inert],
+  .vault-launcher-body > [inert] {
+    visibility: hidden;
+  }
+
+  .server-launcher-actions :global(.account-security-switch) {
+    inline-size: 11rem;
+    justify-content: center;
+  }
+</style>

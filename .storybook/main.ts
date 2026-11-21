@@ -39,7 +39,14 @@ const config: StorybookConfig = {
       build: { target: "esnext" },
       optimizeDeps: {
         exclude: rendererExclusions,
-        include: rendererInclusions,
+        include: [
+          ...rendererInclusions,
+          "@lucide/svelte/icons/book-open",
+          "@lucide/svelte/icons/plus",
+          "@lucide/svelte/icons/shield-check",
+          "@lucide/svelte/icons/trash-2",
+          "@lucide/svelte/icons/user-round",
+        ],
         esbuildOptions: { target: "esnext" },
       },
       resolve: { dedupe: rendererSingletons },

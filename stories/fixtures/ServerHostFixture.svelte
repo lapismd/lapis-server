@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { onMount, tick, untrack } from "svelte";
+  import { onMount, tick, untrack, type Snippet } from "svelte";
   import ServerVaultHost from "../../web/src/ServerVaultHost.svelte";
   import {
     createFixtureVaultRestoration,
@@ -17,7 +17,12 @@
   let {
     backend,
     restoreVaultId,
-  }: { backend: HostedBackend; restoreVaultId?: string } = $props();
+    accountSecurityPage,
+  }: {
+    backend: HostedBackend;
+    restoreVaultId?: string;
+    accountSecurityPage?: Snippet;
+  } = $props();
   const restoration = untrack(() => {
     const state = createFixtureVaultRestoration();
     if (restoreVaultId) state.remember("owner", restoreVaultId);
@@ -43,6 +48,7 @@
     }
     {backend}
     {restoration}
+    {accountSecurityPage}
   />
 </div>
 

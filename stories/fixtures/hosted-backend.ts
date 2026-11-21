@@ -3,6 +3,10 @@ import { contentFixture } from "./content-access";
 import { MemoryAppDatabase, MemoryVaultAdapter } from "@lapis-notes/api";
 import type { NotesWorkspaceHost } from "@lapis-notes/app-profile/workspace-session";
 import type { HostedBackend, HostedVault } from "../../web/src/hosted/backend";
+import type {
+  AccountSecurity,
+  PasskeySummary,
+} from "../../web/src/account/passkeys";
 import { createVaultRestoration } from "../../web/src/vault-restoration";
 
 export function createFixtureVaultRestoration() {
@@ -16,6 +20,35 @@ export function createFixtureVaultRestoration() {
       records.delete(key);
     },
   }));
+}
+
+export function createFixturePasskeyManagement(
+  initialKeys: PasskeySummary[] = [],
+): Omit<AccountSecurity, "signIn"> {
+  const keys = initialKeys.map((key) => ({ ...key }));
+  return {
+    passkeys: async () => keys.map((key) => ({ ...key })),
+    enroll: async (label) => {
+      keys.push({
+        id: crypto.randomUUID(),
+        label,
+        created_at: Date.now(),
+        last_used_at: null,
+      });
+    },
+    rename: async (id, label) => {
+      const key = keys.find((entry) => entry.id === id);
+      if (key) key.label = label;
+    },
+    remove: async (id) => {
+      const index = keys.findIndex((key) => key.id === id);
+      if (index !== -1) keys.splice(index, 1);
+    },
+    verifyPassword: async (password) => {
+      if (password !== "fixture-password") throw new Error("Invalid password");
+    },
+    verifyPasskey: async () => {},
+  };
 }
 
 export type HostedScenario =
@@ -56,33 +89,12 @@ export function createHostedFixture(scenario: HostedScenario) {
   });
   const adapters = new Map<string, MemoryVaultAdapter>();
   let failed = false;
-  const passkeys: Awaited<
-    ReturnType<NonNullable<HostedBackend["security"]>["passkeys"]>
-  > = [];
   const security: HostedBackend["security"] =
     scenario === "passkey-login" || scenario === "passkey-management"
       ? {
+          ...createFixturePasskeyManagement(),
           signIn: async (username) =>
             backend.login(username, "fixture-password"),
-          passkeys: async () => passkeys.map((key) => ({ ...key })),
-          enroll: async (label) => {
-            passkeys.push({
-              id: crypto.randomUUID(),
-              label,
-              created_at: Date.now(),
-              last_used_at: null,
-            });
-          },
-          rename: async (id, label) => {
-            const key = passkeys.find((entry) => entry.id === id);
-            if (key) key.label = label;
-          },
-          remove: async (id) => {
-            const index = passkeys.findIndex((key) => key.id === id);
-            if (index !== -1) passkeys.splice(index, 1);
-          },
-          verifyPassword: async (password) => backend.login("owner", password),
-          verifyPasskey: async () => {},
         }
       : undefined;
   const backend: HostedBackend = {
