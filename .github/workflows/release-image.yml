@@ -120,7 +120,7 @@ jobs:
           images: ghcr.io/lapismd/lapis-server
           tags: |
             type=ref,event=tag
-            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref_type == 'tag' }}
             type=raw,value=${{ steps.short.outputs.tag }},enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Resolve slim image tags
@@ -131,7 +131,7 @@ jobs:
           flavor: suffix=-slim,onlatest=true
           tags: |
             type=ref,event=tag
-            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.ref_type == 'tag' }}
             type=raw,value=${{ steps.short.outputs.tag }},enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and publish the Homebrew-free server image
