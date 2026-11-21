@@ -255,13 +255,13 @@ The host uses Design Core's public setting groups for Content API and MCP and it
 
 <a id="srv-gov-004"></a>
 
-**Requirement.** UI stories MUST mount production components with disposable injected backends. Functional and accessibility checks MUST cover login, chooser actions, startup failure/retry and the ready Notes workspace in light/dark and narrow viewports. Bounds assertions MUST measure the real shell. Visual review remains pending without baseline updates.
+**Requirement.** Production UI stories MUST mount production components with disposable injected backends. Functional and accessibility checks MUST cover login, chooser actions, startup failure/retry and the ready Notes workspace in light/dark and narrow viewports. Bounds assertions MUST measure the real shell. Visual review remains pending without baseline updates.
 
 ### Acceptance details
 
 - Vault-button accessible names include their visible name, role and status text.
 - Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and enrollment, and personal token management with axe failures enabled.
-- Fixtures remain mounted after their play finishes and release resources when the story unmounts.
+- Fixtures remain mounted after their play finishes and release resources when the story unmounts, including the account and security layout preview with sample data.
 
 ## Backup diagnostic unchanged-contract confirmation
 
