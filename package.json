@@ -75,7 +75,7 @@
     "@lapis-notes/source-editor": "^0.1.14",
     "@lapis-notes/ui": "^0.2.8",
     "@lapis-notes/workspace": "^0.4.10",
-    "@lapismd/design-core": "^0.13.7",
+    "@lapismd/design-core": "^0.13.8",
     "@lapismd/jj-history": "~0.1.0",
     "@lapismd/mira": "~0.2.0",
     "@lezer/common": "^1.5.2",
