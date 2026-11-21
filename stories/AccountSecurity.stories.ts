@@ -1,21 +1,77 @@
 import type { Meta, StoryObj } from "@storybook/svelte-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import AccountSecurityPreview from "./fixtures/AccountSecurityPreview.svelte";
+import AccountSecurityJourney from "./fixtures/AccountSecurityJourney.svelte";
+import { disposeServerHostFixtures } from "./fixtures/ServerHostFixture.svelte";
 
 const meta = {
   title: "Shell/Account & security",
-  component: AccountSecurityPreview,
+  component: AccountSecurityJourney,
   tags: ["visual-pending"],
-} satisfies Meta<typeof AccountSecurityPreview>;
+  beforeEach: () => disposeServerHostFixtures,
+} satisfies Meta<typeof AccountSecurityJourney>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Accounts: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    async function openManageVaults() {
+      await userEvent.click(
+        await canvas.findByRole("button", { name: /Current workspace:/ }),
+      );
+      await userEvent.click(
+        await within(canvasElement.ownerDocument.body).findByRole("menuitem", {
+          name: /^Manage Vaults$/i,
+        }),
+      );
+      return canvas.findByRole("heading", { name: "Your vaults" });
+    }
+
+    const vaultTitle = await openManageVaults();
+    const vaultTitleBounds = vaultTitle.getBoundingClientRect();
+    const vaultGridBounds = canvasElement
+      .querySelector(".server-vault-grid")!
+      .getBoundingClientRect();
+    const accountButton = await canvas.findByRole("button", {
+      name: "Account & security",
+    });
+    await expect(accountButton.querySelector("svg")).toBeInTheDocument();
+    const accountButtonBounds = accountButton.getBoundingClientRect();
+    await userEvent.click(accountButton);
+    const vaultsButton = canvas.getByRole("button", { name: "Manage vaults" });
+    await expect(vaultsButton).toBe(accountButton);
+    await expect(vaultsButton.querySelector("svg")).toHaveClass("lucide-vault");
+    const vaultsButtonBounds = vaultsButton.getBoundingClientRect();
+    await expect(
+      Math.abs(vaultsButtonBounds.left - accountButtonBounds.left),
+    ).toBeLessThan(1);
+    await expect(
+      Math.abs(vaultsButtonBounds.top - accountButtonBounds.top),
+    ).toBeLessThan(1);
+    const securityTitleBounds = canvas
+      .getByRole("heading", { name: "Account & security" })
+      .getBoundingClientRect();
+    const securityGridBounds = canvas
+      .getByRole("complementary", { name: "Loaded accounts" })
+      .getBoundingClientRect();
+    await expect(
+      Math.abs(securityTitleBounds.left - vaultTitleBounds.left),
+    ).toBeLessThan(1);
+    await expect(
+      Math.abs(securityTitleBounds.top - vaultTitleBounds.top),
+    ).toBeLessThan(1);
+    await expect(
+      Math.abs(securityGridBounds.left - vaultGridBounds.left),
+    ).toBeLessThan(1);
+    await expect(
+      Math.abs(securityGridBounds.top - vaultGridBounds.top),
+    ).toBeLessThan(1);
     const sidebar = within(
       canvas.getByRole("complementary", { name: "Loaded accounts" }),
     );
+    await expect(
+      sidebar.getByRole("link", { name: "Server API documentation" }),
+    ).toHaveAttribute("href", "/api/docs");
     const owner = sidebar.getByRole("button", {
       name: "Owner Current account",
     });
@@ -102,6 +158,31 @@ export const Accounts: Story = {
     } else {
       await expect(sidebarBounds.bottom).toBeLessThan(detailBounds.top);
     }
+    const ownerPanel = within(
+      canvas.getByRole("region", { name: "Security settings for Owner" }),
+    );
+    await expect(
+      ownerPanel.getByRole("heading", { name: "Passkeys" }),
+    ).toBeVisible();
+    await expect(
+      ownerPanel.queryByText("Current account"),
+    ).not.toBeInTheDocument();
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Manage vaults" }),
+    );
+    await expect(
+      await canvas.findByRole("heading", { name: "Your vaults" }),
+    ).toBeVisible();
+    await waitFor(() => expect(accountButton).toHaveFocus());
+
+    await userEvent.click(accountButton);
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Return to Notes" }),
+    );
+    await expect(
+      await canvas.findByRole("button", { name: /Current workspace:/ }),
+    ).toBeVisible();
+    await openManageVaults();
   },
 };
 

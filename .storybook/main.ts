@@ -41,6 +41,8 @@ const config: StorybookConfig = {
         exclude: rendererExclusions,
         include: [
           ...rendererInclusions,
+          "@lucide/svelte/icons/vault",
+          "@lucide/svelte/icons/book-open",
           "@lucide/svelte/icons/plus",
           "@lucide/svelte/icons/shield-check",
           "@lucide/svelte/icons/trash-2",

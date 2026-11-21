@@ -1,4 +1,5 @@
 <script lang="ts">
+  import BookOpen from "@lucide/svelte/icons/book-open";
   import Ellipsis from "@lucide/svelte/icons/ellipsis";
   import KeyRound from "@lucide/svelte/icons/key-round";
   import PenLine from "@lucide/svelte/icons/pen-line";
@@ -11,7 +12,6 @@
   import * as Dialog from "@lapismd/design-core/shadcn/dialog";
   import * as DropdownMenu from "@lapismd/design-core/shadcn/dropdown-menu";
   import * as Input from "@lapismd/design-core/shadcn/input";
-  import serverLogo from "../../web/src/assets/lapis-logo.svg?url";
 
   type Passkey = { id: string; label: string; activity: string };
   type Account = {
@@ -96,138 +96,132 @@
   }
 </script>
 
-<main class="server-vault-launcher security-preview">
-  <div class="security-content">
-    <header class="server-launcher-header">
-      <div class="server-brand-heading">
-        <img src={serverLogo} alt="" class="server-launcher-logo" />
-        <div class="server-brand-copy">
-          <p class="server-eyebrow">Lapis Notes</p>
-          <h1 class="server-launcher-title">Account &amp; security</h1>
-          <p class="server-launcher-description">
-            Manage how you sign in to your server account.
-          </p>
-        </div>
-      </div>
-    </header>
-
-    <div class="server-vault-grid security-grid">
-      <aside aria-label="Loaded accounts">
-        <Card.Root class="server-vault-card">
-          <Card.Header>
-            <Card.Title class="server-card-title">Accounts</Card.Title>
-          </Card.Header>
-          <Card.Content class="server-managed-content">
-            <ul class="server-vault-list">
-              {#each accounts as entry (entry.id)}
-                <li
-                  class="server-vault-row"
-                  class:selected={entry.id === selectedId}
+<section
+  class="security-preview"
+  aria-labelledby="server-account-security-heading"
+>
+  <div class="server-vault-grid security-grid">
+    <aside aria-label="Loaded accounts">
+      <Card.Root class="server-vault-card">
+        <Card.Header class="security-card-header">
+          <Card.Title class="server-card-title">Accounts</Card.Title>
+        </Card.Header>
+        <Card.Content class="server-managed-content">
+          <ul class="server-vault-list">
+            {#each accounts as entry (entry.id)}
+              <li
+                class="server-vault-row"
+                class:selected={entry.id === selectedId}
+              >
+                <button
+                  type="button"
+                  class="server-vault-open security-account"
+                  aria-pressed={entry.id === selectedId}
+                  onclick={() => select(entry.id)}
                 >
-                  <button
-                    type="button"
-                    class="server-vault-open security-account"
-                    aria-pressed={entry.id === selectedId}
-                    onclick={() => select(entry.id)}
+                  <UserRound aria-hidden="true" />
+                  <span class="server-vault-copy">
+                    <span class="server-vault-name">{entry.label}</span>
+                    <span class="server-vault-meta">{entry.description}</span>
+                  </span>
+                </button>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger
+                    class="server-vault-menu-trigger"
+                    aria-label={`Open actions for ${entry.label}`}
                   >
-                    <UserRound aria-hidden="true" />
-                    <span class="server-vault-copy">
-                      <span class="server-vault-name">{entry.label}</span>
-                      <span class="server-vault-meta">{entry.description}</span>
-                    </span>
-                  </button>
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger
-                      class="server-vault-menu-trigger"
-                      aria-label={`Open actions for ${entry.label}`}
-                    >
-                      <Ellipsis aria-hidden="true" />
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content align="end">
-                      <DropdownMenu.Group>
-                        <DropdownMenu.Item
-                          onclick={() => openAction(entry.id, { kind: "add" })}
-                        >
-                          <Plus aria-hidden="true" />
-                          Add passkey…
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item
-                          onclick={() =>
-                            openAction(entry.id, { kind: "verify" })}
-                        >
-                          <ShieldCheck aria-hidden="true" />
-                          Verify identity…
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Group>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Root>
-                </li>
-              {/each}
-            </ul>
-          </Card.Content>
-        </Card.Root>
-      </aside>
+                    <Ellipsis aria-hidden="true" />
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content align="end">
+                    <DropdownMenu.Group>
+                      <DropdownMenu.Item
+                        onclick={() => openAction(entry.id, { kind: "add" })}
+                      >
+                        <Plus aria-hidden="true" />
+                        Add passkey…
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        onclick={() => openAction(entry.id, { kind: "verify" })}
+                      >
+                        <ShieldCheck aria-hidden="true" />
+                        Verify identity…
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Group>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+              </li>
+            {/each}
+          </ul>
+          <a
+            class="api-docs-link web-vault-launcher__recent"
+            href="/api/docs"
+            target="_blank"
+            rel="noopener"
+          >
+            <BookOpen aria-hidden="true" />
+            Server API documentation
+          </a>
+        </Card.Content>
+      </Card.Root>
+    </aside>
 
-      <section aria-label={`Security settings for ${account.label}`}>
-        <Card.Root class="server-vault-card">
-          <Card.Header>
-            <Card.Title class="server-card-title">{account.label}</Card.Title>
-            <Card.Description>{account.description}</Card.Description>
-          </Card.Header>
-          <Card.Content class="server-managed-content passkeys">
-            <h2 class="passkeys-heading">Passkeys</h2>
-            <ul class="server-vault-list">
-              {#each account.passkeys as key (key.id)}
-                <li class="server-vault-row">
-                  <div class="server-vault-open passkey-summary">
-                    <KeyRound aria-hidden="true" />
-                    <span class="server-vault-copy">
-                      <span class="server-vault-name">{key.label}</span>
-                      <span class="server-vault-meta">{key.activity}</span>
-                    </span>
-                  </div>
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger
-                      class="server-vault-menu-trigger"
-                      aria-label={`Open actions for ${key.label}`}
-                    >
-                      <Ellipsis aria-hidden="true" />
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content align="end">
-                      <DropdownMenu.Group>
-                        <DropdownMenu.Item
-                          onclick={() =>
-                            openAction(account.id, { kind: "rename", key })}
-                        >
-                          <PenLine aria-hidden="true" />
-                          Rename…
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Group>
-                      <DropdownMenu.Separator />
-                      <DropdownMenu.Group>
-                        <DropdownMenu.Item
-                          variant="destructive"
-                          onclick={() =>
-                            openAction(account.id, { kind: "remove", key })}
-                        >
-                          <Trash2 aria-hidden="true" />
-                          Remove…
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Group>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Root>
-                </li>
-              {:else}
-                <li class="server-vault-empty">No passkeys enrolled.</li>
-              {/each}
-            </ul>
-            {#if notice}<p class="server-alert" role="status">{notice}</p>{/if}
-          </Card.Content>
-        </Card.Root>
-      </section>
-    </div>
+    <section aria-label={`Security settings for ${account.label}`}>
+      <Card.Root class="server-vault-card">
+        <Card.Header class="security-card-header">
+          <h2 class="server-card-title passkeys-heading">Passkeys</h2>
+        </Card.Header>
+        <Card.Content class="server-managed-content passkeys">
+          <ul class="server-vault-list">
+            {#each account.passkeys as key (key.id)}
+              <li class="server-vault-row">
+                <div class="server-vault-open passkey-summary">
+                  <KeyRound aria-hidden="true" />
+                  <span class="server-vault-copy">
+                    <span class="server-vault-name">{key.label}</span>
+                    <span class="server-vault-meta">{key.activity}</span>
+                  </span>
+                </div>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger
+                    class="server-vault-menu-trigger"
+                    aria-label={`Open actions for ${key.label}`}
+                  >
+                    <Ellipsis aria-hidden="true" />
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content align="end">
+                    <DropdownMenu.Group>
+                      <DropdownMenu.Item
+                        onclick={() =>
+                          openAction(account.id, { kind: "rename", key })}
+                      >
+                        <PenLine aria-hidden="true" />
+                        Rename…
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Group>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Group>
+                      <DropdownMenu.Item
+                        variant="destructive"
+                        onclick={() =>
+                          openAction(account.id, { kind: "remove", key })}
+                      >
+                        <Trash2 aria-hidden="true" />
+                        Remove…
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Group>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+              </li>
+            {:else}
+              <li class="server-vault-empty">No passkeys enrolled.</li>
+            {/each}
+          </ul>
+          {#if notice}<p class="server-alert" role="status">{notice}</p>{/if}
+        </Card.Content>
+      </Card.Root>
+    </section>
   </div>
-</main>
+</section>
 
 <Dialog.Root bind:open={dialogOpen}>
   <Dialog.Content>
@@ -278,16 +272,8 @@
 
 <style>
   .security-preview {
-    height: 100dvh;
-    overflow: auto;
-  }
-
-  .security-content {
-    display: grid;
-    gap: 1.25rem;
-    max-width: 72rem;
-    margin-inline: auto;
-    padding: clamp(1rem, 4vw, 2.5rem);
+    position: absolute;
+    inset: 0 0 auto;
   }
 
   .security-grid {
@@ -315,8 +301,16 @@
     cursor: pointer;
   }
 
-  .security-account:hover,
-  .selected {
+  .security-grid :global(.security-card-header) {
+    padding-inline: 1rem;
+  }
+
+  .security-grid li.server-vault-row {
+    background: var(--background);
+  }
+
+  .security-grid li.selected,
+  .security-grid li.server-vault-row:hover {
     background: var(--accent);
     color: var(--accent-foreground);
   }
@@ -333,8 +327,19 @@
   }
 
   .passkeys-heading {
-    font-size: 0.875rem;
     font-weight: 600;
+  }
+
+  .api-docs-link {
+    margin-top: 0.5rem;
+    color: var(--foreground);
+    font-size: 0.875rem;
+  }
+
+  .api-docs-link :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
   }
 
   @media (max-width: 52rem) {
