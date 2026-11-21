@@ -99,12 +99,12 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapis-notes/source-editor` | `^0.1.14` | `0.1.14` |
 | `package.json` (dependencies) | `@lapis-notes/ui` | `^0.2.8` | `0.2.8` |
 | `package.json` (dependencies) | `@lapis-notes/workspace` | `^0.4.10` | `0.4.10` |
-| `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.7` | `0.13.7` |
+| `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.8` | `0.13.8` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapismd/mira` | `~0.2.0` | `0.2.0` |
 | `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `eda8bd6676aa34f553e13aba2fd3a98113afb9a3faa34252628dbbabe436faad`.
+Manifest, peer and integrity facts SHA256: `98b1a062ef7ce54e9bd6584fc91c3dcfd209314f4c9b7c4a20003b587f986539`.
 
 <!-- dependency-intake:server-registry:end -->
