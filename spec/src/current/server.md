@@ -59,8 +59,9 @@ MUST listen on port `8787`, store the profile on volume `/data`, and report
 readiness at `http://127.0.0.1:8787/readyz`. It MUST NOT be
 `ghcr.io/lapismd/lapis-notes-ci` or `ghcr.io/lapismd/lapis-ci`.
 A push to `main` MUST publish that image tagged with the 7-character
-`git rev-parse --short` commit hash. A `v*` git tag MUST publish the same
-image with that tag. Published tags MUST provide `linux/amd64` and `linux/arm64`
+`git rev-parse --short` commit hash and MUST advance `latest` to the same
+image index. A `v*` git tag MUST publish the same image with that tag and MUST
+also advance `latest`. Published tags MUST provide `linux/amd64` and `linux/arm64`
 manifests. The image web stage MUST install this repository with the frozen
 lockfile and build the Vite application in `web/`.
 The Rust and Web build stages MUST execute on the native build platform; the
@@ -98,7 +99,7 @@ without requiring source-build memory.
 ### Acceptance details
 
 - The Dockerfile exposes port 8787, volume `/data`, and the readyz URL, while Cargo.toml pins lapis-ai-service to tag v0.2.0 and version 0.2.0.
-- Main publishes the 7-character commit and compatibility -slim tags from one multiarchitecture image index; v\* tags publish both aliases.
+- Main publishes the 7-character commit, `latest` and compatibility `-slim` tags from one multiarchitecture image index; v\* tags publish their version, `latest` and both compatibility aliases.
 - The image cross-compiles each target Rust executable and builds `web/` with Vite on the native build platform after a frozen lockfile install.
 - Both architectures run jj version, repository initialization and status as UID 1993; OCI executable/hooks, read-only no-Mod boot, graceful shutdown, unsupported Homebrew request rejection and the 500 MiB limit remain required.
 

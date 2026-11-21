@@ -118,3 +118,16 @@ test("image release binds reusable Mod qualification to its exact source", () =>
     with: { source: "${{ github.sha }}" },
   });
 });
+
+test("every canonical Server image publish advances latest", () => {
+  const image = imageWorkflow.jobs.image;
+
+  for (const id of ["meta", "slim-meta"]) {
+    const metadata = image.steps.find((step) => step.id === id);
+    assert.ok(metadata, `Missing ${id} image metadata step`);
+    assert.match(
+      metadata.with.tags,
+      /type=raw,value=latest,enable=\$\{\{ github\.ref == 'refs\/heads\/main' \|\| github\.ref_type == 'tag' \}\}/,
+    );
+  }
+});

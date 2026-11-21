@@ -14,14 +14,14 @@ required; navigation cannot await asynchronous App teardown. [Hosted failure own
 Concurrent Sync qualification remains under SRV-GOV-001 in the
 [Lapis Sync source qualification](governance/remotes.md#lapis-sync-source-qualification) topic.
 
-Version preparation MUST validate the pinned source-owned Node runtime and actual
-Changesets plan before minting the repository-scoped App on canonical main.
-Only a nonempty plan admits contents/pull-request writes; missing inputs MUST
-fail closed and checkout MUST NOT persist credentials. Without release intent,
-the existing GitHub release helper MUST retain the workflow token through
-`GH_TOKEN` for tag/release and image/CLI dispatch. Changesets MUST NOT create
-GitHub releases directly. SRV-GOV-001 native/image/specification/publication
-gates and parsed workflow checks in check, test and spec lanes stay required.
+Version preparation MUST validate the pinned Node runtime and actual Changesets
+plan before minting the repository-scoped App on canonical main. Only a nonempty
+plan admits contents/pull-request writes; missing inputs MUST fail closed and
+checkout MUST NOT persist credentials. Without release intent, the existing
+GitHub release helper MUST retain `GH_TOKEN` for tag/release and image/CLI
+dispatch. Changesets MUST NOT create GitHub releases directly. Main and `v*`
+image publications MUST advance normal and slim `latest` aliases. SRV-GOV-001
+native/image/specification/publication gates and parsed workflow checks remain required.
 
 The SRV-SRV-002 candidate dependency intake retains one consistent owning JJ
 Store revision, manifest admission and registry lockfile. Its original hosted

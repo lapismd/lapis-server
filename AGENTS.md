@@ -11,7 +11,8 @@ tag. `lapis-ai-service` stays tag `v0.2.0`.
 
 Use Jujutsu. Do not publish crates. A push to `main` publishes
 `ghcr.io/lapismd/lapis-server` tagged with the 7-character
-`git rev-parse --short` hash. Changesets record the release note, open the
+`git rev-parse --short` hash and advances `latest`; a `v*` tag also advances
+`latest` to that release. Changesets record the release note, open the
 version pull request, and create the `v*` tag and GitHub release. That tag
 also publishes the image. Do not publish an npm package.
 
