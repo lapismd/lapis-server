@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { changesFromVcs } from "@lapismd/spec-validator";
@@ -6,6 +6,7 @@ export function sourceIntakeReader(
   root,
   execute = execFileSync,
   hasJj = existsSync(resolve(root, ".jj")),
+  env = execute === execFileSync ? process.env : {},
 ) {
   const run = (binary, args) =>
     execute(binary, args, {
@@ -13,7 +14,12 @@ export function sourceIntakeReader(
       encoding: "utf8",
       maxBuffer: 3 * 1024 * 1024,
     });
-  const parent = (
+  let parent;
+  if (env.GITHUB_EVENT_NAME === "pull_request" && env.GITHUB_EVENT_PATH) {
+    const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, "utf8"));
+    parent = event.pull_request?.base?.sha;
+  }
+  parent ??= (
     hasJj
       ? run("jj", [
           "--ignore-working-copy",

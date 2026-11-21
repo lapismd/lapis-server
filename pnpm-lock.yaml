@@ -54,8 +54,8 @@ importers:
         specifier: ^0.6.11
         version: 0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0)
       '@lapis-notes/app-profile':
-        specifier: ^0.2.2
-        version: 0.2.2(b5fb4765673fdf5fc9d1eb9c6739e7b2)
+        specifier: ^0.2.8
+        version: 0.2.8(fedb9ee75bb641fbbe31272c93516e51)
       '@lapis-notes/file-explorer':
         specifier: ^0.2.8
         version: 0.2.8(ef7cdb01fe3e8f861d62a96bda2a6f15)
@@ -72,11 +72,11 @@ importers:
         specifier: ^0.3.3
         version: 0.3.3(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/lang-markdown@6.5.2)(@codemirror/lang-yaml@6.1.3)(@codemirror/language-data@6.5.2)(@codemirror/language@6.13.1)(@codemirror/legacy-modes@6.5.5)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.2)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@internationalized/date@3.12.4)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lapis-notes/ui@0.2.8(@internationalized/date@3.12.4)(@lapismd/design-core@0.13.7(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(@lezer/markdown@1.8.1)(svelte@5.56.10)(tailwindcss@4.3.3)(unified@11.0.5)
       '@lapis-notes/search':
-        specifier: ^0.1.12
-        version: 0.1.12(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
+        specifier: ^0.1.15
+        version: 0.1.15(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapis-notes/source-editor':
-        specifier: ^0.1.11
-        version: 0.1.11(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
+        specifier: ^0.1.14
+        version: 0.1.14(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapis-notes/ui':
         specifier: ^0.2.8
         version: 0.2.8(@internationalized/date@3.12.4)(@lapismd/design-core@0.13.7(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)
@@ -245,8 +245,8 @@ packages:
     resolution: {integrity: sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/runtime@7.29.14':
-    resolution: {integrity: sha512-Y5tqevQaUAZhhj82BpYMNC1ssvLQTVAfwKdm8iy8qwmhvC2/CpcAu8OC+QEtjM7pMk7knx83u1Qj8gzkicyelw==}
+  '@babel/runtime@7.29.15':
+    resolution: {integrity: sha512-304gsbbGVmQc+cNGHzwHBlqepYdWLKj3VXCQBGt/EGcV7PUPfKI7kAUNW1FZEOCwlQiLvQjg1JEaAlRQ616h+Q==}
     engines: {node: '>=6.9.0'}
 
   '@blazediff/core@1.10.0':
@@ -1097,14 +1097,10 @@ packages:
       svelte: 5.56.10
       svelte-sonner: ^1.0.5
 
-  '@lapis-notes/app-profile@0.2.2':
-    resolution: {integrity: sha512-Va9HvXBidSLTBuD7BSW0gj7j/lh5F61ylC8DEseFQJWDxwTOKFzjb4xaexTUf1T3srXkk+ZjgzMO5wEVVgiAVQ==}
+  '@lapis-notes/app-profile@0.2.8':
+    resolution: {integrity: sha512-gLNpn14ELUsOurt3jL/5DmClxPevXugz4Tivs3NtPoRHMED2NA8qSa9sY/ME99Mrm5O0I1GuptSb5StzVIzpbg==}
     peerDependencies:
       svelte: ^5.56.10
-      vite: ^6.4.5 || ^7.3.7
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   '@lapis-notes/file-explorer@0.2.8':
     resolution: {integrity: sha512-2nnIW+8O6oQs9PR1rLlQTXJX/2RU7+xGkkmfUDz7ERxEK6nnSEuy+mpTO4hnA0XKV1w1yH6hzz0ai7VOR5G8tQ==}
@@ -1160,8 +1156,8 @@ packages:
       '@lezer/lr': ^1.4.2
       svelte: ^5.0.0
 
-  '@lapis-notes/search@0.1.12':
-    resolution: {integrity: sha512-vPwn6VwaNYpN4MtYswFVneuOyCojoTQc6xAfb1cTUz6GON0Gm+f3Sdg8rBwl5pyOrRjRks0axTBhJ4Ak4UtoLg==}
+  '@lapis-notes/search@0.1.15':
+    resolution: {integrity: sha512-IIr5xXhJHnHSipY7ngmHxeGEZINSr6L0bX+ZjnYjrsVU5noja60sm/y/tZ3BWBrsAwvlBk7lCEbqsftELA3udA==}
     peerDependencies:
       '@codemirror/autocomplete': ^6.18.6
       '@codemirror/commands': ^6.8.1
@@ -1174,8 +1170,8 @@ packages:
       '@lezer/lr': ^1.4.2
       svelte: ^5.0.0
 
-  '@lapis-notes/source-editor@0.1.11':
-    resolution: {integrity: sha512-uNG1fuLtKekEv8sULs8Xr5KFELHOQ5A0HYl5O1x3PoYSGgj78jldt3EF4HxURSg0VjjS+q2aFRt5A8w8HuJSIg==}
+  '@lapis-notes/source-editor@0.1.14':
+    resolution: {integrity: sha512-yDyajSCsY87+W1araoa1WfLk3wRHasCNFoX9EsvDU9qLiwkO8Ppc4yWSqQGd5Nb0E39cTLWOOC1ZF4xLuO3UhQ==}
     peerDependencies:
       '@codemirror/language': ^6.11.3
       '@lapis-notes/api': ^0.2.0 || ^0.4.0 || ^0.6.0
@@ -1194,8 +1190,8 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
-  '@lapismd/agent-ui@0.2.6':
-    resolution: {integrity: sha512-2GpGkXcTbd0dvH9W1UQ1+KXXNFv0kt6bo7lonZwmM3XUYK8Jc3NbYx5rLlOUAnOuhW2zcCJrO0HHLmV6HsZ7EQ==}
+  '@lapismd/agent-ui@0.2.11':
+    resolution: {integrity: sha512-2gG8b2Cn18nBsy4c3g03Ktkmq3By6IhYXK+QUseVSLSoO0rCsz6ZSlScCHxYJTIYFZ/QDzJf/1w+xE/b6VReWw==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -1323,6 +1319,11 @@ packages:
 
   '@lucide/svelte@1.70.0':
     resolution: {integrity: sha512-zvx7K/WLxo82c4ZYqbsfcYUPDVFrq4561xH0NHfSHJJbajj0AONTQ14EO095/WnfI4XUEl1tyS/nbjQNNiNxdQ==}
+    peerDependencies:
+      svelte: ^5
+
+  '@lucide/svelte@1.77.0':
+    resolution: {integrity: sha512-gXjmQ4VK3Mh/M11Nn/XCeln3XZByR4MxX5o+NMfr/Wg9MQs+BffvXTnW+0WvmjV1u58TXJhXvgJZHrMASUnqow==}
     peerDependencies:
       svelte: ^5
 
@@ -2523,8 +2524,8 @@ packages:
     resolution: {integrity: sha512-2z+rWdzbbSZv6/rhtvzvqeZQHrBaqgogqt85sqFNbabZOuFbCVFb8kPeEtZjiKkbrm395irpNKiYeFeLiQnFPg==}
     engines: {node: '>=18'}
 
-  csstype@3.2.3:
-    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+  csstype@3.2.4:
+    resolution: {integrity: sha512-PoKaoPzQapnEoqUSnHx1u6W6ku8CVEgKsnpmmzU3m1nwkidpPBQ8V/Zq2+bWNrsOKoKLwTGdbx6xF7BXP1zLVQ==}
 
   cytoscape-cose-bilkent@4.1.0:
     resolution: {integrity: sha512-wgQlVIUJF13Quxiv5e1gstZ08rnZj2XaLHGoFMYXz7SkNfCDOOteKBE6SYRfA9WxxI/iBc3ajfDoc6hb/MRAHQ==}
@@ -4584,7 +4585,7 @@ snapshots:
 
   '@babel/runtime@7.29.10': {}
 
-  '@babel/runtime@7.29.14': {}
+  '@babel/runtime@7.29.15': {}
 
   '@blazediff/core@1.10.0': {}
 
@@ -5519,21 +5520,19 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@lapis-notes/app-profile@0.2.2(b5fb4765673fdf5fc9d1eb9c6739e7b2)':
+  '@lapis-notes/app-profile@0.2.8(fedb9ee75bb641fbbe31272c93516e51)':
     dependencies:
       '@lapis-notes/api': 0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0)
       '@lapis-notes/file-explorer': 0.2.8(ef7cdb01fe3e8f861d62a96bda2a6f15)
       '@lapis-notes/history': 0.5.1(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lapismd/jj-history@0.1.0)(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapis-notes/markdown': 0.3.3(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/lang-markdown@6.5.2)(@codemirror/lang-yaml@6.1.3)(@codemirror/language-data@6.5.2)(@codemirror/language@6.13.1)(@codemirror/legacy-modes@6.5.5)(@codemirror/lint@6.9.7)(@codemirror/search@6.7.2)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@internationalized/date@3.12.4)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lapis-notes/ui@0.2.8(@internationalized/date@3.12.4)(@lapismd/design-core@0.13.7(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(@lezer/markdown@1.8.1)(svelte@5.56.10)(tailwindcss@4.3.3)(unified@11.0.5)
-      '@lapis-notes/search': 0.1.12(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
-      '@lapis-notes/source-editor': 0.1.11(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
+      '@lapis-notes/search': 0.1.15(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
+      '@lapis-notes/source-editor': 0.1.14(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapis-notes/workspace': 0.4.10(e29f4e45f47884b41d36b824f21bb367)
-      '@lapismd/agent-ui': 0.2.6(svelte@5.56.10)(tailwindcss@4.3.3)
+      '@lapismd/agent-ui': 0.2.11(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapismd/design-core': 0.13.7(svelte@5.56.10)(tailwindcss@4.3.3)
       '@lapismd/jj-history': 0.1.0
       svelte: 5.56.10
-    optionalDependencies:
-      vite: 6.4.5(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@cfworker/json-schema'
       - '@codemirror/autocomplete'
@@ -5725,7 +5724,7 @@ snapshots:
       - tailwindcss
       - unified
 
-  '@lapis-notes/search@0.1.12(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)':
+  '@lapis-notes/search@0.1.15(@codemirror/autocomplete@6.20.4)(@codemirror/commands@6.11.1)(@codemirror/language@6.13.1)(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)':
     dependencies:
       '@codemirror/autocomplete': 6.20.4
       '@codemirror/commands': 6.11.1
@@ -5744,7 +5743,7 @@ snapshots:
       - supports-color
       - tailwindcss
 
-  '@lapis-notes/source-editor@0.1.11(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)':
+  '@lapis-notes/source-editor@0.1.14(@codemirror/language@6.13.1)(@lapis-notes/api@0.6.11(e63ebaa20f0e0b62fbb0f27d03cd25a0))(@lezer/common@1.5.5)(@lezer/highlight@1.2.5)(@lezer/lr@1.4.12)(svelte@5.56.10)(tailwindcss@4.3.3)':
     dependencies:
       '@codemirror/lang-json': 6.0.2
       '@codemirror/lang-yaml': 6.1.3
@@ -5815,10 +5814,10 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@lapismd/agent-ui@0.2.6(svelte@5.56.10)(tailwindcss@4.3.3)':
+  '@lapismd/agent-ui@0.2.11(svelte@5.56.10)(tailwindcss@4.3.3)':
     dependencies:
       '@lapismd/design-core': 0.13.7(svelte@5.56.10)(tailwindcss@4.3.3)
-      '@lucide/svelte': 1.70.0(svelte@5.56.10)
+      '@lucide/svelte': 1.77.0(svelte@5.56.10)
       svelte: 5.56.10
     transitivePeerDependencies:
       - '@sveltejs/kit'
@@ -6154,6 +6153,10 @@ snapshots:
       svelte: 5.56.10
 
   '@lucide/svelte@1.70.0(svelte@5.56.10)':
+    dependencies:
+      svelte: 5.56.10
+
+  '@lucide/svelte@1.77.0(svelte@5.56.10)':
     dependencies:
       svelte: 5.56.10
 
@@ -6858,7 +6861,7 @@ snapshots:
 
   '@types/react@19.3.0':
     dependencies:
-      csstype: 3.2.3
+      csstype: 3.2.4
 
   '@types/trusted-types@2.0.7': {}
 
@@ -7203,7 +7206,7 @@ snapshots:
       '@asamuzakjp/css-color': 3.2.0
       rrweb-cssom: 0.8.0
 
-  csstype@3.2.3: {}
+  csstype@3.2.4: {}
 
   cytoscape-cose-bilkent@4.1.0(cytoscape@3.35.0):
     dependencies:
@@ -7925,7 +7928,7 @@ snapshots:
 
   i18next@25.10.10(typescript@5.9.3):
     dependencies:
-      '@babel/runtime': 7.29.14
+      '@babel/runtime': 7.29.15
     optionalDependencies:
       typescript: 5.9.3
 

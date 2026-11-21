@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
+import {
+  readFileSync,
+  mkdtempSync,
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
@@ -136,4 +142,71 @@ test("missing captured Git ancestry cannot fall back to a working-tree diff", ()
     () => sourceIntakeReader("/controlled-server-git-fixture", () => "", false),
     /Source intake ancestry unavailable/,
   );
+});
+
+test("injected VCS execution ignores ambient pull-request transport", () => {
+  const root = mkdtempSync(join(tmpdir(), "server-ambient-pr-base-"));
+  const eventPath = join(root, "event.json");
+  writeFileSync(
+    eventPath,
+    JSON.stringify({ pull_request: { base: { sha: "b".repeat(40) } } }),
+  );
+  const previous = {
+    eventName: process.env.GITHUB_EVENT_NAME,
+    eventPath: process.env.GITHUB_EVENT_PATH,
+  };
+  process.env.GITHUB_EVENT_NAME = "pull_request";
+  process.env.GITHUB_EVENT_PATH = eventPath;
+  const commands = [];
+  try {
+    const reader = sourceIntakeReader(
+      root,
+      (binary, args) => {
+        commands.push([binary, ...args]);
+        if (args[0] === "rev-parse") return parent;
+        return generated.gitDiff;
+      },
+      false,
+    );
+    assert.equal(reader.sourceSha, parent);
+    reader.changedFiles();
+  } finally {
+    if (previous.eventName === undefined) delete process.env.GITHUB_EVENT_NAME;
+    else process.env.GITHUB_EVENT_NAME = previous.eventName;
+    if (previous.eventPath === undefined) delete process.env.GITHUB_EVENT_PATH;
+    else process.env.GITHUB_EVENT_PATH = previous.eventPath;
+    rmSync(root, { recursive: true, force: true });
+  }
+  assert(commands.some(([, command]) => command === "rev-parse"));
+  assert(commands.every(([, ...args]) => !args.includes("b".repeat(40))));
+});
+
+test("pull-request intake uses the immutable event base across repair commits", () => {
+  const root = mkdtempSync(join(tmpdir(), "server-pr-base-"));
+  const eventPath = join(root, "event.json");
+  writeFileSync(
+    eventPath,
+    JSON.stringify({ pull_request: { base: { sha: parent } } }),
+  );
+  const commands = [];
+  const reader = sourceIntakeReader(
+    root,
+    (binary, args) => {
+      commands.push([binary, ...args]);
+      if (args[0] === "show") return sdk.before[args[1].slice(41)];
+      return generated.gitDiff;
+    },
+    false,
+    { GITHUB_EVENT_NAME: "pull_request", GITHUB_EVENT_PATH: eventPath },
+  );
+  try {
+    assert.equal(reader.sourceSha, parent);
+    assert.equal(reader("package.json"), sdk.before["package.json"]);
+    reader.changedFiles();
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  assert(!commands.some(([, command]) => command === "rev-parse"));
+  assert(commands.every(([, ...args]) => !args.includes("HEAD^1")));
+  assert(commands.some(([, ...args]) => args.includes(parent)));
 });

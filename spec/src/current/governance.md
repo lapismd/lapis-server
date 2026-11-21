@@ -1,6 +1,6 @@
 # Governance
 
-[Node version qualification](../../records/2026-11-17-node-version-runtime.md) and [source-owned workspace registry intake](governance/dependency-automation.md) preserve SRV-GOV-001/003 and independent release/native/image gates; the [reviewed Tasks transition](governance/dependency-automation.md) grants no automated minor capability or production qualification; managed private-root notes carry no release intent; [consumption](../../records/2026-11-18-managed-note-consumption.md) keeps deleted notes distinct from unsafe current files.
+[Node version qualification](../../records/2026-11-17-node-version-runtime.md) and [source-owned workspace registry intake](governance/dependency-automation.md) preserve SRV-GOV-001/003 and independent release/native/image gates; the [reviewed Tasks transition](governance/dependency-automation.md) grants no automated minor capability or production qualification; the [Notes cohort alignment](../../records/2026-11-20-notes-cohort-registry-alignment.md) binds registry metadata evolution and restores full pull-request-base validation; managed private-root notes carry no release intent; [consumption](../../records/2026-11-18-managed-note-consumption.md) keeps deleted notes distinct from unsafe current files.
 
 Terminal plugin 0.1.1 carries its renderer runtime inside the published package,
 so Server removes the obsolete `ghostty-web` optimizer input. Strict resolution,

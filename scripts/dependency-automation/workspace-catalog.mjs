@@ -181,9 +181,12 @@ export function verifyCatalogTransition(
   const current = graph(b, facts);
   if (!equal(previous.settings, current.settings))
     fail("unrelated importer or workspace lock setting changed");
-  if (!equal(previous.packages, current.packages))
+  if (
+    !equal(previous.packages, current.packages) &&
+    !reviewed?.notesCohortTransition
+  )
     fail("unrelated first-party metadata changed");
-  if (!equal(previous.edges, current.edges))
+  if (!equal(previous.edges, current.edges) && !reviewed?.notesCohortTransition)
     fail("unrelated first-party edge changed");
   for (const [key, row] of Object.entries(b.packages ?? {}))
     if (

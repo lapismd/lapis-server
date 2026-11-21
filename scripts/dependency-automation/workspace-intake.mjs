@@ -11,6 +11,7 @@ import {
 
 import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
 import { reviewedNotesPeerTransition } from "./reviewed-notes-peer-transition.mjs";
+import { reviewedNotesCohortTransition } from "./reviewed-notes-cohort-transition.mjs";
 import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
 
 const sections = [
@@ -247,6 +248,16 @@ export function verifyIntake({
       changedFiles,
     }) ??
     reviewedNotesPeerTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    }) ??
+    reviewedNotesCohortTransition({
       sourceSha,
       policyBytes,
       basePolicyBytes,
