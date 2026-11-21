@@ -544,6 +544,31 @@ export const TokenManagement: Story = {
   render: renderScenario("token-management"),
   play: async ({ canvasElement }) => {
     const page = await openContentSettings(canvasElement);
+    const picker = within(
+      (
+        await page.findByRole("listbox", {
+          name: "Vaults this token can read",
+        })
+      ).closest('[data-setting-id="content-access.personal-vaults"]')!,
+    );
+    const vaults = within(picker.getByRole("listbox"));
+    await vaults.findByRole("option", { name: "Notes", selected: true });
+    await expect(vaults.queryByRole("option", { name: "Archive" })).toBeNull();
+    const search = picker.getByRole("combobox");
+    await userEvent.type(search, "proj");
+    await userEvent.keyboard("{Enter}");
+    await userEvent.clear(search);
+    await expect(
+      vaults.getAllByRole("option", { selected: true }),
+    ).toHaveLength(2);
+    await userEvent.click(
+      picker.getByRole("button", { name: "Remove Projects" }),
+    );
+    await userEvent.click(picker.getByRole("button", { name: "Remove Notes" }));
+    await expect(
+      page.getByRole("button", { name: "Create a personal access token" }),
+    ).toBeDisabled();
+    await userEvent.click(vaults.getByRole("option", { name: "Notes" }));
     await page.findByText("Notes backup", { exact: true });
     await page.findByText("Example AI assistant", { exact: true });
     await page.findByRole("button", { name: "Create a personal access token" });

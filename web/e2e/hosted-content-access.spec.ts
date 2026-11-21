@@ -126,6 +126,14 @@ for (const renderer of ["static", "preview", "development"] as const) {
       await page
         .getByRole("textbox", { name: "Credential label", exact: true })
         .fill("Browser acceptance client");
+      const credentialVaults = page.getByRole("listbox", {
+        name: "Vaults this credential can read",
+      });
+      const selectedVault = credentialVaults.getByRole("option", {
+        name: "Rust vault",
+        selected: true,
+      });
+      await expect(selectedVault).toBeVisible();
       const first = await issue(page);
       const note = await read(first);
       expect(note.status).toBe(200);

@@ -1,13 +1,13 @@
 <script lang="ts">
   import CircleAlert from "@lucide/svelte/icons/circle-alert";
-  import Check from "@lucide/svelte/icons/check";
   import FolderOpen from "@lucide/svelte/icons/folder-open";
   import Plug from "@lucide/svelte/icons/plug";
   import ShieldCheck from "@lucide/svelte/icons/shield-check";
   import UserRound from "@lucide/svelte/icons/user-round";
-  import X from "@lucide/svelte/icons/x";
   import * as Alert from "@lapismd/design-core/shadcn/alert";
-  import * as CommandView from "@lapismd/design-core/shadcn/command-view";
+  import ScopePicker, {
+    maxCredentialVaults,
+  } from "../content-access/ScopePicker.svelte";
   import serverLogo from "../assets/lapis-logo.svg?url";
   import { onMount } from "svelte";
   import * as Button from "@lapismd/design-core/shadcn/button";
@@ -59,12 +59,8 @@
   let request = $state<Request>();
   let selectedVaults = $state<string[]>([]);
   let selectedPermissions = $state<string[]>([]);
-  let vaultSearch = $state("");
-  let permissionSearch = $state("");
   let error = $state("");
   let busy = $state(false);
-  const maxVaults = 20;
-  type Choice = { id: string; label: string; description?: string };
   const scopeDescriptions: Record<string, string> = {
     "skills:read": "List available and managed skills",
     "skills:write": "Install and update packaged skills",
@@ -84,11 +80,6 @@
     })),
   );
 
-  function toggle(selected: string[], id: string) {
-    return selected.includes(id)
-      ? selected.filter((entry) => entry !== id)
-      : [...selected, id];
-  }
   const path = $derived(
     `/content-access/mcp/consent/${encodeURIComponent(requestId)}`,
   );
@@ -128,90 +119,6 @@
     }
   }
 </script>
-
-{#snippet picker(
-  label: string,
-  searchLabel: string,
-  choices: Choice[],
-  selected: string[],
-  onToggle: (id: string) => void,
-  query: string,
-  onSearch: (value: string) => void,
-  limit?: number,
-)}
-  <div class="consent-picker">
-    {#if selected.length}
-      <ul class="selection-summary" aria-label={`${label} selected`}>
-        {#each choices.filter( (choice) => selected.includes(choice.id), ) as choice (choice.id)}
-          <li>
-            <Button.Root
-              type="button"
-              size="sm"
-              variant="secondary"
-              disabled={busy}
-              aria-label={`Remove ${choice.label}`}
-              onclick={() => onToggle(choice.id)}
-            >
-              {choice.label}
-              <X aria-hidden="true" data-icon="inline-end" />
-            </Button.Root>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-    <CommandView.Root {label} shouldFilter={false}>
-      <CommandView.Input
-        bind:value={() => query, onSearch}
-        aria-label={searchLabel}
-        placeholder={`${searchLabel}…`}
-        disabled={busy}
-        autocomplete="off"
-      />
-      <CommandView.List aria-label={label} aria-multiselectable="true">
-        <CommandView.Empty>No matching options.</CommandView.Empty>
-        <CommandView.Group>
-          {#each choices.filter( (choice) => `${choice.label} ${choice.description ?? ""}`
-                .toLowerCase()
-                .includes(query.trim().toLowerCase()), ) as choice (choice.id)}
-            {@const checked = selected.includes(choice.id)}
-            <CommandView.Item
-              value={choice.id}
-              keywords={[choice.label, choice.description ?? ""]}
-              disabled={busy ||
-                (!checked && limit !== undefined && selected.length >= limit)}
-              onSelect={() => onToggle(choice.id)}
-            >
-              {#snippet child({ props })}
-                <div {...props} aria-selected={checked} class="consent-option">
-                  <CommandView.ItemIcon>
-                    <span
-                      class="selection-mark"
-                      class:checked
-                      aria-hidden="true"
-                    >
-                      {#if checked}<Check />{/if}
-                    </span>
-                  </CommandView.ItemIcon>
-                  <CommandView.ItemLabel>{choice.label}</CommandView.ItemLabel>
-                  {#if choice.description}
-                    <CommandView.ItemDescription
-                      >{choice.description}</CommandView.ItemDescription
-                    >
-                  {/if}
-                </div>
-              {/snippet}
-            </CommandView.Item>
-          {/each}
-        </CommandView.Group>
-      </CommandView.List>
-      {#if limit !== undefined && selected.length >= limit}
-        <CommandView.Footer
-          >Up to {limit} vaults can be shared.</CommandView.Footer
-        >
-      {/if}
-    </CommandView.Root>
-  </div>
-{/snippet}
 
 <section class="server-centered-surface consent-surface">
   <Card.Root class="server-login-card consent-card">
@@ -269,20 +176,17 @@
               <p>Choose the vaults this application can read.</p>
             </div>
           </div>
-          {@render picker(
-            "Vaults",
-            "Search vaults",
-            vaultChoices,
-            selectedVaults,
-            (id) => {
-              selectedVaults = toggle(selectedVaults, id);
-            },
-            vaultSearch,
-            (value) => {
-              vaultSearch = value;
-            },
-            maxVaults,
-          )}
+          <ScopePicker
+            label="Vaults"
+            searchLabel="Search vaults"
+            choices={vaultChoices}
+            selected={selectedVaults}
+            onChange={(ids) => {
+              selectedVaults = ids;
+            }}
+            limit={maxCredentialVaults}
+            disabled={busy}
+          />
         </div>
         {#if permissionChoices.length}
           <div class="consent-section">
@@ -293,19 +197,16 @@
                 <p>Choose the optional actions this application can take.</p>
               </div>
             </div>
-            {@render picker(
-              "Plugin permissions",
-              "Search permissions",
-              permissionChoices,
-              selectedPermissions,
-              (id) => {
-                selectedPermissions = toggle(selectedPermissions, id);
-              },
-              permissionSearch,
-              (value) => {
-                permissionSearch = value;
-              },
-            )}
+            <ScopePicker
+              label="Plugin permissions"
+              searchLabel="Search permissions"
+              choices={permissionChoices}
+              selected={selectedPermissions}
+              onChange={(ids) => {
+                selectedPermissions = ids;
+              }}
+              disabled={busy}
+            />
           </div>
         {/if}
         <Alert.Root class="consent-notice" role="note">
@@ -364,8 +265,7 @@
     gap: 1rem;
   }
 
-  .consent-identity,
-  .consent-picker {
+  .consent-identity {
     min-width: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -442,47 +342,9 @@
     min-width: 0;
   }
 
-  .consent-picker {
-    --ui-command-view-list-max-height: 13rem;
-  }
-
   .consent-surface :global(.consent-notice) {
     --ui-alert-background: color-mix(in srgb, var(--warning) 10%, var(--card));
     border-color: color-mix(in srgb, var(--warning) 25%, var(--border));
-  }
-
-  .selection-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    list-style: none;
-    padding: 0.375rem;
-    margin: 0;
-    border-block-end: 1px solid var(--border);
-  }
-
-  .consent-option {
-    align-items: center;
-  }
-
-  .selection-mark {
-    display: grid;
-    place-items: center;
-    width: 1rem;
-    height: 1rem;
-    border: 1px solid var(--input);
-    border-radius: 0.25rem;
-  }
-
-  .selection-mark.checked {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--primary-foreground);
-  }
-
-  .selection-mark :global(svg) {
-    width: 0.75rem;
-    height: 0.75rem;
   }
 
   .consent-surface :global(.consent-footer) {

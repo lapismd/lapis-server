@@ -95,7 +95,7 @@ pub(super) async fn icon() -> impl axum::response::IntoResponse {
             ("cross-origin-resource-policy", "cross-origin"),
             ("access-control-allow-origin", "*"),
         ],
-        include_bytes!("../../../../web/public/icon.png").as_slice(),
+        include_bytes!("../../../../web/public/pwa-512x512.png").as_slice(),
     )
 }
 

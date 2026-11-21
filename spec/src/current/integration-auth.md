@@ -14,7 +14,7 @@ affected tokens. Personal tokens MUST NOT authorize server owner routes.
 - Issuance reveals the secret once and offers 1 hour, 24 hours, 7 days, 30 days, 90 days by default, 365 days, and Never.
 - Fresh leases revalidate vault admission and the original operation snapshot after restart or idle cleanup.
 - Disablement, revocation, expiry, or explicit vault retirement permanently end the approval.
-- Owner lists show the label, scope, status and absolute expiry without secrets.
+- Credential settings use a searchable multi-vault picker and issued credential lists show label, scope, status and absolute expiry without secrets.
 
 ## SRV-SRV-018 — OAuth for remote MCP clients
 

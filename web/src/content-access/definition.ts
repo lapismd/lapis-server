@@ -1,4 +1,7 @@
 import type { PluginSettingsDefinition } from "@lapis-notes/api";
+import CredentialVaultSetting, {
+  type CredentialVaultField,
+} from "./CredentialVaultSetting.svelte";
 import { personalTokenLifetimes, type ContentAccessModel } from "./model";
 
 type SettingField = NonNullable<
@@ -326,6 +329,18 @@ function credentialFields(
         maximum: 24,
       };
 
+  const vaultField: CredentialVaultField = {
+    id: id("vaults"),
+    type: "custom",
+    component: CredentialVaultSetting,
+    title: personal
+      ? "Vaults this token can read"
+      : "Vaults this credential can read",
+    presentation: "full-width",
+    contentAccess: model,
+    default: [],
+  };
+
   return [
     {
       id: id("label"),
@@ -334,17 +349,7 @@ function credentialFields(
       title: personal ? "Token label" : "Credential label",
       maxLength: 128,
     },
-    {
-      id: id("vaults"),
-      type: "multi-enum",
-      title: personal
-        ? "Vaults this token can read"
-        : "Vaults this credential can read",
-      optionsSource: "content-access.vaults",
-      default: [],
-      minimumItems: 1,
-      maximumItems: 20,
-    },
+    vaultField,
     {
       id: id("permissions"),
       type: "multi-enum",
