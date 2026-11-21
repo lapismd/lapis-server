@@ -103,6 +103,16 @@ for (const renderer of ["static", "preview", "development"] as const) {
       await expect(
         page.getByText("Enabled · scoped access", { exact: true }),
       ).toBeVisible();
+      for (const [id, path] of [
+        ["api", "/api/content/v1"],
+        ["mcp", "/mcp"],
+      ]) {
+        const field = page.locator(`[data-setting-id="content-access.${id}"]`);
+        await expect(field).toHaveAttribute("data-setting-layout", "stacked");
+        await expect(
+          field.getByText(`${origin}${path}`, { exact: true }),
+        ).toBeVisible();
+      }
       await page
         .getByRole("textbox", { name: "Credential label", exact: true })
         .fill("Browser acceptance client");
