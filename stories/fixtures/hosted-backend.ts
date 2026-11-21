@@ -21,6 +21,7 @@ export function createFixtureVaultRestoration() {
 export type HostedScenario =
   | "login"
   | "passkey-login"
+  | "passkey-management"
   | "token-management"
   | "loading"
   | "protocol"
@@ -55,20 +56,33 @@ export function createHostedFixture(scenario: HostedScenario) {
   });
   const adapters = new Map<string, MemoryVaultAdapter>();
   let failed = false;
-  function unavailable() {
-    return Promise.reject(new Error("Use a hosted server to manage passkeys."));
-  }
+  const passkeys: Awaited<
+    ReturnType<NonNullable<HostedBackend["security"]>["passkeys"]>
+  > = [];
   const security: HostedBackend["security"] =
-    scenario === "passkey-login"
+    scenario === "passkey-login" || scenario === "passkey-management"
       ? {
           signIn: async (username) =>
             backend.login(username, "fixture-password"),
-          passkeys: async () => [],
-          enroll: unavailable,
-          rename: unavailable,
-          remove: unavailable,
-          verifyPassword: unavailable,
-          verifyPasskey: unavailable,
+          passkeys: async () => passkeys.map((key) => ({ ...key })),
+          enroll: async (label) => {
+            passkeys.push({
+              id: crypto.randomUUID(),
+              label,
+              created_at: Date.now(),
+              last_used_at: null,
+            });
+          },
+          rename: async (id, label) => {
+            const key = passkeys.find((entry) => entry.id === id);
+            if (key) key.label = label;
+          },
+          remove: async (id) => {
+            const index = passkeys.findIndex((key) => key.id === id);
+            if (index !== -1) passkeys.splice(index, 1);
+          },
+          verifyPassword: async (password) => backend.login("owner", password),
+          verifyPasskey: async () => {},
         }
       : undefined;
   const backend: HostedBackend = {

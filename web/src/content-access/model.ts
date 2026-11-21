@@ -16,17 +16,22 @@ export const personalTokenLifetimes = [
   { value: "year", label: "365 days" },
   { value: "never", label: "Never" },
 ] satisfies { value: PersonalTokenLifetime; label: string }[];
+type CredentialDraft = {
+  label: string;
+  vaults: string[];
+  permissions: string[];
+};
+
 /** Server-owned settings source. Values and one-time secrets never use App persistence. */
 export class ContentAccessModel {
   status?: ContentHostStatus;
   vaults: ManagedVault[] = [];
   busy = false;
   notice = "Loading content access…";
-  #label = "CLI client";
-  #selected: string[];
+  #temporary: CredentialDraft;
+  #personal: CredentialDraft;
   #hours = 1;
   #personalLifetime: PersonalTokenLifetime = "days90";
-  #permissions: string[] = [];
   permissionOptions = async () => {
     const status = await this.#json<ContentHostStatus>("");
     return this.#closed
@@ -36,7 +41,7 @@ export class ContentAccessModel {
           label: value,
         }));
   };
-  #token = "";
+  #secret?: { token: string; personal: boolean };
   #expires = new Map<string, number>();
   #listeners = new Set<(id?: string) => void>();
   #abort = new AbortController();
@@ -47,10 +52,19 @@ export class ContentAccessModel {
     readonly host: RustHttpClient,
     vaultId: string,
   ) {
-    this.#selected = [vaultId];
+    this.#temporary = {
+      label: "CLI client",
+      vaults: [vaultId],
+      permissions: [],
+    };
+    this.#personal = {
+      label: "CLI client",
+      vaults: [vaultId],
+      permissions: [],
+    };
   }
   get hasSecret() {
-    return this.#token !== "";
+    return this.#secret !== undefined;
   }
   get available() {
     return Boolean(this.status?.available);
@@ -58,12 +72,17 @@ export class ContentAccessModel {
   get enabled() {
     return Boolean(this.status?.access.enabled);
   }
-  get canCreate() {
+  #draft(personal: boolean): CredentialDraft {
+    return personal ? this.#personal : this.#temporary;
+  }
+  canCreate(personal = false) {
+    const draft = this.#draft(personal);
     return (
       this.enabled &&
       !this.busy &&
-      this.#selected.length > 0 &&
-      this.#label.trim().length > 0
+      (!personal || Boolean(this.status?.persistent)) &&
+      draft.vaults.length > 0 &&
+      draft.label.trim().length > 0
     );
   }
   get options() {
@@ -120,20 +139,24 @@ export class ContentAccessModel {
         return this.status?.api_url ?? "";
       case "mcp":
         return this.status?.mcp_url ?? "";
-      case "lifetime":
-        return this.status?.persistent
-          ? "Personal access tokens survive server restart. Temporary credentials are valid only until restart or expiry."
-          : "This server keeps settings and credentials only until restart.";
       case "label":
-        return this.#label;
+        return this.#temporary.label;
+      case "personal-label":
+        return this.#personal.label;
       case "vaults":
-        return this.#selected;
+        return this.#temporary.vaults;
+      case "personal-vaults":
+        return this.#personal.vaults;
       case "hours":
         return this.#hours;
       case "permissions":
-        return this.#permissions;
+        return this.#temporary.permissions;
+      case "personal-permissions":
+        return this.#personal.permissions;
       case "token":
-        return this.#token;
+        return this.#secret?.personal === false ? this.#secret.token : "";
+      case "personal-token":
+        return this.#secret?.personal === true ? this.#secret.token : "";
       case "personal-lifetime":
         return this.#personalLifetime;
       case "mcp-connections":
@@ -192,7 +215,9 @@ export class ContentAccessModel {
   set = async (id: string, value: unknown) => {
     if (this.#closed || this.busy)
       throw new Error("Wait for the current content request to finish.");
-    switch (id.slice(prefix.length)) {
+    const setting = id.slice(prefix.length);
+    const draft = this.#draft(setting.startsWith("personal-"));
+    switch (setting) {
       case "enabled": {
         if (typeof value !== "boolean")
           throw new Error("Choose enabled or disabled.");
@@ -207,7 +232,8 @@ export class ContentAccessModel {
         });
         break;
       }
-      case "label": {
+      case "label":
+      case "personal-label": {
         if (
           typeof value !== "string" ||
           new TextEncoder().encode(value.trim()).length > 128 ||
@@ -216,10 +242,11 @@ export class ContentAccessModel {
           throw new Error(
             "Enter a label of at most 128 UTF-8 bytes without control characters.",
           );
-        this.#label = value;
+        draft.label = value;
         break;
       }
-      case "vaults": {
+      case "vaults":
+      case "personal-vaults": {
         if (
           !Array.isArray(value) ||
           value.length < 1 ||
@@ -231,7 +258,7 @@ export class ContentAccessModel {
           )
         )
           throw new Error("Select one or more active vaults.");
-        this.#selected = [...new Set(value as string[])];
+        draft.vaults = [...new Set(value as string[])];
         break;
       }
       case "hours": {
@@ -253,7 +280,8 @@ export class ContentAccessModel {
         this.#personalLifetime = option.value;
         break;
       }
-      case "permissions": {
+      case "permissions":
+      case "personal-permissions": {
         if (
           !Array.isArray(value) ||
           value.some(
@@ -263,7 +291,7 @@ export class ContentAccessModel {
           )
         )
           throw new Error("Choose advertised plugin permissions.");
-        this.#permissions = [...new Set(value as string[])];
+        draft.permissions = [...new Set(value as string[])];
         break;
       }
       default:
@@ -293,9 +321,10 @@ export class ContentAccessModel {
     if (this.#closed) return;
     this.status = status;
     this.vaults = vaults;
-    this.#selected = this.#selected.filter((id) =>
-      this.options.some((v) => v.value === id),
-    );
+    const activeVaults = new Set(this.options.map((vault) => vault.value));
+    for (const draft of [this.#temporary, this.#personal]) {
+      draft.vaults = draft.vaults.filter((id) => activeVaults.has(id));
+    }
     this.#expires = new Map(
       status.access.grants.map((g) => [
         g.grant_id,
@@ -321,30 +350,37 @@ export class ContentAccessModel {
     }
   }
   refresh = () => this.#run(() => this.#load());
-  create = (personal = false) =>
-    this.#run(async () => {
-      if (!this.enabled || !this.#selected.length || !this.#label.trim())
+  create = (personal = false) => {
+    const draft = this.#draft(personal);
+    return this.#run(async () => {
+      if (
+        !this.enabled ||
+        !draft.vaults.length ||
+        !draft.label.trim() ||
+        (personal && !this.status?.persistent)
+      )
         throw new Error("Enable access and select vaults first.");
       this.clearSecret();
       const result = await this.#json<CreatedContentGrant>(
         personal ? "/tokens" : "/grants",
         "POST",
         {
-          label: this.#label.trim(),
-          vault_ids: this.#selected,
+          label: draft.label.trim(),
+          vault_ids: draft.vaults,
           ...(personal
             ? { lifetime: this.#personalLifetime }
             : { lifetime_seconds: this.#hours * 3600 }),
-          ...(this.#permissions.length
-            ? { permissions: this.#permissions }
+          ...(personal || draft.permissions.length
+            ? { permissions: draft.permissions }
             : {}),
         },
       );
       if (this.#closed) return;
-      this.#token = result.token;
+      this.#secret = { token: result.token, personal };
       this.#secretTimer = setTimeout(() => this.clearSecret(), 60_000);
       await this.#load();
     });
+  };
   revoke = (id: string, personal = false) =>
     this.#run(async () => {
       this.clearSecret();
@@ -361,7 +397,7 @@ export class ContentAccessModel {
     });
   clearSecret = () => {
     clearTimeout(this.#secretTimer);
-    this.#token = "";
+    this.#secret = undefined;
     this.#notify();
   };
   dispose() {

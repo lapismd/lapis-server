@@ -306,7 +306,9 @@ to remove its authority.
   connection in your client, sign into Lapis, and approve the vaults and
   permissions you want to share. Review or disconnect clients from
   **Connected applications**.
-- Add a passkey in **Account & security** on the server’s vault chooser.
-  Use your password or a registered passkey to verify sensitive changes.
+- Sign in with your existing password and open **Account & security** on the
+  vault chooser. Enter a name, select **Add passkey**, and follow the prompt
+  from your device or password manager. If the session asks you to verify
+  again, select **Verify password** before adding the passkey.
 - Open `/api/docs` while signed in for Swagger UI, or download the OpenAPI
   document from `/api/openapi.json`. Both describe the same HTTP route catalog.

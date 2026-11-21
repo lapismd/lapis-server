@@ -9,6 +9,8 @@
   import FolderInput from "@lucide/svelte/icons/folder-input";
   import FolderOpen from "@lucide/svelte/icons/folder-open";
   import FolderPlus from "@lucide/svelte/icons/folder-plus";
+  import KeyRound from "@lucide/svelte/icons/key-round";
+  import LogIn from "@lucide/svelte/icons/log-in";
   import LogOut from "@lucide/svelte/icons/log-out";
   import PenLine from "@lucide/svelte/icons/pen-line";
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
@@ -634,6 +636,7 @@
               type="submit"
               data-server-login-submit
             >
+              <LogIn aria-hidden="true" data-icon="inline-start" />
               Sign in
             </Button.Root>
             {#if passkeysAvailable}
@@ -642,8 +645,10 @@
                 variant="outline"
                 disabled={passkeyBusy || !username.trim()}
                 onclick={() => void signInWithPasskey()}
-                >Sign in with a passkey</Button.Root
               >
+                <KeyRound aria-hidden="true" data-icon="inline-start" />
+                Sign in with a passkey
+              </Button.Root>
             {/if}
           </Card.Content>
         </Card.Root>
