@@ -62,7 +62,7 @@
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.42.1",
     "@fontsource/jetbrains-mono": "5.3.0",
-    "@lapis-notes/api": "^0.6.11",
+    "@lapis-notes/api": "^0.6.12",
     "@lapis-notes/app-profile": "^0.2.8",
     "@lapis-notes/file-explorer": "^0.2.8",
     "@lapis-notes/history": "^0.5.1",
