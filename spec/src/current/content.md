@@ -367,7 +367,9 @@ section under **Core plugins** using the public declarative settings API and
 endpoint availability/addresses, selected vaults, explicit plugin permissions, expiry,
 creation and revocation. One-time tokens MUST stay in transient memory, clear on
 teardown/dismissal, and never enter browser/vault settings storage. Desktop
-integration, OAuth and general note writes remain independently gated.
+integration and general note writes remain independently gated. Endpoint
+addresses MUST show the complete copyable URL in full-width fields that can
+wrap on narrow screens.
 
 ### Acceptance details
 
