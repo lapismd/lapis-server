@@ -1,3 +1,4 @@
+import { createAccountSecurity } from "../../account/passkeys";
 import {
   PROTOCOL_MAJOR,
   type HostInfo,
@@ -80,6 +81,13 @@ export class RustHttpClient {
     });
     return response.status === 204 ? (undefined as T) : response.json();
   }
+
+  readonly security = createAccountSecurity(
+    (path, method, value) => this.json(path, method, value),
+    (session) => {
+      this.#csrfToken = session.csrf_token;
+    },
+  );
 
   info(): Promise<HostInfo> {
     return this.json("/system/info");

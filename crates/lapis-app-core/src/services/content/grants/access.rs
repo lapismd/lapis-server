@@ -64,6 +64,7 @@ impl ContentGrants {
         let grants = registry
             .entries
             .iter()
+            .filter(|(_, entry)| !entry.durable)
             .map(|(id, entry)| {
                 let remaining = entry.session.expires.saturating_duration_since(now);
                 let seconds = remaining.as_secs() + u64::from(remaining.subsec_nanos() != 0);

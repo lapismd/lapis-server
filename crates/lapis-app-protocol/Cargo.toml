@@ -8,6 +8,7 @@ publish.workspace = true
 description = "Typed native service contracts for Lapis hosts and clients"
 
 [dependencies]
+inventory = "=0.3.25"
 schemars = { version = "=1.2.3", features = ["uuid1", "indexmap2"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }

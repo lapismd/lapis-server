@@ -11,6 +11,7 @@ use uuid::Uuid;
 pub(crate) struct Handler {
     pub boundary: Boundary,
     pub catalog: Arc<Catalog>,
+    pub initialized_clients: bool,
 }
 impl Handler {
     async fn authorize(&self, context: &RequestContext<RoleServer>) -> Result<(), ErrorData> {
@@ -50,7 +51,16 @@ impl ServerHandler for Handler {
         ))
     }
     fn supported_protocol_versions(&self) -> Cow<'static, [ProtocolVersion]> {
-        Cow::Borrowed(&[ProtocolVersion::V_2026_07_28])
+        if self.initialized_clients {
+            Cow::Borrowed(&[
+                ProtocolVersion::V_2026_07_28,
+                ProtocolVersion::V_2025_11_25,
+                ProtocolVersion::V_2025_06_18,
+                ProtocolVersion::V_2025_03_26,
+            ])
+        } else {
+            Cow::Borrowed(&[ProtocolVersion::V_2026_07_28])
+        }
     }
     async fn list_tools(
         &self,

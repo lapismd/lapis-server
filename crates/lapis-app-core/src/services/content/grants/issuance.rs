@@ -99,6 +99,7 @@ impl ContentGrants {
                 permissions: permissions.to_vec(),
                 operations,
                 verifier,
+                durable: false,
                 session,
                 label,
                 vault_ids,

@@ -22,10 +22,36 @@ impl Control {
 
     pub(crate) async fn set_content_enabled(&self, enabled: bool) -> io::Result<()> {
         let guard = self.connection.lock().await;
-        guard.as_ref().ok_or_else(unavailable)?.execute(
+        let connection = guard.as_ref().ok_or_else(unavailable)?;
+        if !enabled {
+            connection
+                .execute("BEGIN IMMEDIATE", ())
+                .await
+                .map_err(engine)?;
+        }
+        let result = async {
+            if !enabled {
+                connection.execute(
+                    "UPDATE personal_access_tokens SET revoked_at=? WHERE revoked_at IS NULL",
+                    [super::now_ms()?],
+                ).await.map_err(engine)?;
+                connection.execute(
+                    "UPDATE mcp_oauth_grants SET revoked_at=? WHERE revoked_at IS NULL",
+                    [super::now_ms()?],
+                ).await.map_err(engine)?;
+            }
+            connection.execute(
             "INSERT INTO content_access_settings(id,enabled) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET enabled=excluded.enabled",
             [i64::from(enabled)],
-        ).await.map_err(engine)?;
-        Ok(())
+            ).await.map_err(engine)?;
+            if !enabled {
+                connection.execute("COMMIT", ()).await.map_err(engine)?;
+            }
+            Ok(())
+        }.await;
+        if !enabled && result.is_err() {
+            let _ = connection.execute("ROLLBACK", ()).await;
+        }
+        result
     }
 }

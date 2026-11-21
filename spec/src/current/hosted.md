@@ -280,3 +280,30 @@ this policy; Storybook fixtures alone do not.
 - Missing, archived, malformed or unavailable choices recover through the chooser.
 - Blocked browser storage does not prevent ordinary login and selection.
 - Consume the remembered attempt before opening and rearm it only on readiness.
+
+## SRV-HST-023 — Owner passkey authentication
+
+**Requirement.** A profile-backed server MUST support multiple WebAuthn passkeys
+alongside the owner password. Registration and removal MUST require recent
+owner authentication. Challenges MUST be bounded, single-use and bound to the
+configured origin and ceremony. Passkey login MUST use the existing browser
+session and CSRF contract.
+
+### Acceptance details
+
+- The owner can enroll, name and remove passkeys from Account & security.
+- Passkey enrollment and sign-in require user verification and store only public credential material.
+- Removed credentials and expired or replayed challenges cannot create sessions.
+
+## SRV-HST-024 — Generated server API documentation
+
+**Requirement.** Server MUST generate an OpenAPI 3.1 document from the mounted
+route and protocol definitions and serve it through owner-authenticated Swagger
+UI. The document MUST describe authorization, typed inputs, direct byte bodies,
+and streams. CI MUST reject drift between routing, schemas and generated output.
+
+### Acceptance details
+
+- Route registration produces the documented HTTP method and path.
+- Owner sessions can open the UI and authorize same-origin requests with protocol and CSRF headers.
+- Authentication, content, MCP, service, file, streaming and health routes have separate tags and documented security requirements.

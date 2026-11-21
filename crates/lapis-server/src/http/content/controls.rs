@@ -1,26 +1,28 @@
+use super::super::RegisterRoute as _;
 use super::*;
 use crate::host::error;
 use axum::{
     Json,
     extract::{DefaultBodyLimit, Path, rejection::JsonRejection},
-    routing::{delete, get, post},
 };
 use lapis_app_protocol::{
     ErrorCode,
     content::{ContentAccessSetting, ContentGrantRequest, CreatedContentGrant},
 };
+use lapis_app_protocol::{api_route, http_docs::json_body};
 use std::future::Future;
 use uuid::Uuid;
 
 pub(in crate::http) fn routes() -> Router<State> {
     Router::new()
-        .route("/api/v3/content-access", get(read).post(select))
-        .route("/api/v3/content-access/grants", post(issue))
-        .route("/api/v3/content-access/grants/{grant}", delete(revoke))
+        .merge(super::personal::routes())
+        .api(api_route!("/api/v3/content-access", Owner, { get(read) => ("Inspect Content API and MCP settings", 200, None, json_body::<lapis_app_protocol::content::ContentHostStatus>()), post(select) => ("Enable or disable Content API and MCP access", 200, json_body::<lapis_app_protocol::content::ContentAccessSetting>(), json_body::<lapis_app_protocol::content::ContentHostStatus>()) }))
+        .api(api_route!("/api/v3/content-access/grants", Owner, { post(issue) => ("Issue a temporary content grant", 201, json_body::<lapis_app_protocol::content::ContentGrantRequest>(), json_body::<lapis_app_protocol::content::CreatedContentGrant>()) }))
+        .api(api_route!("/api/v3/content-access/grants/{grant}", Owner, { delete(revoke) => ("Revoke a temporary content grant", 204, None, None) }))
         .layer(DefaultBodyLimit::max(8 * 1024))
 }
 
-async fn controlled<T, F, Fut>(state: State, action: F) -> Result<T, Failure>
+pub(in crate::http) async fn controlled<T, F, Fut>(state: State, action: F) -> Result<T, Failure>
 where
     T: Send + 'static,
     F: FnOnce(State) -> Fut + Send + 'static,
@@ -65,10 +67,20 @@ async fn select(
                 ));
             }
             if let Some(control) = &state.auth.control {
+                // A failed disable fences live grants before reporting the store error.
+                // If the store recovered, finish that revocation before admitting again.
+                if !state.host.content.grants.is_enabled().map_err(native)?
+                    && control.content_enabled().await.map_err(store)?
+                {
+                    control.set_content_enabled(false).await.map_err(store)?;
+                }
                 control.set_content_enabled(true).await.map_err(store)?;
             }
         }
         let host = state.host.clone();
+        if !input.enabled {
+            host.content.retire_generation();
+        }
         let selected = blocking(move || {
             host.content
                 .grants

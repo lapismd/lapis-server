@@ -6,6 +6,7 @@ export default defineConfig({
     "hosted-notes-ui.spec.ts",
     "hosted-skills.spec.ts",
     "hosted-content-access.spec.ts",
+    "hosted-passkeys.spec.ts",
     "hosted-sync-consent.spec.ts",
     "hosted-terminal.spec.ts",
   ],

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import McpConsent from "./account/McpConsent.svelte";
+  import AccountSecurity from "./account/AccountSecurity.svelte";
+  import { supportsPasskeys, securityError } from "./account/passkeys";
   import serverLogo from "./assets/lapis-logo.svg?url";
   import Archive from "@lucide/svelte/icons/archive";
   import Download from "@lucide/svelte/icons/download";
@@ -57,7 +60,12 @@
   let {
     backend,
     restoration = createVaultRestoration(),
-  }: { backend: HostedBackend; restoration?: VaultRestoration } = $props();
+    consentId,
+  }: {
+    backend: HostedBackend;
+    restoration?: VaultRestoration;
+    consentId?: string;
+  } = $props();
   type HostState =
     | "loading"
     | "login"
@@ -70,6 +78,9 @@
   let authenticatedUsername: string | null = null;
   let disposed = false;
   let password = $state("");
+  let passkeysAvailable = $state(false);
+  let accountOpen = $state(false);
+  let passkeyBusy = $state(false);
   let newVaultName = $state("");
   let errorMessage = $state("");
   let actionMessage = $state("");
@@ -135,6 +146,7 @@
       const info = await backend.info();
       if (disposed) return;
       buildId = info.buildId;
+      passkeysAvailable = info.passkeys === true && supportsPasskeys();
       if (info.protocolMajor !== backend.protocolMajor) {
         hostState = "protocol";
         return;
@@ -163,6 +175,21 @@
     }
   }
 
+  async function signInWithPasskey() {
+    if (passkeyBusy || !backend.security) return;
+    passkeyBusy = true;
+    errorMessage = "";
+    try {
+      await backend.security.signIn(username);
+      password = "";
+      await enterAuthenticatedHost();
+    } catch (error) {
+      errorMessage = securityError(error);
+    } finally {
+      passkeyBusy = false;
+    }
+  }
+
   async function refreshVaults(): Promise<void> {
     vaults = await backend.vaults();
   }
@@ -174,6 +201,7 @@
     await refreshVaults();
     if (disposed) return;
     hostState = "vaults";
+    if (consentId) return;
     const vaultId = restoration.take(identity.username);
     if (!vaultId) return;
     const vault = vaults.find(
@@ -608,10 +636,21 @@
             >
               Sign in
             </Button.Root>
+            {#if passkeysAvailable}
+              <Button.Root
+                type="button"
+                variant="outline"
+                disabled={passkeyBusy || !username.trim()}
+                onclick={() => void signInWithPasskey()}
+                >Sign in with a passkey</Button.Root
+              >
+            {/if}
           </Card.Content>
         </Card.Root>
       </form>
     </section>
+  {:else if hostState === "vaults" && consentId}
+    <McpConsent requestId={consentId} {vaults} />
   {:else if hostState === "vaults"}
     <section
       class="web-vault-launcher server-vault-launcher"
@@ -631,6 +670,31 @@
             </div>
           </div>
           <div class="server-launcher-actions">
+            {#if passkeysAvailable && backend.security}
+              <Button.Root
+                variant="ghost"
+                size="sm"
+                onclick={() => {
+                  accountOpen = true;
+                }}
+              >
+                Account &amp; security
+              </Button.Root>
+              <Dialog.Root bind:open={accountOpen}>
+                <Dialog.Content>
+                  <Dialog.Header>
+                    <Dialog.Title>Account &amp; security</Dialog.Title>
+                    <Dialog.Description
+                      >Manage the passkeys you use to sign in.</Dialog.Description
+                    >
+                  </Dialog.Header>
+                  <a href="/api/docs">Server API documentation</a>
+                  {#if accountOpen}<AccountSecurity
+                      security={backend.security}
+                    />{/if}
+                </Dialog.Content>
+              </Dialog.Root>
+            {/if}
             <Button.Root
               variant="ghost"
               size="sm"

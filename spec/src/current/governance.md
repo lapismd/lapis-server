@@ -234,7 +234,7 @@ and cancellation handling.
 - The Storybook preview imports those published stylesheets and defaults `data-ui-theme` to lapis.
 - The hosted Notes story requires grid layout, a loaded `--background` token, zero root padding, and full viewport height.
 - The centered branded login and managed-vault chooser retain standalone Deno presentation at narrow widths, with workspace chrome appearing after vault opening.
-- Each SUMMARY chapter has one Storybook Markdown mirror, and the docs table of contents labels each entry with its requirement id.
+- Each SUMMARY chapter, including integration authorization and its verification, has one Storybook Markdown mirror with requirement IDs in its table of contents.
 
 ## SRV-GOV-003 — Production UI parity
 

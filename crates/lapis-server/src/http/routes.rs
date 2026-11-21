@@ -86,6 +86,16 @@ pub(super) async fn close(
     AxumState(state): AxumState<State>,
     Path(vault): Path<Uuid>,
 ) -> Result<StatusCode, Failure> {
-    blocking(move || state.host.close(vault)).await?;
+    super::content::controlled(state, move |state| async move {
+        if let Some(control) = &state.auth.control {
+            let now = crate::control::now_ms().map_err(super::browser::store)?;
+            control
+                .revoke_personal_for_vault(vault, now)
+                .await
+                .map_err(super::browser::store)?;
+        }
+        blocking(move || state.host.close(vault)).await
+    })
+    .await?;
     Ok(StatusCode::NO_CONTENT)
 }

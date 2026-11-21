@@ -98,6 +98,14 @@ impl Control {
             .map_err(engine)?;
         Ok(Some(session))
     }
+    pub(crate) async fn active_session(&self, id: Uuid, now: i64) -> io::Result<bool> {
+        let guard = self.connection.lock().await;
+        let mut rows = guard.as_ref().ok_or_else(unavailable)?.query(
+            "SELECT 1 FROM sessions WHERE id=? AND revoked_at IS NULL AND expires_at>? AND last_seen_at+?>?",
+            turso::params![id.to_string(), now, SESSION_IDLE_MS, now],
+        ).await.map_err(engine)?;
+        Ok(rows.next().await.map_err(engine)?.is_some())
+    }
     pub async fn revoke(&self, id: Uuid, now: i64) -> io::Result<()> {
         validate_time(now)?;
         let guard = self.connection.lock().await;

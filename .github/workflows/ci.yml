@@ -141,6 +141,7 @@ jobs:
       - run: pnpm configure
       - run: pnpm test:demo
       - run: pnpm protocol:check
+      - run: pnpm openapi:check
       - name: Validate root demo and example Compose profiles
         env:
           LAPIS_SERVER_CONFIG_FILE: /tmp/lapis-server-config.json

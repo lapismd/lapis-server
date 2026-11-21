@@ -12,6 +12,7 @@ pub mod editing_intents;
 pub mod file_changes;
 pub mod files;
 pub mod history_index;
+pub mod http_docs;
 pub mod indexing;
 pub mod native_tasks;
 pub mod participants;

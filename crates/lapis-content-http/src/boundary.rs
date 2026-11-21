@@ -3,8 +3,14 @@ use crate::{MAX_NATIVE_JOBS, Rejection, admission, policy};
 use axum::http::request::Parts;
 use lapis_app_core::services::content::ContentGrants;
 use lapis_app_protocol::content::{ContentReply, ContentRequest};
-use std::sync::Arc;
+use std::{future::Future, pin::Pin, sync::Arc};
 use tokio::sync::Semaphore;
+
+pub type ResolveFuture<'a> = Pin<Box<dyn Future<Output = Result<(), Rejection>> + Send + 'a>>;
+
+pub trait CredentialResolver: Send + Sync {
+    fn resolve<'a>(&'a self, bearer: &'a str, path: &'a str) -> ResolveFuture<'a>;
+}
 
 #[derive(Clone)]
 pub struct Boundary {
@@ -12,6 +18,7 @@ pub struct Boundary {
     policy: Arc<policy::Policy>,
     jobs: Arc<Semaphore>,
     origin: Arc<str>,
+    resolver: Option<Arc<dyn CredentialResolver>>,
 }
 impl Boundary {
     pub async fn operation_catalog(
@@ -43,7 +50,12 @@ impl Boundary {
             policy: Arc::new(policy::Policy::new(origin)?),
             jobs: Arc::new(Semaphore::new(MAX_NATIVE_JOBS)),
             origin: origin.into(),
+            resolver: None,
         })
+    }
+    pub fn with_resolver(mut self, resolver: Arc<dyn CredentialResolver>) -> Self {
+        self.resolver = Some(resolver);
+        self
     }
     pub fn origin(&self) -> &str {
         &self.origin
@@ -72,6 +84,14 @@ impl Boundary {
         admission::run(self.jobs.clone(), move || {
             boundary.policy.check(&parts)?;
             let bearer = policy::bearer(&parts.headers)?.to_owned();
+            if let Some(resolver) = &boundary.resolver {
+                let uri = parts
+                    .extensions
+                    .get::<axum::extract::OriginalUri>()
+                    .map_or(&parts.uri, |original| &original.0);
+                tokio::runtime::Handle::current()
+                    .block_on(resolver.resolve(&bearer, uri.path()))?;
+            }
             boundary.grants.check_credential(&bearer)?;
             action(parts, &boundary.grants, &bearer)
         })

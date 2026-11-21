@@ -5,8 +5,11 @@ mod attempts;
 pub mod bootstrap;
 mod content;
 mod login;
+pub(crate) mod mcp_oauth;
 mod owner;
+pub(crate) mod passkeys;
 pub mod passwords;
+mod personal_tokens;
 mod sessions;
 pub(crate) mod vaults;
 

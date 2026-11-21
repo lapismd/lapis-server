@@ -27,6 +27,8 @@ fn state() -> (tempfile::TempDir, State) {
             origin: "https://notes.example".into(),
             downloads: reqwest::Client::new(),
             web: None,
+            passkeys: None,
+            oauth: None,
             observations: Arc::new(tokio::sync::Semaphore::new(64)),
         },
     )

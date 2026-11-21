@@ -7,16 +7,22 @@ use lapis_app_protocol::{
 };
 use std::{
     collections::BTreeSet,
-    sync::{Arc, Condvar, Mutex, MutexGuard},
+    sync::{
+        Arc, Condvar, Mutex, MutexGuard,
+        atomic::{AtomicU64, Ordering},
+    },
     time::Duration,
 };
 use tokio_util::sync::CancellationToken;
+use uuid::Uuid;
 
 pub(crate) struct Access {
     pub operations: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>,
     pub grants: Arc<ContentGrants>,
     pub cancellation: CancellationToken,
     pub gate: tokio::sync::Mutex<()>,
+    pub oauth_admission: Arc<tokio::sync::Semaphore>,
+    generation: AtomicU64,
     pub admission: Mutex<()>,
     lifetime: Mutex<(bool, usize)>,
     drained: Condvar,
@@ -44,6 +50,8 @@ impl Access {
             operations,
             cancellation: CancellationToken::new(),
             gate: tokio::sync::Mutex::new(()),
+            oauth_admission: Arc::new(tokio::sync::Semaphore::new(16)),
+            generation: AtomicU64::new(0),
             admission: Mutex::new(()),
             lifetime: Mutex::new((false, 0)),
             drained: Condvar::new(),
@@ -52,6 +60,14 @@ impl Access {
 }
 
 impl Access {
+    pub fn generation(&self) -> u64 {
+        self.generation.load(Ordering::Acquire)
+    }
+
+    pub fn retire_generation(&self) {
+        self.generation.fetch_add(1, Ordering::AcqRel);
+    }
+
     pub fn admission(&self) -> Result<MutexGuard<'_, ()>> {
         self.admission
             .lock()
@@ -76,18 +92,30 @@ impl Host {
         if !self.ready() || !self.content.grants.is_enabled().map_err(native)? {
             return Err(error(ErrorCode::Closed, "Content access is disabled"));
         }
+        let vaults = self.content_vaults(&input.vault_ids)?;
+        self.content
+            .grants
+            .issue_named_operations(
+                &input.label,
+                vaults,
+                Duration::from_secs(input.lifetime_seconds.into()),
+                &input.permissions,
+            )
+            .map_err(native)
+    }
+
+    /// Caller holds the content admission gate while attaching these clients.
+    pub(crate) fn content_vaults(&self, ids: &[Uuid]) -> Result<Vec<ContentVault>> {
         let managed = self
             .management
             .get()
-            .map(|manager| manager.catalogue.content_admission(&input.vault_ids))
+            .map(|manager| manager.catalogue.content_admission(ids))
             .transpose()?;
         let catalogue = managed
             .as_ref()
             .map(|(_, vaults)| vaults)
             .unwrap_or(&self.vaults);
-        let vaults = input
-            .vault_ids
-            .iter()
+        ids.iter()
             .map(|id| {
                 let vault = catalogue
                     .iter()
@@ -103,16 +131,7 @@ impl Host {
                     client,
                 })
             })
-            .collect::<Result<Vec<_>>>()?;
-        self.content
-            .grants
-            .issue_named_operations(
-                &input.label,
-                vaults,
-                Duration::from_secs(input.lifetime_seconds.into()),
-                &input.permissions,
-            )
-            .map_err(native)
+            .collect()
     }
 }
 

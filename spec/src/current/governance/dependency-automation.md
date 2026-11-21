@@ -79,6 +79,8 @@ multi-commit branch cannot narrow the transition under review.
 
 Server-owned terminal font assets use the ordinary npm manifest and lockfile path. Fontsource is outside the managed Lapis dependency intake group. Terminal registry adoption includes its maintained private Ghostty build; an upstream Ghostty release is a patch-removal milestone.
 
+The OpenAPI generation and drift scripts are source-owned checks and are separate from registry dependency intake.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.

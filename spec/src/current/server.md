@@ -135,6 +135,9 @@ jj-store path, a crate tag, or pull request 22 head
 
 **Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http`, `lapis-content-mcp` and `lapis-cli` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
+The native server crate also exports an offline OpenAPI generator for the
+registered HTTP routes. The executable and Swagger UI use the same catalog.
+
 ### Acceptance details
 
 - The workspace contains those six crates; HTTP/MCP adapters share Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.

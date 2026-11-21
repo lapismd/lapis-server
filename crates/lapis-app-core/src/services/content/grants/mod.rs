@@ -5,6 +5,8 @@ mod access;
 mod access_tests;
 mod issuance;
 mod lifecycle;
+mod persistent;
+pub use persistent::PersistentGrant;
 #[cfg(test)]
 mod tests;
 mod token;
@@ -43,6 +45,7 @@ pub(super) struct Entry {
     pub(super) permissions: Vec<String>,
     pub(super) operations: BTreeMap<String, String>,
     verifier: [u8; 32],
+    durable: bool,
     pub(super) session: ContentSession,
     label: String,
     pub(super) vault_ids: Vec<Uuid>,

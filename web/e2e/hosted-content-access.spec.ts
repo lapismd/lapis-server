@@ -166,6 +166,27 @@ for (const renderer of ["static", "preview", "development"] as const) {
         .click();
       await page.keyboard.press("Escape");
       const second = await issue(page, ["tasks:read"]);
+      if (renderer === "static") {
+        await page
+          .getByRole("combobox", { name: "Personal access token expiry" })
+          .click();
+        await page.getByRole("option", { name: "Never", exact: true }).click();
+      }
+      const issuedPersonal = page.waitForResponse(
+        (response) =>
+          response.url().endsWith("/api/v3/content-access/tokens") &&
+          response.request().method() === "POST",
+      );
+      await page
+        .getByRole("button", { name: "Create a personal access token" })
+        .click();
+      const personalResponse = await issuedPersonal;
+      expect(personalResponse.status()).toBe(201);
+      expect(personalResponse.request().postDataJSON().lifetime).toBe(
+        renderer === "static" ? "never" : "days90",
+      );
+      const { token: personal } = await personalResponse.json();
+      expect((await read(personal)).status).toBe(200);
       await signOutHostedWorkspace(page);
       expect((await read(second)).status).toBe(200);
       // Dispose the old development document before Vite restarts: its HMR
@@ -177,6 +198,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
       await settings(page);
       await expect(enabled).toBeChecked();
       expect((await read(second)).status).toBe(401);
+      expect((await read(personal)).status).toBe(200);
       const third = await issue(page);
       await enabled.click();
       await expect(page.getByText("Disabled", { exact: true })).toBeVisible();
@@ -186,6 +208,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
         page.getByText("Enabled · scoped access", { exact: true }),
       ).toBeVisible();
       expect((await read(third)).status).toBe(401);
+      expect((await read(personal)).status).toBe(401);
       await enabled.click();
       await expect(page.getByText("Disabled", { exact: true })).toBeVisible();
       await signOutHostedWorkspace(page);
@@ -195,7 +218,8 @@ for (const renderer of ["static", "preview", "development"] as const) {
       expect(
         runtime.logs.includes(first) ||
           runtime.logs.includes(second) ||
-          runtime.logs.includes(third),
+          runtime.logs.includes(third) ||
+          runtime.logs.includes(personal),
       ).toBe(false);
       expect(browserErrors).toEqual([]);
     } catch (error) {

@@ -3,7 +3,7 @@ use super::{
     errors::{Failure, blocking},
 };
 use crate::{
-    control::{LoginError, Session, now_ms},
+    control::{IssuedSession, LoginError, Session, now_ms},
     host::Principal,
 };
 use axum::{
@@ -24,6 +24,7 @@ pub(super) async fn info(AxumState(state): AxumState<State>) -> Json<HostInfo> {
         protocol_major: PROTOCOL_MAJOR,
         build_id: state.build_id,
         browser_auth: state.auth.control.is_some(),
+        passkeys: state.passkeys.is_some(),
         manage_vaults: state.host.manages_vaults(),
         transfer_vaults: state.host.manages_vaults(),
     })
@@ -57,17 +58,23 @@ pub(super) async fn login(
             now_ms().map_err(store)?,
         )
         .await
-        .map_err(|error| match error {
-            LoginError::Denied => Failure(
-                StatusCode::UNAUTHORIZED,
-                crate::host::error(ErrorCode::PermissionDenied, "Invalid username or password"),
-            ),
-            LoginError::Throttled => Failure(
-                StatusCode::TOO_MANY_REQUESTS,
-                crate::host::error(ErrorCode::Busy, "Login temporarily blocked"),
-            ),
-            LoginError::Store(_) => store(std::io::Error::other("Authentication store failed")),
-        })?;
+        .map_err(login_failure)?;
+    issued_response(&state, issued)
+}
+pub(super) fn login_failure(error: LoginError) -> Failure {
+    match error {
+        LoginError::Denied => Failure(
+            StatusCode::UNAUTHORIZED,
+            crate::host::error(ErrorCode::PermissionDenied, "Invalid username or password"),
+        ),
+        LoginError::Throttled => Failure(
+            StatusCode::TOO_MANY_REQUESTS,
+            crate::host::error(ErrorCode::Busy, "Login temporarily blocked"),
+        ),
+        LoginError::Store(error) => store(error),
+    }
+}
+pub(super) fn issued_response(state: &State, issued: IssuedSession) -> Result<Response, Failure> {
     let mut response = Json(session_info(&issued.session)).into_response();
     response.headers_mut().insert(
         "set-cookie",

@@ -132,7 +132,17 @@ pub(super) fn version(headers: &HeaderMap, allow_missing: bool) -> Result<(), Fa
     Ok(())
 }
 pub(super) async fn response_headers(request: Request, next: Next) -> Response {
+    let oauth = request.uri().path().starts_with("/oauth/")
+        || request
+            .uri()
+            .query()
+            .is_some_and(|query| query.starts_with("mcp-consent="));
     let mut response = next.run(request).await;
+    if oauth {
+        response
+            .headers_mut()
+            .insert("referrer-policy", "no-referrer".parse().unwrap());
+    }
     response
         .headers_mut()
         .entry("cache-control")

@@ -351,8 +351,8 @@ Controls MUST bound request bodies, admission and native work, retain accepted
 work after disconnect, and drain before host shutdown. Vault close/archive MUST
 retire affected whole grants while excluding concurrent native admission.
 
-The control database MUST persist only the enable preference, never content
-tokens. Grants remain process-local, named, explicitly scoped to
+The control database MUST persist the enable preference and MUST NOT retain plaintext
+credentials. Legacy grants remain process-local, named, explicitly scoped to
 1–20 active managed/configured vault IDs, and valid for at most 24 hours. Only
 issuance reveals the secret; list/status never do. Disable MUST fence/drain even
 if saving the preference fails. Enabling MUST save consent before admitting
@@ -372,7 +372,7 @@ integration, OAuth and general note writes remain independently gated.
 ### Acceptance details
 
 - Real HTTP and subprocess tests cover disabled startup, owner authorization/CSRF, enable, scoped HTTP/MCP reads, foreign-vault refusal, revocation and disable/re-enable.
-- Cold restart preserves the enable preference but refuses old tokens; vault close/archive and shutdown retire native grants, while unsupported origins preserve owner access.
+- Cold restart preserves the enable preference but refuses old ephemeral tokens; vault close/archive and shutdown retire native grants, while unsupported origins preserve owner access.
 - Accepted control work and bounded native permits survive response cancellation; shutdown drains controls and content readers without reviving authority after a failed native leave.
 - The real hosted plugin settings screen creates/revokes credentials and disables access; production catalog interaction/axe and cold built-server acceptance pass without browser credential persistence.
 

@@ -43,12 +43,12 @@ pub fn verify(password: &str, encoded: &str) -> bool {
     scrypt::scrypt(password.as_bytes(), &salt, &parameters(), &mut output).is_ok()
         && bool::from(output.as_slice().ct_eq(&expected))
 }
-pub(super) fn token() -> io::Result<String> {
+pub(crate) fn token() -> io::Result<String> {
     let mut bytes = [0; 32];
     getrandom::fill(&mut bytes).map_err(|_| io::Error::other("Session entropy is unavailable"))?;
     Ok(URL_SAFE_NO_PAD.encode(bytes))
 }
-pub(super) fn digest(value: &str) -> String {
+pub(crate) fn digest(value: &str) -> String {
     use sha2::{Digest, Sha256};
     format!("{:x}", Sha256::digest(value.as_bytes()))
 }

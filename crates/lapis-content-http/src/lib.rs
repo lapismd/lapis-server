@@ -11,7 +11,7 @@ use axum::{
     extract::{Request, State},
     http::Method,
 };
-pub use boundary::Boundary;
+pub use boundary::{Boundary, CredentialResolver, ResolveFuture};
 use lapis_app_core::services::content::ContentGrants;
 use lapis_app_protocol::content::*;
 pub use response::Failure as Rejection;
@@ -19,6 +19,8 @@ use response::Failure;
 pub use routes::READ_ROUTES;
 use std::sync::Arc;
 use uuid::Uuid;
+
+pub const PREFIX: &str = "/api/content/v1";
 
 pub const API_HEADER: &str = "x-lapis-content-api";
 pub const REQUEST_ID_HEADER: &str = "x-lapis-request-id";
@@ -34,7 +36,7 @@ pub fn router(grants: Arc<ContentGrants>, public_origin: &str) -> std::io::Resul
 /// Reuse a boundary with MCP to share the native concurrency limit.
 pub fn router_with_boundary(boundary: Boundary) -> Router {
     Router::new().nest(
-        "/api/content/v1",
+        PREFIX,
         operations::routes().fallback(handle).with_state(boundary),
     )
 }
