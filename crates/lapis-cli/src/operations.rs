@@ -14,10 +14,26 @@ fn invalid() -> ContentError {
     errors::failure(ContentErrorCode::InvalidRequest)
 }
 
+fn bundled_operations() -> Vec<OperationDescriptor> {
+    [
+        include_str!("../help/tasks-operations.json"),
+        include_str!("../../lapis-app-core/skills/operations.json"),
+        include_str!("../../lapis-app-core/notes/operations.json"),
+    ]
+    .into_iter()
+    .flat_map(|source| {
+        serde_json::from_str::<Vec<OperationDescriptor>>(source)
+            .expect("Bundled operation catalog is valid")
+    })
+    .collect()
+}
+
+fn bundled_plugin(name: &str) -> bool {
+    ["tasks", "skills", "notes"].contains(&name)
+}
+
 pub(crate) fn overview() -> String {
-    let catalog: Vec<OperationDescriptor> =
-        serde_json::from_str(include_str!("../help/tasks-operations.json"))
-            .expect("Bundled operation catalog is valid");
+    let catalog = bundled_operations();
     let roots = catalog
         .into_iter()
         .map(|d| d.plugin_id)
@@ -157,15 +173,10 @@ fn command(plugin: &str, descriptors: &[OperationDescriptor]) -> ClapCommand {
 async fn execute(args: &Cli) -> Result<u8, ContentError> {
     let bundled_help = match &args.command {
         Command::Help { words, .. } => {
-            words.is_empty()
-                || words
-                    .first()
-                    .is_some_and(|word| ["tasks", "skills"].contains(&word.as_str()))
+            words.is_empty() || words.first().is_some_and(|word| bundled_plugin(word))
         }
         Command::Operation(tokens) => {
-            tokens
-                .first()
-                .is_some_and(|word| ["tasks", "skills"].contains(&word.as_str()))
+            tokens.first().is_some_and(|word| bundled_plugin(word))
                 && tokens.iter().any(|word| word == "--help" || word == "-h")
         }
         _ => false,
@@ -189,18 +200,7 @@ async fn execute(args: &Cli) -> Result<u8, ContentError> {
     } else {
         OperationCatalog {
             protocol_version: 1,
-            operations: {
-                let mut entries: Vec<OperationDescriptor> =
-                    serde_json::from_str(include_str!("../help/tasks-operations.json"))
-                        .map_err(|_| invalid())?;
-                entries.extend(
-                    serde_json::from_str::<Vec<OperationDescriptor>>(include_str!(
-                        "../../lapis-app-core/skills/operations.json"
-                    ))
-                    .map_err(|_| invalid())?,
-                );
-                entries
-            },
+            operations: bundled_operations(),
         }
     };
     if catalog.protocol_version != 1 {

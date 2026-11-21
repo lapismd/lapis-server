@@ -59,6 +59,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     let content = server.status().await;
     resource_scopes.extend_from_slice(content["operation_permissions"].as_array().unwrap());
     assert!(resource_scopes.contains(&json!("tasks:write")));
+    assert!(resource_scopes.contains(&json!("notes:write")));
     let resource: Value = request(
         &server,
         Method::GET,
@@ -119,7 +120,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
             ("response_type", "code"),
             ("resource", RESOURCE),
             ("state", "test-state"),
-            ("scope", "mcp:read offline_access"),
+            ("scope", "mcp:read offline_access notes:write"),
             ("code_challenge_method", "S256"),
             (
                 "code_challenge",
@@ -146,12 +147,24 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         401
     );
     let (cookie, csrf) = sign_in(&server).await;
+    let pending: Value = request(&server, Method::GET, &path)
+        .header("cookie", &cookie)
+        .header("x-lapis-protocol", "3")
+        .send()
+        .await
+        .unwrap()
+        .error_for_status()
+        .unwrap()
+        .json()
+        .await
+        .unwrap();
+    assert_eq!(pending["permissions"], json!(["notes:write"]));
     let approved: Value = request(&server, Method::POST, &path)
         .header("cookie", &cookie)
         .header("x-lapis-csrf", csrf)
         .header("x-lapis-protocol", "3")
         .header("origin", ORIGIN)
-        .json(&json!({"approve":true,"vault_ids":[server.ids[0]]}))
+        .json(&json!({"approve":true,"vault_ids":[server.ids[0]],"permissions":["notes:write"]}))
         .send()
         .await
         .unwrap()
@@ -193,6 +206,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         .await
         .unwrap();
     assert_eq!(pair["expires_in"], 900);
+    assert_eq!(pair["scope"], "mcp:read offline_access notes:write");
     assert_eq!(
         credentials(&server, &code_fields(VERIFIER))
             .send()
@@ -203,6 +217,38 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     );
     let access = pair["access_token"].as_str().unwrap();
     let refresh = pair["refresh_token"].as_str().unwrap();
+    let created: Value = request(&server, Method::POST, "/mcp")
+        .bearer_auth(access)
+        .header("accept", "application/json, text/event-stream")
+        .header("mcp-protocol-version", "2026-07-28")
+        .header("mcp-method", "tools/call")
+        .header("mcp-name", "notes_create")
+        .json(&json!({
+            "jsonrpc":"2.0","id":1,"method":"tools/call","params":{
+                "name":"notes_create","arguments":{
+                  "vault_id":server.ids[0],"invocation_id":uuid::Uuid::new_v4(),
+                  "path":"OAuth.md","text":"# Authorized notes"
+                },
+                "_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}
+            }
+        }))
+        .send()
+        .await
+        .unwrap()
+        .error_for_status()
+        .unwrap()
+        .json()
+        .await
+        .unwrap();
+    assert_eq!(
+        created["result"]["structuredContent"]["outcome"]["status"], "ok",
+        "{created}"
+    );
+    assert_eq!(
+        created["result"]["structuredContent"]["outcome"]["value"]["path"],
+        "OAuth.md"
+    );
+
     let server = server.restart().await;
     assert_eq!(
         server

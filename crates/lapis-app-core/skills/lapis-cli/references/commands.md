@@ -51,6 +51,23 @@ Read [skill management](skill-management.md) for the packaged skills operations.
 Do not invent Obsidian commands or assume a newly installed plugin grants an
 existing credential more permissions.
 
+## Saved Markdown writes
+
+A credential approved for `notes:write` can create a note at an unused path
+or replace a saved note at the exact version returned by `note read --json`.
+The same operations appear as `notes_create` and `notes_replace` in MCP.
+Provide a JSON input file with `path` and `text`, and include
+`expected_version` for replacement.
+
+```sh
+lapis --target https://notes.example.com --token-file /protected/lapis-credential notes create --vault "$vault_id" --input-file create.json
+lapis --target https://notes.example.com --token-file /protected/lapis-credential notes replace --vault "$vault_id" --input-file replace.json
+```
+
+The shared native writer refuses dirty editors, hidden paths, stale versions
+and creation collisions. If a response is lost, reread the saved note before
+retrying so an uncertain write does not overwrite newer work.
+
 ## Error outcomes
 
 | Exit | Meaning |

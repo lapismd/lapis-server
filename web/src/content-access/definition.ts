@@ -21,7 +21,7 @@ export function definition(
       sourcePluginId: "content-access",
       navigationGroupId: "core-plugins",
       description:
-        "Connect external clients to selected vaults and explicitly permitted plugin operations.",
+        "Connect external clients to selected vaults and explicitly permitted operations.",
       fields: [
         {
           id: "content-endpoints",
@@ -359,7 +359,7 @@ function credentialFields(
         : "Plugin operation permissions",
       optionsSource: "content-access.permissions",
       description:
-        "Optional operations. Write access can change saved Tasks, their daily notes, or installed agent skills.",
+        "Optional operations. Write access can change Markdown notes, Tasks, or installed agent skills.",
     },
     lifetime,
     {

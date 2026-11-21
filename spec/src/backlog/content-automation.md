@@ -1,6 +1,6 @@
 # Content API, MCP and CLI
 
-Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging, native host controls and the hosted read-only endpoints/settings are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013/014;
+Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging, native host controls and hosted endpoints/settings are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013/014. Scoped hosted note creation and replacement follow SRV-OPS-008.
 Desktop endpoints/settings and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
@@ -19,7 +19,7 @@ an operation/scope/effect catalog and generated bindings with a CI drift gate.
 The next increment adds a read-only Core session with admitted native clients,
 revocation/expiry, bounded reads and snapshot-bound pagination. A bounded native
 test-grant registry now issues random read-only credentials, retains only
-verifiers and fences/drains revocation, expiry and shutdown. General note writes,
+verifiers and fences/drains revocation, expiry and shutdown. Additional note operations,
 generic durable receipts and Desktop intake remain unimplemented. Hosted owner
 consent controls the optional API and MCP endpoints. The
 [integration authorization contract](../current/integration-auth.md) covers
@@ -27,12 +27,12 @@ durable personal tokens and OAuth approvals. ChatGPT web qualification and
 remaining consumer contracts are tracked below.
 The shared `lapis-content-http` read adapter has real-socket coverage using test
 grants, strict Host/Origin checks, typed control responses and direct note bytes.
-It is now mounted by the hosted server under SRV-SRV-014; general note writes and Desktop
+It is now mounted by the hosted server under SRV-SRV-014. Additional note operations and Desktop
 mounting/lifecycle integration remain pending.
 The source `lapis` executable now supports capabilities, vault/note lists and
 note reads against the HTTP adapter, with explicit origin/UUID selection,
 protected file/stdin credentials, JSON output and stable exit codes. It has
-subprocess acceptance; profiles/login, general note writes and distribution remain pending
+subprocess acceptance. Profiles/login, additional note operations and distribution remain pending
 alongside Desktop mounting and consent. The source CLI also bridges stdio
 MCP clients to an explicit host using a protected credential file; SRV-SRV-012
 qualifies current discovery and 2025-11-25 initialized clients.
@@ -241,8 +241,8 @@ retirement. SRV-SRV-014 now mounts both adapters inside the actual hosted proces
 persists its enable preference, and registers the production Notes plugin settings
 screen. Cold static/preview/development browser acceptance creates and revokes
 credentials, reads HTTP/MCP, refuses foreign vaults, disables access and restarts
-the process. Note authority stays read-only; plugin writes require explicit
-permissions under SRV-OPS-002. Credentials remain process-local.
+the process. Hosted note writes require `notes:write` under SRV-OPS-008. Plugin
+writes are governed by SRV-OPS-002. Hosted credentials follow the integration authorization contract.
 
 The next host slice MUST integrate the shared controls/adapters into Desktop's
 native listener and real plugin settings screen. Server and Desktop MUST each expose
@@ -258,6 +258,8 @@ client, refuse a foreign vault, revoke access and disable/drain the endpoint.
 
 ## CLI behavior and distribution
 
+Hosted absent-only creation and conditional replacement follow [SRV-OPS-008](../current/plugin-operations.md#srv-ops-008--scoped-markdown-note-writes).
+
 Use conventional subcommands and flags; Obsidian syntax compatibility is not
 required. Illustrative interface, to finalize in the contract slice:
 
@@ -265,7 +267,7 @@ required. Illustrative interface, to finalize in the contract slice:
 lapis auth login --target work
 lapis vault list --target work --json
 lapis note read --target work --vault personal --path Inbox/idea.md --json
-lapis note create --vault personal --path Inbox/new.md --stdin
+lapis notes create --vault <admitted-uuid> --input-file create.json
 lapis note append --vault personal --path Inbox/idea.md --if-version <version> --stdin
 lapis search --vault personal --query "project atlas" --json
 lapis daily append --vault personal --date 2026-11-09 --stdin

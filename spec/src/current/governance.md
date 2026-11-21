@@ -75,7 +75,7 @@ display-only request inspection, explicit keyboard decisions, teardown and
 unknown-outcome inspection. Desktop custody and enrolled participation remain
 open. New consent stories retain `visual-pending`; baselines are unchanged.
 
-Plugin operation qualification follows [SRV-OPS-001–004](plugin-operations.md).
+Plugin operation qualification follows [SRV-OPS-001–004 and SRV-OPS-008](plugin-operations.md), including scoped note writes through the hosted MCP and CLI.
 Source registry checks do not qualify the Tasks provider or hosted delivery;
 the content automation backlog retains those acceptance boundaries.
 `pnpm test:plugin-operations` builds the production server and CLI, then exercises
@@ -260,7 +260,7 @@ The host uses Design Core's public setting groups for Content API and MCP and it
 ### Acceptance details
 
 - Vault-button accessible names include their visible name, role and status text.
-- Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and enrollment, shared searchable vault selection across MCP consent and personal token management with axe failures enabled.
+- Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and enrollment, shared searchable vault selection across MCP consent and personal token management, and opt-in note writing permissions with axe failures enabled.
 - Fixtures remain mounted after their play finishes and release resources when the story unmounts, including the production account and security view with injected sample data, stable placement during the vault chooser round trip, centered header controls, account selection styled like the primary vault action and a neutral documentation link fill at rest.
 
 ## Backup diagnostic unchanged-contract confirmation

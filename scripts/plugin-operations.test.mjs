@@ -17,7 +17,7 @@ const target = resolve(
 const owner = "isolated-task-operation-owner-token-0123456789";
 
 test(
-  "cold hosted Tasks operations share HTTP, MCP and CLI authority",
+  "cold hosted Tasks and note operations share HTTP, MCP and CLI authority",
   { timeout: 90000 },
   async () => {
     const root = await mkdtemp(join(tmpdir(), "lapis-operation-acceptance-"));
@@ -169,7 +169,13 @@ test(
           .sort(),
         ["install", "list", "update"],
       );
-      assert.equal(ownerOperations.length, 20);
+      assert.deepEqual(
+        ownerOperations
+          .filter((operation) => operation.plugin_id === "notes")
+          .map((operation) => operation.id),
+        ["create", "replace"],
+      );
+      assert.equal(ownerOperations.length, 22);
       assert.equal(
         (await request("/api/v3/content-access", { enabled: true })).status,
         200,
@@ -255,11 +261,11 @@ test(
       const saved = (await invoke(token, "get", { path: "Task.md" })).body
         .outcome.value.snapshot;
       assert.notEqual(saved.version, initial.version);
-      const mcpCall = async (name, args) => {
+      const mcpCall = async (name, args, credential = token) => {
         const mcp = await fetch(base + "/mcp", {
           method: "POST",
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${credential}`,
             "content-type": "application/json",
             accept: "application/json, text/event-stream",
             "mcp-protocol-version": "2026-07-28",
@@ -282,6 +288,91 @@ test(
         });
         return mcp.json();
       };
+      const notePath = "Meeting.md";
+      const originalNote = { path: notePath, text: "# Initial notes" };
+      const noteWrite = await issue(["notes:write"]);
+      assert.equal(
+        (
+          await request(
+            `/api/content/v1/vaults/${id}/plugins/notes/operations/create`,
+            {
+              protocol_version: 1,
+              version: 1,
+              request_id: randomUUID(),
+              input: originalNote,
+            },
+            legacy,
+            true,
+          )
+        ).status,
+        403,
+      );
+      assert.equal(
+        (await mcpCall("notes_create", originalNote, noteWrite)).error.code,
+        -32602,
+      );
+      const noteInvocation = randomUUID();
+      const noteCreate = {
+        ...originalNote,
+        invocation_id: noteInvocation,
+      };
+      const created = (await mcpCall("notes_create", noteCreate, noteWrite))
+        .result.structuredContent;
+      assert.equal(created.request_id, noteInvocation);
+      assert.equal(created.outcome.status, "ok", JSON.stringify(created));
+      assert.equal(created.outcome.value.path, notePath);
+      assert.equal(
+        (await mcpCall("notes_create", noteCreate, noteWrite)).result
+          .structuredContent.outcome.error.code,
+        "CONFLICT",
+      );
+      const noteTokenFile = join(root, "note-write-token");
+      await writeFile(noteTokenFile, noteWrite, { mode: 0o600 });
+      const replaceIdentity = randomUUID();
+      const cliReplace = await run(join(target, "lapis"), [
+        "--target",
+        base,
+        "--token-file",
+        noteTokenFile,
+        "--json",
+        "notes",
+        "replace",
+        "--vault",
+        id,
+        "--invocation-id",
+        replaceIdentity,
+        "--path",
+        notePath,
+        "--if-version",
+        created.outcome.value.version,
+        "--text",
+        "# Updated notes",
+      ]);
+      const replaced = JSON.parse(cliReplace.stdout);
+      assert.equal(replaced.request_id, replaceIdentity);
+      assert.notEqual(
+        replaced.outcome.value.version,
+        created.outcome.value.version,
+      );
+      const stale = await mcpCall(
+        "notes_replace",
+        {
+          path: notePath,
+          expected_version: created.outcome.value.version,
+          text: "# Stale edit",
+          invocation_id: randomUUID(),
+        },
+        noteWrite,
+      );
+      assert.equal(
+        stale.result.structuredContent.outcome.error.code,
+        "CONFLICT",
+      );
+      const savedNote = await mcpCall("read_note", { path: notePath }, legacy);
+      assert.equal(
+        savedNote.result.structuredContent.outcome.value.text,
+        "# Updated notes",
+      );
       const result = await mcpCall("tasks_get", { path: "Task.md" });
       assert.equal(
         result.result.structuredContent.outcome.value.snapshot.version,

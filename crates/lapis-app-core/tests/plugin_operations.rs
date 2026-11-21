@@ -165,3 +165,72 @@ fn registry_rejects_reserved_roots() {
             .is_err()
     );
 }
+
+#[test]
+fn scoped_note_replace_obeys_native_editor_fences_and_public_paths() {
+    use lapis_app_core::services::content::NoteWrites;
+    use lapis_app_protocol::operations::OperationOutcome;
+
+    let root = tempfile::tempdir().unwrap();
+    std::fs::write(root.path().join("Note.md"), "saved").unwrap();
+    let runtime = Runtime::default();
+    let vault_id = Uuid::new_v4();
+    let owner = runtime.admit(vault_id, root.path()).unwrap();
+    let renderer = owner.attach().unwrap();
+    let version = renderer.read_text("Note.md").unwrap().version;
+
+    let mut registry = OperationRegistry::default();
+    registry.register(Arc::new(NoteWrites)).unwrap();
+    let grants = ContentGrants::with_operations(Arc::new(registry));
+    grants.set_enabled(true).unwrap();
+    let grant = grants
+        .issue_named_operations(
+            "notes writer",
+            vec![ContentVault {
+                name: "test".into(),
+                client: owner.attach().unwrap(),
+            }],
+            Duration::from_secs(60),
+            &["notes:write".into()],
+        )
+        .unwrap();
+    let invoke = |vault, action, input| {
+        grants
+            .invoke_operation(
+                grant.token.expose_secret(),
+                vault,
+                "notes",
+                action,
+                OperationRequest {
+                    protocol_version: 1,
+                    request_id: Uuid::new_v4(),
+                    version: 1,
+                    input,
+                },
+            )
+            .outcome
+    };
+
+    let editor = renderer.open_editor("Note.md").unwrap();
+    renderer.mark_dirty(editor, 1).unwrap();
+    assert!(matches!(
+        invoke(vault_id, "replace", json!({"path":"Note.md","text":"updated","expected_version":version})),
+        OperationOutcome::Error { error } if error.code == ContentErrorCode::Busy
+    ));
+    assert_eq!(renderer.read_text("Note.md").unwrap().text, "saved");
+    for path in [
+        "../Outside.md",
+        ".agents/SKILL.md",
+        ".lapis/note.md",
+        "config.json",
+    ] {
+        assert!(matches!(
+            invoke(vault_id, "create", json!({"path":path,"text":"no"})),
+            OperationOutcome::Error { error } if error.code == ContentErrorCode::InvalidRequest
+        ));
+    }
+    assert!(matches!(
+        invoke(Uuid::new_v4(), "create", json!({"path":"Outside.md","text":"no"})),
+        OperationOutcome::Error { error } if error.code == ContentErrorCode::PermissionDenied
+    ));
+}

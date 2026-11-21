@@ -1,0 +1,168 @@
+[
+  {
+    "plugin_id": "notes",
+    "id": "create",
+    "version": 1,
+    "description": "Create a saved Markdown note only at an unused path",
+    "permission": "notes:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 49152
+        }
+      },
+      "required": [
+        "path",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "notes",
+        "create"
+      ],
+      "summary": "Create a saved Markdown note only at an unused path",
+      "markdown": "Write public Markdown in an admitted vault with notes:write. Use a fresh invocation ID for each intended change. Read the saved note before retrying an uncertain result. The existing native editor fence protects dirty drafts. The JSON request must fit the transport limit.",
+      "examples": [
+        "lapis notes create --vault <vault-id> --invocation-id <uuid> --input-file create.json"
+      ],
+      "keywords": [
+        "notes",
+        "markdown",
+        "write",
+        "create"
+      ],
+      "arguments": [
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Public vault-relative Markdown path",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "text",
+          "field": "text",
+          "description": "Complete saved Markdown text",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  },
+  {
+    "plugin_id": "notes",
+    "id": "replace",
+    "version": 1,
+    "description": "Replace a saved Markdown note only if its version still matches",
+    "permission": "notes:write",
+    "effect": "write",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 49152
+        },
+        "expected_version": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "text",
+        "expected_version"
+      ],
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "command": [
+        "notes",
+        "replace"
+      ],
+      "summary": "Replace a saved Markdown note only if its version still matches",
+      "markdown": "Write public Markdown in an admitted vault with notes:write. Use a fresh invocation ID for each intended change. Read the saved note before retrying an uncertain result. The existing native editor fence protects dirty drafts. The JSON request must fit the transport limit.",
+      "examples": [
+        "lapis notes replace --vault <vault-id> --invocation-id <uuid> --input-file replace.json"
+      ],
+      "keywords": [
+        "notes",
+        "markdown",
+        "write",
+        "replace"
+      ],
+      "arguments": [
+        {
+          "flag": "path",
+          "field": "path",
+          "description": "Public vault-relative Markdown path",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "text",
+          "field": "text",
+          "description": "Complete saved Markdown text",
+          "required": true,
+          "json": false
+        },
+        {
+          "flag": "if-version",
+          "field": "expected_version",
+          "description": "Strong version returned by note read",
+          "required": true,
+          "json": false
+        }
+      ]
+    }
+  }
+]

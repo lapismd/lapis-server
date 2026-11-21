@@ -28,5 +28,5 @@ access and renewal. Initialized Streamable HTTP MUST require bearer authorizatio
 
 - Client registration, issuer discovery, S256 PKCE and exact callback validation support ChatGPT, Claude and Codex.
 - Access expires after 15 minutes and refresh credentials rotate within a 90-day authorization, with family revocation on replay.
-- Resource discovery advertises the required read scope and registered plugin scopes, with token renewal listed by OAuth discovery and initialized MCP advertising a public PNG logo.
-- Owners select vaults and optional plugin scopes through searchable multi-select consent controls and can disconnect approved clients from Content API and MCP settings.
+- Resource discovery advertises the required read scope and registered operation scopes, with token renewal listed by OAuth discovery and initialized MCP advertising a public PNG logo.
+- Owners select vaults and optional operation scopes through searchable multi-select consent controls and can disconnect approved clients from Content API and MCP settings.
