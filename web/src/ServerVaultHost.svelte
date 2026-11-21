@@ -16,7 +16,6 @@
   import RotateCcw from "@lucide/svelte/icons/rotate-ccw";
   import Search from "@lucide/svelte/icons/search";
   import ShieldCheck from "@lucide/svelte/icons/shield-check";
-  import Vault from "@lucide/svelte/icons/vault";
   import X from "@lucide/svelte/icons/x";
   import {
     createVaultSession,
@@ -715,7 +714,47 @@
                 }}
               >
                 {#if showAccountSecurityPage}
-                  <Vault aria-hidden="true" data-icon="inline-start" />
+                  <!--
+                    Lucide database-cog, https://lucide.dev/icons/database-cog
+                    Copyright (c) 2026 Lucide Icons and Contributors
+                    Permission to use, copy, modify, and/or distribute this software for any
+                    purpose with or without fee is hereby granted, provided that the above
+                    copyright notice and this permission notice appear in all copies.
+                    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+                    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+                    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+                    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+                    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+                    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+                    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+                  -->
+                  <svg
+                    class="lucide-database-cog"
+                    aria-hidden="true"
+                    data-icon="inline-start"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m14.305 19.53.923-.382" />
+                    <path d="m15.228 16.852-.923-.383" />
+                    <path d="m16.852 15.228-.383-.923" />
+                    <path d="m16.852 20.772-.383.924" />
+                    <path d="m19.148 15.228.383-.923" />
+                    <path d="m19.53 21.696-.382-.924" />
+                    <path d="m20.772 16.852.924-.383" />
+                    <path d="m20.772 19.148.924.383" />
+                    <path d="M21 10.5V5" />
+                    <path d="M3 12a9 3 0 0 0 7.599 2.963" />
+                    <path d="M3 5v14a9 3 0 0 0 8.148 2.987" />
+                    <circle cx="18" cy="18" r="3" />
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                  </svg>
                   Manage vaults
                 {:else}
                   {#if accountSecurityPage}<ShieldCheck
@@ -1153,6 +1192,6 @@
 
   .server-launcher-actions :global(.account-security-switch) {
     inline-size: 11rem;
-    justify-content: flex-start;
+    justify-content: center;
   }
 </style>

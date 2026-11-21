@@ -303,21 +303,40 @@
 
   .security-grid :global(.security-card-header) {
     padding-inline: 1rem;
+    padding-block-end: 0.5rem;
   }
 
   .security-grid li.server-vault-row {
     background: var(--background);
   }
 
-  .security-grid li.selected,
-  .security-grid li.server-vault-row:hover {
+  .security-grid li.server-vault-row:hover:not(.selected) {
     background: var(--accent);
     color: var(--accent-foreground);
+  }
+
+  .security-grid li.selected {
+    background: var(--ui-button-background, var(--primary));
+    color: var(--ui-button-foreground, var(--primary-foreground));
+  }
+
+  .selected .server-vault-meta,
+  .selected :global(.server-vault-menu-trigger) {
+    color: inherit;
+  }
+
+  .selected :global(.server-vault-menu-trigger:hover:not(:disabled)) {
+    background: color-mix(in srgb, currentColor 16%, transparent);
   }
 
   .security-account:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: -2px;
+  }
+
+  .selected .security-account:focus-visible,
+  .selected :global(.server-vault-menu-trigger:focus-visible) {
+    outline-color: currentColor;
   }
 
   .security-grid :global(.passkeys),
@@ -333,7 +352,12 @@
   .api-docs-link {
     margin-top: 0.5rem;
     color: var(--foreground);
+    background: var(--border);
     font-size: 0.875rem;
+  }
+
+  .api-docs-link.web-vault-launcher__recent:hover {
+    background: color-mix(in srgb, var(--foreground) 8%, var(--border));
   }
 
   .api-docs-link :global(svg) {

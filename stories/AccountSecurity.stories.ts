@@ -28,6 +28,11 @@ export const Accounts: Story = {
     }
 
     const vaultTitle = await openManageVaults();
+    const createVault = canvas.getByRole("button", {
+      name: /^Create New Vault/,
+    });
+    const vaultActionBackground = getComputedStyle(createVault).backgroundColor;
+    const vaultActionForeground = getComputedStyle(createVault).color;
     const vaultTitleBounds = vaultTitle.getBoundingClientRect();
     const vaultGridBounds = canvasElement
       .querySelector(".server-vault-grid")!
@@ -35,12 +40,14 @@ export const Accounts: Story = {
     const accountButton = await canvas.findByRole("button", {
       name: "Account & security",
     });
-    await expect(accountButton.querySelector("svg")).toBeInTheDocument();
+    await expect(accountButton.querySelector("svg")).toHaveClass(
+      "lucide-shield-check",
+    );
+    await expect(getComputedStyle(accountButton).justifyContent).toBe("center");
     const accountButtonBounds = accountButton.getBoundingClientRect();
     await userEvent.click(accountButton);
     const vaultsButton = canvas.getByRole("button", { name: "Manage vaults" });
     await expect(vaultsButton).toBe(accountButton);
-    await expect(vaultsButton.querySelector("svg")).toHaveClass("lucide-vault");
     const vaultsButtonBounds = vaultsButton.getBoundingClientRect();
     await expect(
       Math.abs(vaultsButtonBounds.left - accountButtonBounds.left),
@@ -66,12 +73,37 @@ export const Accounts: Story = {
     await expect(
       Math.abs(securityGridBounds.top - vaultGridBounds.top),
     ).toBeLessThan(1);
-    const sidebar = within(
-      canvas.getByRole("complementary", { name: "Loaded accounts" }),
+    const accountsPanel = canvas.getByRole("complementary", {
+      name: "Loaded accounts",
+    });
+    const passkeysPanel = canvas.getByRole("region", {
+      name: "Security settings for Owner",
+    });
+    const accountsHeader = accountsPanel.querySelector(
+      ".security-card-header",
+    )!;
+    const passkeysHeader = passkeysPanel.querySelector(
+      ".security-card-header",
+    )!;
+    const headingPadding = getComputedStyle(accountsHeader).paddingBlockEnd;
+    await expect(Number.parseFloat(headingPadding)).toBeGreaterThan(0);
+    await expect(getComputedStyle(passkeysHeader).paddingBlockEnd).toBe(
+      headingPadding,
     );
-    await expect(
-      sidebar.getByRole("link", { name: "Server API documentation" }),
-    ).toHaveAttribute("href", "/api/docs");
+    const sidebar = within(accountsPanel);
+    const apiDocs = sidebar.getByRole("link", {
+      name: "Server API documentation",
+    });
+    await expect(apiDocs).toHaveAttribute("href", "/api/docs");
+    const docsStyle = getComputedStyle(apiDocs);
+    const expectedColor =
+      canvasElement.ownerDocument.createElement("div").style;
+    expectedColor.backgroundColor = docsStyle.getPropertyValue("--border");
+    await expect(docsStyle.backgroundColor).toBe(expectedColor.backgroundColor);
+    await expect(vaultsButton.querySelector("svg")).toHaveClass(
+      "lucide-database-cog",
+    );
+    await expect(getComputedStyle(vaultsButton).justifyContent).toBe("center");
     const owner = sidebar.getByRole("button", {
       name: "Owner Current account",
     });
@@ -80,7 +112,13 @@ export const Accounts: Story = {
     });
 
     await expect(owner).toHaveAttribute("aria-pressed", "true");
+    const ownerRow = getComputedStyle(owner.closest("li")!);
+    const exampleRow = getComputedStyle(example.closest("li")!);
+    await expect(ownerRow.backgroundColor).toBe(vaultActionBackground);
+    await expect(getComputedStyle(owner).color).toBe(vaultActionForeground);
     await userEvent.click(example);
+    await expect(exampleRow.backgroundColor).toBe(vaultActionBackground);
+    await expect(ownerRow.backgroundColor).not.toBe(vaultActionBackground);
     const detail = within(
       canvas.getByRole("region", {
         name: "Security settings for Example account",
