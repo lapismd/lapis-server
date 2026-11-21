@@ -1,5 +1,17 @@
 # @lapismd/lapis-server
 
+## 2.6.0
+
+### Minor Changes
+
+- [#121](https://github.com/lapismd/lapis-server/pull/121) [`0dcfe84`](https://github.com/lapismd/lapis-server/commit/0dcfe84f76746dd9be25aa765fea7ae7197b0e43) Thanks [@stevejuma](https://github.com/stevejuma)! - Add persistent scoped personal access tokens, owner passkeys, MCP OAuth connections, and generated OpenAPI documentation with an authenticated Swagger UI.
+
+### Patch Changes
+
+- [#124](https://github.com/lapismd/lapis-server/pull/124) [`14a8e61`](https://github.com/lapismd/lapis-server/commit/14a8e618bf61d238f6e4da351bf4b6b102168e91) Thanks [@stevejuma](https://github.com/stevejuma)! - Display the complete Content API and MCP addresses in wider, copyable settings fields.
+
+- [#126](https://github.com/lapismd/lapis-server/pull/126) [`bb085bf`](https://github.com/lapismd/lapis-server/commit/bb085bfd2a867c32a6e5689f50cd358d8d436741) Thanks [@stevejuma](https://github.com/stevejuma)! - Group integration settings, separate personal and temporary credential forms, and add icons to both sign-in buttons.
+
 ## 2.5.2
 
 ### Patch Changes
