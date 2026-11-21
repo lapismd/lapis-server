@@ -1,3 +1,5 @@
+import type { DraftRemote, OfflineWorkspace } from "../offline/workspace";
+import type { HostedConnection } from "../connection/connection";
 import type { NativeTasks } from "@lapis-notes/api/native-tasks";
 import type { NativeEditingIntents } from "@lapis-notes/api/native-editing-intents";
 import type { RepositoryServices } from "../history/services";
@@ -30,22 +32,28 @@ export type HostedResources = {
   pluginAssetServer?: PluginAssetServer;
   pluginDistributionOptions?: AppPluginDistributionOptions;
   workspaceHost?: NotesWorkspaceHost;
+  draftRemote?: DraftRemote;
+  revalidate?(signal: AbortSignal): Promise<boolean>;
   release(): Promise<void>;
 };
 export interface HostedBackend {
+  readonly connection?: HostedConnection;
+  readonly offline?: OfflineWorkspace;
   readonly security?: import("../account/passkeys").AccountSecurity;
   readonly runtime: "node-server" | "rust-server";
   readonly protocolMajor: number;
   readonly capabilities: { manageVaults: boolean; transferVaults: boolean };
-  info(): Promise<{
+  info(signal?: AbortSignal): Promise<{
     buildId: string;
     protocolMajor: number;
     passkeys?: boolean;
   }>;
-  current(): Promise<{ username: string }>;
+  current(
+    signal?: AbortSignal,
+  ): Promise<{ username: string; expires_at?: number }>;
   login(username: string, password: string): Promise<void>;
   logout(): Promise<void>;
-  vaults(): Promise<HostedVault[]>;
+  vaults(signal?: AbortSignal): Promise<HostedVault[]>;
   create(name: string): Promise<{ vaultId: string }>;
   rename(vaultId: string, name: string): Promise<unknown>;
   archive(vaultId: string): Promise<unknown>;

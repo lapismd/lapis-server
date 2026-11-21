@@ -5,12 +5,16 @@ import type { RustVaultClient } from "./vault-client";
 /** Same admitted owner as writes and Tasks; no second lifetime or replay path. */
 export function createRustNativeEditingIntents(
   client: RustVaultClient,
+  tracking?: { acquire(editor: string): void; retire(editor: string): void },
 ): NativeEditingIntents {
   return {
     async call(command) {
+      if (command.kind === "acquire") tracking?.acquire(command.editor_id);
       const value = await client.execute({ kind: "editing_intents", command });
       if (value.kind !== "editing_intents")
         throw new Error("Invalid native editing-intent response");
+      if (value.value.kind === "retired" && "editor_id" in command)
+        tracking?.retire(command.editor_id);
       return value.value;
     },
     async read(path) {

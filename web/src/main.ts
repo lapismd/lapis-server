@@ -8,12 +8,22 @@ import "./styles/host.css";
 import "./styles/login.css";
 import "./styles/vault-launcher.css";
 import "./styles/vault-dialogs.css";
-import { initializeServerHostDocument } from "./server-host-document";
+import {
+  initializeServerHostDocument,
+  observeServerFrameColor,
+} from "./server-host-document";
 import { createRustHostedBackend } from "./hosted/rust/backend";
 import ServerVaultHost from "./ServerVaultHost.svelte";
+import { OfflineWorkspace } from "./offline/workspace";
+import { registerServerPwa } from "./pwa/registration";
 import SyncAccountConsent from "./SyncAccountConsent.svelte";
 
-initializeServerHostDocument(await getBootstrapAppearanceMode());
+const appearanceMode = await getBootstrapAppearanceMode();
+initializeServerHostDocument(appearanceMode);
+const stopFrameColor = observeServerFrameColor(appearanceMode);
+window.addEventListener("pagehide", (event) => {
+  if (!event.persisted) stopFrameColor();
+});
 const target = document.getElementById("app");
 if (!target) throw new Error("Server host root is missing");
 
@@ -28,6 +38,7 @@ export default connectionId !== null
   : mount(ServerVaultHost, {
       target,
       props: {
+        pwa: registerServerPwa(),
         consentId:
           new URLSearchParams(window.location.search).get("mcp-consent") ??
           undefined,
@@ -35,6 +46,7 @@ export default connectionId !== null
           nativeMetadata: true,
           nativeHistory: true,
           nativeTasks: true,
+          offline: new OfflineWorkspace(),
         }),
       },
     });

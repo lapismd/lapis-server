@@ -108,3 +108,6 @@ Current registry dependency coordinates; qualification remains separate.
 Manifest, peer and integrity facts SHA256: `98b1a062ef7ce54e9bd6584fc91c3dcfd209314f4c9b7c4a20003b587f986539`.
 
 <!-- dependency-intake:server-registry:end -->
+
+Hosted PWA toolchain intake includes Vite PWA and its explicit Workbox Window
+peer. Frozen production builds retain the exact worker generator inputs.

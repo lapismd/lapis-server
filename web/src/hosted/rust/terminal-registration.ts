@@ -1,3 +1,4 @@
+import { isHostedTransportError } from "../../connection/connection";
 import type { App } from "@lapis-notes/api";
 import { TerminalPlugin } from "@lapis-notes/lapis-plugin-terminal";
 import type { NotesWorkspaceHost } from "@lapis-notes/app-profile/workspace-session";
@@ -31,6 +32,10 @@ export function hostedTerminalWorkspace(
           app.workspaceTrust.trusted &&
           !app.safeMode.disableOptionalCorePlugins,
         (error) => {
+          if (isHostedTransportError(error)) {
+            client.host.connection.suspect();
+            return;
+          }
           app.notifications.notify({
             title: "Terminal",
             source: "terminal",

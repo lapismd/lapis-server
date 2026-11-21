@@ -1,3 +1,8 @@
+import {
+  HostedConnection,
+  HostedTransportError,
+  recordHostedTransportFailure,
+} from "../../connection/connection";
 import { createAccountSecurity } from "../../account/passkeys";
 import {
   PROTOCOL_MAJOR,
@@ -21,6 +26,7 @@ export class RustHostError extends Error {
 
 export class RustHttpClient {
   readonly protocolMajor = PROTOCOL_MAJOR;
+  readonly connection = new HostedConnection();
   #csrfToken?: string;
 
   constructor(
@@ -43,6 +49,11 @@ export class RustHttpClient {
       ...init,
       headers,
       credentials: "same-origin",
+    }).catch((error: unknown) => {
+      if (!(error instanceof TypeError) || init.signal?.aborted) throw error;
+      this.connection.suspect();
+      recordHostedTransportFailure(error);
+      throw error;
     });
     if (!response.ok) {
       let error: { code?: string; message?: string } = {};
@@ -53,6 +64,12 @@ export class RustHttpClient {
       } catch {
         // A proxy can replace structured failures; never retry a mutation.
       }
+      if (!error?.code && [502, 503, 504].includes(response.status)) {
+        this.connection.suspect();
+        throw new HostedTransportError(response.status);
+      }
+      if (response.status === 401 && !path.startsWith("/auth/"))
+        this.connection.suspect();
       throw new RustHostError(
         error?.code ?? "IO",
         error?.message ?? `Server request failed (${response.status})`,
@@ -89,12 +106,17 @@ export class RustHttpClient {
     },
   );
 
-  info(): Promise<HostInfo> {
-    return this.json("/system/info");
+  info(signal?: AbortSignal): Promise<HostInfo> {
+    return this.json("/system/info", "GET", undefined, signal);
   }
 
-  async current(): Promise<SessionInfo> {
-    const session = await this.json<SessionInfo>("/auth/current");
+  async current(signal?: AbortSignal): Promise<SessionInfo> {
+    const session = await this.json<SessionInfo>(
+      "/auth/current",
+      "GET",
+      undefined,
+      signal,
+    );
     this.#csrfToken = session.csrf_token;
     return session;
   }
@@ -112,8 +134,8 @@ export class RustHttpClient {
     this.#csrfToken = undefined;
   }
 
-  vaults(): Promise<ManagedVault[]> {
-    return this.json("/vaults");
+  vaults(signal?: AbortSignal): Promise<ManagedVault[]> {
+    return this.json("/vaults", "GET", undefined, signal);
   }
 
   async attach(vaultId: string): Promise<RustVaultClient> {

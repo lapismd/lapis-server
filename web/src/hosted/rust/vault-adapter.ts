@@ -1,3 +1,9 @@
+import { isHostedTransportError } from "../../connection/connection";
+import {
+  isOfflineMarkdown,
+  type DraftRemote,
+  type OfflineWorkspace,
+} from "../../offline/workspace";
 import { FileWatchHub } from "./file-stream";
 import type { NativeWatchAdapter } from "@lapis-notes/api";
 import type { VaultAdapter } from "@lapis-notes/api/vault";
@@ -14,6 +20,7 @@ export class RustVaultAdapter implements VaultAdapter, NativeWatchAdapter {
   constructor(
     readonly client: RustVaultClient,
     readonly name: string,
+    private readonly offline?: OfflineWorkspace,
   ) {
     this.fileWatches = new FileWatchHub(client);
   }
@@ -56,8 +63,43 @@ export class RustVaultAdapter implements VaultAdapter, NativeWatchAdapter {
     return (await this.stat(path)) !== null;
   }
   async read(path: string): Promise<string> {
+    if (
+      this.offline &&
+      this.client.host.connection.phase === "offline" &&
+      isOfflineMarkdown(vaultPath(path))
+    ) {
+      const saved = await this.#cachedNote(path);
+      if (saved) return saved.draft?.text ?? saved.text;
+    }
     return (await this.client.host.response(this.client.filePath(path))).text();
   }
+
+  #cachedNote(path: string) {
+    const account = this.offline?.current.grant?.account;
+    return account
+      ? this.offline?.getNote(account, this.getVaultId(), vaultPath(path))
+      : undefined;
+  }
+
+  readonly draftRemote: DraftRemote = {
+    read: async (path) => {
+      try {
+        const response = await this.client.host.response(
+          this.client.filePath(path),
+          { cache: "no-store" },
+        );
+        const etag = response.headers.get("etag");
+        if (!etag) throw Error("Server did not supply a file revision.");
+        return { etag, text: await response.text() };
+      } catch (error) {
+        if (error instanceof RustHostError && error.status === 404)
+          return undefined;
+        throw error;
+      }
+    },
+    write: (path, text, etag) =>
+      this.#upload(path, text, undefined, { "if-match": etag }),
+  };
   async readBinary(path: string): Promise<ArrayBuffer> {
     return (
       await this.client.host.response(this.client.filePath(path))
@@ -102,13 +144,38 @@ export class RustVaultAdapter implements VaultAdapter, NativeWatchAdapter {
     expected: string | null,
     options?: WriteOptions,
   ): Promise<void> {
-    const condition: Record<string, string> =
+    const etag =
       expected === null
-        ? { "if-none-match": "*" }
-        : {
-            "if-match": `"${[...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(expected)))].map((byte) => byte.toString(16).padStart(2, "0")).join("")}"`,
-          };
-    await this.#upload(path, data, options, condition);
+        ? undefined
+        : `"${[...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(expected)))].map((byte) => byte.toString(16).padStart(2, "0")).join("")}"`;
+    const condition: Record<string, string> = etag
+      ? { "if-match": etag }
+      : { "if-none-match": "*" };
+    const cache =
+      this.offline &&
+      isOfflineMarkdown(vaultPath(path)) &&
+      this.offline.current.grant
+        ? this.offline
+        : undefined;
+    const stage = async (interrupted: boolean) => {
+      if (!cache) return false;
+      const note = await this.#cachedNote(path);
+      if (!note || (!note.draft && !interrupted)) return false;
+      await cache.stage(note, data, etag);
+      return true;
+    };
+    if (
+      await stage(
+        this.client.host.connection.phase === "offline" ||
+          this.client.host.connection.phase === "reconnecting",
+      )
+    )
+      return;
+    try {
+      await this.#upload(path, data, options, condition);
+    } catch (error) {
+      if (!isHostedTransportError(error) || !(await stage(true))) throw error;
+    }
   }
 
   async process(

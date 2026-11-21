@@ -44,3 +44,31 @@ body {
   position: fixed;
   inset: 0;
 }
+
+.server-connection-footer {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  background: var(--ui-workspace-panel);
+  padding-inline: 0.25rem;
+}
+
+@media (display-mode: window-controls-overlay) {
+  .server-host {
+    --ui-workspace-window-controls-overlay-height: env(
+      titlebar-area-height,
+      0px
+    );
+    --ui-workspace-window-controls-overlay-inline-start: env(
+      titlebar-area-x,
+      0px
+    );
+    --ui-workspace-window-controls-overlay-inline-end: max(
+      0px,
+      calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw))
+    );
+  }
+}
