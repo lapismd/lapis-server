@@ -291,7 +291,8 @@ session and CSRF contract.
 
 ### Acceptance details
 
-- The owner can enroll, name and remove passkeys from Account & security after signing in, and sign-in buttons show icons with their visible labels.
+- The vault chooser keeps its header position when opening Account & security for the authenticated account with a Server API documentation link and a close control that returns to the open workspace.
+- Account and passkey menus expose enrollment, renaming, removal and identity verification through the existing owner session, and sign-in buttons pair icons with visible labels.
 - Passkey enrollment and sign-in require user verification and store only public credential material.
 - Removed credentials and expired or replayed challenges cannot create sessions.
 

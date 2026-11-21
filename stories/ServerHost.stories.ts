@@ -150,19 +150,22 @@ export const PasskeyEnrollment: Story = {
       name: "Account & security",
     });
     await userEvent.click(account);
-    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
-      "dialog",
-      { name: "Account & security" },
+    const canvas = within(canvasElement);
+    await canvas.findByText("No passkeys enrolled.");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Open actions for owner" }),
     );
-    const form = within(dialog);
-    await form.findByText("No passkeys enrolled.");
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      await body.findByRole("menuitem", { name: "Add passkey…" }),
+    );
+    const form = within(
+      await body.findByRole("dialog", { name: "Add a passkey" }),
+    );
     await expect(
       form.getByRole("button", { name: "Add passkey" }),
     ).toBeDisabled();
-    await userEvent.type(
-      form.getByLabelText("New passkey name"),
-      "This device",
-    );
+    await userEvent.type(form.getByLabelText("Passkey name"), "This device");
     await expect(
       form.getByRole("button", { name: "Add passkey" }),
     ).toBeEnabled();

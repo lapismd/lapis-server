@@ -1,4 +1,4 @@
-type PasskeySummary = {
+export type PasskeySummary = {
   id: string;
   label: string;
   created_at: number;

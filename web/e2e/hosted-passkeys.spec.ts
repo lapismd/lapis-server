@@ -39,14 +39,27 @@ test("enroll a passkey, sign in with it after reload, and remove it", async ({
     await page.goto(origin);
     await signInHostedOwner(page, password);
     await page.getByRole("button", { name: "Account & security" }).click();
-    await page.getByLabel("New passkey name").fill("Local authenticator");
+    await expect(
+      page.getByRole("heading", { name: "Account & security", level: 1 }),
+    ).toBeVisible({ timeout: 3000 });
+    const owner = page.getByRole("complementary", { name: "Loaded accounts" });
+    await expect(
+      owner.getByRole("button", { name: "owner Current account" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(
+      owner.getByRole("link", { name: "Server API documentation" }),
+    ).toHaveAttribute("href", "/api/docs");
+    await expect(page.getByText("No passkeys enrolled.")).toBeVisible();
+    await owner.getByRole("button", { name: "Open actions for owner" }).click();
+    await page.getByRole("menuitem", { name: "Add passkey…" }).click();
+    await page.getByLabel("Passkey name").fill("Local authenticator");
     await page
       .getByRole("button", { name: "Add passkey", exact: true })
       .click();
     await expect(
       page.getByText("Passkey added.", { exact: true }),
     ).toBeVisible();
-    await page.getByRole("dialog").press("Escape");
+    await page.getByRole("button", { name: "Manage vaults" }).click();
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
     await page.reload();
     await page.getByLabel("Username").fill("owner");
@@ -57,13 +70,33 @@ test("enroll a passkey, sign in with it after reload, and remove it", async ({
     await page.getByRole("button", { name: "Account & security" }).click();
     await expect(page.getByText(/Last used/)).toBeVisible();
     await page
-      .getByRole("button", { name: "Remove Local authenticator" })
+      .getByRole("button", { name: "Open actions for Local authenticator" })
+      .click();
+    await page.getByRole("menuitem", { name: "Rename…" }).click();
+    await page.getByLabel("Passkey name").fill("Renamed authenticator");
+    await page.getByRole("button", { name: "Save name" }).click();
+    await expect(
+      page.getByText("Passkey renamed.", { exact: true }),
+    ).toBeVisible();
+    await owner.getByRole("button", { name: "Open actions for owner" }).click();
+    await page.getByRole("menuitem", { name: "Verify identity…" }).click();
+    await page.getByLabel("Verify identity with password").fill(password);
+    await page.getByRole("button", { name: "Verify password" }).click();
+    await expect(
+      page.getByText("Identity verified.", { exact: true }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Open actions for Renamed authenticator" })
+      .click();
+    await page.getByRole("menuitem", { name: "Remove…" }).click();
+    await page
+      .getByRole("button", { name: "Remove passkey", exact: true })
       .click();
     await expect(
       page.getByText("Passkey removed.", { exact: true }),
     ).toBeVisible();
     await expect(page.getByText("No passkeys enrolled.")).toBeVisible();
-    await page.getByRole("dialog").press("Escape");
+    await page.getByRole("button", { name: "Manage vaults" }).click();
     await page.getByRole("button", { name: "Sign out", exact: true }).click();
     await signInHostedOwner(page, password);
   } finally {

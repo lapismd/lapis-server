@@ -80,14 +80,16 @@
     | "protocol";
   let hostState: HostState = $state("loading");
   let username = $state("");
-  let authenticatedUsername: string | null = null;
+  let authenticatedUsername = $state<string | null>(null);
   let disposed = false;
   let password = $state("");
+  let passkeysEnabled = $state(false);
   let passkeysAvailable = $state(false);
-  let accountOpen = $state(false);
-  const showAccountSecurityPage = $derived(
-    accountOpen && Boolean(accountSecurityPage),
+  const hasAccountSecurity = $derived(
+    Boolean(backend.security || accountSecurityPage),
   );
+  let accountOpen = $state(false);
+  const showAccountSecurityPage = $derived(accountOpen && hasAccountSecurity);
 
   let passkeyBusy = $state(false);
   let newVaultName = $state("");
@@ -155,7 +157,8 @@
       const info = await backend.info();
       if (disposed) return;
       buildId = info.buildId;
-      passkeysAvailable = info.passkeys === true && supportsPasskeys();
+      passkeysEnabled = info.passkeys === true;
+      passkeysAvailable = passkeysEnabled && supportsPasskeys();
       if (info.protocolMajor !== backend.protocolMajor) {
         hostState = "protocol";
         return;
@@ -677,7 +680,7 @@
             <img src={serverLogo} alt="" class="server-launcher-logo" />
             <div class="server-brand-copy">
               <p class="server-eyebrow">Lapis Notes</p>
-              <div class:launcher-copy-views={Boolean(accountSecurityPage)}>
+              <div class:launcher-copy-views={hasAccountSecurity}>
                 <div inert={showAccountSecurityPage}>
                   <h1 class="server-launcher-title">Your vaults</h1>
                   <p class="server-launcher-description">
@@ -685,7 +688,7 @@
                     online.
                   </p>
                 </div>
-                {#if accountSecurityPage}
+                {#if hasAccountSecurity}
                   <div inert={!showAccountSecurityPage}>
                     <h1
                       id="server-account-security-heading"
@@ -702,13 +705,11 @@
             </div>
           </div>
           <div class="server-launcher-actions">
-            {#if accountSecurityPage || (passkeysAvailable && backend.security)}
+            {#if hasAccountSecurity}
               <Button.Root
                 variant="ghost"
                 size="sm"
-                class={accountSecurityPage
-                  ? "account-security-switch"
-                  : undefined}
+                class="account-security-switch"
                 onclick={() => {
                   accountOpen = !showAccountSecurityPage;
                 }}
@@ -757,29 +758,10 @@
                   </svg>
                   Manage vaults
                 {:else}
-                  {#if accountSecurityPage}<ShieldCheck
-                      aria-hidden="true"
-                      data-icon="inline-start"
-                    />{/if}
+                  <ShieldCheck aria-hidden="true" data-icon="inline-start" />
                   Account &amp; security
                 {/if}
               </Button.Root>
-              {#if !accountSecurityPage && backend.security}
-                <Dialog.Root bind:open={accountOpen}>
-                  <Dialog.Content>
-                    <Dialog.Header>
-                      <Dialog.Title>Account &amp; security</Dialog.Title>
-                      <Dialog.Description
-                        >Manage the passkeys you use to sign in.</Dialog.Description
-                      >
-                    </Dialog.Header>
-                    <a href="/api/docs">Server API documentation</a>
-                    {#if accountOpen}<AccountSecurity
-                        security={backend.security}
-                      />{/if}
-                  </Dialog.Content>
-                </Dialog.Root>
-              {/if}
             {/if}
             <Button.Root
               variant="ghost"
@@ -998,8 +980,22 @@
               </Card.Content>
             </Card.Root>
           </div>
-          {#if showAccountSecurityPage && accountSecurityPage}
-            {@render accountSecurityPage()}
+          {#if showAccountSecurityPage}
+            {#if accountSecurityPage}
+              {@render accountSecurityPage()}
+            {:else if authenticatedUsername}
+              <AccountSecurity
+                accounts={[
+                  {
+                    id: authenticatedUsername,
+                    label: authenticatedUsername,
+                    description: "Current account",
+                    security: passkeysEnabled ? backend.security : undefined,
+                  },
+                ]}
+                canUsePasskeys={passkeysAvailable}
+              />
+            {/if}
           {/if}
         </div>
       </div>
