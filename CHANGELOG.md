@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.6.1
+
+### Patch Changes
+
+- [#128](https://github.com/lapismd/lapis-server/pull/128) [`773e480`](https://github.com/lapismd/lapis-server/commit/773e480232aaa8cf83b1af08396ae06903b552f2) Thanks [@stevejuma](https://github.com/stevejuma)! - Bring the vault-style Account & security page to the hosted app, with account and passkey action menus, a Server API documentation link, and stable navigation back to vault management.
+
 ## 2.6.0
 
 ### Minor Changes
