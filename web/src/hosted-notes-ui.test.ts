@@ -56,3 +56,17 @@ test("production login enters the managed vault chooser", async () => {
     view.getByRole("button", { name: "Open Notes owner · server-hosted" }),
   ).toBeTruthy();
 });
+
+test("a transport failure opens the connection surface instead of the login alert", async () => {
+  const { backend } = createHostedFixture("login");
+  backend.info = async () => {
+    throw new TypeError("Failed to fetch");
+  };
+  const view = render(ServerVaultHost, { backend });
+  const indicator = await view.findByRole("button", {
+    name: "Server connection: Offline",
+  });
+  expect(view.queryByRole("alert")).toBeNull();
+  await fireEvent.click(indicator);
+  await view.findByRole("button", { name: "Retry now" });
+});

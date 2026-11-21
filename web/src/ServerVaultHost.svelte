@@ -35,7 +35,7 @@
   import * as Dialog from "@lapismd/design-core/shadcn/dialog";
   import * as DropdownMenu from "@lapismd/design-core/shadcn/dropdown-menu";
   import * as Input from "@lapismd/design-core/shadcn/input";
-  import { onMount, tick, type Snippet } from "svelte";
+  import { onMount, tick, untrack, type Snippet } from "svelte";
   import {
     archiveServerImportDirectory,
     canPickServerImportDirectory,
@@ -50,6 +50,22 @@
     type VaultRestoration,
   } from "./vault-restoration";
 
+  import ConnectionStatus from "./connection/ConnectionStatus.svelte";
+  import {
+    HostedConnection,
+    isHostedTransportError,
+  } from "./connection/connection";
+  import { registerConnectionStatus } from "./connection/status-contribution";
+  import { RustHostError } from "./hosted/rust/client";
+
+  import type { App } from "@lapis-notes/api";
+  import OfflineVault from "./offline/OfflineVault.svelte";
+  import { OfflineWorkspace } from "./offline/workspace";
+  import { trackHostedNotes } from "./offline/observe-editor";
+  import { flushOfflineWriters } from "./offline/persistence";
+  import type { ServerPwa } from "./pwa/registration";
+  import { readable } from "svelte/store";
+
   type VaultRow = HostedVault;
   type Prepared = HostedResources & {
     profile: ServerVaultProfile;
@@ -57,7 +73,7 @@
     host: NotesWorkspaceHost;
     token: symbol;
     ready: boolean;
-    onReady(): void;
+    onReady(app: App): void;
   };
 
   let {
@@ -65,14 +81,28 @@
     restoration = createVaultRestoration(),
     consentId,
     accountSecurityPage,
+    pwa,
   }: {
     backend: HostedBackend;
     restoration?: VaultRestoration;
     consentId?: string;
     accountSecurityPage?: Snippet;
+    pwa?: ServerPwa;
   } = $props();
+  const connection = untrack(
+    () => backend.connection ?? new HostedConnection(),
+  );
+  const offline = untrack(() => backend.offline ?? new OfflineWorkspace());
+  const emptyPwa = readable({ canInstall: false, updateAvailable: false });
+  const pwaState = $derived(pwa ?? emptyPwa);
+  let showCached = $state(false);
+  let activeApp: App | undefined;
+  let observer: ReturnType<typeof trackHostedNotes> | undefined;
+  let sessionExpiry: number | undefined;
+
   type HostState =
     | "loading"
+    | "connection"
     | "login"
     | "vaults"
     | "opening"
@@ -131,9 +161,17 @@
     }),
   );
 
+  $effect(() => {
+    if (showCached && !$offline.grant) showCached = false;
+  });
+
   onMount(() => {
+    const stopConnection = connection.start(probeConnection);
+    const stopOffline = backend.offline?.start();
     void initialize();
     return () => {
+      stopConnection();
+      stopOffline?.();
       void dispose();
     };
   });
@@ -154,7 +192,8 @@
   async function initialize(): Promise<void> {
     errorMessage = "";
     try {
-      const info = await backend.info();
+      const signal = AbortSignal.timeout(5000);
+      const info = await backend.info(signal);
       if (disposed) return;
       buildId = info.buildId;
       passkeysEnabled = info.passkeys === true;
@@ -164,14 +203,133 @@
         return;
       }
       try {
-        await enterAuthenticatedHost();
-      } catch {
+        await enterAuthenticatedHost(signal);
+      } catch (error) {
+        if (isHostedTransportError(error) || signal.aborted) throw error;
+        connection.reached("sign-in");
         hostState = "login";
       }
     } catch (error) {
-      errorMessage = error instanceof Error ? error.message : String(error);
-      hostState = "login";
+      if (disposed) return;
+      if (
+        isHostedTransportError(error) ||
+        (error instanceof Error && error.name === "TimeoutError")
+      ) {
+        connection.lost();
+        hostState = "connection";
+        if (backend.offline && !consentId) {
+          await offline.refresh().catch(() => {});
+          if (!disposed && hostState === "connection")
+            showCached = !!offline.current.grant?.selection;
+        }
+      } else {
+        errorMessage = error instanceof Error ? error.message : String(error);
+        hostState = "login";
+      }
     }
+  }
+
+  async function probeConnection(signal: AbortSignal) {
+    if (hostState === "loading") throw Error("Initial connection is pending");
+    const info = await backend.info(signal);
+    signal.throwIfAborted();
+    if (info.protocolMajor !== backend.protocolMajor) {
+      buildId = info.buildId;
+      hostState = "protocol";
+      return "update-required";
+    }
+    try {
+      if (hostState === "connection") {
+        await enterAuthenticatedHost(signal);
+      } else {
+        const identity = await backend.current(signal);
+        if (authenticatedUsername !== identity.username) {
+          offline.restrict();
+          hostState = "login";
+          return "sign-in";
+        }
+        const latest = await backend.vaults(signal);
+        signal.throwIfAborted();
+        vaults = latest;
+        await authorizeOffline(identity);
+        if (prepared) {
+          const current = latest.find(
+            (vault) =>
+              vault.id === prepared?.profile.id &&
+              vault.archivedAt === undefined,
+          );
+          if (!current) {
+            hostState = "vaults";
+            showCached = false;
+          } else if (
+            prepared.revalidate &&
+            !(await prepared.revalidate(signal))
+          ) {
+            showCached = false;
+            await openVault(
+              current,
+              activeApp?.workspace.getActiveFile()?.path,
+            );
+          }
+        }
+      }
+      return "connected";
+    } catch (error) {
+      if (!(error instanceof RustHostError) || error.status !== 401)
+        throw error;
+      offline.restrict();
+      showCached = false;
+      hostState = prepared ? "connection" : "login";
+      return "sign-in";
+    }
+  }
+
+  function requestSignIn() {
+    showCached = false;
+    hostState = "login";
+  }
+
+  async function authorizeOffline(identity: {
+    username: string;
+    expires_at?: number;
+  }) {
+    sessionExpiry = identity.expires_at;
+    if (backend.offline)
+      await offline
+        .authorize(identity.username, identity.expires_at, searchableVaults)
+        .catch(() => {});
+  }
+
+  async function enableOffline() {
+    if (!authenticatedUsername || !sessionExpiry || !prepared?.ready)
+      throw Error("Open an authenticated vault before enabling offline data.");
+    await offline.enable(
+      authenticatedUsername,
+      sessionExpiry,
+      searchableVaults,
+      prepared.profile.id,
+    );
+    await observer?.refresh();
+  }
+
+  async function resumeWorkspace(path?: string) {
+    await flushOfflineWriters();
+    showCached = false;
+    if (
+      path &&
+      activeApp &&
+      connection.phase === "connected" &&
+      activeApp.workspace.getActiveFile()?.path !== path
+    ) {
+      await activeApp.workspace.openLinkText(path, path);
+    }
+  }
+
+  async function applyPwaUpdate() {
+    await pwa?.applyUpdate(async () => {
+      await flushOfflineWriters();
+      await disposeWorkspace(true);
+    });
   }
 
   async function login(event: SubmitEvent): Promise<void> {
@@ -206,15 +364,21 @@
     vaults = await backend.vaults();
   }
 
-  async function enterAuthenticatedHost(): Promise<void> {
-    const identity = await backend.current();
+  async function enterAuthenticatedHost(signal?: AbortSignal): Promise<void> {
+    const identity = await backend.current(signal);
+    signal?.throwIfAborted();
     if (disposed) return;
     authenticatedUsername = identity.username;
-    await refreshVaults();
+    vaults = await backend.vaults(signal);
+    signal?.throwIfAborted();
     if (disposed) return;
+    await authorizeOffline(identity);
+    if (disposed) return;
+    connection.reached("connected");
     hostState = "vaults";
     if (consentId) return;
-    const vaultId = restoration.take(identity.username);
+    const cached = showCached ? offline.current.grant?.selection : undefined;
+    const vaultId = cached?.vault ?? restoration.take(identity.username);
     if (!vaultId) return;
     const vault = vaults.find(
       (row) => row.id === vaultId && row.archivedAt === undefined,
@@ -224,7 +388,7 @@
         "Your previously selected vault is unavailable. Choose a vault.";
       return;
     }
-    await openVault(vault);
+    await openVault(vault, cached?.path);
   }
 
   function activeProfiles() {
@@ -253,9 +417,9 @@
     }
   }
 
-  function openVault(row: VaultRow): Promise<void> {
+  function openVault(row: VaultRow, path?: string): Promise<void> {
     const flight = (openingFlight ?? Promise.resolve()).then(() => {
-      if (!disposed) return openSelectedVault(row);
+      if (!disposed) return openSelectedVault(row, path);
     });
     openingFlight = flight;
     const finish = () => {
@@ -265,8 +429,13 @@
     return flight;
   }
 
-  async function openSelectedVault(row: VaultRow): Promise<void> {
+  async function openSelectedVault(
+    row: VaultRow,
+    path?: string,
+  ): Promise<void> {
     if (row.archivedAt !== undefined) return;
+    const reviewDrafts =
+      showCached && offline.current.notes.some((entry) => entry.draft);
     hostState = "opening";
     errorMessage = "";
     try {
@@ -292,7 +461,7 @@
           session,
           token,
           ready: false,
-          onReady: () => {
+          onReady: (app) => {
             if (
               disposed ||
               prepared?.token !== token ||
@@ -300,11 +469,51 @@
             )
               return;
             prepared.ready = true;
-            if (owner) restoration.remember(owner, profile.id);
+            activeApp = app;
+            if (owner) {
+              restoration.remember(owner, profile.id);
+              if (backend.offline && resources.draftRemote) {
+                observer = trackHostedNotes(
+                  app,
+                  { account: owner, vault: profile.id },
+                  offline,
+                  connection,
+                  resources.draftRemote,
+                );
+              }
+            }
+            if (path && app.workspace.getActiveFile()?.path !== path)
+              void app.workspace.openLinkText(path, path).catch(() => {});
             hostState = "workspace";
+            if (!reviewDrafts) showCached = false;
           },
           host: {
             ...resources.workspaceHost,
+            attach: (app, syncHost) => {
+              const releaseHost = resources.workspaceHost?.attach?.(
+                app,
+                syncHost,
+              );
+              const releaseStatus = registerConnectionStatus(app, {
+                connection,
+                signIn: requestSignIn,
+                ...(backend.offline
+                  ? {
+                      offline,
+                      enableOffline,
+                      browseOffline: () => {
+                        showCached = true;
+                      },
+                    }
+                  : {}),
+                pwa,
+                updatePwa: applyPwaUpdate,
+              });
+              return () => {
+                releaseStatus();
+                releaseHost?.();
+              };
+            },
             dispose: async (app) => {
               try {
                 await resources.workspaceHost?.dispose?.(app);
@@ -338,6 +547,9 @@
       await active.session.close();
       await active.release();
     }
+    observer?.close();
+    observer = undefined;
+    activeApp = undefined;
     sessionComponent = null;
     prepared = null;
   }
@@ -507,6 +719,8 @@
     try {
       await disposeWorkspace(true);
       await backend.logout();
+      showCached = false;
+      if (backend.offline) void offline.clear().catch(() => {});
       accountOpen = false;
       if (authenticatedUsername) restoration.forget(authenticatedUsername);
       authenticatedUsername = null;
@@ -533,13 +747,15 @@
 <div
   class="server-host"
   data-server-host-state={hostState}
-  role={hostState === "workspace" ? undefined : "main"}
+  role={hostState === "workspace" || showCached ? undefined : "main"}
 >
   {#if prepared}
     <div
       class="server-workspace"
-      hidden={hostState !== "workspace" && hostState !== "opening"}
-      inert={hostState !== "workspace" && hostState !== "opening"}
+      hidden={showCached ||
+        (hostState !== "workspace" && hostState !== "opening")}
+      inert={showCached ||
+        (hostState !== "workspace" && hostState !== "opening")}
     >
       <NotesWorkspaceSession
         bind:this={
@@ -568,7 +784,19 @@
     </div>
   {/if}
 
-  {#if hostState === "loading" || (hostState === "opening" && !prepared)}
+  {#if showCached && $offline.grant}
+    <OfflineVault
+      {offline}
+      {connection}
+      signIn={requestSignIn}
+      remote={$connection.phase === "connected"
+        ? prepared?.draftRemote
+        : undefined}
+      resume={prepared?.ready
+        ? (path) => void resumeWorkspace(path).catch(() => {})
+        : undefined}
+    />
+  {:else if hostState === "loading" || (hostState === "opening" && !prepared)}
     <section class="server-centered-surface" aria-live="polite">
       <Card.Root class="server-status-card">
         <Card.Header>
@@ -582,6 +810,19 @@
         </Card.Header>
       </Card.Root>
     </section>
+  {:else if hostState === "connection"}
+    <section class="server-centered-surface" aria-label="Lapis Server">
+      <Card.Root class="server-status-card">
+        <Card.Header>
+          <h1 class="server-status-title">Lapis Server</h1>
+          <Card.Description>Waiting for the server connection.</Card.Description
+          >
+        </Card.Header>
+      </Card.Root>
+    </section>
+    <footer class="server-connection-footer" aria-label="Status bar">
+      <ConnectionStatus {connection} signIn={requestSignIn} {offline} />
+    </footer>
   {:else if hostState === "protocol"}
     <section class="server-centered-surface" role="alert">
       <Card.Root class="server-status-card">
@@ -786,6 +1027,15 @@
             {/if}
           </div>
         </header>
+
+        {#if $pwaState.canInstall && pwa}
+          <Button.Root
+            variant="outline"
+            size="sm"
+            onclick={() => void pwa?.install()}
+            >Install Lapis Server</Button.Root
+          >
+        {/if}
 
         {#if errorMessage}
           <div class="server-alert server-alert--error" role="alert">

@@ -19,6 +19,7 @@ for (const name of [
   "properties",
   "tasks",
   "static",
+  "pwa",
 ]) {
   run("pnpm", [
     "exec",

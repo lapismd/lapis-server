@@ -1,3 +1,5 @@
+import type { HostedConnection } from "../connection/connection";
+import { retainHostedRead } from "../connection/retained-read";
 import type { RepositoryRemotesService } from "@lapis-notes/history/repository";
 import type {
   RepositoryRemotesCommand,
@@ -26,6 +28,7 @@ export function createHostedRemotes(
   synchronize?: (
     command?: RepositorySyncCommand,
   ) => Promise<RepositorySyncSnapshot>,
+  connection?: HostedConnection,
 ): RepositoryRemotesService & { close(): void } {
   let closed = false;
   const requireOpen = () => {
@@ -38,23 +41,26 @@ export function createHostedRemotes(
     requireOpen();
     return snapshot;
   };
+  const readSynchronization =
+    synchronize && retainHostedRead(connection, () => synchronize());
   return {
-    synchronization: synchronize
-      ? {
-          read: async () => {
-            requireOpen();
-            const snapshot = await synchronize();
-            requireOpen();
-            return snapshot;
-          },
-          execute: async (command) => {
-            requireOpen();
-            const snapshot = await synchronize(command);
-            requireOpen();
-            return snapshot;
-          },
-        }
-      : undefined,
+    synchronization:
+      synchronize && readSynchronization
+        ? {
+            read: async () => {
+              requireOpen();
+              const snapshot = await readSynchronization();
+              requireOpen();
+              return snapshot;
+            },
+            execute: async (command) => {
+              requireOpen();
+              const snapshot = await synchronize(command);
+              requireOpen();
+              return snapshot;
+            },
+          }
+        : undefined,
     read: () => request(),
     execute: (command) => request(command),
     async openSignIn() {

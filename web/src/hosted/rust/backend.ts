@@ -1,3 +1,10 @@
+import { retainHostedRead } from "../../connection/retained-read";
+import {
+  recoverBrowserAttachments,
+  trackBrowserAttachment,
+} from "./browser-attachment";
+import type { OfflineWorkspace } from "../../offline/workspace";
+import { isHostedTransportError } from "../../connection/connection";
 import { createRustSkillManagement } from "./skill-management";
 import { contentAccessPlugin } from "../../content-access/plugin";
 import { hostedTerminalWorkspace } from "./terminal-registration";
@@ -22,20 +29,25 @@ export function createRustHostedBackend(
     nativeMetadata = false,
     nativeHistory = false,
     nativeTasks = false,
+    offline,
   }: {
     nativeMetadata?: boolean;
     nativeHistory?: boolean;
     nativeTasks?: boolean;
+    offline?: OfflineWorkspace;
   } = {},
 ): HostedBackend {
+  let account: string | undefined;
   const capabilities = { manageVaults: false, transferVaults: false };
   return {
     runtime: "rust-server",
+    connection: host.connection,
+    offline,
     protocolMajor: host.protocolMajor,
     capabilities,
     security: host.security,
-    async info() {
-      const info = await host.info();
+    async info(signal) {
+      const info = await host.info(signal);
       capabilities.manageVaults = info.manage_vaults;
       capabilities.transferVaults = info.transfer_vaults;
       return {
@@ -44,11 +56,15 @@ export function createRustHostedBackend(
         ...(info.passkeys ? { passkeys: true } : {}),
       };
     },
-    current: () => host.current(),
+    async current(signal) {
+      const session = await host.current(signal);
+      account = session.username;
+      return session;
+    },
     login: (username, password) => host.login(username, password),
     logout: () => host.logout(),
-    async vaults() {
-      return (await host.vaults()).map((vault) => ({
+    async vaults(signal) {
+      return (await host.vaults(signal)).map((vault) => ({
         id: vault.vault_id,
         name: vault.name,
         role: "owner" as const,
@@ -81,8 +97,20 @@ export function createRustHostedBackend(
     exportUrl: (id) => host.url(`/vaults/${encodeURIComponent(id)}/export`),
     async prepare(profile) {
       const client = await host.attach(profile.id);
-      const adapter = new RustVaultAdapter(client, profile.name);
+      const owner = account;
+      if (owner && offline?.current.grant?.account === owner)
+        await recoverBrowserAttachments(host, client, owner);
+      const tracking =
+        offline && owner
+          ? await trackBrowserAttachment(client, owner, offline)
+          : undefined;
+      const adapter = new RustVaultAdapter(client, profile.name, offline);
+      const historyIndexStatus = retainHostedRead(host.connection, () =>
+        client.historyIndex({ kind: "status" }),
+      );
       return {
+        draftRemote: adapter.draftRemote,
+        revalidate: (signal) => client.revalidate(signal),
         workspaceHost: hostedTerminalWorkspace(client, [
           {
             plugin: contentAccessPlugin(host, profile.id),
@@ -97,7 +125,7 @@ export function createRustHostedBackend(
           : undefined,
         nativeEditingIntents:
           nativeTasks || nativeHistory
-            ? createRustNativeEditingIntents(client)
+            ? createRustNativeEditingIntents(client, tracking)
             : undefined,
         repositoryFactory: nativeHistory
           ? (app) =>
@@ -130,6 +158,7 @@ export function createRustHostedBackend(
                     client.signal,
                     undefined,
                     (command) => client.repositorySynchronization(command),
+                    host.connection,
                   ),
                   workingCopy: async () =>
                     parseWorkingCopyStatus(
@@ -143,7 +172,12 @@ export function createRustHostedBackend(
             ? { call: (command) => client.indexing(command) }
             : undefined,
         nativeHistoryIndex: nativeHistory
-          ? { call: (command) => client.historyIndex(command) }
+          ? {
+              call: (command) =>
+                command.kind === "status"
+                  ? historyIndexStatus()
+                  : client.historyIndex(command),
+            }
           : undefined,
         nativeChat: (app) => ({
           allowed: () =>
@@ -179,20 +213,31 @@ export function createRustHostedBackend(
                 throw error;
             }
           },
-          report: (error) =>
+          report: (error) => {
+            if (isHostedTransportError(error)) {
+              host.connection.suspect();
+              return;
+            }
             app.notifications.notify({
               title: "AI",
               source: "ai",
               severity: "error",
               message: error.message,
-            }),
+            });
+          },
         }),
         pluginAssetServer: createRustPluginAssetServer(client, adapter),
         database: new RustDatabaseProvider(client),
         pluginDistributionOptions: {
           fetch: createRustPluginDistributionFetch(client),
         },
-        release: () => client.close(),
+        async release() {
+          try {
+            await client.close();
+          } finally {
+            tracking?.dispose();
+          }
+        },
       };
     },
   };

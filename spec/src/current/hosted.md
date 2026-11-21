@@ -308,3 +308,54 @@ and streams. CI MUST reject drift between routing, schemas and generated output.
 - Route registration produces the documented HTTP method and path.
 - Owner sessions can open the UI and authorize same-origin requests with protocol and CSRF headers.
 - Authentication, content, MCP, service, file, streaming and health routes have separate tags and documented security requirements.
+
+## SRV-HST-025 — Hosted connection status
+
+**Requirement.** The hosted workspace MUST present connection state through one
+icon at the right of its status bar. Activating the icon MUST open an anchored
+detail panel with connection state, last contact and retry or sign-in actions.
+Transient background transport failures MUST update this state without spawning
+alerts or interrupting editor focus.
+
+### Acceptance details
+
+- Connected, reconnecting, offline and reauthentication states use one mounted status item.
+- The details open on explicit activation and close with Escape, returning focus to the trigger.
+
+## SRV-HST-026 — Installable hosted shell
+
+**Requirement.** The HTTPS hosted application MUST provide an installable
+manifest and a versioned offline app shell. The service worker MUST cache only
+public build assets and MUST exclude authenticated requests and consent
+navigation. Updates MUST await persistence before replacing the running shell.
+
+### Acceptance details
+
+- An installed browser can load a previously prepared shell without contacting the server.
+- Sign-in, integrations, and vault requests always resolve through live routes.
+
+## SRV-HST-027 — Device-local notes and drafts
+
+**Requirement.** An authenticated user MAY enable offline copies of recently
+opened Markdown notes on the device. Snapshots and drafts MUST be scoped to the
+admitted account and vault, bounded by the last known session expiry, and
+removable by the user. Browser snapshots MUST NOT grant server admission.
+
+### Acceptance details
+
+- Browser storage retains recent Markdown and an explicit draft per cached note.
+- Signing out or clearing local data removes stored note content and invalidates other tabs.
+
+## SRV-HST-028 — Hosted session recovery
+
+**Requirement.** The workspace MUST keep its location and unsaved note content
+through transient disconnects. Recovery MUST validate the live session and
+vault admission before restoring server-backed controls. Applying an offline
+draft MUST require user confirmation and an enforced server file precondition.
+Uncertain mutations MUST be reconciled before they can be submitted again.
+
+### Acceptance details
+
+- Transient observation failures retain the admitted vault and replay the available file cursor.
+- A stale attachment is replaced only after live session and vault validation.
+- Browser recovery retires only verified clean editing claims from inactive attachments it owns and preserves dirty claims for native recovery.

@@ -102,6 +102,7 @@ const preview: Preview = {
             "Content API, MCP and CLI",
             "Hosted qualification and delivery",
             "Verification",
+            "Hosted PWA verification",
             "Authentication verification",
             "CI verification",
             "Lapis Sync verification",

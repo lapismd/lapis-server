@@ -1,3 +1,4 @@
+import { isHostedTransportError } from "../connection/connection";
 import type { App } from "@lapis-notes/api";
 import type {
   RepositoryBackupCommand,
@@ -48,15 +49,21 @@ export function createHostedBackup(
         timer = setTimeout(() => {
           void poll()
             .catch((error) => {
-              if (epoch === current)
+              if (epoch === current && !isHostedTransportError(error))
                 changed({ ...latest, phase: "failed", error: String(error) });
             })
             .finally(schedule);
         }, 1000);
       };
-      const initial = await poll();
-      schedule();
-      return initial;
+      try {
+        const initial = await poll();
+        schedule();
+        return initial;
+      } catch (error) {
+        if (!isHostedTransportError(error)) throw error;
+        schedule();
+        return latest;
+      }
     },
     async stop() {
       epoch++;

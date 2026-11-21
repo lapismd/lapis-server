@@ -227,3 +227,10 @@ metadata and removal of the unused API 0.6.3 lock identity. It grants no generic
 peer-metadata capability and no Server product release intent. Workspace and
 Design Core remain for the subsequent ordinary dependency-automation PR and
 its full current-head, main, completion and replay evidence.
+
+## Hosted PWA qualification
+
+Qualify the installed shell, connection status, offline notes and drafts, and
+authenticated recovery under SRV-HST-025–028 in the exact built image behind
+HTTPS. Retain the normal Chromium journey and record installed desktop and
+iOS launch and recovery separately.

@@ -22,6 +22,7 @@
   - [Content API, MCP and CLI](backlog/content-automation.md)
   - [Hosted qualification and delivery](backlog/qualification.md)
 - [Verification](verification.md)
+  - [Hosted PWA verification](verification/pwa.md)
   - [Authentication verification](verification/authentication.md)
   - [CI verification](verification/ci.md)
   - [Lapis Sync verification](verification/sync.md)

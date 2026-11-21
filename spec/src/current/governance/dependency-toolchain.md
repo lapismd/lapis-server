@@ -102,3 +102,7 @@ Current registry dependency coordinates; qualification remains separate.
 Manifest, peer and integrity facts SHA256: `98b1a062ef7ce54e9bd6584fc91c3dcfd209314f4c9b7c4a20003b587f986539`.
 
 <!-- dependency-intake:server-registry:end -->
+
+The existing Server Vite build uses Vite PWA with its explicit Workbox Window
+peer to emit the install manifest and prompt-controlled app-shell worker.
+Neither dependency runs in the Rust container at runtime.

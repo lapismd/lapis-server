@@ -1,3 +1,4 @@
+import { isHostedTransportError } from "../../connection/connection";
 import type {
   NativeTaskCommand,
   NativeTaskValue,
@@ -38,23 +39,46 @@ import { RustHostError, type RustHttpClient } from "./client";
 export class RustVaultClient {
   #closed = false;
   #leaseError?: unknown;
-  #heartbeat: ReturnType<typeof setInterval>;
+  #heartbeat?: ReturnType<typeof setInterval>;
   #closePromise?: Promise<void>;
   #lifetime = new AbortController();
 
   private constructor(
     readonly host: RustHttpClient,
     readonly descriptor: ClientDescriptor,
+    heartbeat: boolean,
   ) {
-    this.#heartbeat = setInterval(() => {
-      void this.host.json(`${this.path}/heartbeat`, "POST").catch((error) => {
-        this.#leaseError = error;
-        this.#lifetime.abort();
-      });
-    }, 30_000);
+    if (heartbeat)
+      this.#heartbeat = setInterval(() => {
+        if (this.host.connection.phase !== "offline")
+          void this.revalidate(AbortSignal.timeout(5000)).catch(() => {});
+      }, 30_000);
   }
 
-  static admitted(host: RustHttpClient, value: unknown, vaultId: string) {
+  async revalidate(signal: AbortSignal): Promise<boolean> {
+    if (this.#closed || this.#leaseError) return false;
+    try {
+      await this.host.json(`${this.path}/heartbeat`, "POST", undefined, signal);
+      return true;
+    } catch (error) {
+      if (isHostedTransportError(error) || signal.aborted) throw error;
+      if (
+        !(error instanceof RustHostError) ||
+        ![403, 404, 409, 410].includes(error.status)
+      )
+        throw error;
+      this.#leaseError = error;
+      this.#lifetime.abort();
+      return false;
+    }
+  }
+
+  static admitted(
+    host: RustHttpClient,
+    value: unknown,
+    vaultId: string,
+    heartbeat = true,
+  ) {
     const descriptor = value as ClientDescriptor | undefined;
     if (
       descriptor?.vault_id !== vaultId ||
@@ -66,7 +90,7 @@ export class RustVaultClient {
       throw new Error(
         "The server did not return the requested vault admission",
       );
-    return new RustVaultClient(host, descriptor);
+    return new RustVaultClient(host, descriptor, heartbeat);
   }
 
   get path(): string {

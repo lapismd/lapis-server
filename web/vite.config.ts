@@ -1,6 +1,7 @@
 import path from "node:path";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig } from "vite";
+import { serverPwaPlugin } from "./pwa-config";
 import {
   rendererExclusions,
   rendererInclusions,
@@ -41,7 +42,7 @@ export default defineConfig({
       },
     },
   },
-  plugins: [pluginHostImportMapPlugin(), svelte()],
+  plugins: [pluginHostImportMapPlugin(), svelte(), serverPwaPlugin()],
   optimizeDeps: {
     exclude: rendererExclusions,
     include: rendererInclusions,
