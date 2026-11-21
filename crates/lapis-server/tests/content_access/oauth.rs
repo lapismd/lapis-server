@@ -49,12 +49,16 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     server.enable(true).await;
     let challenge_response = request(&server, Method::POST, "/mcp").send().await.unwrap();
     assert_eq!(challenge_response.status(), 401);
-    assert!(
+    assert_eq!(
         challenge_response.headers()["www-authenticate"]
             .to_str()
-            .unwrap()
-            .contains("https://notes.example/.well-known/oauth-protected-resource/mcp")
+            .unwrap(),
+        "Bearer resource_metadata=\"https://notes.example/.well-known/oauth-protected-resource/mcp\", scope=\"mcp:read\""
     );
+    let mut resource_scopes = vec![json!("mcp:read")];
+    let content = server.status().await;
+    resource_scopes.extend_from_slice(content["operation_permissions"].as_array().unwrap());
+    assert!(resource_scopes.contains(&json!("tasks:write")));
     let resource: Value = request(
         &server,
         Method::GET,
@@ -67,6 +71,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     .await
     .unwrap();
     assert_eq!(resource["resource"], RESOURCE);
+    assert_eq!(resource["scopes_supported"], json!(resource_scopes));
     let metadata: Value = request(
         &server,
         Method::GET,
@@ -79,6 +84,18 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     .await
     .unwrap();
     assert_eq!(metadata["issuer"], ORIGIN);
+    resource_scopes.insert(1, json!("offline_access"));
+    assert_eq!(metadata["scopes_supported"], json!(resource_scopes));
+    let icon = request(&server, Method::GET, "/icon.png")
+        .send()
+        .await
+        .unwrap()
+        .error_for_status()
+        .unwrap();
+    assert_eq!(icon.headers()["content-type"], "image/png");
+    let icon = icon.bytes().await.unwrap();
+    assert_eq!(&icon[..8], b"\x89PNG\r\n\x1a\n");
+    assert_eq!(&icon[16..24], &[0, 0, 2, 0, 0, 0, 2, 0]);
     assert_eq!(
         metadata["code_challenge_methods_supported"],
         json!(["S256"])
@@ -224,6 +241,10 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     assert_eq!(initialize.status(), 200);
     let initialized: Value = initialize.json().await.unwrap();
     assert_eq!(initialized["result"]["protocolVersion"], "2025-11-25");
+    assert_eq!(
+        initialized["result"]["serverInfo"]["icons"],
+        json!([{"src": format!("{ORIGIN}/icon.png"), "mimeType":"image/png", "sizes":["512x512"]}])
+    );
 
     let refresh_fields = [
         ("grant_type", "refresh_token"),

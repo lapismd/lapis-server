@@ -176,6 +176,7 @@ fn configured_router(
         .api(api_route!("/api/v3/auth/login", Login, { post(browser::login) => ("Sign in with a password", 200, json_body::<lapis_app_protocol::browser::LoginRequest>(), json_body::<lapis_app_protocol::browser::SessionInfo>()) }))
         .merge(passkeys::public_routes())
         .merge(mcp_oauth::public_routes())
+        .api(api_route!("/icon.png", Public, { get(mcp_oauth::icon) => ("Fetch the public MCP server logo", 200, None, bytes("image/png")) }))
         .api(api_route!("/api/v3/sync/account", Sync, { post(sync_account::initiate) => ("Start native account approval", 200, json_body::<serde_json::Value>(), json_body::<serde_json::Value>()) }))
         .api(api_route!("/api/v3/sync/account/{id}/redeem", Sync, { post(sync_account::redeem) => ("Exchange an approved native account request", 200, json_body::<serde_json::Value>(), json_body::<serde_json::Value>()) }))
         .api(api_route!("/api/v3/sync/account/{id}/inspect", Sync, { post(sync_account_recovery::inspect) => ("Inspect the outcome of native account approval", 200, json_body::<serde_json::Value>(), json_body::<serde_json::Value>()) }))

@@ -39,16 +39,21 @@ impl Handler {
 }
 impl ServerHandler for Handler {
     fn get_info(&self) -> ServerConfig {
+        let mut info = Implementation::new("lapis-content", env!("CARGO_PKG_VERSION"));
+        if self.initialized_clients {
+            info = info.with_icons(vec![
+                Icon::new(format!("{}/icon.png", self.boundary.origin()))
+                    .with_mime_type("image/png")
+                    .with_sizes(vec!["512x512".to_owned()]),
+            ]);
+        }
         ServerConfig::new(
             ServerCapabilities::builder()
                 .enable_tools()
                 .enable_resources()
                 .build(),
         )
-        .with_server_info(Implementation::new(
-            "lapis-content",
-            env!("CARGO_PKG_VERSION"),
-        ))
+        .with_server_info(info)
     }
     fn supported_protocol_versions(&self) -> Cow<'static, [ProtocolVersion]> {
         if self.initialized_clients {

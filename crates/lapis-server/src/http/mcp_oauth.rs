@@ -81,6 +81,24 @@ fn resource_ready<'a>(
     Ok((control, oauth))
 }
 
+fn resource_scopes(state: &State) -> Vec<String> {
+    let mut scopes = vec!["mcp:read".to_owned()];
+    scopes.extend(state.host.content.grants.operation_permissions());
+    scopes
+}
+
+pub(super) async fn icon() -> impl axum::response::IntoResponse {
+    (
+        [
+            ("content-type", "image/png"),
+            ("cache-control", "public, max-age=86400"),
+            ("cross-origin-resource-policy", "cross-origin"),
+            ("access-control-allow-origin", "*"),
+        ],
+        include_bytes!("../../../../web/public/icon.png").as_slice(),
+    )
+}
+
 async fn protected_resource(
     AxumState(state): AxumState<State>,
     headers: HeaderMap,
@@ -88,7 +106,7 @@ async fn protected_resource(
     resource_ready(&state, &headers)?;
     Ok(Json(json!({
         "resource":resource(&state),"authorization_servers":[state.origin],
-        "bearer_methods_supported":["header"],"scopes_supported":["mcp:read"],"resource_name":"Lapis Server"
+        "bearer_methods_supported":["header"],"scopes_supported":resource_scopes(&state),"resource_name":"Lapis Server"
     })))
 }
 
@@ -97,8 +115,8 @@ async fn metadata(
     headers: HeaderMap,
 ) -> Result<Json<Value>, OAuthError> {
     resource_ready(&state, &headers)?;
-    let mut scopes = vec!["mcp:read".to_owned(), "offline_access".to_owned()];
-    scopes.extend(state.host.content.grants.operation_permissions());
+    let mut scopes = resource_scopes(&state);
+    scopes.insert(1, "offline_access".to_owned());
     Ok(Json(json!({
         "issuer":state.origin,
         "authorization_endpoint":format!("{}/oauth/authorize",state.origin),

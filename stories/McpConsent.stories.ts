@@ -11,24 +11,82 @@ const meta = {
 
 export default meta;
 
-export const Consent: StoryObj<typeof meta> = {
+type Story = StoryObj<typeof meta>;
+
+export const Consent: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const notes = await canvas.findByRole("checkbox", { name: "Notes" });
+    const search = await canvas.findByRole("combobox", {
+      name: "Vaults",
+    });
+    const vaults = within(canvas.getByRole("listbox", { name: "Vaults" }));
+    const permissions = within(
+      canvas.getByRole("listbox", { name: "Plugin permissions" }),
+    );
     const approve = canvas.getByRole("button", { name: "Allow access" });
-    const readTasks = canvas.getByRole("checkbox", { name: "tasks:read" });
-
+    await expect(vaults.queryByRole("option", { name: "Archive" })).toBeNull();
+    await expect(approve).toBeDisabled();
     await expect(
-      canvas.queryByRole("checkbox", { name: "Archive" }),
-    ).toBeNull();
-    await expect(approve).toBeDisabled();
-    await expect(readTasks).not.toBeChecked();
-    await userEvent.click(notes);
+      canvas.getByRole("heading", { name: "Authorize application" }),
+    ).toBeVisible();
+    await expect(canvas.getByText("mcp:read", { exact: true })).toBeVisible();
+    await expect(
+      canvas.getByText("offline_access", { exact: true }),
+    ).toBeVisible();
+    await expect(canvas.getByRole("note")).toHaveTextContent(
+      "You can disconnect this application",
+    );
+    await expect(permissions.getAllByRole("option")).toHaveLength(4);
+
+    await userEvent.type(search, "proj");
+    await expect(vaults.queryByRole("option", { name: "Notes" })).toBeNull();
+    await userEvent.keyboard("{Enter}");
+    await expect(
+      vaults.getByRole("option", { name: "Projects" }),
+    ).toHaveAttribute("aria-selected", "true");
+    await userEvent.clear(search);
+    await userEvent.click(await vaults.findByRole("option", { name: "Notes" }));
+    await expect(
+      vaults.getAllByRole("option", { selected: true }),
+    ).toHaveLength(2);
     await expect(approve).toBeEnabled();
-    await userEvent.click(readTasks);
-    await expect(readTasks).toBeChecked();
-    await userEvent.click(readTasks);
-    await userEvent.click(notes);
+
+    const permissionSearch = canvas.getByRole("combobox", {
+      name: "Plugin permissions",
+    });
+    await userEvent.type(permissionSearch, "tasks");
+    await expect(
+      permissions.queryByRole("option", { name: /skills:read/ }),
+    ).toBeNull();
+    await userEvent.click(
+      permissions.getByRole("option", { name: /tasks:read/ }),
+    );
+    await userEvent.click(
+      permissions.getByRole("option", { name: /tasks:write/ }),
+    );
+    await expect(
+      permissions.getAllByRole("option", { selected: true }),
+    ).toHaveLength(2);
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove Projects" }),
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "Remove Notes" }));
     await expect(approve).toBeDisabled();
+    await expect(
+      permissions.getAllByRole("option", { selected: true }),
+    ).toHaveLength(2);
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove tasks:read" }),
+    );
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove tasks:write" }),
+    );
+    await userEvent.clear(permissionSearch);
   },
+};
+
+export const ConsentDark: Story = {
+  ...Consent,
+  globals: { colorMode: "dark" },
 };

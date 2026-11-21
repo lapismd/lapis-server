@@ -18,6 +18,7 @@
 {:else}
   <McpConsent
     requestId="storybook-mcp-request"
+    username="owner"
     {vaults}
     transport={{
       load: async () => ({

@@ -8017,6 +8017,80 @@
         }
       }
     },
+    "/icon.png": {
+      "get": {
+        "summary": "Fetch the public MCP server logo",
+        "tags": ["Public and sign-in"],
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "image/png": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "403": {
+            "description": "Permission denied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict or protocol mismatch",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "413": {
+            "description": "Request too large",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "503": {
+            "description": "Unavailable or busy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          }
+        }
+      }
+    },
     "/mcp": {
       "delete": {
         "summary": "Close a negotiated MCP transport session when supported",
