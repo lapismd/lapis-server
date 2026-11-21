@@ -11,6 +11,8 @@ export const rendererExclusions = [
   "@tursodatabase/database-wasm/vite",
 ];
 export const rendererInclusions = [
+  "@lucide/svelte/icons/key-round",
+  "@lucide/svelte/icons/log-in",
   "@codemirror/autocomplete",
   "@codemirror/commands",
   "@codemirror/language",

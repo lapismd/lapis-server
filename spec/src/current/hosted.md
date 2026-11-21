@@ -291,7 +291,7 @@ session and CSRF contract.
 
 ### Acceptance details
 
-- The owner can enroll, name and remove passkeys from Account & security.
+- The owner can enroll, name and remove passkeys from Account & security after signing in, and sign-in buttons show icons with their visible labels.
 - Passkey enrollment and sign-in require user verification and store only public credential material.
 - Removed credentials and expired or replayed challenges cannot create sessions.
 

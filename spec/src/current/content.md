@@ -369,7 +369,9 @@ creation and revocation. One-time tokens MUST stay in transient memory, clear on
 teardown/dismissal, and never enter browser/vault settings storage. Desktop
 integration and general note writes remain independently gated. Endpoint
 addresses MUST show the complete copyable URL in full-width fields that can
-wrap on narrow screens.
+wrap on narrow screens. The page MUST group endpoints, personal access tokens,
+MCP OAuth and temporary credentials, with independent creation fields for
+personal tokens and temporary credentials.
 
 ### Acceptance details
 

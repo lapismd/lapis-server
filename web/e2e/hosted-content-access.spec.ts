@@ -97,6 +97,16 @@ for (const renderer of ["static", "preview", "development"] as const) {
       const enabled = page.getByRole("switch", {
         name: "Enable API and MCP access",
       });
+      for (const title of [
+        "Endpoints",
+        "Personal access tokens",
+        "MCP OAuth",
+        "Temporary credentials",
+      ]) {
+        await expect(
+          page.getByRole("heading", { name: title, exact: true }),
+        ).toBeVisible();
+      }
       await expect(enabled).not.toBeChecked();
       expect((await read("invalid")).status).toBe(404);
       await enabled.click();
@@ -182,6 +192,9 @@ for (const renderer of ["static", "preview", "development"] as const) {
           .click();
         await page.getByRole("option", { name: "Never", exact: true }).click();
       }
+      await page
+        .getByRole("textbox", { name: "Token label", exact: true })
+        .fill("Persistent browser client");
       const issuedPersonal = page.waitForResponse(
         (response) =>
           response.url().endsWith("/api/v3/content-access/tokens") &&
@@ -192,9 +205,17 @@ for (const renderer of ["static", "preview", "development"] as const) {
         .click();
       const personalResponse = await issuedPersonal;
       expect(personalResponse.status()).toBe(201);
-      expect(personalResponse.request().postDataJSON().lifetime).toBe(
-        renderer === "static" ? "never" : "days90",
-      );
+      expect(personalResponse.request().postDataJSON()).toMatchObject({
+        label: "Persistent browser client",
+        lifetime: renderer === "static" ? "never" : "days90",
+        permissions: [],
+      });
+      await expect(
+        page.getByRole("button", { name: /^Copy full personal access token:/ }),
+      ).toBeVisible();
+      await expect(
+        page.getByText("No credential to display", { exact: true }),
+      ).toBeVisible();
       const { token: personal } = await personalResponse.json();
       expect((await read(personal)).status).toBe(200);
       await signOutHostedWorkspace(page);

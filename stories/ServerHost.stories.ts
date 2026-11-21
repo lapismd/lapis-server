@@ -124,11 +124,48 @@ export const PasskeyLogin: Story = {
   render: renderScenario("passkey-login"),
   play: async ({ canvasElement }) => {
     await expectLogin(canvasElement);
+    const canvas = within(canvasElement);
+    const password = canvas.getByRole("button", {
+      name: /^Sign in$/,
+    });
+    const passkey = canvas.getByRole("button", {
+      name: "Sign in with a passkey",
+    });
+    await expect(passkey).toBeDisabled();
+    for (const button of [password, passkey]) {
+      await expect(
+        button.querySelector(
+          'svg[data-icon="inline-start"][aria-hidden="true"]',
+        ),
+      ).toBeVisible();
+    }
+  },
+};
+
+export const PasskeyEnrollment: Story = {
+  name: "Add a passkey",
+  render: renderScenario("passkey-management"),
+  play: async ({ canvasElement }) => {
+    const account = await within(canvasElement).findByRole("button", {
+      name: "Account & security",
+    });
+    await userEvent.click(account);
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
+      "dialog",
+      { name: "Account & security" },
+    );
+    const form = within(dialog);
+    await form.findByText("No passkeys enrolled.");
     await expect(
-      within(canvasElement).getByRole("button", {
-        name: "Sign in with a passkey",
-      }),
+      form.getByRole("button", { name: "Add passkey" }),
     ).toBeDisabled();
+    await userEvent.type(
+      form.getByLabelText("New passkey name"),
+      "This device",
+    );
+    await expect(
+      form.getByRole("button", { name: "Add passkey" }),
+    ).toBeEnabled();
   },
 };
 export const LoginDark: Story = { ...Login, globals: { colorMode: "dark" } };
