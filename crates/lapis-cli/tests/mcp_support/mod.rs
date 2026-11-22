@@ -19,6 +19,9 @@ pub struct Fixture {
 }
 impl Fixture {
     pub async fn start() -> Self {
+        Self::with_apps(Default::default()).await
+    }
+    pub async fn with_apps(apps: lapis_content_mcp::AppRegistry) -> Self {
         let root = tempfile::tempdir().unwrap();
         fs::write(root.path().join("note.md"), SAVED).unwrap();
         let runtime = Runtime::default();
@@ -40,7 +43,13 @@ impl Fixture {
         fs::set_permissions(&token_path, fs::Permissions::from_mode(0o600)).unwrap();
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
         let base = format!("http://{}", listener.local_addr().unwrap());
-        let app = lapis_content_mcp::router(grants.clone(), &base).unwrap();
+        let app = lapis_content_mcp::hosted_router_with_apps(
+            lapis_content_http::Boundary::new(grants.clone(), &base).unwrap(),
+            tokio_util::sync::CancellationToken::new(),
+            false,
+            apps,
+        )
+        .unwrap();
         let server = tokio::spawn(async move {
             axum::serve(listener, app).await.unwrap();
         });

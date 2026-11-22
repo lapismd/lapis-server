@@ -5,6 +5,8 @@ Desktop endpoints/settings and binary distribution remain gated. The end goal is
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
 and a first-party `lapis` CLI for interactive use, scripts and agents.
 
+[MCP Apps](../current/mcp-apps.md) tracks hosted Notes and Tasks. External-client qualification and installable providers remain open.
+
 ## Existing foundations and gaps
 
 Native plugin operation contributions follow SRV-OPS-001–004. The Tasks provider

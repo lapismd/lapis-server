@@ -46,50 +46,57 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
     let origin =
         std::env::var("LAPIS_SERVER_ORIGIN").unwrap_or_else(|_| format!("http://{address}"));
-    let host = Arc::new(
-        match std::env::var_os("LAPIS_SERVER_DATA_ROOT") {
-            Some(profile) => {
-                let agents = match std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG") {
-                    Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
-                    None => Vec::new(),
-                };
-                Host::with_remote_profile(
-                    config,
-                    std::path::Path::new(&profile),
-                    agents,
-                    std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1"),
-                    RemoteInstallation {
-                        key_file: std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE")
-                            .map(Into::into),
-                        known_hosts: std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS")
-                            .map(Into::into),
-                        github_client: std::env::var("LAPIS_SERVER_GITHUB_CLIENT_ID").ok(),
-                        ssh_available: std::process::Command::new("ssh")
-                            .arg("-V")
-                            .stdout(std::process::Stdio::null())
-                            .stderr(std::process::Stdio::null())
-                            .status()
-                            .is_ok_and(|status| status.success()),
-                    },
-                )?
-            }
-            None => {
-                if std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG").is_some()
-                    || std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1")
-                    || std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE").is_some()
-                    || std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").is_some()
-                    || std::env::var_os("LAPIS_SERVER_GITHUB_CLIENT_ID").is_some()
-                {
-                    return Err("Native services require LAPIS_SERVER_DATA_ROOT".into());
-                }
-                Host::new(config)?
-            }
+    let mut host = match std::env::var_os("LAPIS_SERVER_DATA_ROOT") {
+        Some(profile) => {
+            let agents = match std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG") {
+                Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
+                None => Vec::new(),
+            };
+            Host::with_remote_profile(
+                config,
+                std::path::Path::new(&profile),
+                agents,
+                std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1"),
+                RemoteInstallation {
+                    key_file: std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE").map(Into::into),
+                    known_hosts: std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").map(Into::into),
+                    github_client: std::env::var("LAPIS_SERVER_GITHUB_CLIENT_ID").ok(),
+                    ssh_available: std::process::Command::new("ssh")
+                        .arg("-V")
+                        .stdout(std::process::Stdio::null())
+                        .stderr(std::process::Stdio::null())
+                        .status()
+                        .is_ok_and(|status| status.success()),
+                },
+            )?
         }
-        .with_bundled_skills(match std::env::var_os("LAPIS_SERVER_BUNDLED_SKILLS") {
-            Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
-            None => Vec::new(),
-        }),
-    );
+        None => {
+            if std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG").is_some()
+                || std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1")
+                || std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE").is_some()
+                || std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").is_some()
+                || std::env::var_os("LAPIS_SERVER_GITHUB_CLIENT_ID").is_some()
+            {
+                return Err("Native services require LAPIS_SERVER_DATA_ROOT".into());
+            }
+            Host::new(config)?
+        }
+    }
+    .with_bundled_skills(match std::env::var_os("LAPIS_SERVER_BUNDLED_SKILLS") {
+        Some(path) => serde_json::from_slice(&std::fs::read(path)?)?,
+        None => Vec::new(),
+    });
+    if let Some(root) = std::env::var_os("LAPIS_SERVER_MCP_APPS_ROOT") {
+        let mut excluded = roots.clone();
+        excluded.extend(
+            ["LAPIS_SERVER_STATIC_ROOT", "LAPIS_SERVER_DATA_ROOT"]
+                .into_iter()
+                .filter_map(std::env::var_os)
+                .map(std::path::PathBuf::from),
+        );
+        host = host.with_mcp_apps(std::path::Path::new(&root), &excluded)?;
+    }
+    let host = Arc::new(host);
     if let (Some(control), Some(profile)) = (&control, std::env::var_os("LAPIS_SERVER_DATA_ROOT")) {
         host.enable_management(control.clone(), std::path::Path::new(&profile))
             .await?;

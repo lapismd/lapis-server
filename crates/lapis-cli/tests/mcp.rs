@@ -166,3 +166,47 @@ async fn closed_stdout_exits_and_oversized_lines_are_discarded_without_losing_th
         drop(held_input);
     }
 }
+
+#[tokio::test]
+async fn initialized_stdio_host_receives_packaged_mcp_apps() {
+    let uri = "ui://lapis/notes/read-note-v1";
+    let mut apps = lapis_content_mcp::AppRegistry::default();
+    apps.register_builtin(
+        "read_note",
+        lapis_content_mcp::AppResource {
+            uri: uri.into(),
+            title: "Note".into(),
+            html: "<h1>Note</h1>".into(),
+        },
+    )
+    .unwrap();
+    let f = Fixture::with_apps(apps).await;
+    let mut child = f.command().spawn().unwrap();
+    let transport =
+        AsyncRwTransport::new_client(child.stdout.take().unwrap(), child.stdin.take().unwrap());
+    let client = ().serve_with_lifecycle(transport, ClientLifecycleMode::Initialize).await.unwrap();
+    let tools = client.list_all_tools().await.unwrap();
+    assert_eq!(
+        tools
+            .iter()
+            .find(|tool| tool.name == "read_note")
+            .unwrap()
+            .meta
+            .as_ref()
+            .unwrap()
+            .0["ui"]["resourceUri"],
+        uri
+    );
+    let resource = client
+        .read_resource(ReadResourceRequestParams::new(uri))
+        .await
+        .unwrap();
+    let value = serde_json::to_value(resource).unwrap();
+    assert_eq!(
+        value["contents"][0]["mimeType"],
+        "text/html;profile=mcp-app"
+    );
+    assert_eq!(value["contents"][0]["text"], "<h1>Note</h1>");
+    client.cancel().await.unwrap();
+    assert!(finish(child).await.status.success());
+}

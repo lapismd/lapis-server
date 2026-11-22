@@ -1,4 +1,4 @@
-use crate::{catalog::Catalog, resources};
+use crate::{AppRegistry, apps, catalog::Catalog, resources};
 use axum::http::request::Parts;
 use lapis_app_protocol::{content::*, operations::OperationCatalog};
 use lapis_content_http::Boundary;
@@ -12,23 +12,25 @@ pub(crate) struct Handler {
     pub boundary: Boundary,
     pub catalog: Arc<Catalog>,
     pub initialized_clients: bool,
+    pub apps: Arc<AppRegistry>,
 }
 impl Handler {
-    async fn registered_operations(
-        &self,
-        context: &RequestContext<RoleServer>,
-    ) -> Result<OperationCatalog, ErrorData> {
-        self.boundary
-            .operation_catalog(parts(context)?, None)
-            .await
-            .map_err(|e| content_error(e.into_error()))
-    }
     async fn authorize(&self, context: &RequestContext<RoleServer>) -> Result<(), ErrorData> {
         self.boundary
             .check(parts(context)?)
             .await
             .map_err(|e| content_error(e.into_error()))?;
         Ok(())
+    }
+    async fn operation_catalog(
+        &self,
+        context: &RequestContext<RoleServer>,
+        vault: Option<Uuid>,
+    ) -> Result<OperationCatalog, ErrorData> {
+        self.boundary
+            .operation_catalog(parts(context)?, vault)
+            .await
+            .map_err(|error| content_error(error.into_error()))
     }
     async fn execute(
         &self,
@@ -85,8 +87,11 @@ impl ServerHandler for Handler {
         no_cursor(request)?;
         let mut tools = self.catalog.tools.clone();
         tools.extend(crate::operations::tools(
-            self.registered_operations(&context).await?,
+            self.operation_catalog(&context, None).await?,
         )?);
+        if apps::supported(&context) {
+            self.apps.attach(&mut tools);
+        }
         Ok(ListToolsResult::with_all_items(tools)
             .with_ttl_ms(0)
             .with_cache_scope(CacheScope::Private))
@@ -103,7 +108,7 @@ impl ServerHandler for Handler {
             .iter()
             .any(|tool| tool.name == request.name)
         {
-            let catalog = self.registered_operations(&context).await?;
+            let catalog = self.operation_catalog(&context, None).await?;
             if let Some(descriptor) = catalog
                 .operations
                 .iter()
@@ -150,12 +155,17 @@ impl ServerHandler for Handler {
                 );
                 let value = serde_json::to_value(reply)
                     .map_err(|_| ErrorData::internal_error("Operation result unavailable", None))?;
-                return Ok(if error {
-                    CallToolResult::structured_error(value)
-                } else {
-                    CallToolResult::structured(value)
+                if error {
+                    return Ok(CallToolResult::structured_error(value).into());
                 }
-                .into());
+                let mut result = CallToolResult::structured(value);
+                if apps::supported(&context)
+                    && let Some(app) = self.apps.get(&request.name)
+                    && let Ok(catalog) = self.operation_catalog(&context, Some(vault)).await
+                {
+                    result.meta = Some(app.tool_meta(&catalog.operations));
+                }
+                return Ok(result.into());
             }
         }
         let command = self.catalog.command(&request.name, request.arguments)?;
@@ -163,11 +173,15 @@ impl ServerHandler for Handler {
         let error = matches!(reply.outcome, ContentOutcome::Error { .. });
         let value = if matches!(
             &reply.outcome,
-            ContentOutcome::Ok { value: ContentValue::Capabilities { .. } }
+            ContentOutcome::Ok {
+                value: ContentValue::Capabilities { .. }
+            }
         ) {
-            let registered = self.registered_operations(&context).await?;
+            let registered = self.operation_catalog(&context, None).await?;
             serde_json::to_value(crate::capabilities::Reply::new(
-                reply, &self.catalog.tools, registered,
+                reply,
+                &self.catalog.tools,
+                registered,
             )?)
         } else {
             serde_json::to_value(reply)
@@ -187,9 +201,20 @@ impl ServerHandler for Handler {
     ) -> Result<ListResourcesResult, ErrorData> {
         self.authorize(&context).await?;
         no_cursor(request)?;
-        // Notes are dynamic and vault-scoped: discover through list_notes, then
-        // expand the template. Never enumerate every vault's files here.
-        Ok(ListResourcesResult::default()
+        // Saved notes still use the dynamic template. Only packaged views are listed here.
+        let mut resources = Vec::new();
+        if !self.apps.is_empty() && apps::supported(&context) {
+            let mut tools = self.catalog.tools.clone();
+            tools.extend(crate::operations::tools(
+                self.operation_catalog(&context, None).await?,
+            )?);
+            resources.extend(
+                tools
+                    .iter()
+                    .filter_map(|tool| self.apps.get(&tool.name).map(|app| app.listing())),
+            );
+        }
+        Ok(ListResourcesResult::with_all_items(resources)
             .with_ttl_ms(0)
             .with_cache_scope(CacheScope::Private))
     }
@@ -216,6 +241,23 @@ impl ServerHandler for Handler {
         context: RequestContext<RoleServer>,
     ) -> Result<ReadResourceResponse, ErrorData> {
         self.authorize(&context).await?;
+        if request.uri.starts_with("ui://") {
+            let (tool, app) = self.apps.find(&request.uri).ok_or_else(app_not_found)?;
+            if !crate::catalog::is_builtin(tool) {
+                let catalog = self.operation_catalog(&context, None).await?;
+                if !catalog
+                    .operations
+                    .iter()
+                    .any(|item| crate::operations::tool_name(item) == tool)
+                {
+                    return Err(app_not_found());
+                }
+            }
+            return Ok(ReadResourceResult::new(vec![app.content()])
+                .with_ttl_ms(0)
+                .with_cache_scope(CacheScope::Private)
+                .into());
+        }
         let reply = self
             .execute(&context, resources::command(&request.uri)?)
             .await?;
@@ -237,6 +279,9 @@ impl ServerHandler for Handler {
             _ => Err(ErrorData::internal_error("Unexpected content result", None)),
         }
     }
+}
+fn app_not_found() -> ErrorData {
+    ErrorData::resource_not_found("MCP App resource not found", None)
 }
 fn parts(context: &RequestContext<RoleServer>) -> Result<Parts, ErrorData> {
     context

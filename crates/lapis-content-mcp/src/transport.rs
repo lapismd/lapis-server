@@ -1,4 +1,6 @@
-use crate::{MAX_HTTP_REQUESTS, MAX_REQUEST_BYTES, catalog::Catalog, handler::Handler};
+use crate::{
+    AppRegistry, MAX_HTTP_REQUESTS, MAX_REQUEST_BYTES, catalog::Catalog, handler::Handler,
+};
 use axum::{
     Router,
     extract::{Request, State},
@@ -56,11 +58,13 @@ pub fn router(
     boundary: Boundary,
     cancellation: CancellationToken,
     initialized_clients: bool,
+    apps: AppRegistry,
 ) -> std::io::Result<Router> {
     let handler = Handler {
         boundary: boundary.clone(),
         catalog: Arc::new(Catalog::new()?),
         initialized_clients,
+        apps: Arc::new(apps),
     };
     let uri: Uri = boundary
         .origin()

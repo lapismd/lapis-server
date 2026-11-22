@@ -258,8 +258,9 @@ annotations. The MCP capabilities reply MUST report the same credential-admitted
 tool names and effects as tools/list. Tool dispatch MUST decode strict Protocol arguments and call Core;
 typed content failures retain code/effect with `isError`. Note resources use
 `lapis://notes/{vault_id}/{path}`, decode the relative path exactly once and use
-the same read operation, preserving saved text/version. Resource lists remain
-empty; templates and `list_notes` provide discovery without unbounded traversal.
+the same read operation, preserving saved text/version. Templates and
+`list_notes` provide note discovery without unbounded traversal. Resource lists
+can advertise [packaged MCP Apps](mcp-apps.md).
 Catalog/resource cache hints MUST be private with zero freshness; HTTP replies
 MUST be no-store. Core's scope, path, payload and cursor limits remain in force.
 SDK protocol/body/header checks MUST reject missing or mismatched metadata,

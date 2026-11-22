@@ -218,6 +218,8 @@ this documentation correction changes no CLI or native service behavior.
 <a id="srv-srv-011"></a>
 
 [SRV-SRV-011](content.md#srv-srv-011) moved to the content chapter.
+The hosted adapter mounts [MCP Apps](mcp-apps.md) from private installation
+assets when configured.
 
 <a id="srv-srv-012"></a>
 

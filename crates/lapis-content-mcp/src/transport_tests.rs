@@ -12,7 +12,7 @@ fn fixture() -> (Router, Arc<ContentGrants>, Uuid, String, CancellationToken) {
     let boundary = Boundary::new(grants.clone(), "http://localhost:8787").unwrap();
     let cancellation = CancellationToken::new();
     (
-        router(boundary, cancellation.clone(), false).unwrap(),
+        router(boundary, cancellation.clone(), false, Default::default()).unwrap(),
         grants,
         issued.grant_id,
         issued.token.expose_secret().into(),

@@ -1,0 +1,46 @@
+@import "@lapismd/design-core/styles.css";
+@import "@lapismd/design-core/themes/lapis.css";
+@import "@lapis-notes/ui/theme.css";
+
+html {
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
+  color: var(--ui-text-primary, CanvasText);
+  background: var(--ui-bg-primary, Canvas);
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-inline-size: 48rem;
+  margin-inline: auto;
+  padding: 1rem;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.15rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-block-end: 0.75rem;
+}
+
+.message {
+  margin-block: 0.75rem;
+}

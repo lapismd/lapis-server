@@ -11,7 +11,7 @@ use rmcp::{
 use serde_json::{Value, json};
 use std::sync::Arc;
 
-struct SavedNote;
+pub(super) struct SavedNote;
 impl OperationProvider for SavedNote {
     fn descriptors(&self) -> Vec<OperationDescriptor> {
         vec![OperationDescriptor {

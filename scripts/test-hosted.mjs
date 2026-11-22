@@ -20,6 +20,7 @@ for (const name of [
   "tasks",
   "static",
   "pwa",
+  "mcp-apps",
 ]) {
   run("pnpm", [
     "exec",

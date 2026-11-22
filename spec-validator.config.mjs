@@ -41,12 +41,17 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|sync|content|cli|governance(?:/(?:ci|dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
+        "^spec/src/current/(?:server|sync|content|mcp-apps|cli|governance(?:/(?:ci|dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
       ignore: ["(^|/)(?:node_modules|target|spec/book)/"],
       rules: [
+        {
+          pattern:
+            "^(?:crates/lapis-content-mcp/|docs/plugin-operations\\.md$|crates/lapis-cli/(?:src/mcp/|tests/mcp)|crates/lapis-server/(?:Dockerfile$|src/(?:host/(?:mod|mcp_apps)\\.rs$|http/content/mod\\.rs$|main\\.rs$))|web/(?:mcp-apps/|e2e/mcp-apps|playwright\\.rust-mcp-apps)|scripts/(?:build-mcp-apps|test-hosted)\\.mjs$|stories/spec/current/mcp-apps\\.mdx$|\\.storybook/preview\\.ts$|tsconfig\\.json$)",
+          chapters: ["spec/src/current/mcp-apps.md"],
+        },
         {
           pattern:
             "^(?:\\.ci/|\\.github/workflows/(?:ci|container-mods|publish-ci-image)\\.yml$|scripts/ci-(?:image|plan|required|rust))",

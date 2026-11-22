@@ -117,3 +117,6 @@ Manifest, peer and integrity facts SHA256: `20afc36f3a2015d86551f1135ebb41324d83
 
 Hosted PWA toolchain intake includes Vite PWA and its explicit Workbox Window
 peer. Frozen production builds retain the exact worker generator inputs.
+
+The external MCP Apps SDK, its peers, and Vite single-file bundling are resolved
+from the Server lockfile. Their built output is served as scoped MCP resources.
