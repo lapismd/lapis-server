@@ -1,4 +1,6 @@
 <script lang="ts">
+  import * as Breadcrumb from "@lapismd/design-core/shadcn/breadcrumb";
+  import RefreshCwIcon from "@lucide/svelte/icons/refresh-cw";
   import { Button } from "@lapismd/design-core/shadcn/button";
   import { MarkdownPreview } from "@lapismd/mira/preview";
   import { onMount } from "svelte";
@@ -32,6 +34,7 @@
   let canCall = $state(false);
   let busy = $state(true);
   let error = $state("");
+  const pathParts = $derived((note?.path ?? "Lapis Notes").split("/"));
 
   onMount(() => {
     bridge = connectView("Lapis Notes", {
@@ -73,16 +76,37 @@
 
 <main>
   <header class="toolbar">
-    <h1>{note?.path ?? "Lapis Notes"}</h1>
+    <Breadcrumb.Root>
+      <Breadcrumb.List>
+        {#each pathParts as part, index}
+          {#if index > 0}<Breadcrumb.Separator />{/if}
+          <Breadcrumb.Item>
+            {#if index === pathParts.length - 1}
+              <Breadcrumb.Page>{part}</Breadcrumb.Page>
+            {:else}
+              <span>{part}</span>
+            {/if}
+          </Breadcrumb.Item>
+        {/each}
+      </Breadcrumb.List>
+    </Breadcrumb.Root>
     {#if canCall && args}
-      <Button variant="outline" size="sm" disabled={busy} onclick={refresh}
-        >Refresh</Button
+      <Button
+        variant="outline"
+        size="icon-sm"
+        aria-label="Refresh"
+        title="Refresh"
+        disabled={busy}
+        onclick={refresh}
       >
+        <RefreshCwIcon aria-hidden="true" />
+      </Button>
     {/if}
   </header>
   {#if error}<p class="message" role="alert">{error}</p>{/if}
   {#if note}
     <MarkdownPreview
+      class="mcp-note-preview"
       value={note.text}
       sourcePath={note.path}
       htmlPolicy="safe"

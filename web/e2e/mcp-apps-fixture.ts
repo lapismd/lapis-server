@@ -1,6 +1,13 @@
 import { expect, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  copyFile,
+  mkdtemp,
+  mkdir,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { build } from "vite";
@@ -33,7 +40,7 @@ export async function bundleExternalHost() {
   return entry.code;
 }
 
-export async function startMcpAppsFixture() {
+export async function startMcpAppsFixture({ includeProviders = true } = {}) {
   const root = await mkdtemp(join(tmpdir(), "lapis-mcp-apps-"));
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
   const password = randomUUID();
@@ -77,10 +84,17 @@ export async function startMcpAppsFixture() {
     );
     await writeFile(join(server.vault, "Read.md"), recurring.raw);
     const prev = process.env.LAPIS_SERVER_MCP_APPS_ROOT;
-    process.env.LAPIS_SERVER_MCP_APPS_ROOT = join(
-      repository,
-      ".local/mcp-apps-dist",
-    );
+    let mcpApps = join(repository, ".local/mcp-apps-dist");
+    if (!includeProviders) {
+      const notesOnly = join(root, "mcp-apps");
+      await mkdir(notesOnly);
+      await copyFile(
+        join(mcpApps, "notes.html"),
+        join(notesOnly, "notes.html"),
+      );
+      mcpApps = notesOnly;
+    }
+    process.env.LAPIS_SERVER_MCP_APPS_ROOT = mcpApps;
     try {
       await server.start();
     } finally {

@@ -159,34 +159,130 @@ test("static MCP Apps show the packaged views and support sample interactions", 
     note.getByRole("heading", { name: /Team offsite/ }),
   ).toBeVisible();
   await expect(note.getByRole("table")).toBeVisible();
+  await expect(
+    note.getByRole("navigation", { name: "breadcrumb" }),
+  ).toContainText("Projects");
+  await expect(
+    note.getByRole("link", { name: "Team Offsite.md" }),
+  ).toHaveAttribute("aria-current", "page");
+  await expect(note.locator(".markdown-view__document")).toHaveCSS(
+    "padding-bottom",
+    "0px",
+  );
+  await expect(note.getByRole("button", { name: "Refresh" })).toHaveText("");
+  await expect(note.locator("body")).toHaveCSS(
+    "background-color",
+    "rgb(255, 255, 255)",
+  );
   await note.getByRole("button", { name: "Refresh" }).click();
   await expect(note.getByText(/Latest update/)).toBeVisible();
 
   await page.goto(
     `${origin}/iframe.html?id=shell-mcp-apps--tasks&viewMode=story`,
   );
+  if (
+    (await page.getByTestId("mcp-app").getAttribute("data-unavailable")) ===
+    "true"
+  ) {
+    await expect(page.getByRole("status")).toHaveText(
+      "The installed Tasks plugin does not contribute an MCP App.",
+    );
+    expect(errors).toEqual([]);
+    return;
+  }
   const tasks = page.frameLocator('iframe[title="Lapis Tasks"]');
+  await expect(tasks.locator("body")).toHaveCSS(
+    "background-color",
+    "rgb(255, 255, 255)",
+  );
+  await expect(tasks.getByRole("button", { name: "Refresh tasks" })).toHaveText(
+    "",
+  );
+  const row = tasks.locator('[data-planner-task-id="prototype"]');
   const surface = tasks.getByRole("region", { name: "Selected task" });
+  await expect(
+    tasks.getByRole("progressbar", { name: "Checklist progress: 1 of 3" }),
+  ).toBeVisible();
   await tasks
-    .getByRole("button", { name: "Practice the prototype walkthrough" })
+    .getByRole("button", {
+      name: "Show checklist for Practice the prototype walkthrough",
+      exact: true,
+    })
     .click();
-  await expect(surface.getByRole("heading")).toHaveText(
+  await expect(
+    tasks.getByRole("checkbox", { name: "Review the demo outline" }),
+  ).toBeDisabled();
+  await row
+    .getByText("Practice the prototype walkthrough", { exact: true })
+    .dblclick();
+  await expect(
+    row.getByRole("region", { name: "Selected task" }),
+  ).toBeVisible();
+  await row.getByRole("button", { name: "Close inline details" }).click();
+  await expect(surface).toHaveCount(0);
+  await tasks
+    .getByRole("button", {
+      name: "Open task details for Practice the prototype walkthrough",
+      exact: true,
+    })
+    .click();
+  await expect(
+    tasks.getByRole("button", { name: "Close Task details column" }),
+  ).toBeVisible();
+  await expect(surface.getByRole("textbox", { name: "Task title" })).toHaveText(
     "Practice the prototype walkthrough",
   );
-  await surface.getByLabel("In Inbox").click();
-  await expect(surface.getByLabel("In Inbox")).toBeChecked();
-  await surface.getByRole("button", { name: "Complete", exact: true }).click();
+  await expect(row).toHaveAttribute("data-planner-selected", "true");
+  await expect(surface).toHaveAttribute("data-task-sidebar-detail", "");
+  await expect(surface.getByRole("button", { name: "Comments" })).toBeVisible();
+  await expect(
+    surface.getByRole("button", { name: "Task actions" }),
+  ).toBeDisabled();
+  await surface.getByRole("button", { name: "Properties" }).click();
+  await surface.getByRole("checkbox", { name: "In Inbox" }).click();
+  await expect(
+    surface.getByRole("checkbox", { name: "In Inbox" }),
+  ).toBeChecked();
+  await surface.getByRole("checkbox", { name: "Mark task done" }).click();
   const dialog = tasks.getByRole("dialog", { name: /Complete Practice/ });
   await dialog.getByLabel("Duration").fill("25m");
   await dialog.getByRole("button", { name: "Complete", exact: true }).click();
   await expect(
     tasks.getByText("Task completed.", { exact: true }),
   ).toBeVisible();
-  await expect(surface.getByText("completed", { exact: true })).toBeVisible();
+  await expect(
+    surface.getByRole("checkbox", { name: "Mark task incomplete" }),
+  ).toBeChecked();
   expect(
     await tasks
       .locator("html")
       .evaluate((element) => element.scrollWidth <= element.clientWidth),
   ).toBe(true);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.reload();
+  await tasks
+    .getByRole("button", {
+      name: "Open task details for Review the offsite agenda",
+      exact: true,
+    })
+    .click();
+  const planner = tasks.locator(
+    '[data-ui-part="column"][data-column-id="planner"]',
+  );
+  const detail = tasks.locator(
+    '[data-ui-part="column"][data-column-id="detail"]',
+  );
+  await expect(
+    detail.getByRole("region", { name: "Selected task" }),
+  ).toBeVisible();
+  await expect
+    .poll(async () => {
+      const [left, right] = await Promise.all([
+        planner.boundingBox(),
+        detail.boundingBox(),
+      ]);
+      return Boolean(left && right && right.x > left.x);
+    })
+    .toBe(true);
   expect(errors).toEqual([]);
 });

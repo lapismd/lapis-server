@@ -11,6 +11,15 @@ html {
   color-scheme: light dark;
 }
 
+html[data-mcp-view="notes"] {
+  --mcp-canvas: var(--mira-preview-background);
+}
+
+html[data-mcp-view],
+[data-mcp-view] body {
+  background: var(--mcp-canvas);
+}
+
 body {
   margin: 0;
 }
@@ -22,13 +31,13 @@ main {
   overflow-wrap: anywhere;
 }
 
-h1,
-h2,
-p {
-  margin: 0;
+[data-mcp-view="notes"] .mcp-note-preview {
+  --mira-preview-bottom-padding: 0;
+  padding-block-end: 0;
 }
 
-h1 {
+.toolbar h1 {
+  margin: 0;
   font-size: 1.15rem;
 }
 

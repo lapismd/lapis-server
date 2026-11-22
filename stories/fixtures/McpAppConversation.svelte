@@ -5,7 +5,11 @@
   } from "@modelcontextprotocol/ext-apps/app-bridge";
   import { onMount } from "svelte";
   import notesHtml from "../../.local/mcp-apps-dist/notes.html?raw";
-  import tasksHtml from "../../.local/mcp-apps-dist/tasks.html?raw";
+  const taskBundles = import.meta.glob<string>(
+    "../../.local/mcp-apps-dist/providers/tasks/tasks.html",
+    { eager: true, query: "?raw", import: "default" },
+  );
+  const tasksHtml = Object.values(taskBundles)[0];
   import {
     noteFixture,
     taskFixture,
@@ -13,7 +17,8 @@
   } from "./mcp-app-fixtures";
 
   let { kind, theme }: { kind: McpAppKind; theme: "light" | "dark" } = $props();
-  let frame: HTMLIFrameElement;
+  let frame = $state<HTMLIFrameElement>();
+  const resource = $derived(kind === "notes" ? notesHtml : tasksHtml);
   let ready = $state(false);
   let error = $state(false);
   let height = $state(470);
@@ -26,10 +31,12 @@
   });
 
   onMount(() => {
-    const resource = kind === "notes" ? notesHtml : tasksHtml;
+    const html = resource;
+    if (!html) return;
     const fixture = kind === "notes" ? noteFixture() : taskFixture();
-    const target = frame.contentWindow;
-    if (!target) {
+    const iframe = frame;
+    const target = iframe?.contentWindow;
+    if (!iframe || !target) {
       error = true;
       return;
     }
@@ -45,7 +52,7 @@
       fixture.call(name, input ?? {});
     host.onsizechange = ({ height: suggested }) => {
       if (suggested)
-        height = Math.min(740, Math.max(470, Math.ceil(suggested) + 4));
+        height = Math.min(740, Math.max(120, Math.ceil(suggested) + 4));
     };
     host.oninitialized = () => {
       void (async () => {
@@ -59,7 +66,7 @@
     void host
       .connect(new PostMessageTransport(target, target))
       .then(() => {
-        if (live) frame.srcdoc = resource;
+        if (live) iframe.srcdoc = html;
       })
       .catch(() => {
         if (live) error = true;
@@ -87,14 +94,25 @@
         ? "I found the offsite note in Lapis."
         : "Here are the offsite tasks from Lapis."}
     </p>
-    <div class="app" data-testid="mcp-app" data-ready={ready}>
+    <div
+      class="app"
+      data-testid="mcp-app"
+      data-ready={ready}
+      data-unavailable={!resource}
+    >
       {#if error}<p role="alert">The MCP App preview could not load.</p>{/if}
-      <iframe
-        bind:this={frame}
-        {title}
-        sandbox="allow-scripts allow-forms"
-        style:height={`${height}px`}
-      ></iframe>
+      {#if resource}
+        <iframe
+          bind:this={frame}
+          {title}
+          sandbox="allow-scripts allow-forms"
+          style:height={`${height}px`}
+        ></iframe>
+      {:else}
+        <p role="status">
+          The installed Tasks plugin does not contribute an MCP App.
+        </p>
+      {/if}
     </div>
   </section>
 </main>

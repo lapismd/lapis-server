@@ -343,3 +343,7 @@ or newer compatible releases; 0.3.1 has no supporting reference resources.
 Hosted qualification builds the CLI alongside the server before app/CLI journeys.
 
 Native terminal launch arguments/environment are supplied by the owning Server Host through Core's optional per-vault factory. The default Core/PTY constructors remain unchanged; [native profile qualification](../../records/2026-11-20-native-terminal-profile.md) covers startup hooks, status, real paths, admission and opt-out. Prompt checks distinguish visible ANSI text from non-rendering OSC metadata, whose cwd retains its full physical path.
+
+The native operation registry supplies installed descriptors to the packaged
+MCP Apps loader. Transport discovery still checks each operation’s current
+admission and granted permissions.

@@ -22,6 +22,12 @@ type Story = StoryObj<typeof meta>;
 const loaded: Story["play"] = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   const surface = canvas.getByTestId("mcp-app");
+  if (surface.dataset.unavailable === "true") {
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "The installed Tasks plugin does not contribute an MCP App.",
+    );
+    return;
+  }
   await waitFor(() => expect(surface).toHaveAttribute("data-ready", "true"), {
     timeout: 15_000,
   });

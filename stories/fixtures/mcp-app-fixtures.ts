@@ -83,17 +83,28 @@ type Task = {
   deadline: string | null;
   inbox: boolean;
   tracking?: { type: "duration"; target: string };
+  checklist?: { text: string; checked: boolean }[];
 };
 
 export function taskFixture() {
+  const localDate = (date: Date) =>
+    new Intl.DateTimeFormat("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(date);
+  const now = new Date();
+  const today = localDate(now);
+  now.setDate(now.getDate() - 1);
+  const yesterday = localDate(now);
   const tasks: Task[] = [
     {
       id: "agenda",
       title: "Review the offsite agenda",
       version: 1,
       status: "open",
-      plan: { date: "2026-12-08", at: "morning" },
-      deadline: "2026-12-09",
+      plan: { date: yesterday, at: "anytime" },
+      deadline: null,
       inbox: false,
     },
     {
@@ -101,8 +112,13 @@ export function taskFixture() {
       title: "Practice the prototype walkthrough",
       version: 1,
       status: "open",
-      plan: { date: "2026-12-09", at: "afternoon" },
-      deadline: null,
+      plan: { date: today, at: "anytime" },
+      deadline: today,
+      checklist: [
+        { text: "Review the demo outline", checked: true },
+        { text: "Rehearse the walkthrough", checked: false },
+        { text: "Check the meeting room setup", checked: false },
+      ],
       inbox: false,
       tracking: { type: "duration", target: "30m" },
     },
@@ -111,8 +127,8 @@ export function taskFixture() {
       title: "Confirm access to the studio",
       version: 1,
       status: "open",
-      plan: null,
-      deadline: "2026-12-09",
+      plan: { date: today, at: "morning" },
+      deadline: today,
       inbox: true,
     },
   ];
@@ -129,6 +145,12 @@ export function taskFixture() {
           title: task.title,
           status: task.status,
           deadline: task.deadline,
+          planDate: task.plan?.date,
+          planKind: task.plan?.at,
+          planTime: task.plan?.time,
+          checklistTotal: task.checklist?.length ?? 0,
+          checklistCompleted:
+            task.checklist?.filter((item) => item.checked).length ?? 0,
         })),
       },
       { "io.lapismd/availableTools": available },
@@ -154,6 +176,14 @@ export function taskFixture() {
             kind: "task",
             tags: [],
             body: "",
+            checklist:
+              task.checklist?.map((item, position) => ({
+                ...item,
+                position,
+                sourceStart: 0,
+                sourceEnd: 0,
+                source: `- [${item.checked ? "x" : " "}] ${item.text}`,
+              })) ?? [],
             task,
           },
         });
