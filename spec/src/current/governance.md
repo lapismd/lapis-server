@@ -142,7 +142,7 @@ process cases, workspace tests/Clippy, protocol and documentation checks validat
 this slice; consumer installation and real host qualification remain pending.
 
 SRV-SRV-011 adds shared MCP reads using the pinned official Rust SDK and shared
-HTTP admission. SRV-GOV-001/002 limits, package ownership and release gates remain
+HTTP admission. OAuth client acceptance follows challenge scopes through approval, initialized tool discovery and a scoped write. SRV-GOV-001/002 limits, package ownership and release gates remain
 unchanged. Official-client and raw HTTP acceptance, revocation during body intake,
 capacity/cancellation tests and the workspace/Clippy/protocol/specification lanes
 qualify the source adapter only; production host and OAuth gates remain pending.

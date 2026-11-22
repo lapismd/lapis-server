@@ -31,7 +31,7 @@ Protocol with namespaced descriptors and credential-bound dispatch. It does not
 alter native engine ownership or the crate dependency direction in SRV-SRV-004.
 The compiled note provider delegates to the existing native writer under
 [SRV-OPS-008](plugin-operations.md#srv-ops-008--scoped-markdown-note-writes).
-MCP discovery lists `notes:write` and an owner can grant it for selected vaults through OAuth or Content API and MCP settings.
+MCP discovery and the OAuth challenge list `notes:write` with other registered scopes. An owner can grant it for selected vaults through OAuth or Content API and MCP settings.
 The compiled Tasks adapter incorporates its owning repository's current-main
 intake at a pinned Git revision. Workspace patches bind Core/Protocol to this host's
 internal workspace instances without introducing an external Cargo path.

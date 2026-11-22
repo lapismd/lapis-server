@@ -49,17 +49,24 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     server.enable(true).await;
     let challenge_response = request(&server, Method::POST, "/mcp").send().await.unwrap();
     assert_eq!(challenge_response.status(), 401);
-    assert_eq!(
-        challenge_response.headers()["www-authenticate"]
-            .to_str()
-            .unwrap(),
-        "Bearer resource_metadata=\"https://notes.example/.well-known/oauth-protected-resource/mcp\", scope=\"mcp:read\""
-    );
-    let mut resource_scopes = vec![json!("mcp:read")];
+    let challenge_scope = challenge_response.headers()["www-authenticate"]
+        .to_str()
+        .unwrap()
+        .strip_prefix(
+            "Bearer resource_metadata=\"https://notes.example/.well-known/oauth-protected-resource/mcp\", scope=\"",
+        )
+        .and_then(|scope| scope.strip_suffix('"'))
+        .expect("MCP authentication challenge includes a scope");
     let content = server.status().await;
-    resource_scopes.extend_from_slice(content["operation_permissions"].as_array().unwrap());
-    assert!(resource_scopes.contains(&json!("tasks:write")));
-    assert!(resource_scopes.contains(&json!("notes:write")));
+    let operation_scopes = content["operation_permissions"].as_array().unwrap();
+    assert!(operation_scopes.contains(&json!("tasks:write")));
+    assert!(operation_scopes.contains(&json!("notes:write")));
+    let mut resource_scopes = vec![json!("mcp:read")];
+    resource_scopes.extend_from_slice(operation_scopes);
+    assert_eq!(
+        json!(challenge_scope.split_ascii_whitespace().collect::<Vec<_>>()),
+        json!(resource_scopes)
+    );
     let resource: Value = request(
         &server,
         Method::GET,
@@ -111,6 +118,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         .redirect(reqwest::redirect::Policy::none())
         .build()
         .unwrap();
+    let requested_scope = format!("{challenge_scope} offline_access");
     let authz = agent
         .get(format!("{}/oauth/authorize", server.base))
         .header("host", "notes.example")
@@ -120,7 +128,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
             ("response_type", "code"),
             ("resource", RESOURCE),
             ("state", "test-state"),
-            ("scope", "mcp:read offline_access notes:write"),
+            ("scope", requested_scope.as_str()),
             ("code_challenge_method", "S256"),
             (
                 "code_challenge",
@@ -158,7 +166,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         .json()
         .await
         .unwrap();
-    assert_eq!(pending["permissions"], json!(["notes:write"]));
+    assert_eq!(pending["permissions"], json!(operation_scopes));
     let approved: Value = request(&server, Method::POST, &path)
         .header("cookie", &cookie)
         .header("x-lapis-csrf", csrf)
@@ -217,29 +225,100 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     );
     let access = pair["access_token"].as_str().unwrap();
     let refresh = pair["refresh_token"].as_str().unwrap();
-    let created: Value = request(&server, Method::POST, "/mcp")
-        .bearer_auth(access)
-        .header("accept", "application/json, text/event-stream")
-        .header("mcp-protocol-version", "2026-07-28")
-        .header("mcp-method", "tools/call")
-        .header("mcp-name", "notes_create")
-        .json(&json!({
-            "jsonrpc":"2.0","id":1,"method":"tools/call","params":{
-                "name":"notes_create","arguments":{
-                  "vault_id":server.ids[0],"invocation_id":uuid::Uuid::new_v4(),
-                  "path":"OAuth.md","text":"# Authorized notes"
-                },
-                "_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}
-            }
-        }))
-        .send()
-        .await
-        .unwrap()
-        .error_for_status()
-        .unwrap()
-        .json()
-        .await
+    let mcp = |message: Value| {
+        request(&server, Method::POST, "/mcp")
+            .bearer_auth(access)
+            .header("accept", "application/json, text/event-stream")
+            .header("mcp-protocol-version", "2025-11-25")
+            .json(&message)
+    };
+    let initialized: Value = mcp(json!({
+        "jsonrpc":"2.0","id":1,"method":"initialize","params":{
+            "protocolVersion":"2025-11-25",
+            "capabilities":{},
+            "clientInfo":{"name":"OAuth browser client","version":"1.0.0"}
+        }
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
+    assert_eq!(initialized["result"]["protocolVersion"], "2025-11-25");
+    assert_eq!(
+        mcp(json!({"jsonrpc":"2.0","method":"notifications/initialized"}))
+            .send()
+            .await
+            .unwrap()
+            .status(),
+        202
+    );
+    let listed: Value = mcp(json!({
+        "jsonrpc":"2.0","id":2,"method":"tools/list","params":{}
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
+    let tools = listed["result"]["tools"].as_array().unwrap();
+    for name in ["read_note", "notes_create", "notes_replace"] {
+        assert!(tools.iter().any(|tool| tool["name"] == name), "{listed}");
+    }
+    assert!(tools.iter().all(|tool| {
+        let name = tool["name"].as_str().unwrap();
+        !name.starts_with("skills_") && !name.starts_with("tasks_")
+    }));
+    let capabilities: Value = mcp(json!({
+        "jsonrpc":"2.0","id":3,"method":"tools/call","params":{
+            "name":"capabilities","arguments":{}
+        }
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
+    let operations = capabilities["result"]["structuredContent"]["outcome"]["value"]
+        ["capabilities"]["operations"]
+        .as_array()
         .unwrap();
+    assert_eq!(operations.len(), tools.len());
+    for (tool, operation) in tools.iter().zip(operations) {
+        assert_eq!(tool["name"], operation["operation"]);
+        let (effect, scope) = if tool["annotations"]["readOnlyHint"] == true {
+            ("read_only", "read")
+        } else {
+            ("write", "write")
+        };
+        assert_eq!(operation["effect"], effect);
+        assert_eq!(operation["scope"], scope);
+    }
+    let created: Value = mcp(json!({
+        "jsonrpc":"2.0","id":4,"method":"tools/call","params":{
+            "name":"notes_create","arguments":{
+              "vault_id":server.ids[0],"invocation_id":uuid::Uuid::new_v4(),
+              "path":"OAuth.md","text":"# Authorized notes"
+            }
+        }
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
     assert_eq!(
         created["result"]["structuredContent"]["outcome"]["status"], "ok",
         "{created}"

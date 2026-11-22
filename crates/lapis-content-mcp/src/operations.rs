@@ -1,4 +1,7 @@
-use lapis_app_protocol::{content::ContentEffect, operations::OperationCatalog};
+use lapis_app_protocol::{
+    content::ContentEffect,
+    operations::{OperationCatalog, OperationDescriptor},
+};
 use rmcp::{
     ErrorData,
     model::{Tool, ToolAnnotations},
@@ -6,8 +9,13 @@ use rmcp::{
 use serde_json::json;
 use std::sync::Arc;
 
+pub(super) fn tool_name(descriptor: &OperationDescriptor) -> String {
+    format!("{}_{}", descriptor.plugin_id, descriptor.id)
+}
+
 pub fn tools(catalog: OperationCatalog) -> Result<Vec<Tool>, ErrorData> {
     catalog.operations.into_iter().map(|descriptor| {
+        let name = tool_name(&descriptor);
         let mut schema = descriptor.input_schema;
         schema["properties"]["vault_id"] = json!({
             "type": "string", "format": "uuid",
@@ -25,7 +33,7 @@ pub fn tools(catalog: OperationCatalog) -> Result<Vec<Tool>, ErrorData> {
             schema["required"].as_array_mut().unwrap().push(json!("invocation_id"));
         }
         let mut tool = Tool::new(
-            format!("{}_{}", descriptor.plugin_id, descriptor.id),
+            name,
             descriptor.description,
             schema.as_object().cloned().ok_or_else(|| {
                 ErrorData::internal_error("Invalid operation schema", None)

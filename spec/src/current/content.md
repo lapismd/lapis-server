@@ -254,7 +254,8 @@ shutdown/drain. Session IDs MUST NOT confer authority and MUST be rejected.
 
 Built-in discovery MUST advertise only `capabilities`, `list_vaults`, `list_notes` and
 `read_note`, plus credential-admitted plugin operations under SRV-OPS-001/002, with input/output schemas derived from Protocol and advisory read
-annotations. Tool dispatch MUST decode strict Protocol arguments and call Core;
+annotations. The MCP capabilities reply MUST report the same credential-admitted
+tool names and effects as tools/list. Tool dispatch MUST decode strict Protocol arguments and call Core;
 typed content failures retain code/effect with `isError`. Note resources use
 `lapis://notes/{vault_id}/{path}`, decode the relative path exactly once and use
 the same read operation, preserving saved text/version. Resource lists remain
