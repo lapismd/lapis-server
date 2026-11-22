@@ -1,5 +1,12 @@
 # @lapismd/lapis-server
 
+## 2.9.0
+
+### Minor Changes
+
+- [#145](https://github.com/lapismd/lapis-server/pull/145) [`489c275`](https://github.com/lapismd/lapis-server/commit/489c275ae7563e81122965a40b256407d455f2e0) Thanks [@stevejuma](https://github.com/stevejuma)! - Add scoped keyword, semantic and hybrid note search, plus version-guarded
+  frontmatter reads and patches, across MCP, the Content API and the CLI.
+
 ## 2.8.1
 
 ### Patch Changes
