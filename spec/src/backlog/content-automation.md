@@ -133,11 +133,11 @@ desktop UI operations are separately advertised.
 | Delivery                | Operations                                                                                                                                                | Main dependency                                                           |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | First end-to-end slice  | Capabilities; admitted vault list; note list/read/create/conditional replace                                                                              | Existing client admission, file IO and versions                           |
-| Initial content release | Append/prepend; copy/move/rename; recoverable delete/list-trash/restore; folders; attachment upload/download; bounded text search with context            | Shared transforms, recovery storage, query service and byte routes        |
-| Knowledge workflows     | Property get/set/remove, tags/aliases, outline, backlinks/outgoing/unresolved links; daily read/ensure/append; template list/read/apply; task list/update | Qualified native metadata/Search/Tasks/daily services and shared settings |
+| Initial content release | Append/prepend; copy/move/rename; recoverable delete/list-trash/restore; folders; attachment upload/download                                           | Shared transforms, recovery storage and byte routes                        |
+| Knowledge workflows     | Outline, backlinks/outgoing/unresolved links; daily read/ensure/append; template list/read/apply                                                        | Qualified native metadata and daily services and shared settings           |
 | History workflows       | Version list/read/diff; explicitly guarded restore                                                                                                        | Qualified native repository/history owner and recovery checkpoints        |
 | Desktop conveniences    | Open/reveal note, active note, selection, allowlisted registered commands                                                                                 | Explicit window binding and live UI capability                            |
-| Deferred                | CLI TUI, bulk transactions, semantic search/model setup, plugin installation/management, sync administration, publishing and arbitrary evaluation         | Separate feature contracts and qualification                              |
+| Deferred                | CLI TUI, bulk transactions, guided model setup, plugin installation/management, sync administration, publishing and arbitrary evaluation                 | Separate feature contracts and qualification                              |
 
 Daily dates/timezones and template rules use shared settings, not CLI-local
 defaults. Reads report index freshness and unavailable capabilities. Task edits
@@ -258,7 +258,7 @@ client, refuse a foreign vault, revoke access and disable/drain the endpoint.
 
 ## CLI behavior and distribution
 
-Hosted absent-only creation and conditional replacement follow [SRV-OPS-008](../current/plugin-operations.md#srv-ops-008--scoped-markdown-note-writes).
+Hosted writes, note search and frontmatter follow [SRV-OPS-008 and SRV-OPS-009](../current/plugin-operations.md#srv-ops-008--scoped-markdown-note-writes).
 
 Use conventional subcommands and flags; Obsidian syntax compatibility is not
 required. Illustrative interface, to finalize in the contract slice:

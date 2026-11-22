@@ -25,6 +25,10 @@ pub(super) enum Action {
     List,
     Manifest(SearchManifestQuery),
     Stats,
+    Notes(
+        String,
+        lapis_app_protocol::database::search::retrieval::SearchOptions,
+    ),
     Retrieve(
         String,
         lapis_app_protocol::database::search::retrieval::SearchOptions,
@@ -40,7 +44,16 @@ pub(super) enum Value {
     Stats(SearchIndexStats),
     Results(Vec<lapis_app_protocol::database::search::retrieval::SearchResult>),
     Paths(Vec<String>),
+    Notes(NoteSearch),
 }
+
+pub(crate) struct NoteSearch {
+    pub rows: Vec<retrieval_types::SearchResult>,
+    pub mode: retrieval_types::SearchRetrievalMode,
+    pub semantic_status: &'static str,
+}
+
+use lapis_app_protocol::database::search::retrieval as retrieval_types;
 impl Store {
     pub(super) async fn search(&mut self, action: Action) -> Result<Value> {
         match action {
@@ -57,6 +70,9 @@ impl Store {
             }
             Action::Retrieve(query, options, paths) => {
                 self.retrieve_search(query, options, paths).await
+            }
+            Action::Notes(query, options) => {
+                self.retrieve_notes(query, options).await.map(Value::Notes)
             }
             Action::Get(path) => self
                 .search_rows(

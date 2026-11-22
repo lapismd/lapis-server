@@ -39,6 +39,20 @@ pub fn openapi_document() -> Value {
         .chain(lapis_app_core::skills::provider::SkillsProvider::default().descriptors())
         .chain(lapis_app_core::services::content::NoteWrites.descriptors())
         .collect::<Vec<_>>();
+    let mut scopes = Map::new();
+    scopes.insert("mcp:read".into(), json!("Read explicitly approved vaults"));
+    scopes.insert("offline_access".into(), json!("Refresh this connection"));
+    for permission in operations
+        .iter()
+        .map(|operation| operation.permission.as_str())
+    {
+        let description = match permission {
+            "notes:read" => "Search notes and read frontmatter",
+            "notes:write" => "Create, replace, and edit frontmatter in Markdown notes",
+            _ => permission,
+        };
+        scopes.insert(permission.into(), json!(description));
+    }
     json!({
         "openapi":"3.1.0",
         "info":{"title":"Lapis Server HTTP API","version":lapis_app_protocol::PROTOCOL_MAJOR.to_string(),"description":"Content API and authenticated hosted server operations. External integrations use scoped content credentials or MCP OAuth."},
@@ -52,7 +66,7 @@ pub fn openapi_document() -> Value {
                 "contentToken":{"type":"http","scheme":"bearer","description":"Scoped personal or temporary content token."},
                 "syncDiscoveryToken":{"type":"http","scheme":"bearer","description":"Scoped native account discovery credential."},
                 "oauthClientBasic":{"type":"http","scheme":"basic","description":"OAuth client registration may require HTTP Basic, form credentials, or public-client PKCE."},
-                "mcpOAuth":{"type":"oauth2","flows":{"authorizationCode":{"authorizationUrl":"/oauth/authorize","tokenUrl":"/oauth/token","scopes":{"mcp:read":"Read explicitly approved vaults"}}}}
+                "mcpOAuth":{"type":"oauth2","flows":{"authorizationCode":{"authorizationUrl":"/oauth/authorize","tokenUrl":"/oauth/token","scopes":scopes}}}
             }
         },
         "x-lapis-plugin-operations":operations

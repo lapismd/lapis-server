@@ -1,6 +1,8 @@
 //! Native read-only content sessions. Hosts authenticate before constructing one
 //! from dedicated admitted clients; no HTTP credential or caller-selected root enters here.
+mod frontmatter;
 mod grants;
+mod note_search;
 mod note_writes;
 pub use note_writes::NoteWrites;
 mod pagination;

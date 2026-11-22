@@ -13,14 +13,22 @@ impl Store {
         query: &Query,
         options: &SearchOptions,
         paths: bool,
+        public_notes: bool,
     ) -> Result<super::super::Value> {
         let vector = if matches!(options.mode, Some(SearchMode::Lexical)) {
             None
         } else {
             self.embedding.query_vector(&query.raw).await
         };
+        if public_notes && !matches!(options.mode, Some(SearchMode::Lexical)) && vector.is_none() {
+            return Err(crate::services::Error::new(
+                lapis_app_protocol::ErrorCode::Io,
+                "The local search model could not embed this query",
+            ));
+        }
         let candidates =
-            candidates::Candidates::new(self, query, options, vector.as_deref()).await?;
+            candidates::Candidates::new(self, query, options, vector.as_deref(), public_notes)
+                .await?;
         let locale = CollatorBorrowed::try_new(Default::default(), Default::default())
             .map_err(|_| invalid("Search collation is unavailable"))?;
         let required = query.properties();
@@ -36,6 +44,9 @@ impl Store {
                 }
                 let record: SearchDocumentRecord = serde_json::from_str(&raw)
                     .map_err(|_| invalid("Invalid stored Search record"))?;
+                if public_notes && !super::public_notes::public_markdown(&record.path) {
+                    continue;
+                }
                 let props = properties::Properties::new(
                     self.search_properties(&record.path).await?,
                     record.metadata_text.as_deref(),
@@ -60,7 +71,7 @@ impl Store {
         let mode = if vector.is_some() {
             if matches!(options.mode, Some(SearchMode::Vector)) {
                 SearchRetrievalMode::Vector
-            } else if vector_candidates > 0 {
+            } else if vector_candidates > 0 || public_notes {
                 SearchRetrievalMode::Hybrid
             } else {
                 SearchRetrievalMode::Lexical

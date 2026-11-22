@@ -36,10 +36,15 @@ export const Consent: Story = {
     await expect(canvas.getByRole("note")).toHaveTextContent(
       "You can disconnect this application",
     );
-    await expect(permissions.getAllByRole("option")).toHaveLength(5);
+    await expect(permissions.getAllByRole("option")).toHaveLength(6);
+    const noteRead = permissions.getByRole("option", { name: /notes:read/ });
+    await expect(noteRead).toHaveTextContent(
+      "Search notes and read frontmatter",
+    );
+    await expect(noteRead).toHaveAttribute("aria-selected", "false");
     const noteWrite = permissions.getByRole("option", { name: /notes:write/ });
     await expect(noteWrite).toHaveTextContent(
-      "Create and replace Markdown notes",
+      "Create, replace, and edit frontmatter in Markdown notes",
     );
     await expect(noteWrite).toHaveAttribute("aria-selected", "false");
 

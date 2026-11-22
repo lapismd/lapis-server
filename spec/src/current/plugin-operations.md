@@ -81,6 +81,31 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 - CLI `notes create` and `notes replace` discover the same descriptors and accept bounded Markdown input and explicit invocation identities.
 - Read-only grants and other write scopes confer no note mutation authority.
 
+## SRV-OPS-009 — Scoped note search and frontmatter
+
+**Requirement.** The shared catalog MUST expose `notes.search` and `notes.frontmatter-get`
+under `notes:read`, and `notes.frontmatter-patch` under `notes:write`. Issued
+operation snapshots retain their original authority. Generated OpenAPI, MCP
+discovery and CLI help MUST use the same descriptors.
+
+Search MUST query one admitted vault using the native Markdown index and scope
+its ranking to public saved Markdown. It MUST return bounded ranked paths,
+titles and snippets with the applied retrieval mode and index status. Keyword
+search works independently of embeddings. Semantic and hybrid searches use
+the vault's local model and return a typed error if unavailable. Auto may fall
+back to keyword search and MUST report that mode.
+
+Frontmatter reads use the saved file and return its version. An atomic patch
+sets and removes individual YAML keys using the strong version and native
+editor fence. It MUST preserve the note body and unrelated YAML, pass through
+existing indexing, and refuse unsafe layouts or stale versions.
+
+### Acceptance details
+
+- The public operation catalog matches Content API, MCP and CLI invocation.
+- Semantic retrieval finds relevant Markdown without a distinctive keyword match.
+- Saved metadata patches preserve unrelated YAML, body bytes and editor fences.
+
 ## Qualification and release intake
 
 Skill package preparation and CLI qualification follow [SRV-OPS-005–007](plugin-operations.md); source checks and consumer adoption remain separate.

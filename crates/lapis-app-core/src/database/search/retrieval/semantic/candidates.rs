@@ -46,7 +46,11 @@ impl Candidates {
         query: &Query,
         options: &SearchOptions,
         vector: Option<&[f64]>,
+        public_notes: bool,
     ) -> Result<Self> {
+        if public_notes {
+            return Self::public_notes(store, query, options, vector).await;
+        }
         let mut clauses = vec![];
         let mut args = vec![];
         if let Some(ids) = options
@@ -123,6 +127,70 @@ impl Candidates {
             sql: format!("SELECT path,data_json FROM search_docs {scope} ORDER BY path"),
             args,
             paths,
+        })
+    }
+
+    async fn public_notes(
+        store: &Store,
+        query: &Query,
+        options: &SearchOptions,
+        vector: Option<&[f64]>,
+    ) -> Result<Self> {
+        let (filter, args) = super::super::public_notes::scope(options);
+        let mut paths = HashSet::new();
+        let mut bytes = 0;
+        let limit = turso::Value::Integer((options.limit.unwrap_or(20) * 4).min(200) as i64);
+        if !matches!(options.mode, Some(SearchMode::Vector)) {
+            let terms = query.collected().unwrap_or_default();
+            let fts = terms
+                .iter()
+                .map(|term| format!("\"{}\"", term.replace('\\', "\\\\").replace('"', "\\\"")))
+                .collect::<Vec<_>>()
+                .join(" AND ");
+            let text = turso::Value::Text(fts);
+            let mut lexical = vec![text.clone(), text];
+            lexical.extend(args.iter().cloned());
+            lexical.push(limit.clone());
+            let sql = format!(
+                "SELECT path,fts_score(name,path,content,tags,metadata_text,?) AS score FROM search_docs WHERE fts_match(name,path,content,tags,metadata_text,?) AND {filter} ORDER BY score ASC, path LIMIT ?"
+            );
+            let mut rows = store
+                .connection
+                .query(&sql, lexical)
+                .await
+                .map_err(engine)?;
+            while let Some(row) = rows.next().await.map_err(engine)? {
+                include(
+                    &mut paths,
+                    &mut bytes,
+                    row.get::<String>(0).map_err(engine)?,
+                )?;
+            }
+        }
+        if let Some(vector) = vector {
+            let mut scoped = args;
+            scoped.push(turso::Value::Text(
+                serde_json::to_string(vector).map_err(|_| invalid("Invalid Search vector"))?,
+            ));
+            scoped.push(limit);
+            let sql = format!(
+                "SELECT path FROM search_chunks WHERE embedding IS NOT NULL AND path IN (SELECT path FROM search_docs WHERE {filter}) ORDER BY vector_distance_cos(embedding,vector32(?)), path LIMIT ?"
+            );
+            let mut rows = store.connection.query(&sql, scoped).await.map_err(engine)?;
+            while let Some(row) = rows.next().await.map_err(engine)? {
+                include(
+                    &mut paths,
+                    &mut bytes,
+                    row.get::<String>(0).map_err(engine)?,
+                )?;
+            }
+        }
+        let mut paths = paths.into_iter().collect::<Vec<_>>();
+        paths.sort();
+        Ok(Self {
+            paths: Some(paths),
+            sql: String::new(),
+            args: Vec::new(),
         })
     }
 }

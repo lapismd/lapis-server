@@ -62,7 +62,8 @@
   let error = $state("");
   let busy = $state(false);
   const scopeDescriptions: Record<string, string> = {
-    "notes:write": "Create and replace Markdown notes",
+    "notes:read": "Search notes and read frontmatter",
+    "notes:write": "Create, replace, and edit frontmatter in Markdown notes",
     "skills:read": "List available and managed skills",
     "skills:write": "Install and update packaged skills",
     "tasks:read": "List, read, and inspect tasks",

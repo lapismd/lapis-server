@@ -31,6 +31,8 @@ Protocol with namespaced descriptors and credential-bound dispatch. It does not
 alter native engine ownership or the crate dependency direction in SRV-SRV-004.
 The compiled note provider delegates to the existing native writer under
 [SRV-OPS-008](plugin-operations.md#srv-ops-008--scoped-markdown-note-writes).
+Scoped external note search and saved frontmatter operations use the same
+registry and versioned Content API route, including MCP and CLI discovery.
 MCP discovery and the OAuth challenge list `notes:write` with other registered scopes. An owner can grant it for selected vaults through OAuth or Content API and MCP settings.
 The compiled Tasks adapter incorporates its owning repository's current-main
 intake at a pinned Git revision. Workspace patches bind Core/Protocol to this host's
@@ -160,7 +162,7 @@ This preserves the existing wait deadline and immediate busy refusal.
 ## Native engine source intake
 
 Native Markdown/Search algorithms use lapis-plugins commit
-`879581d1549187bdbac2d75b40d02e0df46e721a`, Tasks uses
+`9f2713ac6a4f40ff48325620d969de08fb31f5aa`, Tasks uses
 `52270c2aa7838811604a20be0861cdbd04027b42`, and Docs uses
 `f772f2bacc20a914cef2f0398f294cefbac4ba3c`. These remain owning-package
 engines. App Core retains admission, scheduling, writer fencing and persistence;

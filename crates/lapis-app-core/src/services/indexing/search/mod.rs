@@ -23,6 +23,30 @@ use std::sync::{
 };
 
 impl VaultService {
+    /// A scoped, headless client can use the default Markdown index. An existing
+    /// owner-selected source configuration always wins.
+    pub(in crate::services) async fn ensure_content_search(self: &Arc<Self>) -> Result<()> {
+        let _control = self.indexing_control.lock().await;
+        let selected = {
+            let slot = self.indexing.lock().map_err(|_| super::unavailable())?;
+            match slot.as_ref() {
+                Some(owner) => owner.markdown_search_selected()?,
+                None => None,
+            }
+        };
+        match selected {
+            Some(true) => Ok(()),
+            Some(false) => Err(Error::new(
+                lapis_app_protocol::ErrorCode::Unsupported,
+                "Native Markdown search is disabled for this vault",
+            )),
+            None => {
+                self.start_search_policy(SearchIndexingConfiguration::default().into())
+                    .await
+            }
+        }
+    }
+
     /// Select the native Markdown Search source; other providers and host defaults stay separate.
     pub async fn start_search_indexing(self: &Arc<Self>) -> Result<()> {
         self.start_search_indexing_with(SearchIndexingConfiguration::default())

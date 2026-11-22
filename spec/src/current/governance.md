@@ -75,7 +75,7 @@ display-only request inspection, explicit keyboard decisions, teardown and
 unknown-outcome inspection. Desktop custody and enrolled participation remain
 open. New consent stories retain `visual-pending`; baselines are unchanged.
 
-Plugin operation qualification follows [SRV-OPS-001–004 and SRV-OPS-008](plugin-operations.md), including scoped note writes through the hosted MCP and CLI.
+Plugin operation qualification follows [SRV-OPS-001–004 and SRV-OPS-008](plugin-operations.md), including scoped note search, frontmatter and writes through the hosted MCP and CLI. New note permissions require fresh approval and matching discovery and consent coverage.
 The Tasks MCP App dependency uses an exact source-reviewed registry receipt.
 Provider and hosted delivery qualification follow the content automation backlog. The hosted recovery case saves settings through the native Tasks navigation toggle and checks the interrupted operation.
 `pnpm test:plugin-operations` builds the production server and CLI, then exercises

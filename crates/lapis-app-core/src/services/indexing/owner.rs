@@ -199,6 +199,10 @@ impl Owner {
             completed: self.completed.clone(),
         }
     }
+    pub(super) fn markdown_search_selected(&self) -> Result<Option<bool>> {
+        self.search.markdown_selected()
+    }
+
     pub(super) fn select_search(&self, configuration: Option<search::Policy>) -> Result<()> {
         self.search.configure(configuration)?;
         let _ = self.signal.try_send(());

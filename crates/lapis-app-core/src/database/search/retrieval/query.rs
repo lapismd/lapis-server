@@ -41,6 +41,17 @@ pub(super) struct Query {
     pub expr: Option<Expr>,
 }
 impl Query {
+    pub(super) fn plain(raw: String) -> Self {
+        let expressions = raw
+            .split_whitespace()
+            .map(|term| Expr::Literal(Literal::new(term.into(), Kind::Word)))
+            .collect();
+        Self {
+            raw,
+            expr: Some(Expr::And(expressions)),
+        }
+    }
+
     pub fn new(raw: String) -> Result<Self> {
         if raw.len() > 65_536 || raw.encode_utf16().count() > 32_768 {
             return Err(invalid("Search query exceeds bounds"));

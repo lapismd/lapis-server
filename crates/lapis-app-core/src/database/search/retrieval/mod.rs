@@ -4,6 +4,7 @@ mod lexer;
 mod page;
 mod parser;
 mod properties;
+mod public_notes;
 mod query;
 mod scopes;
 mod semantic;
@@ -26,7 +27,7 @@ impl Store {
     ) -> Result<Value> {
         let query = query::Query::new(raw)?;
         if self.embedding.config.is_some() {
-            return self.semantic_search(&query, &options, paths).await;
+            return self.semantic_search(&query, &options, paths, false).await;
         }
         if !matches!(options.mode, Some(SearchMode::Lexical))
             && self

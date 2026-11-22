@@ -51,6 +51,22 @@ Read [skill management](skill-management.md) for the packaged skills operations.
 Do not invent Obsidian commands or assume a newly installed plugin grants an
 existing credential more permissions.
 
+## Search and frontmatter
+
+Use a grant with `notes:read` to search saved Markdown or inspect its YAML
+properties. Search uses the vault's local Search settings. Auto reports the
+mode it applied. Explicit semantic and hybrid modes require ready embeddings.
+
+```sh
+lapis --target https://notes.example.com --token-file /protected/lapis-credential --json notes search --vault "$vault_id" --query "release checklist" --mode auto
+lapis --target https://notes.example.com --token-file /protected/lapis-credential --json notes frontmatter-get --vault "$vault_id" --path "Projects/Plan.md"
+```
+
+With `notes:write`, use `notes frontmatter-patch` with `--path`, `--if-version`
+and a JSON input file containing `set` and/or `remove`. A value of `null`
+sets YAML null. Put a key in `remove` to delete it. A stale version requires
+a fresh read. Newly added operations require a fresh grant.
+
 ## Saved Markdown writes
 
 A credential approved for `notes:write` can create a note at an unused path

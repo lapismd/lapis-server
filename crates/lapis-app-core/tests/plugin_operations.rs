@@ -217,6 +217,15 @@ fn scoped_note_replace_obeys_native_editor_fences_and_public_paths() {
         invoke(vault_id, "replace", json!({"path":"Note.md","text":"updated","expected_version":version})),
         OperationOutcome::Error { error } if error.code == ContentErrorCode::Busy
     ));
+    let patch = json!({"path":"Note.md","expected_version":version,"set":{"status":"done"}});
+    assert!(matches!(
+        invoke(vault_id, "frontmatter-patch", patch.clone()),
+        OperationOutcome::Error { error } if error.code == ContentErrorCode::Busy
+    ));
+    assert!(matches!(
+        invoke(Uuid::new_v4(), "frontmatter-patch", patch),
+        OperationOutcome::Error { error } if error.code == ContentErrorCode::PermissionDenied
+    ));
     assert_eq!(renderer.read_text("Note.md").unwrap().text, "saved");
     for path in [
         "../Outside.md",
