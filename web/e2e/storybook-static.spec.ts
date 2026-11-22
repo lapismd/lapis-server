@@ -284,5 +284,20 @@ test("static MCP Apps show the packaged views and support sample interactions", 
       return Boolean(left && right && right.x > left.x);
     })
     .toBe(true);
+  await expect.soft(detail).toHaveCSS("border-top-width", "0px");
+  await expect
+    .soft(detail.getByRole("region", { name: "Selected task" }))
+    .toHaveCSS("border-top-width", "1px");
+  const canvas = tasks.getByRole("region", { name: "Task planner" });
+  expect.soft((await canvas.boundingBox())?.height).toBeGreaterThanOrEqual(500);
+  const listInset = await planner
+    .getByRole("list", { name: "Tasks" })
+    .evaluate(
+      (list) =>
+        list.getBoundingClientRect().top -
+        list.closest("[data-scroll-area-viewport]")!.getBoundingClientRect()
+          .top,
+    );
+  expect.soft(listInset).toBeGreaterThanOrEqual(8);
   expect(errors).toEqual([]);
 });

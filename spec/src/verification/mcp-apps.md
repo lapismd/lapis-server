@@ -19,3 +19,8 @@ the Server build input. The MCP Apps catalog case verifies the white Notes
 and Tasks bodies, icon-only refresh controls, the note breadcrumb and bottom
 spacing, native task details at narrow and desktop widths, inline expansion,
 checklist display and permission-scoped actions.
+
+The Tasks layout assertions reproduced the duplicate detail border, 432 px
+canvas, and missing top inset in the original bundle. The rebuilt package
+passes with a single detail border, a 512 px canvas, and 8 px of vertical
+list padding at the standard root font size.
