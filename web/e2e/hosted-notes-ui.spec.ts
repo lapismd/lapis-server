@@ -158,3 +158,81 @@ for (const renderer of ["preview", "development"] as const) {
     }
   });
 }
+
+for (const status of [401, 403]) {
+  test(`hosted session expiry returns to sign-in after a ${status} response`, async ({
+    page,
+    context,
+  }) => {
+    const repository = resolve(import.meta.dirname, "../..");
+    await mkdir(join(repository, ".local"), { recursive: true });
+    const root = await mkdtemp(
+      join(repository, ".local/hosted-session-expiry-"),
+    );
+    const origin = `http://localhost:${await unusedLoopbackPort()}`;
+    const runtime = new RustServerRuntime(root, repository, origin, password);
+    try {
+      await runtime.start();
+      await page.clock.install();
+      await page.goto(origin);
+      await signInHostedOwner(page, password);
+      await page.getByRole("button", { name: /^Open Rust vault/ }).click();
+      await expect(
+        page.locator('[data-notes-session-ready="true"]'),
+      ).toBeVisible();
+
+      let documentLoads = 0;
+      page.on("request", (request) => {
+        if (
+          request.isNavigationRequest() &&
+          request.frame() === page.mainFrame()
+        )
+          documentLoads++;
+      });
+
+      // Let the real server reject the missing session. For the 403 case, the
+      // first signal is the same attachment denial a stale client receives.
+      await page.route(
+        "**/api/v3/clients/*/heartbeat",
+        async (route) => {
+          if (status === 403) {
+            await route.fulfill({
+              status,
+              json: {
+                code: "PERMISSION_DENIED",
+                message: "Client attachment is not valid",
+              },
+            });
+          } else {
+            await route.continue();
+          }
+        },
+        { times: 1 },
+      );
+      const denied = page.waitForResponse(
+        (response) =>
+          response.url().includes("/heartbeat") && response.status() === status,
+      );
+      await context.clearCookies();
+      await page.clock.fastForward(30_000);
+      await denied;
+
+      await expect(
+        page.getByRole("heading", { name: "Sign in", exact: true }),
+      ).toBeVisible({ timeout: 5_000 });
+      await expect(
+        page.locator('[data-notes-session-ready="true"]'),
+      ).toBeHidden();
+      expect(documentLoads).toBe(0);
+      await page.getByLabel("Username").fill("owner");
+      await page.getByLabel("Password").fill(password);
+      await page.getByRole("button", { name: "Sign in", exact: true }).click();
+      await expect(
+        page.locator('[data-notes-session-ready="true"]'),
+      ).toBeVisible();
+      await signOutHostedWorkspace(page);
+    } finally {
+      await runtime.stop();
+    }
+  });
+}

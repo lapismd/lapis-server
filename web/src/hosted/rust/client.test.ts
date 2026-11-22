@@ -53,6 +53,40 @@ describe("Rust hosted transport", () => {
     ).toBe("session-token");
   });
 
+  it("checks the session after an invalid attachment but preserves other permission failures", async () => {
+    const fetch = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValueOnce(
+        json({ code: "PERMISSION_DENIED", message: "Invalid CSRF token" }, 403),
+      )
+      .mockResolvedValueOnce(
+        json(
+          {
+            outcome: {
+              status: "error",
+              error: {
+                code: "PERMISSION_DENIED",
+                message: "Client attachment is not valid",
+              },
+            },
+          },
+          403,
+        ),
+      );
+    const host = new RustHttpClient("", fetch);
+    const suspect = vi.spyOn(host.connection, "suspect");
+    const path = "/clients/client/commands";
+    await expect(host.json(path, "POST")).rejects.toMatchObject({
+      status: 403,
+    });
+    expect(suspect).not.toHaveBeenCalled();
+    await expect(host.json(path, "POST")).rejects.toMatchObject({
+      status: 403,
+    });
+    expect(suspect).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
   it("uses only admitted IDs in generated command envelopes and disposes the lease", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>(async (_url, init) => {
       if (init?.method === "DELETE") return new Response(null, { status: 204 });

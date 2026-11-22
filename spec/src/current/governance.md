@@ -240,7 +240,7 @@ and cancellation handling.
 
 <a id="srv-gov-003"></a>
 
-**Requirement.** The hosted application MUST use the built public Notes application-profile workspace session. Its host wrappers and the real workspace shell MUST fill the viewport. Appearance initialization and branding assets MUST work in application and catalog builds. Host authentication, the connection indicator, and Rust transport MUST remain server-owned.
+**Requirement.** The hosted application MUST use the built public Notes application-profile workspace session. Its host wrappers and the real workspace shell MUST fill the viewport. Appearance initialization and branding assets MUST work in application and catalog builds. Host authentication (including [sign-in after session loss](hosted.md#srv-hst-028)), the connection indicator, and Rust transport MUST remain server-owned.
 The installed dependency graph MUST provide one `@lapis-notes/api` peer context to the host and application profile.
 The host uses Design Core's public setting groups for Content API and MCP and its full-width layout for endpoint addresses.
 
