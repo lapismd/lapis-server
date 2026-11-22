@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.8.0
+
+### Minor Changes
+
+- [#137](https://github.com/lapismd/lapis-server/pull/137) [`00361d2`](https://github.com/lapismd/lapis-server/commit/00361d2d10c54e4850c7217619a2dbfe147efe25) Thanks [@stevejuma](https://github.com/stevejuma)! - Provide inline Notes and Tasks views to external MCP Apps clients. Read notes with the Lapis Markdown preview, edit task scheduling and Inbox properties, and complete tasks through scoped native Tasks operations.
+
 ## 2.7.3
 
 ### Patch Changes
