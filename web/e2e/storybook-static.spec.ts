@@ -146,7 +146,7 @@ test("static Docs isolate complete shells in 700px embeds", async ({
   expect(errors).toEqual([]);
 });
 
-test("static MCP Apps show the packaged views and support sample interactions", async ({
+test("static MCP Apps Notes shows and refreshes the packaged preview", async ({
   page,
 }) => {
   const errors = runtimeErrors(page);
@@ -177,6 +177,10 @@ test("static MCP Apps show the packaged views and support sample interactions", 
   await note.getByRole("button", { name: "Refresh" }).click();
   await expect(note.getByText(/Latest update/)).toBeVisible();
 
+  expect(errors).toEqual([]);
+});
+
+async function openStaticTasks(page: Page) {
   await page.goto(
     `${origin}/iframe.html?id=shell-mcp-apps--tasks&viewMode=story`,
   );
@@ -187,10 +191,21 @@ test("static MCP Apps show the packaged views and support sample interactions", 
     await expect(page.getByRole("status")).toHaveText(
       "The installed Tasks plugin does not contribute an MCP App.",
     );
+    return;
+  }
+  return page.frameLocator('iframe[title="Lapis Tasks"]');
+}
+
+test("static MCP Apps Tasks supports scoped task interactions", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const tasks = await openStaticTasks(page);
+  if (!tasks) {
     expect(errors).toEqual([]);
     return;
   }
-  const tasks = page.frameLocator('iframe[title="Lapis Tasks"]');
   await expect(tasks.locator("body")).toHaveCSS(
     "background-color",
     "rgb(255, 255, 255)",
@@ -332,8 +347,19 @@ test("static MCP Apps show the packaged views and support sample interactions", 
       .locator("html")
       .evaluate((element) => element.scrollWidth <= element.clientWidth),
   ).toBe(true);
+  expect(errors).toEqual([]);
+});
+
+test("static MCP Apps Tasks snaps between full-width compact panes", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.reload();
+  const tasks = await openStaticTasks(page);
+  if (!tasks) {
+    expect(errors).toEqual([]);
+    return;
+  }
   await tasks
     .getByRole("button", {
       name: "Open task details for Review the offsite agenda",
