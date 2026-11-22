@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type FrameLocator, type Page } from "@playwright/test";
 import { createServer, type Server } from "node:http";
 import { access, readFile } from "node:fs/promises";
 import { extname, join, resolve, sep } from "node:path";
@@ -196,7 +196,17 @@ async function openStaticTasks(page: Page) {
   return page.frameLocator('iframe[title="Lapis Tasks"]');
 }
 
-test("static MCP Apps Tasks supports scoped task interactions", async ({
+async function openPrototypeTaskDetails(tasks: FrameLocator) {
+  await tasks
+    .getByRole("button", {
+      name: "Open task details for Practice the prototype walkthrough",
+      exact: true,
+    })
+    .click();
+  return tasks.getByRole("region", { name: "Selected task" });
+}
+
+test("static MCP Apps Tasks opens and dismisses inline details", async ({
   page,
 }) => {
   const errors = runtimeErrors(page);
@@ -285,12 +295,21 @@ test("static MCP Apps Tasks supports scoped task interactions", async ({
   ).toBeVisible();
   await tasks.getByRole("button", { name: "Refresh tasks" }).focus();
   await expect(inline).toHaveCount(0);
-  await tasks
-    .getByRole("button", {
-      name: "Open task details for Practice the prototype walkthrough",
-      exact: true,
-    })
-    .click();
+  expect(errors).toEqual([]);
+});
+
+test("static MCP Apps Tasks renders the sidebar and updates Inbox", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const tasks = await openStaticTasks(page);
+  if (!tasks) {
+    expect(errors).toEqual([]);
+    return;
+  }
+  const row = tasks.locator('[data-planner-task-id="prototype"]');
+  const surface = await openPrototypeTaskDetails(tasks);
   await expect(
     tasks.getByRole("button", { name: "Close Task details column" }),
   ).toBeVisible();
@@ -332,6 +351,20 @@ test("static MCP Apps Tasks supports scoped task interactions", async ({
   await expect(
     surface.getByRole("checkbox", { name: "inbox value" }),
   ).toBeChecked();
+  expect(errors).toEqual([]);
+});
+
+test("static MCP Apps Tasks completes a duration-tracked task", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const tasks = await openStaticTasks(page);
+  if (!tasks) {
+    expect(errors).toEqual([]);
+    return;
+  }
+  const surface = await openPrototypeTaskDetails(tasks);
   await surface.getByRole("checkbox", { name: "Mark task done" }).click();
   const dialog = tasks.getByRole("dialog", { name: /Complete Practice/ });
   await dialog.getByLabel("Duration").fill("25m");
