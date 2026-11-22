@@ -1,5 +1,17 @@
 # @lapismd/lapis-server
 
+## 2.7.0
+
+### Minor Changes
+
+- [#130](https://github.com/lapismd/lapis-server/pull/130) [`4a18273`](https://github.com/lapismd/lapis-server/commit/4a18273359c94cb223ba914e816e7a9b3e43fd1c) Thanks [@stevejuma](https://github.com/stevejuma)! - Make Lapis Server installable, keep recent Markdown notes and drafts available offline on trusted devices, and restore the live vault after reconnecting.
+
+### Patch Changes
+
+- [#131](https://github.com/lapismd/lapis-server/pull/131) [`d24955c`](https://github.com/lapismd/lapis-server/commit/d24955cd6abbd2c27ca428587c5ca0d7797483b3) Thanks [@stevejuma](https://github.com/stevejuma)! - Update MCP consent and credential settings with a shared searchable vault picker, add permission search to consent, advertise registered plugin scopes in MCP resource discovery, and publish the Lapis logo for connecting clients.
+
+- [#130](https://github.com/lapismd/lapis-server/pull/130) [`4a18273`](https://github.com/lapismd/lapis-server/commit/4a18273359c94cb223ba914e816e7a9b3e43fd1c) Thanks [@stevejuma](https://github.com/stevejuma)! - Show hosted connection state in the status bar with recovery details on demand.
+
 ## 2.6.1
 
 ### Patch Changes
