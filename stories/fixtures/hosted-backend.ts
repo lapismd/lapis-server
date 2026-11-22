@@ -82,6 +82,9 @@ export function createHostedFixture(scenario: HostedScenario) {
           { id: "notes", name: "Notes", role: "owner" },
           { id: "archive", name: "Archive", role: "owner", archivedAt: 1 },
         ];
+  if (scenario === "token-management") {
+    vaults.push({ id: "projects", name: "Projects", role: "owner" });
+  }
   const content = contentFixture(() => vaults, scenario === "token-management");
   let releaseGate!: () => void;
   const gate = new Promise<void>((done) => {

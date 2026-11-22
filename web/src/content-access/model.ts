@@ -90,28 +90,6 @@ export class ContentAccessModel {
       .filter((v) => v.archived_at == null)
       .map((v) => ({ value: v.vault_id, label: v.name }));
   }
-  async vaultOptions() {
-    try {
-      const vaults = await this.host.json<ManagedVault[]>(
-        "/vaults",
-        "GET",
-        undefined,
-        this.#abort.signal,
-      );
-      return this.#closed
-        ? []
-        : vaults
-            .filter((v) => v.archived_at == null)
-            .map((v) => ({ value: v.vault_id, label: v.name }));
-    } catch {
-      if (!this.#closed) {
-        this.notice =
-          "Vault choices could not be loaded. Reopen these settings to retry.";
-        this.#notify();
-      }
-      return [];
-    }
-  }
   subscribe = (listener: (id?: string) => void) => {
     this.#listeners.add(listener);
     return () => {
@@ -249,7 +227,6 @@ export class ContentAccessModel {
       case "personal-vaults": {
         if (
           !Array.isArray(value) ||
-          value.length < 1 ||
           value.length > 20 ||
           value.some(
             (id) =>
@@ -257,7 +234,7 @@ export class ContentAccessModel {
               !this.options.some((v) => v.value === id),
           )
         )
-          throw new Error("Select one or more active vaults.");
+          throw new Error("Choose up to 20 active vaults.");
         draft.vaults = [...new Set(value as string[])];
         break;
       }

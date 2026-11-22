@@ -908,7 +908,11 @@
       </form>
     </section>
   {:else if hostState === "vaults" && consentId}
-    <McpConsent requestId={consentId} {vaults} />
+    <McpConsent
+      requestId={consentId}
+      username={authenticatedUsername}
+      {vaults}
+    />
   {:else if hostState === "vaults"}
     <section
       class="web-vault-launcher server-vault-launcher"

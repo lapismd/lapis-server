@@ -260,7 +260,7 @@ The host uses Design Core's public setting groups for Content API and MCP and it
 ### Acceptance details
 
 - Vault-button accessible names include their visible name, role and status text.
-- Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and enrollment, and personal token management with axe failures enabled.
+- Production-component stories exercise keyboard navigation, the real shell geometry, passkey sign-in and enrollment, shared searchable vault selection across MCP consent and personal token management with axe failures enabled.
 - Fixtures remain mounted after their play finishes and release resources when the story unmounts, including the production account and security view with injected sample data, stable placement during the vault chooser round trip, centered header controls, account selection styled like the primary vault action and a neutral documentation link fill at rest.
 
 ## Backup diagnostic unchanged-contract confirmation

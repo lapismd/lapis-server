@@ -32,12 +32,6 @@ export function contentAccessPlugin(host: RustHttpClient, vaultId: string) {
       // the settings controller is still subscribed so its cached token clears.
       this.register(() => this.#model.dispose());
       const binding = getWorkspaceHostBinding(this.app.workspace);
-      this.register(
-        binding.controller.configuration.optionSources.register({
-          id: "content-access.vaults",
-          load: () => this.#model.vaultOptions(),
-        }),
-      );
       this.registerSettingsSection(definition(this.#model));
       this.register(
         binding.controller.configuration.optionSources.register({
