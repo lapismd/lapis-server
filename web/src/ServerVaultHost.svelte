@@ -99,6 +99,7 @@
   let activeApp: App | undefined;
   let observer: ReturnType<typeof trackHostedNotes> | undefined;
   let sessionExpiry: number | undefined;
+  let reopenAfterSignIn = false;
 
   type HostState =
     | "loading"
@@ -124,6 +125,7 @@
   let passkeyBusy = $state(false);
   let newVaultName = $state("");
   let errorMessage = $state("");
+  let signInError = $state("");
   let actionMessage = $state("");
   let buildId = $state("");
   let vaults: VaultRow[] = $state.raw([]);
@@ -223,7 +225,7 @@
             showCached = !!offline.current.grant?.selection;
         }
       } else {
-        errorMessage = error instanceof Error ? error.message : String(error);
+        signInError = error instanceof Error ? error.message : String(error);
         hostState = "login";
       }
     }
@@ -238,14 +240,15 @@
       hostState = "protocol";
       return "update-required";
     }
+    if (hostState === "login") return "sign-in";
     try {
       if (hostState === "connection") {
         await enterAuthenticatedHost(signal);
       } else {
         const identity = await backend.current(signal);
+        signal.throwIfAborted();
         if (authenticatedUsername !== identity.username) {
-          offline.restrict();
-          hostState = "login";
+          requireSignIn();
           return "sign-in";
         }
         const latest = await backend.vaults(signal);
@@ -277,11 +280,25 @@
     } catch (error) {
       if (!(error instanceof RustHostError) || error.status !== 401)
         throw error;
-      offline.restrict();
-      showCached = false;
-      hostState = prepared ? "connection" : "login";
+      signal.throwIfAborted();
+      requireSignIn();
       return "sign-in";
     }
+  }
+
+  function requireSignIn() {
+    reopenAfterSignIn = !!(prepared || openingFlight);
+    offline.restrict();
+    authenticatedUsername = null;
+    sessionExpiry = undefined;
+    vaults = [];
+    accountOpen = false;
+    vaultDialogOpen = false;
+    createDialogOpen = false;
+    renameDialogOpen = false;
+    directoryDialogOpen = false;
+    signInError = "Your session ended. Sign in again to continue.";
+    requestSignIn();
   }
 
   function requestSignIn() {
@@ -332,36 +349,47 @@
     });
   }
 
+  async function finishSignIn(): Promise<void> {
+    if (reopenAfterSignIn) {
+      // The old workspace can no longer persist through its revoked attachment.
+      // Start a fresh App with the new session and the saved vault selection.
+      window.location.reload();
+      return;
+    }
+    await enterAuthenticatedHost();
+  }
+
   async function login(event: SubmitEvent): Promise<void> {
     event.preventDefault();
-    errorMessage = "";
+    signInError = "";
     try {
       await backend.login(username, password);
       password = "";
-      await enterAuthenticatedHost();
+      await finishSignIn();
     } catch (error) {
       password = "";
-      errorMessage = error instanceof Error ? error.message : String(error);
+      signInError = error instanceof Error ? error.message : String(error);
     }
   }
 
   async function signInWithPasskey() {
     if (passkeyBusy || !backend.security) return;
     passkeyBusy = true;
-    errorMessage = "";
+    signInError = "";
     try {
       await backend.security.signIn(username);
       password = "";
-      await enterAuthenticatedHost();
+      await finishSignIn();
     } catch (error) {
-      errorMessage = securityError(error);
+      signInError = securityError(error);
     } finally {
       passkeyBusy = false;
     }
   }
 
   async function refreshVaults(): Promise<void> {
-    vaults = await backend.vaults();
+    const latest = await backend.vaults();
+    if (authenticatedUsername) vaults = latest;
   }
 
   async function enterAuthenticatedHost(signal?: AbortSignal): Promise<void> {
@@ -419,7 +447,8 @@
 
   function openVault(row: VaultRow, path?: string): Promise<void> {
     const flight = (openingFlight ?? Promise.resolve()).then(() => {
-      if (!disposed) return openSelectedVault(row, path);
+      if (!disposed && authenticatedUsername)
+        return openSelectedVault(row, path);
     });
     openingFlight = flight;
     const finish = () => {
@@ -529,6 +558,7 @@
       }
       await tick();
     } catch (error) {
+      if (!authenticatedUsername) return;
       errorMessage = error instanceof Error ? error.message : String(error);
       hostState = sessionComponent?.canRecoverLeave() ? "workspace" : "vaults";
     }
@@ -540,7 +570,8 @@
       try {
         await sessionComponent.dispose(persistLayout);
       } catch (error) {
-        if (sessionComponent.canRecoverLeave()) hostState = "workspace";
+        if (authenticatedUsername && sessionComponent.canRecoverLeave())
+          hostState = "workspace";
         throw error;
       }
     } else if (active) {
@@ -556,7 +587,8 @@
 
   async function manageVaults(): Promise<void> {
     await refreshVaults();
-    if (authenticatedUsername) restoration.forget(authenticatedUsername);
+    if (!authenticatedUsername) return;
+    restoration.forget(authenticatedUsername);
     hostState = "vaults";
   }
 
@@ -726,8 +758,10 @@
       authenticatedUsername = null;
       vaults = [];
       username = "";
+      signInError = "";
       hostState = "login";
     } catch (error) {
+      if (!authenticatedUsername) return;
       errorMessage = error instanceof Error ? error.message : String(error);
       hostState = sessionComponent?.canRecoverLeave() ? "workspace" : "vaults";
     }
@@ -881,8 +915,8 @@
                 required
               />
             </label>
-            {#if errorMessage}
-              <p class="server-error" role="alert">{errorMessage}</p>
+            {#if signInError}
+              <p class="server-error" role="alert">{signInError}</p>
             {/if}
             <Button.Root
               class="server-full-button"

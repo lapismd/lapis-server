@@ -68,7 +68,16 @@ export class RustHttpClient {
         this.connection.suspect();
         throw new HostedTransportError(response.status);
       }
-      if (response.status === 401 && !path.startsWith("/auth/"))
+      const invalidAttachment =
+        response.status === 403 &&
+        path.startsWith("/clients/") &&
+        method !== "DELETE" &&
+        error?.code === "PERMISSION_DENIED" &&
+        error.message === "Client attachment is not valid";
+      if (
+        (response.status === 401 && !path.startsWith("/auth/")) ||
+        invalidAttachment
+      )
         this.connection.suspect();
       throw new RustHostError(
         error?.code ?? "IO",

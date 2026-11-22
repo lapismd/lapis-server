@@ -350,12 +350,16 @@ removable by the user. Browser snapshots MUST NOT grant server admission.
 
 **Requirement.** The workspace MUST keep its location and unsaved note content
 through transient disconnects. Recovery MUST validate the live session and
-vault admission before restoring server-backed controls. Applying an offline
+vault admission before restoring server-backed controls. A stale attachment
+response MUST trigger live session validation. If validation rejects the browser
+session, the host MUST show the sign-in form in the current tab and hide the
+previous workspace and cached data. Applying an offline
 draft MUST require user confirmation and an enforced server file precondition.
 Uncertain mutations MUST be reconciled before they can be submitted again.
 
 ### Acceptance details
 
 - Transient observation failures retain the admitted vault and replay the available file cursor.
+- After reauthentication, the host opens a newly admitted workspace when one was already open.
 - A stale attachment is replaced only after live session and vault validation.
 - Browser recovery retires only verified clean editing claims from inactive attachments it owns and preserves dirty claims for native recovery.
