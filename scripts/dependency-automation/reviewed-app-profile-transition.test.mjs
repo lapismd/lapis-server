@@ -8,7 +8,10 @@ import { verifyIntake } from "./workspace-intake.mjs";
 const fixture = JSON.parse(
   gunzipSync(
     readFileSync(
-      new URL("../fixtures/reviewed-app-profile-transition.json.gz", import.meta.url),
+      new URL(
+        "../fixtures/reviewed-app-profile-transition.json.gz",
+        import.meta.url,
+      ),
     ),
   ),
 );
