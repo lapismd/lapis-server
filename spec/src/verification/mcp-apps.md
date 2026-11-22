@@ -9,3 +9,7 @@ The external reference host uses two iframe origins and a form-capable sandbox.
 The application bundles request no extra permissions and prevent outbound
 network requests and form navigation. Individual external client products
 require separate acceptance.
+
+Both Storybook previews passed interaction and accessibility checks at desktop
+and narrow widths. The static catalog test refreshes the sample note, changes
+Inbox status, and completes a duration-tracked sample task through AppBridge.

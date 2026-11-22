@@ -145,3 +145,48 @@ test("static Docs isolate complete shells in 700px embeds", async ({
   for (const height of heights) expect(height).toBe(700);
   expect(errors).toEqual([]);
 });
+
+test("static MCP Apps show the packaged views and support sample interactions", async ({
+  page,
+}) => {
+  const errors = runtimeErrors(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(
+    `${origin}/iframe.html?id=shell-mcp-apps--notes&viewMode=story`,
+  );
+  const note = page.frameLocator('iframe[title="Lapis Notes"]');
+  await expect(
+    note.getByRole("heading", { name: /Team offsite/ }),
+  ).toBeVisible();
+  await expect(note.getByRole("table")).toBeVisible();
+  await note.getByRole("button", { name: "Refresh" }).click();
+  await expect(note.getByText(/Latest update/)).toBeVisible();
+
+  await page.goto(
+    `${origin}/iframe.html?id=shell-mcp-apps--tasks&viewMode=story`,
+  );
+  const tasks = page.frameLocator('iframe[title="Lapis Tasks"]');
+  const surface = tasks.getByRole("region", { name: "Selected task" });
+  await tasks
+    .getByRole("button", { name: "Practice the prototype walkthrough" })
+    .click();
+  await expect(surface.getByRole("heading")).toHaveText(
+    "Practice the prototype walkthrough",
+  );
+  await surface.getByLabel("In Inbox").click();
+  await expect(surface.getByLabel("In Inbox")).toBeChecked();
+  await surface.getByRole("button", { name: "Complete", exact: true }).click();
+  const dialog = tasks.getByRole("dialog", { name: /Complete Practice/ });
+  await dialog.getByLabel("Duration").fill("25m");
+  await dialog.getByRole("button", { name: "Complete", exact: true }).click();
+  await expect(
+    tasks.getByText("Task completed.", { exact: true }),
+  ).toBeVisible();
+  await expect(surface.getByText("completed", { exact: true })).toBeVisible();
+  expect(
+    await tasks
+      .locator("html")
+      .evaluate((element) => element.scrollWidth <= element.clientWidth),
+  ).toBe(true);
+  expect(errors).toEqual([]);
+});

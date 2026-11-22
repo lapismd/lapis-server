@@ -32,6 +32,8 @@ Tasks edits require a saved version and an invocation UUID. Completion uses
 the user's local calendar date and the native journal, including recurrence
 and daily-note behavior. The view reports success after a completed receipt.
 It uses `tasks_inspect` after an uncertain completion and never resends a write.
+Storybook MUST render both packaged views in a sandboxed external conversation
+fixture with AppBridge and sample data.
 
 ### Acceptance details
 

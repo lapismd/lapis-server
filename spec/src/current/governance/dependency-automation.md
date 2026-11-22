@@ -120,3 +120,5 @@ peer. Frozen production builds retain the exact worker generator inputs.
 
 The external MCP Apps SDK, its peers, and Vite single-file bundling are resolved
 from the Server lockfile. Their built output is served as scoped MCP resources.
+
+Storybook preparation uses the same frozen SDK and view build as Server packaging.

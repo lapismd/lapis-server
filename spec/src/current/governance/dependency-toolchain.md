@@ -112,3 +112,5 @@ Server resolves it through the frozen registry lock before staging its app.
 
 The MCP Apps build packages the official SDK and existing Svelte views as
 standalone documents outside the hosted Vite and PWA output.
+
+Storybook build, development and interaction lanes prepare those same documents.
