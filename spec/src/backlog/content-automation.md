@@ -3,7 +3,7 @@
 Disposition: portable contracts, native reads, test grants, shared HTTP/MCP reads, initial CLI reads, stdio bridging, native host controls and hosted endpoints/settings are implemented under SRV-SRV-005/006/007/008/009/010/011/012/013/014. Scoped hosted note creation and replacement follow SRV-OPS-008.
 Desktop endpoints/settings and binary distribution remain gated. The end goal is one content API
 available through the hosted server and Lapis Desktop, an MCP endpoint in both,
-and a first-party `lapis` CLI for interactive use, scripts and agents.
+and a first-party `lapis` CLI for interactive use, scripts and agents. [MCP Apps](../current/mcp-apps.md) tracks hosted Notes and Tasks. External-client qualification and installable providers remain open.
 
 ## Existing foundations and gaps
 

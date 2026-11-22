@@ -93,3 +93,23 @@ deadline, inbox, repeat, tracking and state changes, plus complete/skip/retry.
 Task creation and title/body edits, independently installable native execution,
 Desktop listeners, OAuth and packaged CLI distribution remain later work in
 `spec/src/backlog/content-automation.md`.
+
+## Contribute an MCP App
+
+Build the HTML as a self-contained view using the official MCP Apps SDK.
+Register its entry operation and follow-up tools from the compiled provider's
+operation descriptors in the hosted app registry. Use a versioned
+`ui://lapis/<plugin>/<view>-v1` URI. Resource discovery follows the grant's
+operation catalog. The view receives results and calls tools through the
+external host, which owns iframe isolation and sends the usual MCP credentials
+to Server.
+
+The Server image includes the Notes view for `read_note` and the Tasks view
+for `tasks_list`. For local source builds, run `pnpm build:mcp-apps` and set
+`LAPIS_SERVER_MCP_APPS_ROOT` to the absolute path to `.local/mcp-apps-dist`.
+Keep this directory outside the public static root and vault storage.
+
+An external host requests `tasks:read` to show Tasks and also requests
+`tasks:write` to enable edits and completion. The owner approves both scopes
+for the selected vaults. After an uncertain completion, use **Check completion
+status**. Retain the displayed request ID for native Tasks recovery.

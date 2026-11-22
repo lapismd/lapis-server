@@ -1,10 +1,13 @@
 //! Explicit shared MCP mount. Hosts own consent, grants, listeners and teardown.
+mod apps;
 mod capabilities;
 mod catalog;
 mod handler;
 mod operations;
 mod resources;
 mod transport;
+
+pub use apps::{AppRegistry, AppResource, MAX_HTML_BYTES};
 
 use lapis_app_core::services::content::ContentGrants;
 use lapis_content_http::Boundary;
@@ -25,7 +28,7 @@ pub fn router_with_boundary(
     boundary: Boundary,
     cancellation: CancellationToken,
 ) -> std::io::Result<axum::Router> {
-    transport::router(boundary, cancellation, false)
+    hosted_router(boundary, cancellation, false)
 }
 
 /// Hosted clients can also negotiate initialized stateless Streamable HTTP.
@@ -34,5 +37,20 @@ pub fn hosted_router(
     cancellation: CancellationToken,
     initialized_clients: bool,
 ) -> std::io::Result<axum::Router> {
-    transport::router(boundary, cancellation, initialized_clients)
+    hosted_router_with_apps(
+        boundary,
+        cancellation,
+        initialized_clients,
+        AppRegistry::default(),
+    )
+}
+
+/// Mount assets registered by the application before the listener starts.
+pub fn hosted_router_with_apps(
+    boundary: Boundary,
+    cancellation: CancellationToken,
+    initialized_clients: bool,
+    apps: AppRegistry,
+) -> std::io::Result<axum::Router> {
+    transport::router(boundary, cancellation, initialized_clients, apps)
 }

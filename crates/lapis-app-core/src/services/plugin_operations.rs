@@ -47,6 +47,10 @@ fn identifier(value: &str) -> bool {
 const RESERVED: &[&str] = &["help", "version", "capabilities", "vault", "note", "mcp"];
 
 impl OperationRegistry {
+    pub fn installed_descriptors(&self) -> impl Iterator<Item = &OperationDescriptor> {
+        self.entries.values().map(|entry| &entry.descriptor)
+    }
+
     pub fn permissions(&self) -> Vec<String> {
         self.entries
             .values()
@@ -118,7 +122,8 @@ impl OperationRegistry {
                         "invocation-id",
                     ]
                     .contains(&arg.flag.as_str())
-                    || ["help", "vault", "input-file", "invocation-id"].contains(&arg.field.as_str())
+                    || ["help", "vault", "input-file", "invocation-id"]
+                        .contains(&arg.field.as_str())
                     || !flags.insert(&arg.flag)
                     || !fields.insert(&arg.field)
                     || descriptor.input_schema["properties"]

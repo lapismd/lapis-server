@@ -30,6 +30,10 @@ const READS: &[(&str, ContentOperation, &str)] = &[
     ),
 ];
 
+pub(crate) fn is_builtin(tool: &str) -> bool {
+    READS.iter().any(|(name, _, _)| *name == tool)
+}
+
 pub(crate) struct Catalog {
     pub tools: Vec<Tool>,
 }

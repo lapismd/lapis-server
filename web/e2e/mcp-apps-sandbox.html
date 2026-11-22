@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8" />
+<script>
+  const host = "http://127.0.0.1:58191";
+  const view = document.createElement("iframe");
+  view.title = "MCP App";
+  view.sandbox.add("allow-scripts", "allow-forms");
+  view.style.cssText = "border:0;width:100%;height:680px";
+  document.documentElement.append(view);
+  addEventListener("message", ({ source, origin, data }) => {
+    if (source === parent && origin === host) {
+      if (data?.method === "ui/notifications/sandbox-resource-ready") {
+        view.srcdoc = data.params.html;
+      } else if (!data?.method?.startsWith("ui/notifications/sandbox-")) {
+        view.contentWindow.postMessage(data, "*");
+      }
+    } else if (
+      source === view.contentWindow &&
+      origin === "null" &&
+      !data?.method?.startsWith("ui/notifications/sandbox-")
+    ) {
+      parent.postMessage(data, host);
+    }
+  });
+  parent.postMessage(
+    { jsonrpc: "2.0", method: "ui/notifications/sandbox-proxy-ready" },
+    host,
+  );
+</script>

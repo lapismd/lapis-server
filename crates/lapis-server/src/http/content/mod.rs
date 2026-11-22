@@ -53,10 +53,11 @@ pub(super) fn transport(state: &State) -> io::Result<Router<State>> {
                 None => boundary,
             };
             lapis_content_http::router_with_boundary(boundary.clone()).merge(
-                lapis_content_mcp::hosted_router(
+                lapis_content_mcp::hosted_router_with_apps(
                     boundary,
                     state.host.content.cancellation.clone(),
                     state.oauth.is_some(),
+                    state.host.mcp_apps.clone(),
                 )?,
             )
         }

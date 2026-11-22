@@ -46,7 +46,8 @@ same typed error/effect handling. Tasks contributes the first 17 operations; see
 `resources/templates/list` advertises `lapis://notes/{vault_id}/{path}`. Use an
 admitted UUID and percent-encode the relative path; `resources/read` returns saved
 Markdown with its strong version in `_meta["io.lapismd/contentVersion"]`.
-`resources/list` is empty; find paths through the paginated `list_notes` tool.
+`resources/list` lists packaged MCP Apps when configured. Find saved paths
+through the paginated `list_notes` tool.
 The resource path is decoded once and validated by Core without URL normalization.
 
 Requests are limited to 64 KiB, including unknown-length bodies, with 64 active

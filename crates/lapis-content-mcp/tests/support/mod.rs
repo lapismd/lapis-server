@@ -24,7 +24,18 @@ impl Fixture {
     pub async fn start() -> Self {
         Self::with_operations(Default::default(), &[]).await
     }
-    pub async fn with_operations(registry: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>, permissions: &[String]) -> Self {
+    pub async fn with_operations(
+        registry: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>,
+        permissions: &[String],
+    ) -> Self {
+        Self::with_apps(registry, permissions, Default::default()).await
+    }
+
+    pub async fn with_apps(
+        registry: Arc<lapis_app_core::services::plugin_operations::OperationRegistry>,
+        permissions: &[String],
+        apps: lapis_content_mcp::AppRegistry,
+    ) -> Self {
         let root = tempfile::tempdir().unwrap();
         fs::write(root.path().join("a note.md"), SAVED).unwrap();
         fs::write(root.path().join("b.md"), "second").unwrap();
@@ -48,9 +59,14 @@ impl Fixture {
         let origin = format!("http://{}", listener.local_addr().unwrap());
         let boundary = lapis_content_http::Boundary::new(grants.clone(), &origin).unwrap();
         let cancellation = tokio_util::sync::CancellationToken::new();
-        let app = lapis_content_mcp::router_with_boundary(boundary.clone(), cancellation.clone())
-            .unwrap()
-            .merge(lapis_content_http::router_with_boundary(boundary));
+        let app = lapis_content_mcp::hosted_router_with_apps(
+            boundary.clone(),
+            cancellation.clone(),
+            false,
+            apps,
+        )
+        .unwrap()
+        .merge(lapis_content_http::router_with_boundary(boundary));
         let server = tokio::spawn(async move {
             axum::serve(listener, app).await.unwrap();
         });

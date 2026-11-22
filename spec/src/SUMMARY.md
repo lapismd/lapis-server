@@ -9,6 +9,7 @@
   - [Integration authorization](current/integration-auth.md)
   - [CLI installation](current/cli.md)
   - [Plugin operations](current/plugin-operations.md)
+  - [MCP Apps](current/mcp-apps.md)
 - [Hosted contract](current/hosted.md)
   - [Terminal presentation](current/terminal-presentation.md)
 - [Static delivery](current/delivery.md)
@@ -29,4 +30,5 @@
   - [Plugin skills verification](verification/plugin-skills.md)
   - [OCI Mods verification](verification/mods.md)
   - [CLI verification](verification/cli.md)
+  - [MCP Apps verification](verification/mcp-apps.md)
   - [Repository credential verification](verification/repository.md)

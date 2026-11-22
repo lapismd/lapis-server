@@ -6,6 +6,7 @@ mod history_index;
 mod history_reader;
 mod indexing;
 mod management;
+mod mcp_apps;
 mod remote_installation;
 pub use remote_installation::RemoteInstallation;
 mod repository_backup;
@@ -42,6 +43,7 @@ pub enum Principal {
 pub struct Host {
     ready: AtomicBool,
     pub(crate) content: Arc<content::Access>,
+    pub(crate) mcp_apps: lapis_content_mcp::AppRegistry,
     runtime: Runtime,
     vaults: Vec<ManagedVault>,
     clients: attachments::Attachments,
@@ -97,6 +99,7 @@ impl Host {
         Ok(Self {
             ready: AtomicBool::new(true),
             content: Arc::new(content::Access::default()),
+            mcp_apps: Default::default(),
             runtime,
             vaults,
             clients: attachments::Attachments::default(),

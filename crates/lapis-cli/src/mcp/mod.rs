@@ -6,7 +6,7 @@ use crate::{args::Cli, client, credential, errors::failure};
 use lapis_app_protocol::content::{ContentError, ContentErrorCode};
 use rmcp::{
     ClientCacheConfig, ClientLifecycleMode, ClientServiceExt,
-    model::ProtocolVersion,
+    model::{ClientCapabilities, ClientConfig, Implementation, ProtocolVersion},
     transport::{
         StreamableHttpClientTransport, async_rw::AsyncRwTransport,
         streamable_http_client::StreamableHttpClientTransportConfig,
@@ -38,7 +38,7 @@ pub(crate) async fn run(args: &Cli) -> Result<(), ContentError> {
     );
     let upstream = tokio::time::timeout(
         timeout,
-        ().serve_with_lifecycle(
+        upstream_config().serve_with_lifecycle(
             transport,
             ClientLifecycleMode::Discover {
                 preferred_versions: vec![ProtocolVersion::V_2026_07_28],
@@ -74,4 +74,28 @@ pub(crate) async fn run(args: &Cli) -> Result<(), ContentError> {
     };
     let _ = tokio::time::timeout(timeout, upstream.cancel()).await;
     outcome
+}
+
+// This bridge relays presentation metadata even when the downstream MCP host
+// uses the older initialized protocol. The host negotiates with each view.
+fn upstream_config() -> ClientConfig {
+    let capabilities = ClientCapabilities::builder()
+        .enable_extensions_with(
+            [(
+                "io.modelcontextprotocol/ui".into(),
+                [(
+                    "mimeTypes".into(),
+                    serde_json::json!(["text/html;profile=mcp-app"]),
+                )]
+                .into_iter()
+                .collect(),
+            )]
+            .into_iter()
+            .collect(),
+        )
+        .build();
+    ClientConfig::new(
+        capabilities,
+        Implementation::new("lapis-stdio", env!("CARGO_PKG_VERSION")),
+    )
 }
