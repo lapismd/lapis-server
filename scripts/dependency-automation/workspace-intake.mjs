@@ -13,6 +13,7 @@ import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
 import { reviewedNotesPeerTransition } from "./reviewed-notes-peer-transition.mjs";
 import { reviewedNotesCohortTransition } from "./reviewed-notes-cohort-transition.mjs";
 import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
+import { reviewedAppProfileTransition } from "./reviewed-app-profile-transition.mjs";
 
 const sections = [
   "dependencies",
@@ -237,6 +238,16 @@ export function verifyIntake({
     fail("missing or changed source opt-in");
   const reviewed =
     terminal ??
+    reviewedAppProfileTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    }) ??
     reviewedTasksTransition({
       sourceSha,
       policyBytes,
@@ -314,14 +325,22 @@ export function verifyIntake({
           fail("selected edge added or removed");
         }
         const reviewedEdge =
-          reviewed &&
-          path === "package.json" &&
-          type === "devDependencies" &&
-          name === "@lapis-notes/lapis-plugin-tasks" &&
-          x.version === "0.1.1" &&
-          y.version === "0.2.1" &&
-          x.declared === "^0.1.1" &&
-          y.declared === "^0.2.1";
+          (reviewed &&
+            path === "package.json" &&
+            type === "devDependencies" &&
+            name === "@lapis-notes/lapis-plugin-tasks" &&
+            x.version === "0.1.1" &&
+            y.version === "0.2.1" &&
+            x.declared === "^0.1.1" &&
+            y.declared === "^0.2.1") ||
+          (reviewed?.appProfileTransition &&
+            path === "package.json" &&
+            type === "dependencies" &&
+            name === "@lapis-notes/app-profile" &&
+            x.version === "0.2.8" &&
+            y.version === "0.3.0" &&
+            x.declared === "^0.2.8" &&
+            y.declared === "^0.3.0");
         if (
           !reviewedEdge &&
           y.version &&

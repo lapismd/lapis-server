@@ -54,8 +54,8 @@ importers:
         specifier: ^0.6.12
         version: 0.6.12(85527b0855397efc1e0c558d13448e3e)
       '@lapis-notes/app-profile':
-        specifier: ^0.2.8
-        version: 0.2.8(9f55501465e1359cca1fe0e5598e4fdd)
+        specifier: ^0.3.0
+        version: 0.3.0(9f55501465e1359cca1fe0e5598e4fdd)
       '@lapis-notes/file-explorer':
         specifier: ^0.2.8
         version: 0.2.8(5f36c306d6c5e3e369c54c3f74623fa8)
@@ -1605,8 +1605,8 @@ packages:
       svelte: 5.56.10
       svelte-sonner: ^1.0.5
 
-  '@lapis-notes/app-profile@0.2.8':
-    resolution: {integrity: sha512-gLNpn14ELUsOurt3jL/5DmClxPevXugz4Tivs3NtPoRHMED2NA8qSa9sY/ME99Mrm5O0I1GuptSb5StzVIzpbg==}
+  '@lapis-notes/app-profile@0.3.0':
+    resolution: {integrity: sha512-ySZvymVhJPWhBIy1DUTRvioUBMkO5oh9/sN6uQD8ohtr2L50D5qBZ+bWZluAmmb/4vzCyztc/yjoK0p72UJbPA==}
     peerDependencies:
       svelte: ^5.56.10
 
@@ -7406,7 +7406,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@lapis-notes/app-profile@0.2.8(9f55501465e1359cca1fe0e5598e4fdd)':
+  '@lapis-notes/app-profile@0.3.0(9f55501465e1359cca1fe0e5598e4fdd)':
     dependencies:
       '@lapis-notes/api': 0.6.12(85527b0855397efc1e0c558d13448e3e)
       '@lapis-notes/file-explorer': 0.2.8(5f36c306d6c5e3e369c54c3f74623fa8)

@@ -30,6 +30,15 @@ test("the hosted PWA keeps a local draft through an outage and reconnects quietl
     await service.start();
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto(origin);
+    await expect(page.locator("html")).toHaveAttribute("data-pwa-host", "true");
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-runtime",
+      "rust-server",
+    );
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-pwa-titlebar-hidden",
+      "false",
+    );
     expect(
       (await (await page.request.get(`${origin}/manifest.webmanifest`)).json())
         .name,
