@@ -1,5 +1,12 @@
 # @lapismd/lapis-server
 
+## 2.7.2
+
+### Patch Changes
+
+- [#135](https://github.com/lapismd/lapis-server/pull/135) [`8e532f6`](https://github.com/lapismd/lapis-server/commit/8e532f6211e93f91b7b638a12f768f3b05137af7) Thanks [@stevejuma](https://github.com/stevejuma)! - Adopt the shared Lapis browser presentation contract for hosted PWA appearance,
+  theme colour, install identity, and window-controls geometry.
+
 ## 2.7.1
 
 ### Patch Changes
