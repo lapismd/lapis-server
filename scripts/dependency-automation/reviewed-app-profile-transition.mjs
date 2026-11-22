@@ -4,7 +4,7 @@ import { isDeepStrictEqual as equal } from "node:util";
 // Reviewed source, never loaded from a candidate manifest, actor or environment.
 // The immutable receipt is populated after the complete candidate is assembled.
 const receipt = {
-  sourceSha: "c1a71cefddf58430bb822f7690b25b5fd86f0bc7",
+  sourceSha: "56ec300e6cab11944f8a583d85eb6f60e1dc0ce9",
   policy: "9becfe19edbde0008a83464e72fbd4c7d27a4a29c741c00c86c1ae533a818afe",
   before: {
     "package.json":
