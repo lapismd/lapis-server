@@ -4233,6 +4233,7 @@ dependencies = [
  "reqwest 0.13.5",
  "rmcp",
  "schemars",
+ "serde",
  "serde_json",
  "tempfile",
  "tokio",

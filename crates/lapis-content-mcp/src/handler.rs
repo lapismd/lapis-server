@@ -1,6 +1,6 @@
 use crate::{catalog::Catalog, resources};
 use axum::http::request::Parts;
-use lapis_app_protocol::content::*;
+use lapis_app_protocol::{content::*, operations::OperationCatalog};
 use lapis_content_http::Boundary;
 use rmcp::{ErrorData, RoleServer, ServerHandler, model::*, service::RequestContext};
 use serde_json::json;
@@ -14,6 +14,15 @@ pub(crate) struct Handler {
     pub initialized_clients: bool,
 }
 impl Handler {
+    async fn registered_operations(
+        &self,
+        context: &RequestContext<RoleServer>,
+    ) -> Result<OperationCatalog, ErrorData> {
+        self.boundary
+            .operation_catalog(parts(context)?, None)
+            .await
+            .map_err(|e| content_error(e.into_error()))
+    }
     async fn authorize(&self, context: &RequestContext<RoleServer>) -> Result<(), ErrorData> {
         self.boundary
             .check(parts(context)?)
@@ -76,10 +85,7 @@ impl ServerHandler for Handler {
         no_cursor(request)?;
         let mut tools = self.catalog.tools.clone();
         tools.extend(crate::operations::tools(
-            self.boundary
-                .operation_catalog(parts(&context)?, None)
-                .await
-                .map_err(|e| content_error(e.into_error()))?,
+            self.registered_operations(&context).await?,
         )?);
         Ok(ListToolsResult::with_all_items(tools)
             .with_ttl_ms(0)
@@ -97,15 +103,11 @@ impl ServerHandler for Handler {
             .iter()
             .any(|tool| tool.name == request.name)
         {
-            let catalog = self
-                .boundary
-                .operation_catalog(parts(&context)?, None)
-                .await
-                .map_err(|e| content_error(e.into_error()))?;
+            let catalog = self.registered_operations(&context).await?;
             if let Some(descriptor) = catalog
                 .operations
                 .iter()
-                .find(|d| format!("{}_{}", d.plugin_id, d.id) == request.name)
+                .find(|d| crate::operations::tool_name(d) == request.name)
             {
                 let plugin = descriptor.plugin_id.clone();
                 let operation = descriptor.id.clone();
@@ -159,8 +161,18 @@ impl ServerHandler for Handler {
         let command = self.catalog.command(&request.name, request.arguments)?;
         let reply = self.execute(&context, command).await?;
         let error = matches!(reply.outcome, ContentOutcome::Error { .. });
-        let value = serde_json::to_value(reply)
-            .map_err(|_| ErrorData::internal_error("Content result unavailable", None))?;
+        let value = if matches!(
+            &reply.outcome,
+            ContentOutcome::Ok { value: ContentValue::Capabilities { .. } }
+        ) {
+            let registered = self.registered_operations(&context).await?;
+            serde_json::to_value(crate::capabilities::Reply::new(
+                reply, &self.catalog.tools, registered,
+            )?)
+        } else {
+            serde_json::to_value(reply)
+        }
+        .map_err(|_| ErrorData::internal_error("Content result unavailable", None))?;
         Ok(if error {
             CallToolResult::structured_error(value)
         } else {

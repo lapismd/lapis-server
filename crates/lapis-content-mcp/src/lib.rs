@@ -1,4 +1,5 @@
 //! Explicit shared MCP mount. Hosts own consent, grants, listeners and teardown.
+mod capabilities;
 mod catalog;
 mod handler;
 mod operations;

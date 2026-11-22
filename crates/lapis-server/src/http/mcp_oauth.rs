@@ -81,7 +81,7 @@ fn resource_ready<'a>(
     Ok((control, oauth))
 }
 
-fn resource_scopes(state: &State) -> Vec<String> {
+pub(super) fn resource_scopes(state: &State) -> Vec<String> {
     let mut scopes = vec!["mcp:read".to_owned()];
     scopes.extend(state.host.content.grants.operation_permissions());
     scopes

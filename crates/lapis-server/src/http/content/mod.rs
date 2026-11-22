@@ -93,8 +93,9 @@ async fn enabled(
     let oauth_mcp = request.uri().path() == "/mcp" && super::mcp_oauth::enabled(&state);
     let mut response = next.run(request).await;
     if oauth_mcp && response.status() == StatusCode::UNAUTHORIZED {
+        let scope = super::mcp_oauth::resource_scopes(&state).join(" ");
         let challenge = format!(
-            "Bearer resource_metadata=\"{}/.well-known/oauth-protected-resource/mcp\", scope=\"mcp:read\"",
+            "Bearer resource_metadata=\"{}/.well-known/oauth-protected-resource/mcp\", scope=\"{scope}\"",
             state.origin,
         );
         if let Ok(value) = challenge.parse() {

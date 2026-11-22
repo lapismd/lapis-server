@@ -119,6 +119,19 @@ async fn registered_provider_has_http_and_official_mcp_parity() {
         .unwrap();
     let tools = client.list_all_tools().await.unwrap();
     assert!(tools.iter().any(|t| t.name == "example-plugin_saved-note"));
+    let capabilities = client
+        .call_tool(CallToolRequestParams::new("capabilities"))
+        .await
+        .unwrap()
+        .structured_content
+        .unwrap();
+    let operations = capabilities["outcome"]["value"]["capabilities"]["operations"]
+        .as_array()
+        .unwrap();
+    assert_eq!(operations.len(), tools.len());
+    for tool in &tools {
+        assert!(operations.iter().any(|entry| entry["operation"] == tool.name.as_ref()));
+    }
     let result = client
         .call_tool(
             CallToolRequestParams::new("example-plugin_saved-note")

@@ -63,7 +63,16 @@ impl Catalog {
                 .ok_or_else(invalid_schema)?
                 .retain(|v| v != "operation");
             let mut tool = Tool::new(name, description, input);
-            tool.output_schema = Some(output.clone());
+            tool.output_schema = Some(if operation == "capabilities" {
+                Arc::new(
+                    schema::<super::capabilities::Reply>()
+                        .as_object()
+                        .ok_or_else(invalid_schema)?
+                        .clone(),
+                )
+            } else {
+                output.clone()
+            });
             tool.annotations = Some(
                 ToolAnnotations::new()
                     .read_only(true)
