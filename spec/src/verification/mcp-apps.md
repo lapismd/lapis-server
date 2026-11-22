@@ -24,3 +24,7 @@ The Tasks layout assertions reproduced the duplicate detail border, 432 px
 canvas, and missing top inset in the original bundle. The rebuilt package
 passes with a single detail border, a 512 px canvas, and 8 px of vertical
 list padding at the standard root font size.
+
+The packed Tasks story checks that double-click renders the native inline notes
+and metadata footer. It saves a schedule change from that footer, closes the
+row, and opens the native sidebar separately with the details button.

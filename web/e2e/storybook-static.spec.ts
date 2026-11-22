@@ -215,10 +215,31 @@ test("static MCP Apps show the packaged views and support sample interactions", 
   await row
     .getByText("Practice the prototype walkthrough", { exact: true })
     .dblclick();
+  const inline = row.locator("[data-task-preview-surface]");
+  await expect(inline).toBeVisible();
+  await expect
+    .soft(inline.locator("[data-task-sidebar-detail]"))
+    .toHaveCount(0, { timeout: 1000 });
+  await expect
+    .soft(inline.getByText("Rehearse the demo in the studio."))
+    .toBeVisible({ timeout: 1000 });
+  await expect
+    .soft(
+      inline.getByRole("button", { name: "Set planner schedule", exact: true }),
+    )
+    .toBeVisible({ timeout: 1000 });
+  await inline
+    .getByRole("button", { name: "Set planner schedule", exact: true })
+    .click();
+  await tasks.getByRole("button", { name: "Tomorrow", exact: true }).click();
+  await expect(tasks.getByText("Task updated.", { exact: true })).toBeVisible();
   await expect(
-    row.getByRole("region", { name: "Selected task" }),
-  ).toBeVisible();
+    row.getByRole("checkbox", {
+      name: "Mark Practice the prototype walkthrough complete",
+    }),
+  ).toBeEnabled();
   await row.getByRole("button", { name: "Close inline details" }).click();
+  await expect(inline).toHaveCount(0);
   await expect(surface).toHaveCount(0);
   await tasks
     .getByRole("button", {

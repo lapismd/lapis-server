@@ -175,7 +175,8 @@ export function taskFixture() {
             title: task.title,
             kind: "task",
             tags: [],
-            body: "",
+            body:
+              task.id === "prototype" ? "Rehearse the demo in the studio." : "",
             checklist:
               task.checklist?.map((item, position) => ({
                 ...item,
