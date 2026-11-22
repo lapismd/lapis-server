@@ -169,8 +169,8 @@ test("edits and completes tasks with native receipts, including lost tracked com
       (await executeEditing({ kind: "changed", generation, revision: 1 }))
         .outcome.status,
     ).toBe("ok");
-    const inbox = detail.getByRole("checkbox", { name: "In Inbox" });
-    await detail.getByRole("button", { name: "Properties" }).click();
+    const inbox = detail.getByRole("checkbox", { name: "inbox value" });
+    await detail.getByRole("button", { name: "Expand properties" }).click();
     await inbox.click();
     await expect(view.getByRole("alert")).toContainText(
       "Reload the saved task",
@@ -231,7 +231,7 @@ test("edits and completes tasks with native receipts, including lost tracked com
     await detail.getByRole("button", { name: "Set due date" }).click();
     await view.getByRole("button", { name: "Clear", exact: true }).click();
     await expect.poll(() => readFile(one, "utf8")).not.toContain("deadline:");
-    await detail.getByRole("button", { name: "Properties" }).click();
+    await detail.getByRole("button", { name: "Expand properties" }).click();
     await inbox.click();
     await expect.poll(() => readFile(one, "utf8")).toContain("inbox: true");
     await inbox.click();
@@ -302,8 +302,11 @@ test("read grants show task details without write controls", async ({
     await expect(
       detail.getByRole("textbox", { name: "Task title" }),
     ).toHaveText("One-off task");
-    await detail.getByRole("button", { name: "Properties" }).click();
-    await expect(detail.getByText("Outside Inbox")).toBeVisible();
+    await detail.getByRole("button", { name: "Expand properties" }).click();
+    const inbox = detail.getByRole("checkbox", { name: "inbox value" });
+    await expect(inbox).toBeVisible();
+    await expect(inbox).toBeDisabled();
+    await expect(inbox).not.toBeChecked();
     await expect(
       view.getByRole("checkbox", { name: "Mark One-off task complete" }),
     ).toBeDisabled();

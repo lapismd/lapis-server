@@ -26,5 +26,9 @@ passes with a single detail border, a 512 px canvas, and 8 px of vertical
 list padding at the standard root font size.
 
 The packed Tasks story checks that double-click renders the native inline notes
-and metadata footer. It saves a schedule change from that footer, closes the
-row, and opens the native sidebar separately with the details button.
+and metadata footer. It saves a schedule change from that footer, dismisses the
+row on outside pointer and focus events, and opens the native sidebar through
+the details button. Coverage includes the one-rem Markdown side inset and
+Mira Properties styling. Hosted acceptance covers the Inbox control with write
+and read-only grants. At 820 px the compact Tasks preview opens a full-width
+detail pane and supports horizontal scrolling back to the list.

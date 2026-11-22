@@ -78,7 +78,11 @@
   });
 </script>
 
-<main class="conversation" aria-label="Example external agent conversation">
+<main
+  class="conversation"
+  class:tasks-conversation={kind === "tasks"}
+  aria-label="Example external agent conversation"
+>
   <header>
     <h1>External agent conversation</h1>
     <p>Storybook preview · Changes use sample data</p>
@@ -126,6 +130,9 @@
     font:
       14px/1.5 system-ui,
       sans-serif;
+  }
+  .tasks-conversation {
+    max-inline-size: 68rem;
   }
   h1 {
     font-size: 1rem;

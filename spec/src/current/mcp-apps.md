@@ -40,8 +40,12 @@ Both views use white document surfaces in light mode and icon-only Refresh
 controls with accessible labels. The note path uses a read-only breadcrumb and
 the embedded preview omits Mira's trailing reading padding. The Tasks list
 expands a row inline on double-click and opens the task's scoped controls in a
-scrollable right-hand column through the detail button. Storybook MUST render both packaged views in a sandboxed external conversation
-fixture with AppBridge and sample data.
+scrollable right-hand column through the detail button. The Tasks canvas
+fills the compact stage with a single pane and lets readers scroll back to the
+list. The right-hand Properties use the native Markdown component and expose
+only the Inbox edit allowed by the grant. Storybook MUST render both packaged
+views in a sandboxed external conversation fixture with AppBridge and sample
+data.
 
 For local review of a plugin release candidate, build and pack the Tasks
 package, extract the archive, then set `LAPIS_MCP_APP_PROVIDER_PACKAGE` to the
