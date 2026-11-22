@@ -49,6 +49,12 @@ impl From<SearchIndexingConfiguration> for Policy {
     }
 }
 impl Selection {
+    pub(in crate::services::indexing) fn markdown_selected(&self) -> Result<Option<bool>> {
+        let value = self.value.lock().map_err(|_| super::super::unavailable())?;
+        Ok((self.generation.load(Ordering::Acquire) != 0)
+            .then(|| value.as_ref().is_some_and(|policy| policy.markdown)))
+    }
+
     pub(super) fn snapshot(&self) -> Result<Option<(Policy, u64)>> {
         let value = self.value.lock().map_err(|_| super::super::unavailable())?;
         Ok(value

@@ -22,16 +22,15 @@ impl OperationProvider for NoteWrites {
     }
 
     fn invoke(&self, client: &Client, id: &str, request: &OperationRequest) -> Result<Value> {
+        if id == "search" {
+            return super::note_search::search(client, &request.input);
+        }
         let path = string(&request.input, "path")?;
-        validate_content_path(path)?;
-        let markdown = path.rsplit_once('.').is_some_and(|(_, suffix)| {
-            suffix.eq_ignore_ascii_case("md") || suffix.eq_ignore_ascii_case("markdown")
-        });
-        if !markdown || path.split('/').any(|part| part.starts_with('.')) {
-            return Err(failure(
-                ContentErrorCode::InvalidRequest,
-                "Expected a public Markdown note path",
-            ));
+        validate_note_path(path)?;
+        match id {
+            "frontmatter-get" => return super::frontmatter::read(client, path),
+            "frontmatter-patch" => return super::frontmatter::patch(client, path, &request.input),
+            _ => {}
         }
         let text = string(&request.input, "text")?;
         if text.len() > MAX_NOTE_WRITE_BYTES {
@@ -59,6 +58,20 @@ impl OperationProvider for NoteWrites {
     }
 }
 
+pub(super) fn validate_note_path(path: &str) -> Result<()> {
+    validate_content_path(path)?;
+    let markdown = path.rsplit_once('.').is_some_and(|(_, suffix)| {
+        suffix.eq_ignore_ascii_case("md") || suffix.eq_ignore_ascii_case("markdown")
+    });
+    if !markdown || path.split('/').any(|part| part.starts_with('.')) {
+        return Err(failure(
+            ContentErrorCode::InvalidRequest,
+            "Expected a public Markdown note path",
+        ));
+    }
+    Ok(())
+}
+
 fn string<'a>(input: &'a Value, field: &str) -> Result<&'a str> {
     input[field].as_str().ok_or_else(|| {
         failure(
@@ -68,7 +81,7 @@ fn string<'a>(input: &'a Value, field: &str) -> Result<&'a str> {
     })
 }
 
-fn write_error(error: Error) -> ContentError {
+pub(super) fn write_error(error: Error) -> ContentError {
     let (code, message) = match error.code() {
         ErrorCode::Busy => (ContentErrorCode::Busy, "An editor or native writer is busy"),
         ErrorCode::Conflict | ErrorCode::AlreadyExists => (

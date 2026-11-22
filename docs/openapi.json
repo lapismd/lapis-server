@@ -13327,7 +13327,16 @@
           "authorizationCode": {
             "authorizationUrl": "/oauth/authorize",
             "tokenUrl": "/oauth/token",
-            "scopes": { "mcp:read": "Read explicitly approved vaults" }
+            "scopes": {
+              "mcp:read": "Read explicitly approved vaults",
+              "offline_access": "Refresh this connection",
+              "tasks:read": "tasks:read",
+              "tasks:write": "tasks:write",
+              "skills:read": "skills:read",
+              "skills:write": "skills:write",
+              "notes:write": "Create, replace, and edit frontmatter in Markdown notes",
+              "notes:read": "Search notes and read frontmatter"
+            }
           }
         }
       }
@@ -15090,6 +15099,228 @@
             "description": "Strong version returned by note read",
             "required": true,
             "json": false
+          }
+        ]
+      }
+    },
+    {
+      "plugin_id": "notes",
+      "id": "search",
+      "version": 1,
+      "description": "Search saved Markdown in an admitted vault and report the retrieval mode",
+      "permission": "notes:read",
+      "effect": "read_only",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "folder": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "mode": {
+            "type": "string",
+            "enum": ["auto", "keyword", "semantic", "hybrid"],
+            "default": "auto"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          }
+        },
+        "required": ["query"],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["keyword", "semantic", "hybrid"]
+          },
+          "index_status": {
+            "type": "string",
+            "enum": ["ready", "indexing", "unavailable"]
+          },
+          "semantic_status": {
+            "type": "string",
+            "enum": ["ready", "disabled", "indexing", "unavailable"]
+          },
+          "hits": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string", "minLength": 1, "maxLength": 4096 },
+                "title": { "type": "string" },
+                "score": { "type": "number" },
+                "snippets": {
+                  "type": "array",
+                  "maxItems": 2,
+                  "items": { "type": "string", "maxLength": 240 }
+                }
+              },
+              "required": ["path", "title", "score", "snippets"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["mode", "index_status", "semantic_status", "hits"],
+        "additionalProperties": false
+      },
+      "help": {
+        "command": ["notes", "search"],
+        "summary": "Search saved Markdown in an admitted vault and report the retrieval mode",
+        "markdown": "Search one approved vault with a plain-text query of up to 4096 UTF-8 bytes. Auto uses hybrid retrieval when the owner-configured local embedding model and index are ready and otherwise uses keyword retrieval. Explicit semantic and hybrid modes require a ready model. The reply reports applied mode, index state and short snippets.",
+        "examples": [
+          "lapis notes search --vault <vault-id> --query \"release checklist\" --mode hybrid"
+        ],
+        "keywords": ["notes", "semantic", "search"],
+        "arguments": [
+          {
+            "flag": "query",
+            "field": "query",
+            "description": "Plain-text note search query",
+            "required": true,
+            "json": false
+          },
+          {
+            "flag": "folder",
+            "field": "folder",
+            "description": "Restrict to this vault-relative folder",
+            "required": false,
+            "json": false
+          },
+          {
+            "flag": "mode",
+            "field": "mode",
+            "description": "auto, keyword, semantic, or hybrid",
+            "required": false,
+            "json": false
+          },
+          {
+            "flag": "limit",
+            "field": "limit",
+            "description": "Maximum ranked notes (1-50, default 20)",
+            "required": false,
+            "json": true
+          }
+        ]
+      }
+    },
+    {
+      "plugin_id": "notes",
+      "id": "frontmatter-get",
+      "version": 1,
+      "description": "Read a saved Markdown note's frontmatter and strong version",
+      "permission": "notes:read",
+      "effect": "read_only",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 4096 }
+        },
+        "required": ["path"],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "version": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "properties": { "type": "object" }
+        },
+        "required": ["path", "version", "properties"],
+        "additionalProperties": false
+      },
+      "help": {
+        "command": ["notes", "frontmatter-get"],
+        "summary": "Read a saved Markdown note's frontmatter and strong version",
+        "markdown": "Read the selected note's saved YAML properties and version. A note without a header returns an empty properties map.",
+        "examples": [
+          "lapis notes frontmatter-get --vault <vault-id> --path Plan.md"
+        ],
+        "keywords": ["notes", "frontmatter", "properties"],
+        "arguments": [
+          {
+            "flag": "path",
+            "field": "path",
+            "description": "Public vault-relative Markdown path",
+            "required": true,
+            "json": false
+          }
+        ]
+      }
+    },
+    {
+      "plugin_id": "notes",
+      "id": "frontmatter-patch",
+      "version": 1,
+      "description": "Set and remove individual frontmatter properties on a version-matched saved note",
+      "permission": "notes:write",
+      "effect": "write",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "expected_version": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "set": { "type": "object", "maxProperties": 100 },
+          "remove": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1, "maxLength": 256 }
+          }
+        },
+        "required": ["path", "expected_version"],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 4096 },
+          "version": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "changed": { "type": "boolean" }
+        },
+        "required": ["path", "version", "changed"],
+        "additionalProperties": false
+      },
+      "help": {
+        "command": ["notes", "frontmatter-patch"],
+        "summary": "Set and remove individual frontmatter properties on a version-matched saved note",
+        "markdown": "Supply a strong version, and set and/or remove top-level YAML keys. Set accepts typed JSON, including explicit null. Remove takes an array of distinct keys. The Markdown body and unrelated YAML are preserved. Read the saved note before retrying a conflicted or uncertain write.",
+        "examples": [
+          "lapis notes frontmatter-patch --vault <vault-id> --invocation-id <uuid> --input-file patch.json"
+        ],
+        "keywords": ["notes", "frontmatter", "properties"],
+        "arguments": [
+          {
+            "flag": "path",
+            "field": "path",
+            "description": "Public vault-relative Markdown path",
+            "required": true,
+            "json": false
+          },
+          {
+            "flag": "if-version",
+            "field": "expected_version",
+            "description": "Strong version from a saved note read",
+            "required": true,
+            "json": false
+          },
+          {
+            "flag": "set",
+            "field": "set",
+            "description": "JSON object of properties to set",
+            "required": false,
+            "json": true
+          },
+          {
+            "flag": "remove",
+            "field": "remove",
+            "description": "JSON array of property names to remove",
+            "required": false,
+            "json": true
           }
         ]
       }

@@ -3,11 +3,15 @@ import assert from "node:assert/strict";
 import { spawn, execFile } from "node:child_process";
 import { once } from "node:events";
 import { promisify } from "node:util";
-import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve, join } from "node:path";
 import { createServer } from "node:net";
 import { randomUUID } from "node:crypto";
+import {
+  Client,
+  StreamableHTTPClientTransport,
+} from "@modelcontextprotocol/client";
 
 const run = promisify(execFile);
 const target = resolve(
@@ -18,7 +22,7 @@ const owner = "isolated-task-operation-owner-token-0123456789";
 
 test(
   "cold hosted Tasks and note operations share HTTP, MCP and CLI authority",
-  { timeout: 90000 },
+  { timeout: process.env.LAPIS_TEST_HOSTED_ONNX === "1" ? 300000 : 90000 },
   async () => {
     const root = await mkdtemp(join(tmpdir(), "lapis-operation-acceptance-"));
     const vault = join(root, "vault");
@@ -173,9 +177,9 @@ test(
         ownerOperations
           .filter((operation) => operation.plugin_id === "notes")
           .map((operation) => operation.id),
-        ["create", "replace"],
+        ["create", "frontmatter-get", "frontmatter-patch", "replace", "search"],
       );
-      assert.equal(ownerOperations.length, 22);
+      assert.equal(ownerOperations.length, 25);
       assert.equal(
         (await request("/api/v3/content-access", { enabled: true })).status,
         200,
@@ -373,6 +377,198 @@ test(
         savedNote.result.structuredContent.outcome.value.text,
         "# Updated notes",
       );
+      const noteRead = await issue(["notes:read"]);
+      const invokeNote = (token, operation, input) =>
+        request(
+          `/api/content/v1/vaults/${id}/plugins/notes/operations/${operation}`,
+          { protocol_version: 1, version: 1, request_id: randomUUID(), input },
+          token,
+          true,
+        );
+      const patch = {
+        path: notePath,
+        expected_version: replaced.outcome.value.version,
+        set: { tags: ["reviewed"], status: null },
+      };
+      assert.equal(
+        (await invokeNote(noteRead, "frontmatter-patch", patch)).status,
+        403,
+      );
+      const patched = await invokeNote(noteWrite, "frontmatter-patch", patch);
+      assert.equal(
+        patched.body.outcome.value.changed,
+        true,
+        JSON.stringify(patched),
+      );
+      assert.equal(
+        (await invokeNote(noteWrite, "frontmatter-patch", patch)).status,
+        409,
+      );
+      const properties = (
+        await invokeNote(noteRead, "frontmatter-get", { path: notePath })
+      ).body.outcome.value;
+      assert.deepEqual(properties.properties, {
+        tags: ["reviewed"],
+        status: null,
+      });
+      const throughMcp = (
+        await mcpCall("notes_frontmatter-get", { path: notePath }, noteRead)
+      ).result.structuredContent.outcome.value;
+      assert.deepEqual(throughMcp, properties);
+      const readTokenFile = join(root, "note-read-token");
+      await writeFile(readTokenFile, noteRead, { mode: 0o600 });
+      const notesCli = (...args) =>
+        run(join(target, "lapis"), [
+          "--target",
+          base,
+          "--token-file",
+          readTokenFile,
+          "--json",
+          "notes",
+          ...args,
+          "--vault",
+          id,
+        ]);
+      const cliFrontmatter = JSON.parse(
+        (await notesCli("frontmatter-get", "--path", notePath)).stdout,
+      );
+      assert.deepEqual(cliFrontmatter.outcome.value, properties);
+      const search = { query: "Updated notes", mode: "auto" };
+      assert.equal((await invokeNote(legacy, "search", search)).status, 403);
+      assert.equal(
+        (
+          await invokeNote(noteRead, "search", {
+            query: search.query,
+            folder: ".hidden",
+          })
+        ).status,
+        400,
+      );
+      let found;
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const result = await invokeNote(noteRead, "search", search);
+        assert.equal(result.status, 200, JSON.stringify(result.body));
+        found = result.body.outcome.value;
+        if (
+          found.index_status === "ready" &&
+          found.hits.some((hit) => hit.path === notePath)
+        )
+          break;
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      assert.equal(found.mode, "keyword");
+      assert.equal(found.semantic_status, "disabled");
+      assert.equal(found.hits[0]?.path, notePath);
+      const sdk = new Client(
+        { name: "Hosted Content acceptance", version: "1.0.0" },
+        { versionNegotiation: { mode: "auto" } },
+      );
+      await sdk.connect(
+        new StreamableHTTPClientTransport(new URL("/mcp", base), {
+          requestInit: { headers: { authorization: `Bearer ${noteRead}` } },
+        }),
+      );
+      try {
+        const { tools } = await sdk.listTools();
+        const names = tools.map(({ name }) => name);
+        assert.ok(names.includes("notes_search"));
+        assert.ok(names.includes("notes_frontmatter-get"));
+        assert.ok(!names.includes("notes_frontmatter-patch"));
+        const mcpSearch = await sdk.callTool({
+          name: "notes_search",
+          arguments: { vault_id: id, ...search },
+        });
+        assert.deepEqual(mcpSearch.structuredContent.outcome.value, found);
+      } finally {
+        await sdk.close();
+      }
+      const cliSearch = JSON.parse(
+        (await notesCli("search", "--query", search.query)).stdout,
+      );
+      assert.deepEqual(cliSearch.outcome.value, found);
+
+      const realModel = process.env.LAPIS_TEST_HOSTED_ONNX === "1";
+      const assertSemantic = async (credential) => {
+        const query = "Damaged car wheel assistance";
+        const search = (mode, folder) =>
+          invokeNote(credential, "search", { query, mode, folder });
+        let semantic;
+        for (let attempt = 0; attempt < 100; attempt++) {
+          const response = await search("semantic");
+          if (response.status === 200) {
+            semantic = response.body.outcome.value;
+            if (semantic.hits.some((hit) => hit.path === "Transport.md")) break;
+          } else {
+            assert.equal(
+              response.body.outcome.error.code,
+              "BUSY",
+              JSON.stringify(response.body),
+            );
+          }
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+        assert.equal(semantic?.mode, "semantic");
+        assert.equal(semantic.semantic_status, "ready");
+        assert.ok(semantic.hits.some((hit) => hit.path === "Transport.md"));
+        assert.equal(
+          (await search("keyword")).body.outcome.value.hits.length,
+          0,
+        );
+        const hybrid = (await search("hybrid")).body.outcome.value;
+        assert.equal(hybrid.mode, "hybrid");
+        assert.ok(hybrid.hits.some((hit) => hit.path === "Transport.md"));
+        assert.deepEqual(
+          (await search("semantic", "Missing")).body.outcome.value.hits,
+          [],
+        );
+      };
+      if (realModel) {
+        const fixture = JSON.parse(
+          await readFile(
+            new URL(
+              "../crates/lapis-app-core/tests/fixtures/search-semantic-model.json",
+              import.meta.url,
+            ),
+            "utf8",
+          ),
+        );
+        const configure = async (allowRemoteModels) => {
+          const response = await request(`/api/v3/clients/${client}/database`, {
+            method: "configureSearchEmbeddingProvider",
+            args: [
+              {
+                kind: "value",
+                value: {
+                  kind: "transformers-js",
+                  modelId: fixture.modelId,
+                  revision: fixture.revision,
+                  dtype: fixture.dtype,
+                  dimensions: 384,
+                  normalize: true,
+                  allowRemoteModels,
+                },
+              },
+            ],
+          });
+          assert.equal(response.status, 200, JSON.stringify(response.body));
+        };
+        const rebuild = async () => {
+          const response = await request(`/api/v3/clients/${client}/indexing`, {
+            kind: "refresh",
+            rebuild: true,
+          });
+          assert.equal(response.status, 200, JSON.stringify(response.body));
+        };
+        await writeFile(
+          join(vault, "Transport.md"),
+          "# Maintenance\n\nAn automobile needs a mechanic to replace a flat tire.",
+        );
+        await configure(true);
+        await rebuild();
+        await assertSemantic(noteRead);
+        await configure(false);
+        await rebuild();
+      }
       const result = await mcpCall("tasks_get", { path: "Task.md" });
       assert.equal(
         result.result.structuredContent.outcome.value.snapshot.version,
@@ -436,6 +632,7 @@ test(
         401,
       );
       const fresh = await issue(["tasks:read", "tasks:write"]);
+      if (realModel) await assertSemantic(await issue(["notes:read"]));
       const coldList = await invoke(fresh, "list", { limit: 50 });
       assert.equal(coldList.status, 200, JSON.stringify(coldList.body));
       assert.ok(Array.isArray(coldList.body.outcome.value.items));

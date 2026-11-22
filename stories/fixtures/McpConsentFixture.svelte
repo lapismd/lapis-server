@@ -26,6 +26,7 @@
         client_id: "storybook-example-client",
         callback_host: "client.example",
         permissions: [
+          "notes:read",
           "notes:write",
           "skills:read",
           "skills:write",

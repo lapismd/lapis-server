@@ -4,6 +4,20 @@ use crate::services::Result;
 use lapis_app_protocol::database::search::{records::SearchDocumentRecord, *};
 
 impl Database {
+    pub(crate) async fn search_notes(
+        &self,
+        query: &str,
+        options: retrieval::SearchOptions,
+    ) -> Result<super::NoteSearch> {
+        match self
+            .submit(Operation::Search(Action::Notes(query.into(), options)))
+            .await?
+        {
+            Output::Search(Value::Notes(results)) => Ok(results),
+            _ => unreachable!("matching worker output"),
+        }
+    }
+
     pub async fn search_documents(
         &self,
         query: &str,

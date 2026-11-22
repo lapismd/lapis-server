@@ -60,6 +60,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     let content = server.status().await;
     let operation_scopes = content["operation_permissions"].as_array().unwrap();
     assert!(operation_scopes.contains(&json!("tasks:write")));
+    assert!(operation_scopes.contains(&json!("notes:read")));
     assert!(operation_scopes.contains(&json!("notes:write")));
     let mut resource_scopes = vec![json!("mcp:read")];
     resource_scopes.extend_from_slice(operation_scopes);
@@ -172,7 +173,7 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         .header("x-lapis-csrf", csrf)
         .header("x-lapis-protocol", "3")
         .header("origin", ORIGIN)
-        .json(&json!({"approve":true,"vault_ids":[server.ids[0]],"permissions":["notes:write"]}))
+        .json(&json!({"approve":true,"vault_ids":[server.ids[0]],"permissions":["notes:read","notes:write"]}))
         .send()
         .await
         .unwrap()
@@ -214,7 +215,10 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
         .await
         .unwrap();
     assert_eq!(pair["expires_in"], 900);
-    assert_eq!(pair["scope"], "mcp:read offline_access notes:write");
+    assert_eq!(
+        pair["scope"],
+        "mcp:read offline_access notes:read notes:write"
+    );
     assert_eq!(
         credentials(&server, &code_fields(VERIFIER))
             .send()
@@ -268,7 +272,14 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     .await
     .unwrap();
     let tools = listed["result"]["tools"].as_array().unwrap();
-    for name in ["read_note", "notes_create", "notes_replace"] {
+    for name in [
+        "read_note",
+        "notes_create",
+        "notes_replace",
+        "notes_search",
+        "notes_frontmatter-get",
+        "notes_frontmatter-patch",
+    ] {
         assert!(tools.iter().any(|tool| tool["name"] == name), "{listed}");
     }
     assert!(tools.iter().all(|tool| {
@@ -326,6 +337,44 @@ async fn oidc_free_oauth_consent_pkce_and_rotating_refresh_survive_restart() {
     assert_eq!(
         created["result"]["structuredContent"]["outcome"]["value"]["path"],
         "OAuth.md"
+    );
+    let version = &created["result"]["structuredContent"]["outcome"]["value"]["version"];
+    let patched: Value = mcp(json!({
+        "jsonrpc":"2.0","id":5,"method":"tools/call","params":{
+            "name":"notes_frontmatter-patch","arguments":{
+              "vault_id":server.ids[0],"invocation_id":uuid::Uuid::new_v4(),
+              "path":"OAuth.md","expected_version":version,"set":{"status":"approved"}
+            }
+        }
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
+    assert_eq!(
+        patched["result"]["structuredContent"]["outcome"]["value"]["changed"], true,
+        "{patched}"
+    );
+    let frontmatter: Value = mcp(json!({
+        "jsonrpc":"2.0","id":6,"method":"tools/call","params":{
+            "name":"notes_frontmatter-get","arguments":{"vault_id":server.ids[0],"path":"OAuth.md"}
+        }
+    }))
+    .send()
+    .await
+    .unwrap()
+    .error_for_status()
+    .unwrap()
+    .json()
+    .await
+    .unwrap();
+    assert_eq!(
+        frontmatter["result"]["structuredContent"]["outcome"]["value"]["properties"],
+        json!({"status":"approved"})
     );
 
     let server = server.restart().await;
