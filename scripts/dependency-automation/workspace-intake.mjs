@@ -10,6 +10,7 @@ import {
 } from "./workspace-catalog.mjs";
 
 import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
+import { reviewedTasksMcpAppTransition } from "./reviewed-tasks-mcp-app-transition.mjs";
 import { reviewedNotesPeerTransition } from "./reviewed-notes-peer-transition.mjs";
 import { reviewedNotesCohortTransition } from "./reviewed-notes-cohort-transition.mjs";
 import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
@@ -248,6 +249,16 @@ export function verifyIntake({
       baseDocuments,
       changedFiles,
     }) ??
+    reviewedTasksMcpAppTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    }) ??
     reviewedTasksTransition({
       sourceSha,
       policyBytes,
@@ -333,6 +344,14 @@ export function verifyIntake({
             y.version === "0.2.1" &&
             x.declared === "^0.1.1" &&
             y.declared === "^0.2.1") ||
+          (reviewed?.tasksMcpAppTransition &&
+            path === "package.json" &&
+            type === "devDependencies" &&
+            name === "@lapis-notes/lapis-plugin-tasks" &&
+            x.version === "0.2.1" &&
+            y.version === "0.3.0" &&
+            x.declared === "^0.2.1" &&
+            y.declared === "^0.3.0") ||
           (reviewed?.appProfileTransition &&
             path === "package.json" &&
             type === "dependencies" &&

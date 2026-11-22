@@ -96,13 +96,16 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.8` | `0.13.8` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapismd/mira` | `~0.2.0` | `0.2.0` |
-| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
+| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.3.0` | `0.3.0` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `75d272c139e0edb3f6b60e7cbe560e3c636cc95e205664f356a5ce9082e7ec35`.
+Manifest, peer and integrity facts SHA256: `20afc36f3a2015d86551f1135ebb41324d83df1cbf855a145f5156bef2ebe1fd`.
 
 <!-- dependency-intake:server-registry:end -->
 
 The existing Server Vite build uses Vite PWA with its explicit Workbox Window
 peer to emit the install manifest and prompt-controlled app-shell worker.
 Neither dependency runs in the Rust container at runtime.
+
+The Tasks 0.3.0 package contributes its MCP App via its published manifest.
+Server resolves it through the frozen registry lock before staging its app.

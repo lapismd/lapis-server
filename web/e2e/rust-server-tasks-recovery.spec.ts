@@ -53,9 +53,12 @@ test("another App saving ordinary settings preserves interrupted native Task ref
         page.getByRole("alert").filter({ hasText: /unknown|inspect/i }),
       ).toBeVisible();
       expect(requestId).toEqual(expect.any(String));
-      await other
-        .getByRole("button", { name: "Collapse Tasks column", exact: true })
-        .click();
+      const navigation = other.getByRole("button", {
+        name: "Toggle Tasks navigation",
+        exact: true,
+      });
+      await expect(navigation).toBeVisible();
+      await navigation.click();
       await expect
         .poll(async () => {
           const value = await readFile(

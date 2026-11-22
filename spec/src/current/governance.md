@@ -76,8 +76,8 @@ unknown-outcome inspection. Desktop custody and enrolled participation remain
 open. New consent stories retain `visual-pending`; baselines are unchanged.
 
 Plugin operation qualification follows [SRV-OPS-001–004 and SRV-OPS-008](plugin-operations.md), including scoped note writes through the hosted MCP and CLI.
-Source registry checks do not qualify the Tasks provider or hosted delivery;
-the content automation backlog retains those acceptance boundaries.
+The Tasks MCP App dependency uses an exact source-reviewed registry receipt.
+Provider and hosted delivery qualification follow the content automation backlog. The hosted recovery case saves settings through the native Tasks navigation toggle and checks the interrupted operation.
 `pnpm test:plugin-operations` builds the production server and CLI, then exercises
 scoped Tasks reads/writes, MCP parity, lifecycle inspection and a cold restart
 using an isolated profile. This source gate does not publish packages or images.
