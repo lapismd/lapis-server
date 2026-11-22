@@ -37,3 +37,8 @@ The packed preview reproduced 0.6 effective opacity on the title, deadline and
 schedule badge when swipe-to-delete was unavailable. The Tasks plugin fix
 restores full opacity to all three, and the task title matches the native
 Lapis light theme's `#222222` color.
+
+The frozen registry install of Tasks 0.3.0 passes all six static Storybook
+checks and all four hosted AppBridge checks. After incorporating the MCP
+scope-negotiation update, the MCP HTTP, hosted content access and CLI stdio
+suites pass 11, 10 and 7 checks respectively.
