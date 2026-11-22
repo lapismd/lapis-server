@@ -1,5 +1,12 @@
 # @lapismd/lapis-server
 
+## 2.7.3
+
+### Patch Changes
+
+- [#138](https://github.com/lapismd/lapis-server/pull/138) [`6d5010d`](https://github.com/lapismd/lapis-server/commit/6d5010de7e5e33c3ac9458eb9c4cb4d843a04578) Thanks [@stevejuma](https://github.com/stevejuma)! - Advertise registered operation scopes in the MCP OAuth challenge so clients can request note, skill, and task access during sign-in. Owners choose which optional scopes to grant.
+  MCP capabilities now report the same credential-scoped operations as the tool list.
+
 ## 2.7.2
 
 ### Patch Changes
