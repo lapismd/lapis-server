@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.7.1
+
+### Patch Changes
+
+- [#133](https://github.com/lapismd/lapis-server/pull/133) [`56ec300`](https://github.com/lapismd/lapis-server/commit/56ec300e6cab11944f8a583d85eb6f60e1dc0ce9) Thanks [@stevejuma](https://github.com/stevejuma)! - Add Markdown note creation and conditional replacement to MCP, the Content API operation catalog, and the Lapis CLI. Owners can grant `notes:write` for selected vaults through OAuth consent or Content API and MCP settings.
+
 ## 2.7.0
 
 ### Minor Changes
