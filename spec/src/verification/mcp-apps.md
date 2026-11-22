@@ -43,6 +43,7 @@ checks and all four hosted AppBridge checks. After incorporating the MCP
 scope-negotiation update, the MCP HTTP, hosted content access and CLI stdio
 suites pass 11, 10 and 7 checks respectively.
 
-The static Notes preview, Tasks interactions and responsive canvas each have
-their own test budget. The responsive case opens at desktop width, resizes to
-the compact stage, reopens details and scrolls horizontally across both panes.
+The static Notes preview, inline Tasks, sidebar Properties, tracked completion
+and responsive canvas each have their own test budget. The responsive case
+opens at desktop width, resizes to the compact stage, reopens details and
+scrolls horizontally across both panes.
