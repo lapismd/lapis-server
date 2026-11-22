@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.8.1
+
+### Patch Changes
+
+- [#143](https://github.com/lapismd/lapis-server/pull/143) [`914b5bd`](https://github.com/lapismd/lapis-server/commit/914b5bd2b01ebb0899010582e0e70fbe597b58cb) Thanks [@stevejuma](https://github.com/stevejuma)! - Show the sign-in screen automatically when a hosted browser session expires.
+
 ## 2.8.0
 
 ### Minor Changes
