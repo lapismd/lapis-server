@@ -110,7 +110,12 @@ export function verifyCatalogTransition(
         // declaration evolution. Identity, integrity, registry shape and all
         // snapshot/direct-edge checks still run independently.
         const normalized = walk(row);
-        if (reviewed && key === "@lapis-notes/lapis-plugin-tasks@0.2.1") {
+        if (
+          reviewed?.paths.includes(
+            "scripts/dependency-automation/reviewed-tasks-transition.mjs",
+          ) &&
+          key === "@lapis-notes/lapis-plugin-tasks@0.2.1"
+        ) {
           normalized.peerDependencies = {
             ...normalized.peerDependencies,
             "@lapis-notes/api": "^0.2.3",

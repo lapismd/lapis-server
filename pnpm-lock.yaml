@@ -118,8 +118,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@lapis-notes/lapis-plugin-tasks':
-        specifier: ^0.2.1
-        version: 0.2.1(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.12(85527b0855397efc1e0c558d13448e3e))(@lapismd/design-core@0.13.8(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)
+        specifier: ^0.3.0
+        version: 0.3.0(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.12(85527b0855397efc1e0c558d13448e3e))(@lapismd/design-core@0.13.8(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)
       '@lapismd/spec-validator':
         specifier: 0.2.1
         version: 0.2.1
@@ -1628,8 +1628,8 @@ packages:
   '@lapis-notes/language-service@0.1.6':
     resolution: {integrity: sha512-RJB4eqpZV18toBdDJbTwzmmFRmPmY3wPxZ/d9mhvljfP1ZApRU3/Jh7wFsD11MVNq9AyLTvOlQh6L+LsayejZg==}
 
-  '@lapis-notes/lapis-plugin-tasks@0.2.1':
-    resolution: {integrity: sha512-qQirkbxAOR0x2r08yyd3D2pflO+LkEg8LL5DsWU/2nRg3ro4DwbYExaB5pJ8W7W99oQfD9ww11wZts9VdEQtlQ==}
+  '@lapis-notes/lapis-plugin-tasks@0.3.0':
+    resolution: {integrity: sha512-3VQ61myOxXc+g0/TckSgN7J87OADT6bGidkZ+3ju6LxVcaU6CovipWWwq1ysQtQ24uWtWb8KKk1b6xRlOl867A==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@codemirror/state': ^6.7.6
@@ -7550,7 +7550,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@lapis-notes/lapis-plugin-tasks@0.2.1(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.12(85527b0855397efc1e0c558d13448e3e))(@lapismd/design-core@0.13.8(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)':
+  '@lapis-notes/lapis-plugin-tasks@0.3.0(@codemirror/state@6.7.6)(@codemirror/view@6.43.15)(@lapis-notes/api@0.6.12(85527b0855397efc1e0c558d13448e3e))(@lapismd/design-core@0.13.8(svelte@5.56.10)(tailwindcss@4.3.3))(svelte@5.56.10)':
     dependencies:
       '@codemirror/state': 6.7.6
       '@codemirror/view': 6.43.15

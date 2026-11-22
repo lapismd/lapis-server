@@ -81,6 +81,12 @@ Server-owned terminal font assets use the ordinary npm manifest and lockfile pat
 
 The OpenAPI generation and drift scripts are source-owned checks and are separate from registry dependency intake.
 
+The Tasks MCP Apps intake authorizes one reviewed transition from Tasks 0.2.1
+to the published 0.3.0 package. It binds the first parent, the registry lock
+and manifest bytes, both canonical chapters and the complete changed-path set,
+including the hosted test that exercises the published navigation control.
+The ordinary compatible-patch policy continues to govern automated updates.
+
 <!-- dependency-intake:server-registry:start -->
 
 Current registry dependency coordinates; qualification remains separate.
@@ -102,10 +108,10 @@ Current registry dependency coordinates; qualification remains separate.
 | `package.json` (dependencies) | `@lapismd/design-core` | `^0.13.8` | `0.13.8` |
 | `package.json` (dependencies) | `@lapismd/jj-history` | `~0.1.0` | `0.1.0` |
 | `package.json` (dependencies) | `@lapismd/mira` | `~0.2.0` | `0.2.0` |
-| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.2.1` | `0.2.1` |
+| `package.json` (devDependencies) | `@lapis-notes/lapis-plugin-tasks` | `^0.3.0` | `0.3.0` |
 | `package.json` (devDependencies) | `@lapismd/spec-validator` | `0.2.1` | `0.2.1` |
 
-Manifest, peer and integrity facts SHA256: `75d272c139e0edb3f6b60e7cbe560e3c636cc95e205664f356a5ce9082e7ec35`.
+Manifest, peer and integrity facts SHA256: `20afc36f3a2015d86551f1135ebb41324d83df1cbf855a145f5156bef2ebe1fd`.
 
 <!-- dependency-intake:server-registry:end -->
 
