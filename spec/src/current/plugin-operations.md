@@ -70,6 +70,17 @@ Desktop, installable-provider and delivery work belongs to the content automatio
 - Cold reopen retains installation ownership and local-edit detection.
 - Interrupted writes cannot be mistaken for completed updates or automatically replayed.
 
+## SRV-OPS-008 — Scoped Markdown note writes
+
+**Requirement.** Hosted Content API, MCP and CLI MUST share native operations for absent-only Markdown creation and strong-version replacement under an explicit `notes:write` grant. The native writer MUST enforce the admitted vault, restricted public Markdown paths and existing editor fences.
+
+### Acceptance details
+
+- Create refuses any existing destination and replacement refuses missing, changed or dirty notes.
+- MCP approval and Content API credentials grant the registered tools only when the owner selects `notes:write`.
+- CLI `notes create` and `notes replace` discover the same descriptors and accept bounded Markdown input and explicit invocation identities.
+- Read-only grants and other write scopes confer no note mutation authority.
+
 ## Qualification and release intake
 
 Skill package preparation and CLI qualification follow [SRV-OPS-005–007](plugin-operations.md); source checks and consumer adoption remain separate.

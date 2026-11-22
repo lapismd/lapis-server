@@ -203,6 +203,13 @@ for (const renderer of ["static", "preview", "development"] as const) {
       await page
         .getByRole("textbox", { name: "Token label", exact: true })
         .fill("Persistent browser client");
+      await page
+        .getByRole("combobox", { name: "Token plugin permissions" })
+        .click();
+      await page
+        .getByRole("option", { name: "notes:write", exact: true })
+        .click();
+      await page.keyboard.press("Escape");
       const issuedPersonal = page.waitForResponse(
         (response) =>
           response.url().endsWith("/api/v3/content-access/tokens") &&
@@ -216,7 +223,7 @@ for (const renderer of ["static", "preview", "development"] as const) {
       expect(personalResponse.request().postDataJSON()).toMatchObject({
         label: "Persistent browser client",
         lifetime: renderer === "static" ? "never" : "days90",
-        permissions: [],
+        permissions: ["notes:write"],
       });
       await expect(
         page.getByRole("button", { name: /^Copy full personal access token:/ }),

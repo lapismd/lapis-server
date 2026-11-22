@@ -37,6 +37,7 @@ pub fn openapi_document() -> Value {
         .descriptors()
         .into_iter()
         .chain(lapis_app_core::skills::provider::SkillsProvider::default().descriptors())
+        .chain(lapis_app_core::services::content::NoteWrites.descriptors())
         .collect::<Vec<_>>();
     json!({
         "openapi":"3.1.0",

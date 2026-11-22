@@ -62,6 +62,7 @@
   let error = $state("");
   let busy = $state(false);
   const scopeDescriptions: Record<string, string> = {
+    "notes:write": "Create and replace Markdown notes",
     "skills:read": "List available and managed skills",
     "skills:write": "Install and update packaged skills",
     "tasks:read": "List, read, and inspect tasks",
@@ -193,12 +194,12 @@
             <div class="consent-section-label">
               <ShieldCheck aria-hidden="true" />
               <div>
-                <h2>Plugin permissions</h2>
+                <h2>Additional permissions</h2>
                 <p>Choose the optional actions this application can take.</p>
               </div>
             </div>
             <ScopePicker
-              label="Plugin permissions"
+              label="Additional permissions"
               searchLabel="Search permissions"
               choices={permissionChoices}
               selected={selectedPermissions}

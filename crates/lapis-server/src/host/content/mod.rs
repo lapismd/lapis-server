@@ -1,6 +1,8 @@
 mod lifetime;
 use super::{Host, Result, error};
-use lapis_app_core::services::content::{ContentGrants, ContentVault, IssuedContentGrant};
+use lapis_app_core::services::content::{
+    ContentGrants, ContentVault, IssuedContentGrant, NoteWrites,
+};
 use lapis_app_protocol::{
     ErrorCode, ServiceError,
     content::{ContentError, ContentErrorCode, ContentGrantRequest},
@@ -44,6 +46,9 @@ impl Access {
                 lapis_app_core::skills::provider::SkillsProvider::default().with_bundled(bundles),
             ))
             .expect("valid packaged skill descriptors");
+        registry
+            .register(Arc::new(NoteWrites))
+            .expect("Bundled note write operation catalog is valid");
         let operations = Arc::new(registry);
         Self {
             grants: Arc::new(ContentGrants::with_operations(operations.clone())),

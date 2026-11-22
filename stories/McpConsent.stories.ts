@@ -21,7 +21,7 @@ export const Consent: Story = {
     });
     const vaults = within(canvas.getByRole("listbox", { name: "Vaults" }));
     const permissions = within(
-      canvas.getByRole("listbox", { name: "Plugin permissions" }),
+      canvas.getByRole("listbox", { name: "Additional permissions" }),
     );
     const approve = canvas.getByRole("button", { name: "Allow access" });
     await expect(vaults.queryByRole("option", { name: "Archive" })).toBeNull();
@@ -36,7 +36,12 @@ export const Consent: Story = {
     await expect(canvas.getByRole("note")).toHaveTextContent(
       "You can disconnect this application",
     );
-    await expect(permissions.getAllByRole("option")).toHaveLength(4);
+    await expect(permissions.getAllByRole("option")).toHaveLength(5);
+    const noteWrite = permissions.getByRole("option", { name: /notes:write/ });
+    await expect(noteWrite).toHaveTextContent(
+      "Create and replace Markdown notes",
+    );
+    await expect(noteWrite).toHaveAttribute("aria-selected", "false");
 
     await userEvent.type(search, "proj");
     await expect(vaults.queryByRole("option", { name: "Notes" })).toBeNull();
@@ -52,7 +57,7 @@ export const Consent: Story = {
     await expect(approve).toBeEnabled();
 
     const permissionSearch = canvas.getByRole("combobox", {
-      name: "Plugin permissions",
+      name: "Additional permissions",
     });
     await userEvent.type(permissionSearch, "tasks");
     await expect(
@@ -82,6 +87,17 @@ export const Consent: Story = {
     await userEvent.click(
       canvas.getByRole("button", { name: "Remove tasks:write" }),
     );
+    await userEvent.clear(permissionSearch);
+    await userEvent.type(permissionSearch, "notes:write");
+    const option = await permissions.findByRole("option", {
+      name: /notes:write/,
+    });
+    await userEvent.click(option);
+    await expect(option).toHaveAttribute("aria-selected", "true");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Remove notes:write" }),
+    );
+    await expect(option).toHaveAttribute("aria-selected", "false");
     await userEvent.clear(permissionSearch);
   },
 };
