@@ -32,3 +32,8 @@ the details button. Coverage includes the one-rem Markdown side inset and
 Mira Properties styling. Hosted acceptance covers the Inbox control with write
 and read-only grants. At 820 px the compact Tasks preview opens a full-width
 detail pane and supports horizontal scrolling back to the list.
+
+The packed preview reproduced 0.6 effective opacity on the title, deadline and
+schedule badge when swipe-to-delete was unavailable. The Tasks plugin fix
+restores full opacity to all three, and the task title matches the native
+Lapis light theme's `#222222` color.

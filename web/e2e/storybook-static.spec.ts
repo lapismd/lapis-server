@@ -199,6 +199,24 @@ test("static MCP Apps show the packaged views and support sample interactions", 
     "",
   );
   const row = tasks.locator('[data-planner-task-id="prototype"]');
+  await expect(
+    row.getByText("Practice the prototype walkthrough"),
+  ).toBeVisible();
+  const rowOpacity = await row.evaluate((element) =>
+    [".task-line__title", ".task-line__due", ".task-when-picker__trigger"].map(
+      (selector) => {
+        let opacity = 1;
+        const text = element.querySelector(selector);
+        if (!text) throw new Error(`Missing task text: ${selector}`);
+        for (let node: Element | null = text; node; node = node.parentElement) {
+          opacity *= Number(getComputedStyle(node).opacity);
+          if (node === element) break;
+        }
+        return opacity;
+      },
+    ),
+  );
+  expect.soft(rowOpacity).toEqual([1, 1, 1]);
   const surface = tasks.getByRole("region", { name: "Selected task" });
   await expect(
     tasks.getByRole("progressbar", { name: "Checklist progress: 1 of 3" }),
