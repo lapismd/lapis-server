@@ -130,14 +130,14 @@ These are planned Lapis capabilities, not a claim of Obsidian compatibility.
 Every supported content operation should have HTTP, CLI and MCP coverage;
 desktop UI operations are separately advertised.
 
-| Delivery                | Operations                                                                                                                                                | Main dependency                                                           |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| First end-to-end slice  | Capabilities; admitted vault list; note list/read/create/conditional replace                                                                              | Existing client admission, file IO and versions                           |
-| Initial content release | Append/prepend; copy/move/rename; recoverable delete/list-trash/restore; folders; attachment upload/download                                           | Shared transforms, recovery storage and byte routes                        |
-| Knowledge workflows     | Outline, backlinks/outgoing/unresolved links; daily read/ensure/append; template list/read/apply                                                        | Qualified native metadata and daily services and shared settings           |
-| History workflows       | Version list/read/diff; explicitly guarded restore                                                                                                        | Qualified native repository/history owner and recovery checkpoints        |
-| Desktop conveniences    | Open/reveal note, active note, selection, allowlisted registered commands                                                                                 | Explicit window binding and live UI capability                            |
-| Deferred                | CLI TUI, bulk transactions, guided model setup, plugin installation/management, sync administration, publishing and arbitrary evaluation                 | Separate feature contracts and qualification                              |
+| Delivery                | Operations                                                                                                                               | Main dependency                                                    |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| First end-to-end slice  | Capabilities; admitted vault list; note list/read/create/conditional replace                                                             | Existing client admission, file IO and versions                    |
+| Initial content release | Append/prepend; copy/move/rename; recoverable delete/list-trash/restore; folders; attachment upload/download                             | Shared transforms, recovery storage and byte routes                |
+| Knowledge workflows     | Outline, backlinks/outgoing/unresolved links; daily read/ensure/append; template list/read/apply                                         | Qualified native metadata and daily services and shared settings   |
+| History workflows       | Version list/read/diff; explicitly guarded restore                                                                                       | Qualified native repository/history owner and recovery checkpoints |
+| Desktop conveniences    | Open/reveal note, active note, selection, allowlisted registered commands                                                                | Explicit window binding and live UI capability                     |
+| Deferred                | CLI TUI, bulk transactions, guided model setup, plugin installation/management, sync administration, publishing and arbitrary evaluation | Separate feature contracts and qualification                       |
 
 Daily dates/timezones and template rules use shared settings, not CLI-local
 defaults. Reads report index freshness and unavailable capabilities. Task edits
