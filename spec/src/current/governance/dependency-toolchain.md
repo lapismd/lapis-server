@@ -114,3 +114,5 @@ The MCP Apps build packages the official SDK and existing Svelte views as
 standalone documents outside the hosted Vite and PWA output.
 
 Storybook build, development and interaction lanes prepare those same documents.
+
+The qualified Server version command synchronizes the CLI Cargo manifest and lock entry after Changesets applies its release plan, before lockfile refresh and changelog formatting. The source-owned runtime receipt names that exact command; normal checks and archive jobs reject version drift.

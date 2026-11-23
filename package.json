@@ -34,7 +34,7 @@
     "test:demo": "node --test scripts/demo.test.mjs",
     "test:startup-budget": "cargo build -p lapis-server --locked && node scripts/test-startup-budget.mjs",
     "configure": "node scripts/configure.mjs",
-    "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
+    "release:version": "changeset version && node scripts/sync-cli-version.mjs && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write",
     "release:github": "node scripts/release-github.mjs",
     "test:hosted-ui": "vite build --config web/vite.config.ts && playwright test -c web/playwright.hosted-notes.config.ts",
     "build": "pnpm build:mcp-apps && vite build --config web/vite.config.ts",
@@ -47,7 +47,7 @@
     "test:hosted": "node scripts/test-hosted.mjs",
     "validate": "pnpm check && pnpm test && pnpm build && pnpm test:storybook && pnpm build-storybook && pnpm test:storybook:static && pnpm test:hosted && pnpm test:plugin-operations",
     "test:storybook:static": "playwright test -c web/playwright.storybook-static.config.ts",
-    "test:release-workflow": "node --test scripts/version-pr-auth.test.mjs",
+    "test:release-workflow": "node --test scripts/version-pr-auth.test.mjs scripts/cli-version.test.mjs",
     "check:dependency-intake": "node scripts/dependency-automation/check-canonical-intake.mjs",
     "test:dependency-intake": "node --test scripts/dependency-automation/*.test.mjs"
   },

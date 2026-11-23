@@ -122,3 +122,5 @@ The external MCP Apps SDK, its peers, and Vite single-file bundling are resolved
 from the Server lockfile. Their built output is served as scoped MCP resources.
 
 Storybook preparation uses the same frozen SDK and view build as Server packaging.
+
+The qualified Server version command synchronizes the CLI Cargo manifest and lock entry after Changesets applies its release plan, before lockfile refresh and changelog formatting. The source-owned runtime receipt names that exact command; normal checks and archive jobs reject version drift.

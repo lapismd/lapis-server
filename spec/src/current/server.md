@@ -353,4 +353,4 @@ admission and granted permissions.
 The CLI's [approved Desktop connection reuse](cli.md#approved-desktop-connection-reuse)
 resolves host-selected connection metadata before ordinary content, operation and
 MCP dispatch. The CLI never admits a vault or constructs a second native owner.
-Remote URL targets preserve their explicit credentials and transport boundaries.
+Remote URL targets preserve their explicit credentials and transport boundaries. CLI version custody follows [the CLI contract](cli.md#cli-release-identity).

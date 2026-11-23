@@ -8,3 +8,7 @@
 | SRV-CLI-004 | Partial | Four archive regressions and real Linux x64 extracted-archive install/execute/remove pass; multi-platform workflow/publication remain pending.                                                                                                                                      |
 
 [Desktop connection reuse](../../records/2026-11-23-desktop-connection-reuse.md) qualifies source CLI and official MCP subprocess access only; bundled and native distribution remain pending.
+
+[CLI version custody](../../records/2026-11-23-cli-release-version.md) qualifies
+Changesets/Cargo identity and archive drift refusal; native Homebrew formula
+acceptance remains a separately owned tap gate.
