@@ -69,3 +69,10 @@ login is required for CLI reads, contributed operations or stdio MCP. Stale,
 missing, revoked and expired access MUST fail without host or disk fallback.
 MCP stdout MUST remain protocol-only on discovery failure. Help and installation
 remain offline. Non-Unix private-file discovery is unsupported.
+
+## CLI release identity
+
+SRV-CLI-004 requires the executable's Cargo version and lock entry to match the
+Changesets-owned Server release version. Version preparation synchronizes both;
+normal checks and archive CI reject drift before building. A published older
+archive remains immutable even when its executable has an obsolete version.

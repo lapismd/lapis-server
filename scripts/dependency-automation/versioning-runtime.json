@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.34.5",
   "configSha256": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
   "scripts": {
-    "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write"
+    "release:version": "changeset version && node scripts/sync-cli-version.mjs && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write"
   },
   "files": {
     ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
