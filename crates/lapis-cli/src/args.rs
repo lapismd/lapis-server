@@ -12,7 +12,7 @@ use uuid::Uuid;
     about = "Read notes and invoke permitted plugin operations through a Lapis content host"
 )]
 pub(crate) struct Cli {
-    /// Exact HTTPS origin, or HTTP loopback for a local host.
+    /// Desktop (default), exact HTTPS origin, or HTTP loopback for a local host.
     #[arg(long, global = true)]
     pub target: Option<String>,
     /// Read the scoped bearer credential from a protected file (Unix).
@@ -66,7 +66,7 @@ pub(crate) enum Command {
 #[derive(Subcommand)]
 pub(crate) enum Mcp {
     Serve {
-        /// Reserve stdin/stdout for MCP; requires --token-file.
+        /// Reserve stdin/stdout for MCP; reuse Desktop access or supply --token-file.
         #[arg(long, required = true)]
         stdio: bool,
     },

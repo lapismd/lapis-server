@@ -210,3 +210,58 @@ async fn initialized_stdio_host_receives_packaged_mcp_apps() {
     client.cancel().await.unwrap();
     assert!(finish(child).await.status.success());
 }
+
+#[tokio::test]
+async fn desktop_discovery_connects_stdio_without_separate_credentials() {
+    use std::{fs, os::unix::fs::PermissionsExt, process::Stdio};
+    let f = Fixture::start().await;
+    let state = f.root.path().join(".local/state/lapis");
+    fs::create_dir_all(&state).unwrap();
+    let path = state.join("desktop.json");
+    fs::write(
+        &path,
+        serde_json::to_vec(&json!({
+            "version": 1, "origin": f.base, "token_file": f.root.path().join("token")
+        }))
+        .unwrap(),
+    )
+    .unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    let mut child = tokio::process::Command::new(env!("CARGO_BIN_EXE_lapis"))
+        .env("HOME", f.root.path())
+        .args(["mcp", "serve", "--stdio"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .kill_on_drop(true)
+        .spawn()
+        .unwrap();
+    let transport =
+        AsyncRwTransport::new_client(child.stdout.take().unwrap(), child.stdin.take().unwrap());
+    let client = ()
+        .serve_with_lifecycle(
+            transport,
+            ClientLifecycleMode::Discover {
+                preferred_versions: vec![ProtocolVersion::V_2026_07_28],
+            },
+        )
+        .await
+        .unwrap();
+    let note = client
+        .call_tool(
+            CallToolRequestParams::new("read_note").with_arguments(
+                json!({"vault_id": f.vault, "path":"note.md"})
+                    .as_object()
+                    .unwrap()
+                    .clone(),
+            ),
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        note.structured_content.unwrap()["outcome"]["value"]["text"],
+        SAVED
+    );
+    client.cancel().await.unwrap();
+    assert!(finish(child).await.status.success());
+}

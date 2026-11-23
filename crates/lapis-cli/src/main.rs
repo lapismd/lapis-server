@@ -1,6 +1,7 @@
 mod args;
 mod client;
 mod credential;
+mod desktop;
 mod errors;
 mod installation;
 mod mcp;
@@ -31,9 +32,28 @@ fn main() -> ExitCode {
 }
 
 async fn run() -> ExitCode {
-    let args = args::Cli::parse();
+    let mut args = args::Cli::parse();
     if let args::Command::Cli { command } = &args.command {
         return installation::run(command, args.json);
+    }
+    if let Err(error) = desktop::resolve(&mut args) {
+        let code = errors::exit_code(error.code);
+        let reply = ContentReply {
+            api_version: CONTENT_API_MAJOR,
+            request_id: Uuid::new_v4(),
+            outcome: ContentOutcome::Error { error },
+        };
+        // MCP stdout is exclusively reserved for protocol frames.
+        if matches!(args.command, args::Command::Mcp { .. }) {
+            use std::io::Write;
+            let _ = writeln!(
+                std::io::stderr(),
+                "Desktop access unavailable; enable access and create a credential in Desktop settings"
+            );
+        } else {
+            let _ = output::write(&reply, args.json);
+        }
+        return ExitCode::from(code);
     }
     if matches!(
         args.command,

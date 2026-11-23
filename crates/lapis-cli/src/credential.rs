@@ -26,7 +26,7 @@ pub(crate) fn read(args: &Cli) -> Result<String, ContentError> {
 }
 
 #[cfg(unix)]
-fn open(path: &Path) -> Result<std::fs::File, ContentError> {
+pub(crate) fn open(path: &Path) -> Result<std::fs::File, ContentError> {
     use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
     let flags = rustix::fs::OFlags::NOFOLLOW | rustix::fs::OFlags::NONBLOCK;
     let file = std::fs::OpenOptions::new()
@@ -46,6 +46,6 @@ fn open(path: &Path) -> Result<std::fs::File, ContentError> {
     Ok(file)
 }
 #[cfg(not(unix))]
-fn open(_: &Path) -> Result<std::fs::File, ContentError> {
+pub(crate) fn open(_: &Path) -> Result<std::fs::File, ContentError> {
     Err(failure(ContentErrorCode::Unsupported))
 }

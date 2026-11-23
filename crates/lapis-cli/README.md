@@ -87,3 +87,27 @@ and SHA-256. `--replace` explicitly switches between Lapis-owned sources;
 unrelated or modified binaries are still refused. A missing owned registration
 can be repaired by repeating installation. Setup mutations use an exclusive
 per-user lock.
+
+### Connect to an open Desktop
+
+Enable local access in Desktop's General → Advanced settings, then create a
+credential for the desired vaults, permissions and lifetime. Save its private
+file outside your vault. On Unix, Desktop remembers that approved connection
+locally; the CLI and MCP reuse it without a separate sign-in:
+
+```sh
+lapis vault list --json
+lapis --target desktop capabilities
+lapis --target desktop mcp serve --stdio
+```
+
+An MCP subprocess configuration can use command `lapis` with arguments
+`["--target", "desktop", "mcp", "serve", "--stdio"]`. The command must be a
+build containing Desktop discovery. An older Desktop-bundled CLI still requires
+explicit `--target <origin> --token-file <file>` arguments.
+
+Access expires or stops working after revocation, vault closure, disabling
+access or Desktop restart. Recreate the credential in Desktop to reconnect.
+Remote HTTPS targets still require an explicit credential; local credentials
+are never borrowed for a remote target. Windows discovery and durable approvals
+across restarts remain unqualified.
