@@ -53,3 +53,19 @@ assertion. The source-switch subprocess fixture prepares its alternate executabl
 in a completed child process. No executable writer descriptor remains in the
 multithreaded test runner where concurrent process creation could inherit it.
 This harness repair changes no production registration, credentials or lease.
+
+## Approved Desktop connection reuse
+
+The CLI MUST resolve `--target desktop` from the private Unix connection record
+`~/.local/state/lapis/desktop.json`. With no target or credential flags, Desktop
+is the default. Explicit URL targets retain their explicit credential source;
+o remote connection can inherit a Desktop credential. Discovery MUST accept
+only version 1, an exact `http://127.0.0.1:<port>` origin and an absolute
+credential-file path. Both files MUST pass existing owned/private/regular-file
+and no-symlink checks, and record decoding MUST be bounded to 16 KiB.
+
+The record selects an already approved, scoped host credential; no separate
+login is required for CLI reads, contributed operations or stdio MCP. Stale,
+missing, revoked and expired access MUST fail without host or disk fallback.
+MCP stdout MUST remain protocol-only on discovery failure. Help and installation
+remain offline. Non-Unix private-file discovery is unsupported.

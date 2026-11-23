@@ -349,3 +349,8 @@ Native terminal launch arguments/environment are supplied by the owning Server H
 The native operation registry supplies installed descriptors to the packaged
 MCP Apps loader. Transport discovery still checks each operation’s current
 admission and granted permissions.
+
+The CLI's [approved Desktop connection reuse](cli.md#approved-desktop-connection-reuse)
+resolves host-selected connection metadata before ordinary content, operation and
+MCP dispatch. The CLI never admits a vault or constructs a second native owner.
+Remote URL targets preserve their explicit credentials and transport boundaries.

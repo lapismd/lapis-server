@@ -224,6 +224,7 @@ async fn binary_reports_typed_errors_with_stable_exit_codes_and_clean_streams() 
 
 #[tokio::test]
 async fn help_and_invalid_targets_never_open_a_local_vault() {
+    let isolated_home = tempfile::tempdir().unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_lapis"))
         .arg("--help")
         .output()
@@ -242,6 +243,7 @@ async fn help_and_invalid_targets_never_open_a_local_vault() {
         assert!(!String::from_utf8_lossy(&output.stderr).contains("password"));
     }
     let output = Command::new(env!("CARGO_BIN_EXE_lapis"))
+        .env("HOME", isolated_home.path())
         .args(["--json", "capabilities"])
         .output()
         .await
@@ -251,3 +253,40 @@ async fn help_and_invalid_targets_never_open_a_local_vault() {
 
 #[path = "reads/security.rs"]
 mod security;
+
+#[cfg(unix)]
+#[tokio::test]
+async fn desktop_discovery_reuses_approved_access_without_login() {
+    use std::os::unix::fs::PermissionsExt;
+    let f = Fixture::start().await;
+    let state = f.root.path().join(".local/state/lapis");
+    fs::create_dir_all(&state).unwrap();
+    let token = f.root.path().join("token");
+    fs::write(&token, &f.token).unwrap();
+    fs::set_permissions(&token, fs::Permissions::from_mode(0o600)).unwrap();
+    let discovery = state.join("desktop.json");
+    fs::write(
+        &discovery,
+        serde_json::to_vec(&serde_json::json!({
+            "version":1,"origin":f.base,"token_file":token
+        }))
+        .unwrap(),
+    )
+    .unwrap();
+    fs::set_permissions(&discovery, fs::Permissions::from_mode(0o600)).unwrap();
+    let run = || {
+        let mut cmd = Command::new(env!("CARGO_BIN_EXE_lapis"));
+        cmd.env("HOME", f.root.path())
+            .args(["--target", "desktop", "--json", "vault", "list"]);
+        cmd
+    };
+    let output = run().output().await.unwrap();
+    assert!(output.status.success(), "{:?}", output);
+    assert!(String::from_utf8_lossy(&output.stdout).contains(&f.vault.to_string()));
+    f.grants.revoke(f.grant).unwrap();
+    assert!(!run().output().await.unwrap().status.success());
+    fs::set_permissions(&discovery, fs::Permissions::from_mode(0o644)).unwrap();
+    let output = run().output().await.unwrap();
+    assert!(!output.status.success());
+    assert!(!String::from_utf8_lossy(&output.stderr).contains(&f.token));
+}

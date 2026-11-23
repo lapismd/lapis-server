@@ -397,4 +397,4 @@ the CLI, MCP or either host from the end goal.
 CLI source setup, host UI ports, Linux x64 archives and the actual runtime image
 are [qualified locally](../../records/2026-11-14-bundled-cli.md). UI registry
 intake is complete; remaining platform artifacts and governed CLI publication
-remain release gates.
+remain release gates. [Approved Desktop discovery](../../records/2026-11-23-desktop-connection-reuse.md) now has CLI subprocess and official SDK stdio evidence. Desktop source mounts the shared MCP router; bundled CLI intake and cold native consent remain open, alongside durable approvals, Windows custody and remote OAuth.
