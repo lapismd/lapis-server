@@ -164,6 +164,9 @@ test("expired authentication retains only the vault preference until the owner s
 }) => {
   await page.goto(origin);
   await signInHostedOwner(page, password);
+  const admitted = page.waitForResponse((response) =>
+    response.url().endsWith(`/vaults/${runtime.vaultId}/clients`),
+  );
   await page
     .getByRole("button", {
       name: "Open Rust vault owner · server-hosted",
@@ -171,14 +174,73 @@ test("expired authentication retains only the vault preference until the owner s
     })
     .click();
   await expect(page.locator('[data-notes-session-ready="true"]')).toBeVisible();
+  const originalClient = (await (await admitted).json()).client_id;
+  await page.locator('button[data-path="Note.md"]').click();
+  await expect(
+    page.locator(".cm-content[contenteditable=true]").last(),
+  ).toContainText("Native hosted note");
+  const originalCookies = await context.cookies(origin);
+  const originalAuth = await page.request.get(`${origin}/api/v3/auth/current`, {
+    headers: { "x-lapis-protocol": "3" },
+  });
+  const originalCsrf = (await originalAuth.json()).csrf_token;
   await context.clearCookies();
   await page.reload();
   await expect(page.getByLabel("Username")).toBeVisible();
   await page.getByLabel("Username").fill("owner");
   await page.getByLabel("Password").fill(password);
+  const readmitted = page.waitForResponse((response) =>
+    response.url().endsWith(`/vaults/${runtime.vaultId}/clients`),
+  );
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page.locator('[data-notes-session-ready="true"]')).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Your vaults", exact: true }),
   ).not.toBeVisible();
+  expect((await (await readmitted).json()).client_id).not.toBe(originalClient);
+
+  // Cookie loss keeps the old browser's native claim. Recover that test-owned
+  // client explicitly before the existing guarded logout and shutdown.
+  const current = await page.request.get(`${origin}/api/v3/auth/current`, {
+    headers: { "x-lapis-protocol": "3" },
+  });
+  const { csrf_token } = await current.json();
+  const retired = await page.request.delete(
+    `${origin}/api/v3/clients/${originalClient}`,
+    {
+      headers: { "x-lapis-protocol": "3", "x-lapis-csrf": csrf_token, origin },
+    },
+  );
+  expect(retired.status()).toBe(403);
+  const ownedRetirement = await page.request.delete(
+    `${origin}/api/v3/clients/${originalClient}`,
+    {
+      headers: {
+        "x-lapis-protocol": "3",
+        "x-lapis-csrf": originalCsrf,
+        origin,
+        cookie: originalCookies
+          .map(({ name, value }) => `${name}=${value}`)
+          .join("; "),
+      },
+    },
+  );
+  expect(ownedRetirement.status()).toBe(204);
+  const problem = await showEditingProblems(page);
+  await expect(problem).toBeVisible();
+  await problem.click({ button: "right" });
+  await page
+    .getByRole("menuitem", { name: "Review saved file", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /^Current view: preview/ }),
+  ).toBeVisible();
+  expect(await readFile(join(runtime.vault, "Note.md"), "utf8")).toContain(
+    "Native hosted note",
+  );
+  await problem.click({ button: "right" });
+  await page
+    .getByRole("menuitem", { name: "Discard editing claim", exact: true })
+    .click();
+  await expect(problem).toHaveCount(0);
 });
