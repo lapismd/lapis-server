@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.9.1
+
+### Patch Changes
+
+- [#147](https://github.com/lapismd/lapis-server/pull/147) [`b69ca71`](https://github.com/lapismd/lapis-server/commit/b69ca710f2140c5ac906fc8ce5f3e10f1aa7261c) Thanks [@stevejuma](https://github.com/stevejuma)! - Reuse approved local Desktop access for CLI commands and stdio MCP without a separate sign-in. Validate private discovery records and preserve explicit remote credentials, offline help and protocol-only MCP output.
+
 ## 2.9.0
 
 ### Minor Changes
