@@ -1,5 +1,11 @@
 # @lapismd/lapis-server
 
+## 2.9.2
+
+### Patch Changes
+
+- [#149](https://github.com/lapismd/lapis-server/pull/149) [`cadc20b`](https://github.com/lapismd/lapis-server/commit/cadc20b8200e3388486549509a00981b6c164eb6) Thanks [@stevejuma](https://github.com/stevejuma)! - Synchronize the CLI executable version with the Server release and reject mismatched CLI archives before building for Homebrew distribution.
+
 ## 2.9.1
 
 ### Patch Changes
