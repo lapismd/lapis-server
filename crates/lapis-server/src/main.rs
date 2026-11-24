@@ -3,15 +3,18 @@
 use lapis_server::{
     config::Config,
     control::bootstrap,
+    credentials::KEY_FILE_ENV,
     host::{Host, RemoteInstallation},
     http,
     lifecycle::{Shutdown, server::serve},
 };
 use std::{net::SocketAddr, sync::Arc};
+mod startup_credential;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut args = std::env::args().skip(1);
+    let mut args = std::env::args().skip(1).peekable();
+    let (key_from_environment, credential_key) = startup_credential::receive(&mut args)?;
     let config_path = args
         .next()
         .ok_or("Usage: lapis-server <config.json> [listen-address]")?;
@@ -46,6 +49,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
     let origin =
         std::env::var("LAPIS_SERVER_ORIGIN").unwrap_or_else(|_| format!("http://{address}"));
+    let key_file = std::env::var_os(KEY_FILE_ENV).map(std::path::PathBuf::from);
+    let private_key_path = key_file.as_ref().and_then(|path| path.canonicalize().ok());
     let mut host = match std::env::var_os("LAPIS_SERVER_DATA_ROOT") {
         Some(profile) => {
             let agents = match std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG") {
@@ -58,7 +63,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 agents,
                 std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1"),
                 RemoteInstallation {
-                    key_file: std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE").map(Into::into),
+                    key_file: key_file.clone(),
+                    credential_key,
                     known_hosts: std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").map(Into::into),
                     github_client: std::env::var("LAPIS_SERVER_GITHUB_CLIENT_ID").ok(),
                     ssh_available: std::process::Command::new("ssh")
@@ -73,7 +79,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         None => {
             if std::env::var_os("LAPIS_SERVER_AGENTS_CONFIG").is_some()
                 || std::env::var("LAPIS_SERVER_NATIVE_HISTORY").as_deref() == Ok("1")
-                || std::env::var_os("LAPIS_SERVER_REPOSITORY_KEY_FILE").is_some()
+                || key_file.is_some()
+                || key_from_environment
                 || std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").is_some()
                 || std::env::var_os("LAPIS_SERVER_GITHUB_CLIENT_ID").is_some()
             {
@@ -94,6 +101,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .filter_map(std::env::var_os)
                 .map(std::path::PathBuf::from),
         );
+        excluded.extend(private_key_path.iter().cloned());
         host = host.with_mcp_apps(std::path::Path::new(&root), &excluded)?;
     }
     let host = Arc::new(host);
@@ -110,13 +118,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "LAPIS_SERVER_DATA_ROOT",
                 "LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE",
                 "LAPIS_SERVER_AGENTS_CONFIG",
-                "LAPIS_SERVER_REPOSITORY_KEY_FILE",
                 "LAPIS_SERVER_SSH_KNOWN_HOSTS",
             ] {
                 if let Some(path) = std::env::var_os(key) {
                     private.push(path.into());
                 }
             }
+            private.extend(private_key_path);
             Some(http::StaticWeb::open(
                 std::path::Path::new(&root),
                 &private,

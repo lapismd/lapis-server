@@ -8,17 +8,8 @@ generation; another session cannot reuse an attachment. A file-only server witho
 
 ## Provision token storage
 
-Mount a file containing exactly 32 random bytes outside both `/data` and all
-configured vaults, readable only by the server's runtime identity. For example,
-create a private operator directory and run `openssl rand -out repository.key 32`
-there. Set its ownership/permissions for the unprivileged container user, then
-mount it read-only at `/run/secrets/lapis_repository_key`. Never print the key or
-put its bytes in an environment variable, Compose file or source control.
-
-Set `LAPIS_SERVER_REPOSITORY_KEY_FILE=/run/secrets/lapis_repository_key` in the
-server environment. Compose operators can add a file-backed secret and this
-variable through their deployment override; the local demo does not silently
-create or enable a key. Optional `LAPIS_SERVER_GITHUB_CLIENT_ID` supplies the
+Configure one Server credential key using [the hosted deployment guide](hosted-server.md#credential-key).
+Optional `LAPIS_SERVER_GITHUB_CLIENT_ID` supplies the
 operator's GitHub OAuth application client ID for device sign-in. Without it,
 raw HTTPS tokens and GitHub/Forgejo token accounts remain available.
 

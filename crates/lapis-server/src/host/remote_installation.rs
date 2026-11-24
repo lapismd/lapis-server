@@ -2,7 +2,10 @@
 mod storage;
 #[cfg(test)]
 mod tests;
-use crate::{config::Config, credentials::CredentialStore};
+use crate::{
+    config::Config,
+    credentials::{CredentialKey, CredentialStore},
+};
 use lapis_app_core::{services::RemoteStorage, vault::VaultRoot};
 use std::{io, path::Path, path::PathBuf, sync::Arc};
 
@@ -10,6 +13,7 @@ use std::{io, path::Path, path::PathBuf, sync::Arc};
 #[derive(Default)]
 pub struct RemoteInstallation {
     pub key_file: Option<PathBuf>,
+    pub credential_key: Option<CredentialKey>,
     pub known_hosts: Option<PathBuf>,
     pub github_client: Option<String>,
     pub ssh_available: bool,
@@ -52,11 +56,16 @@ impl RemoteInstallation {
         let secrets = storage::child(&root, "credentials")?;
         let accounts = storage::child(&root, "accounts")?;
         let selection = storage::child(&root, "selection")?;
-        let store = Arc::new(CredentialStore::open(
-            secrets.path(),
-            identity.installation,
-            self.key_file.as_deref(),
-        ));
+        let store = Arc::new(match self.credential_key.as_ref() {
+            Some(key) => {
+                CredentialStore::open_with_key(secrets.path(), identity.installation, Some(key))
+            }
+            None => CredentialStore::open(
+                secrets.path(),
+                identity.installation,
+                self.key_file.as_deref(),
+            ),
+        });
         let credentials = store.remote_credentials(
             identity.owner,
             accounts.path().into(),

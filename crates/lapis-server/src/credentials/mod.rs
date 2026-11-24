@@ -6,16 +6,20 @@ mod forge_adapter;
 mod forge_adapter_tests;
 #[cfg(test)]
 mod forge_tests;
+mod key;
 mod record;
 mod remotes;
 #[cfg(test)]
 mod remotes_tests;
+mod scoped;
 mod sealed;
 #[cfg(test)]
 mod tests;
 use cap_std::fs::MetadataExt as _;
+pub use key::{CredentialKey, KEY_ENV, KEY_FILE_ENV};
 use lapis_app_core::vault::{VaultRoot, WriteOptions};
 pub use record::{CredentialSummary, TokenInput};
+pub use scoped::CredentialNamespace;
 use sealed::{Cipher, unavailable};
 use std::{
     fs::File,
@@ -48,6 +52,23 @@ impl CredentialStore {
     /// The caller creates an installation-private 0700 directory outside vaults.
     /// Missing/incorrect keys refuse the entire store, including empty inventory.
     pub fn open(directory: &Path, installation: Uuid, key: Option<&Path>) -> Self {
+        let key = key.and_then(|path| {
+            if path
+                .canonicalize()
+                .ok()?
+                .starts_with(directory.canonicalize().ok()?)
+            {
+                return None;
+            }
+            CredentialKey::from_file(path)
+        });
+        Self::open_with_key(directory, installation, key.as_ref())
+    }
+    pub fn open_with_key(
+        directory: &Path,
+        installation: Uuid,
+        key: Option<&CredentialKey>,
+    ) -> Self {
         Self(Unlocked::open(directory, installation, key).ok())
     }
     pub fn available(&self) -> bool {
@@ -127,15 +148,10 @@ impl CredentialStore {
     }
 }
 impl Unlocked {
-    fn open(directory: &Path, installation: Uuid, key: Option<&Path>) -> io::Result<Self> {
-        let cipher = Cipher::load(key.ok_or_else(unavailable)?, installation)?;
+    fn open(directory: &Path, installation: Uuid, key: Option<&CredentialKey>) -> io::Result<Self> {
+        let cipher = Cipher::new(key.ok_or_else(unavailable)?, installation)?;
         let root = VaultRoot::open(directory).map_err(|_| unavailable())?;
-        if root.directory_handle()?.dir_metadata()?.mode() & 0o077 != 0
-            || key
-                .ok_or_else(unavailable)?
-                .canonicalize()?
-                .starts_with(root.path())
-        {
+        if root.directory_handle()?.dir_metadata()?.mode() & 0o077 != 0 {
             return Err(unavailable());
         }
         match root.create_file(".custody.lock", &b""[..], &WriteOptions::default()) {
@@ -154,7 +170,8 @@ impl Unlocked {
         };
         if store.root.stat(".key-check")?.is_none() {
             // Existing records with no verifier never authorize a fresh key.
-            if !store.ids()?.is_empty() || store.has_forge_records()? {
+            if !store.ids()?.is_empty() || store.has_forge_records()? || store.scoped_count()? != 0
+            {
                 return Err(unavailable());
             }
             let bytes = store.cipher.seal(Uuid::nil(), Uuid::nil(), CHECK)?;
@@ -193,7 +210,7 @@ impl Unlocked {
         self.verify()?;
         let mut result = Vec::new();
         for (index, entry) in self.root.directory_handle()?.entries()?.enumerate() {
-            if index >= LIMIT + 3 {
+            if index >= LIMIT + scoped::MAX_RECORDS + 4 {
                 return Err(unavailable());
             }
             let entry = entry?;
@@ -203,6 +220,9 @@ impl Unlocked {
                 continue;
             }
             if name == ".forge" && entry.file_type()?.is_dir() {
+                continue;
+            }
+            if scoped::is_record_name(&name) && entry.file_type()?.is_file() {
                 continue;
             }
             let ids = name.strip_suffix(".sealed").ok_or_else(unavailable)?;
@@ -215,6 +235,9 @@ impl Unlocked {
                 return Err(unavailable());
             }
             result.push((owner, id));
+            if result.len() > LIMIT {
+                return Err(unavailable());
+            }
         }
         result.sort();
         Ok(result)

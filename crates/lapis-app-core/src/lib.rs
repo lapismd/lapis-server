@@ -4,6 +4,7 @@
 
 pub mod archive;
 pub mod context;
+pub mod credentials;
 pub mod database;
 pub mod embedding;
 pub mod plugins;

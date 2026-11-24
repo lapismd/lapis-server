@@ -1,9 +1,9 @@
 # Repository credential verification
 
-| ID          | Status  | Evidence                                                                                                                                                                                                         |
-| ----------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SRV-SRV-015 | Partial | [Native custody source](../../records/2026-11-15-repository-credential-custody.md): encrypted restart, wrong/missing keys and tamper tests pass; host adoption and cold acceptance pending.                      |
-| SRV-SRV-016 | Partial | [Native custody source](../../records/2026-11-15-repository-credential-custody.md): opaque references, replacement/forgetting and owner/endpoint isolation pass; admitted HTTP/UI and export acceptance pending. |
+| ID          | Status  | Evidence                                                                                                                                                                                                                      |
+| ----------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SRV-SRV-015 | Partial | [Repository custody baseline](../../records/2026-11-15-repository-credential-custody.md). Shared scoped backend, equivalent environment/file startup, child environment checks and cold host acceptance require new evidence. |
+| SRV-SRV-016 | Partial | [Native custody source](../../records/2026-11-15-repository-credential-custody.md): opaque references, replacement/forgetting and owner/endpoint isolation pass; admitted HTTP/UI and export acceptance pending.              |
 
 The [shared Core/Protocol source receipt](../../records/2026-11-15-shared-remotes-core-protocol.md)
 qualifies version-one backup selection extraction and generated path-free remotes

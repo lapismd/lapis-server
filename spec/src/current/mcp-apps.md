@@ -1,5 +1,7 @@
 # MCP Apps
 
+The installation-owned bundle directory excludes mounted Server credential keys.
+
 ## SRV-MCP-001 — Scoped application resources
 
 **Requirement.** The hosted MCP adapter MUST register packaged, versioned

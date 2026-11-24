@@ -8,6 +8,36 @@ and the existing Web application. It is not
 This page describes how to run a published image. Publishing the image is a
 separate step and is not part of preparing the package release pull request.
 
+## Credential key
+
+Configure one credential key for the installation. Without a key, the server
+starts with credential storage locked. Supplying both settings fails startup.
+
+For Coolify, generate a key once with `openssl rand -base64 32`. Save the result
+as the runtime environment variable `LAPIS_SERVER_CREDENTIAL_KEY`. Reference it
+from the existing Server service in Compose without committing the value.
+
+```yaml
+environment:
+  LAPIS_SERVER_CREDENTIAL_KEY: ${LAPIS_SERVER_CREDENTIAL_KEY}
+```
+
+For a file-based deployment, generate the binary key once with
+`openssl rand -out credential.key 32`. Place it on the host outside the profile
+and vaults, and give the container's runtime identity read access. Add the file
+mount and setting to the existing Server service.
+
+```yaml
+environment:
+  LAPIS_SERVER_CREDENTIAL_KEY_FILE: /run/secrets/lapis_credential_key
+volumes:
+  - /etc/lapis/credential.key:/run/secrets/lapis_credential_key:ro
+```
+
+Preserve the original key across redeployments and back it up separately from
+`/data`. Switching delivery methods requires the same 32 bytes. The file holds
+raw bytes and the runtime variable holds their standard Base64 encoding.
+
 ## Run
 
 From a `lapismd/lapis-server` checkout:
