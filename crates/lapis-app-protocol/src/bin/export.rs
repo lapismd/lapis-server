@@ -1,3 +1,4 @@
+mod background_jobs;
 mod content;
 mod contracts;
 pub use contracts::Contracts;
@@ -221,6 +222,7 @@ fn main() {
         content::constants(),
         content::declarations(&config)
             .iter()
+            .chain(background_jobs::declarations(&config).iter())
             .chain(operations::declarations(&config).iter())
             .chain(history_index::declarations(&config).iter())
             .chain(repository_backup::declarations(&config).iter())
@@ -244,6 +246,6 @@ fn main() {
     let database_typescript = database::typescript(&config);
     println!(
         "{}",
-        json!({"schema": schema, "typescript": typescript, "databaseTypescript": database_typescript, "turnTypescript": turns::typescript(&config), "queueTypescript": queues::typescript(&config), "participantTypescript": participants::typescript(&config), "indexingTypescript": indexing::typescript(&config), "historyIndexTypescript": history_index::typescript(&config), "tasksTypescript": native_tasks::typescript(&config), "editingIntentTypescript": editing_intents::typescript(&config)})
+        json!({"schema": schema, "typescript": typescript, "databaseTypescript": database_typescript, "backgroundJobsTypescript": background_jobs::typescript(&config), "turnTypescript": turns::typescript(&config), "queueTypescript": queues::typescript(&config), "participantTypescript": participants::typescript(&config), "indexingTypescript": indexing::typescript(&config), "historyIndexTypescript": history_index::typescript(&config), "tasksTypescript": native_tasks::typescript(&config), "editingIntentTypescript": editing_intents::typescript(&config)})
     );
 }

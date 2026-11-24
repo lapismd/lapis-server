@@ -9,6 +9,7 @@ const rootPackages = [
   "lapis-cli",
   "lapis-content-http",
   "lapis-content-mcp",
+  "lapis-plugin-jobs",
   "lapis-server",
 ];
 

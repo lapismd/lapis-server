@@ -6,6 +6,7 @@ use ts_rs::TS;
 use uuid::Uuid;
 
 pub mod browser;
+pub use lapis_plugin_jobs as background_jobs;
 pub mod content;
 pub mod database;
 pub mod editing_intents;
@@ -55,6 +56,9 @@ pub enum ExpectedVersion {
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 #[ts(tag = "kind", rename_all = "snake_case")]
 pub enum VaultCommand {
+    PluginJobs {
+        command: background_jobs::JobCommand,
+    },
     EditingIntents {
         command: editing_intents::EditingIntentCommand,
     },
@@ -153,6 +157,9 @@ pub struct TextSnapshot {
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 #[ts(tag = "kind", rename_all = "snake_case")]
 pub enum VaultValue {
+    PluginJobs {
+        snapshot: Box<background_jobs::JobSnapshot>,
+    },
     EditingIntents {
         value: editing_intents::EditingIntentValue,
     },
