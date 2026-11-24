@@ -127,6 +127,12 @@ export function verifyCatalogTransition(
             ...normalized.peerDependencies,
             "@lapis-notes/ui": "<reviewed-notes-ui-peer>",
           };
+        if (reviewed?.backgroundJobsTransition && name === "@lapis-notes/api") {
+          normalized.peerDependencies = {
+            ...normalized.peerDependencies,
+            i18next: "<reviewed-i18next-peer>",
+          };
+        }
         if (policy.dependencies.includes(name))
           normalized.resolution = {
             ...normalized.resolution,

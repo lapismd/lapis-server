@@ -173,7 +173,6 @@ for (const status of [401, 403]) {
     const runtime = new RustServerRuntime(root, repository, origin, password);
     try {
       await runtime.start();
-      await page.clock.install();
       await page.goto(origin);
       await signInHostedOwner(page, password);
       await page.getByRole("button", { name: /^Open Rust vault/ }).click();
@@ -209,12 +208,12 @@ for (const status of [401, 403]) {
         },
         { times: 1 },
       );
+      // Real heartbeat time preserves the five-second network probe deadline.
       const denied = page.waitForResponse(
         (response) =>
           response.url().includes("/heartbeat") && response.status() === status,
       );
       await context.clearCookies();
-      await page.clock.fastForward(30_000);
       await denied;
 
       await expect(
