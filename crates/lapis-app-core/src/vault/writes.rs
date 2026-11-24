@@ -1,5 +1,8 @@
 use super::conditional::WriteCondition;
+#[cfg(target_os = "android")]
+use super::staged::StagedFile;
 use super::{MAX_FILE_BYTES, VaultRoot, invalid, sync_directory};
+#[cfg(not(target_os = "android"))]
 use cap_tempfile::TempFile;
 use serde::Deserialize;
 use std::io::{self, Read};
@@ -68,22 +71,27 @@ impl VaultRoot {
             Err(error) if error.kind() == io::ErrorKind::NotFound => None,
             Err(error) => return Err(error),
         };
+        // Android app sandboxes can deny publication of an unnamed tempfile.
+        // Stage a named sibling there so the final replacement uses renameat.
+        #[cfg(target_os = "android")]
+        let mut staged = StagedFile::new(&parent)?;
+        #[cfg(target_os = "android")]
+        let file = &mut staged.file;
+        #[cfg(not(target_os = "android"))]
         let mut staged = TempFile::new(&parent)?;
+        #[cfg(not(target_os = "android"))]
+        let file = staged.as_file_mut();
         if let Some(original) = original {
-            staged.as_file().set_permissions(original.permissions())?;
+            file.set_permissions(original.permissions())?;
         }
-        let count = io::copy(&mut source.take(MAX_FILE_BYTES + 1), &mut staged)?;
+        let count = io::copy(&mut source.take(MAX_FILE_BYTES + 1), file)?;
         if count > MAX_FILE_BYTES {
             return Err(invalid("Write exceeds the 64 MiB limit"));
         }
         if let Some(mtime) = mtime {
-            staged
-                .as_file()
-                .try_clone()?
-                .into_std()
-                .set_modified(mtime)?;
+            file.try_clone()?.into_std().set_modified(mtime)?;
         }
-        staged.as_file().sync_all()?;
+        file.sync_all()?;
         condition.verify(&parent, name, path)?;
         staged.replace(name)?;
         sync_directory(&parent)?;
