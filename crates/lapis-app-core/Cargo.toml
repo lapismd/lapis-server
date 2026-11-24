@@ -13,6 +13,14 @@ default = ["local-sibling-projections"]
 local-sibling-projections = []
 
 [dependencies]
+cap-std = "=4.0.3"
+cap-tempfile = "=4.0.3"
+libc = "0.2"
+rustix = { version = "=1.1.6", features = ["fs"] }
+serde = { version = "1", features = ["derive"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 jj-forge = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0", default-features = false }
 jj-store-service = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0", default-features = false }
 lapis-terminal-service = { git = "https://github.com/lapismd/terminal-host", rev = "88fae24eb24934bb8dcc8bdf2eb0f1e86ffb39ef", version = "0.1.0" }
@@ -24,18 +32,12 @@ lapis-ai-service = { git = "https://github.com/lapismd/lapis-ai", tag = "v0.2.0"
 async-trait = "0.1"
 jj-history-service = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0" }
 jj-store-model = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0" }
-cap-std = "=4.0.3"
-cap-tempfile = "=4.0.3"
-libc = "0.2"
 md5 = "=0.8.0"
-rustix = { version = "=1.1.6", features = ["fs"] }
-serde = { version = "1", features = ["derive"] }
 sha2 = "=0.10.9"
 same-file = "=1.0.6"
 getrandom = "=0.4.3"
 subtle = "=2.6.1"
 zeroize = { version = "=1.9.1", features = ["serde"] }
-uuid = { version = "1", features = ["v4", "serde"] }
 tempfile = "=3.27.0"
 serde_json = "1"
 jsonschema = { version = "=0.33.0", default-features = false }

@@ -23,6 +23,8 @@ handoff/discovery client grants no endpoint or working-vault authority.
 
 This book owns the hosted server. Shared Notes product requirements stay in
 the Notes specification at <https://lapismd.github.io/lapis-notes/>.
+Android and iOS hosts consume the shared checked vault file operations directly from lapis-app-core. Target-specific dependencies keep desktop services outside the mobile file-operation graph. Mobile hosts own directory admission and write serialization under SRV-SRV-004.
+
 The core crate README routes native ownership and commands here; outstanding
 integration and qualification live in the [canonical backlog](../backlog.md).
 
