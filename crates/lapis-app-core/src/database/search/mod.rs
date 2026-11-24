@@ -25,6 +25,7 @@ pub(super) enum Action {
     List,
     Manifest(SearchManifestQuery),
     Stats,
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     Notes(
         String,
         lapis_app_protocol::database::search::retrieval::SearchOptions,
@@ -44,15 +45,18 @@ pub(super) enum Value {
     Stats(SearchIndexStats),
     Results(Vec<lapis_app_protocol::database::search::retrieval::SearchResult>),
     Paths(Vec<String>),
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     Notes(NoteSearch),
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub(crate) struct NoteSearch {
     pub rows: Vec<retrieval_types::SearchResult>,
     pub mode: retrieval_types::SearchRetrievalMode,
     pub semantic_status: &'static str,
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use lapis_app_protocol::database::search::retrieval as retrieval_types;
 impl Store {
     pub(super) async fn search(&mut self, action: Action) -> Result<Value> {
@@ -71,6 +75,7 @@ impl Store {
             Action::Retrieve(query, options, paths) => {
                 self.retrieve_search(query, options, paths).await
             }
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             Action::Notes(query, options) => {
                 self.retrieve_notes(query, options).await.map(Value::Notes)
             }

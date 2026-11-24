@@ -41,7 +41,7 @@ impl Database {
     pub(crate) async fn release_native_projection(&self, id: &str) {
         self.authority.write().await.projections.remove(id);
     }
-    pub(crate) async fn call_from_client(&self, request: DatabaseCall) -> Result<DatabaseValue> {
+    pub async fn call_from_client(&self, request: DatabaseCall) -> Result<DatabaseValue> {
         if !Authority::generated(&request) {
             return self.call(request).await;
         }

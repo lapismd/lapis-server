@@ -6,7 +6,10 @@
 pub mod archive;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod context;
-#[cfg(not(any(target_os = "android", target_os = "ios")))]
+#[cfg(any(
+    not(any(target_os = "android", target_os = "ios")),
+    feature = "mobile-database"
+))]
 pub mod database;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod embedding;
@@ -18,9 +21,18 @@ mod record_store;
 pub mod repository;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod services;
+#[cfg(all(
+    any(target_os = "android", target_os = "ios"),
+    feature = "mobile-database"
+))]
+#[path = "services/error.rs"]
+pub mod services;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod sync;
-#[cfg(not(any(target_os = "android", target_os = "ios")))]
+#[cfg(any(
+    not(any(target_os = "android", target_os = "ios")),
+    feature = "mobile-database"
+))]
 mod text;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod turns;

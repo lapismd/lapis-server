@@ -358,3 +358,5 @@ MCP dispatch. The CLI never admits a vault or constructs a second native owner.
 Remote URL targets preserve their explicit credentials and transport boundaries. CLI version custody follows [the CLI contract](cli.md#cli-release-identity).
 
 Android conditional replacement stages a named file in the admitted parent directory. The writer preserves permission and modification-time checks, checks the expected bytes again before rename, and synchronizes the parent before acknowledging the edit.
+
+Mobile hosts can opt into the typed database with the mobile-database feature. The native owner admits an absolute app-private database directory and vault UUID. Renderer calls enter through the client authority check. Lexical search and token-hash embeddings run locally. Mobile builds reject unregistered model runtimes at configuration time.
