@@ -128,9 +128,9 @@ impl CredentialStore {
         // Decrypt before removing, so a swapped or foreign record is not accepted.
         store.read(owner, id)?;
         store
-            .root
-            .remove_file(&format!("{owner}-{id}.sealed"))
-            .map_err(|_| unavailable())
+            .repository_record(owner, id)
+            .remove(store)
+            .map_err(io::Error::other)
     }
     pub fn resolve(&self, owner: Uuid, id: Uuid, endpoint: &str) -> io::Result<NativeCredential> {
         let (store, _guard) = self.ready()?;
@@ -170,8 +170,7 @@ impl Unlocked {
         };
         if store.root.stat(".key-check")?.is_none() {
             // Existing records with no verifier never authorize a fresh key.
-            if !store.ids()?.is_empty() || store.has_forge_records()? || store.scoped_count()? != 0
-            {
+            if !store.ids()?.is_empty() || store.scoped_count()? != 0 {
                 return Err(unavailable());
             }
             let bytes = store.cipher.seal(Uuid::nil(), Uuid::nil(), CHECK)?;
@@ -219,9 +218,6 @@ impl Unlocked {
             {
                 continue;
             }
-            if name == ".forge" && entry.file_type()?.is_dir() {
-                continue;
-            }
             if scoped::is_record_name(&name) && entry.file_type()?.is_file() {
                 continue;
             }
@@ -256,10 +252,11 @@ impl Unlocked {
             return Err(unavailable());
         }
         self.verify()?;
-        let bytes = self.bytes(&format!("{owner}-{id}.sealed"))?;
-        let plain = self.cipher.open(owner, id, &bytes).inspect_err(|_| {
-            self.locked.store(true, Ordering::Release);
-        })?;
+        let (plain, bytes) = self
+            .repository_record(owner, id)
+            .read(self)
+            .map_err(io::Error::other)?
+            .ok_or_else(unavailable)?;
         let record: record::Record = serde_json::from_slice(&plain).map_err(|_| unavailable())?;
         if record.summary.id != id
             || record::endpoint(&record.summary.endpoint)? != record.summary.endpoint
@@ -278,21 +275,17 @@ impl Unlocked {
     ) -> io::Result<()> {
         self.verify()?;
         let plain = Zeroizing::new(serde_json::to_vec(record).map_err(|_| unavailable())?);
-        let bytes = self.cipher.seal(owner, id, &plain)?;
-        let name = format!("{owner}-{id}.sealed");
-        match before {
-            Some(before) => self.root.write_if_unchanged(
-                &name,
-                &bytes[..],
-                Some(before),
-                &WriteOptions::default(),
-            ),
-            None => self
-                .root
-                .create_file(&name, &bytes[..], &WriteOptions::default()),
+        self.repository_record(owner, id)
+            .write(self, &plain, before)
+            .map_err(io::Error::other)
+    }
+
+    fn repository_record(&self, owner: Uuid, id: Uuid) -> scoped::Record {
+        scoped::Record {
+            name: format!("{owner}-{id}.sealed"),
+            aad: self.cipher.aad(owner, id),
+            limit: 16 * 1024,
         }
-        .map_err(|_| unavailable())?;
-        self.verify()
     }
 }
 impl Drop for Unlocked {

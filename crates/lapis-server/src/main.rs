@@ -1,5 +1,6 @@
 #![forbid(unsafe_code)]
 
+use lapis_app_core::credentials::PluginGrants;
 use lapis_server::{
     config::Config,
     control::bootstrap,
@@ -65,6 +66,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 RemoteInstallation {
                     key_file: key_file.clone(),
                     credential_key,
+                    credential_plugins: PluginGrants::parse(
+                        &std::env::var("LAPIS_SERVER_CREDENTIAL_PLUGINS").unwrap_or_default(),
+                    )?,
                     known_hosts: std::env::var_os("LAPIS_SERVER_SSH_KNOWN_HOSTS").map(Into::into),
                     github_client: std::env::var("LAPIS_SERVER_GITHUB_CLIENT_ID").ok(),
                     ssh_available: std::process::Command::new("ssh")

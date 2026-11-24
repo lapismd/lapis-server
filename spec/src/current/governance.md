@@ -363,9 +363,9 @@ It changes dependency manifests and the registry lockfile, without changing
 server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
 
-Credential custody under SRV-SRV-015/016 requires shared Core tests and cold
-host evidence for both key inputs, HTTP admission, consumer visibility and
-real Git transport. Tests use disposable profiles, vaults and credentials.
+Credential custody under SRV-SRV-015/016 requires Core tests, cold key-source
+and Git transport acceptance, plus attachment-scoped plugin admission and
+revocation. Tests use disposable profiles, vaults and credentials.
 
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
 

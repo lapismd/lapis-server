@@ -28,7 +28,7 @@ impl Cipher {
             installation,
         })
     }
-    fn aad(&self, owner: Uuid, id: Uuid) -> Vec<u8> {
+    pub(super) fn aad(&self, owner: Uuid, id: Uuid) -> Vec<u8> {
         let mut result = b"lapis.repository.credentials.v1\0".to_vec();
         result.extend_from_slice(self.installation.as_bytes());
         result.extend_from_slice(owner.as_bytes());
@@ -37,16 +37,6 @@ impl Cipher {
     }
     pub fn seal(&self, owner: Uuid, id: Uuid, plaintext: &[u8]) -> io::Result<Vec<u8>> {
         self.seal_aad(&self.aad(owner, id), plaintext)
-    }
-    pub fn seal_forge(&self, owner: Uuid, account: &str, plaintext: &[u8]) -> io::Result<Vec<u8>> {
-        self.seal_aad(&self.forge_aad(owner, account), plaintext)
-    }
-    fn forge_aad(&self, owner: Uuid, account: &str) -> Vec<u8> {
-        let mut result = b"lapis.repository.forge.v1\0".to_vec();
-        result.extend_from_slice(self.installation.as_bytes());
-        result.extend_from_slice(owner.as_bytes());
-        result.extend_from_slice(account.as_bytes());
-        result
     }
     pub(super) fn seal_aad(&self, aad: &[u8], plaintext: &[u8]) -> io::Result<Vec<u8>> {
         let mut nonce = [0u8; 12];
@@ -68,14 +58,6 @@ impl Cipher {
     }
     pub fn open(&self, owner: Uuid, id: Uuid, bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
         self.open_aad(&self.aad(owner, id), bytes)
-    }
-    pub fn open_forge(
-        &self,
-        owner: Uuid,
-        account: &str,
-        bytes: &[u8],
-    ) -> io::Result<Zeroizing<Vec<u8>>> {
-        self.open_aad(&self.forge_aad(owner, account), bytes)
     }
     pub(super) fn open_aad(&self, aad: &[u8], bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
         if bytes.len() < 29 || bytes[0] != 1 || bytes.len() > MAX_SECRET_BYTES + 29 {

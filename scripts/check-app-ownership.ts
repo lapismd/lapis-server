@@ -98,6 +98,14 @@ const program = ts.createProgram({
 const checker = program.getTypeChecker();
 const findings: Array<{ file: string; line: number; kind: string }> = [];
 
+for (const file of readdirSync("crates/lapis-server/src", { recursive: true })) {
+  if (!file.endsWith(".rs") || file.startsWith("credentials/")) continue;
+  const path = `crates/lapis-server/src/${file}`;
+  if (/\b(?:aes_gcm|Aes256Gcm|ScopedNativeSecrets)\b|"\.key-check"/u.test(readFileSync(path, "utf8"))) {
+    findings.push({ file: path, line: 1, kind: "Use the Server credential adapter for native persistence" });
+  }
+}
+
 function isApplicationExpression(node: ts.Identifier): boolean {
   const parent = node.parent;
   return (

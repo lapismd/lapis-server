@@ -13,9 +13,10 @@ Optional `LAPIS_SERVER_GITHUB_CLIENT_ID` supplies the
 operator's GitHub OAuth application client ID for device sign-in. Without it,
 raw HTTPS tokens and GitHub/Forgejo token accounts remain available.
 
-Private `/data/repository-remotes/` contains a stable installation/owner identity,
-separate account metadata and per-vault connection/recovery state, and an
-AES-256-GCM credential store. Preserve this directory across container replacement.
+Private `/data/repository-remotes/` contains the installation and owner identity,
+account metadata, and per-vault connection state. `/data/credentials/` contains
+the shared AES-256-GCM credential store. Preserve both directories across
+container replacement.
 The key is separate from the ciphertext and must be backed up through a separate
 operator secret-management channel. Restoring encrypted backups requires the
 original key and identity file. A missing, malformed or incorrect key leaves

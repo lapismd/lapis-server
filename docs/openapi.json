@@ -3824,6 +3824,189 @@
         }
       }
     },
+    "/api/v3/clients/{client}/plugin-credentials": {
+      "get": {
+        "summary": "List installation-approved plugin credential scopes",
+        "tags": ["Server owner API"],
+        "security": [{ "ownerSession": [] }, { "operatorToken": [] }],
+        "parameters": [
+          {
+            "name": "client",
+            "in": "path",
+            "required": true,
+            "description": "Path component",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "x-lapis-protocol",
+            "in": "header",
+            "required": true,
+            "description": "Hosted browser protocol major",
+            "schema": { "type": "string", "const": "3", "default": "3" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "403": {
+            "description": "Permission denied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict or protocol mismatch",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "413": {
+            "description": "Request too large",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "503": {
+            "description": "Unavailable or busy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Use an admitted plugin credential scope",
+        "tags": ["Server owner API"],
+        "security": [{ "ownerSession": [] }, { "operatorToken": [] }],
+        "parameters": [
+          {
+            "name": "client",
+            "in": "path",
+            "required": true,
+            "description": "Path component",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "x-lapis-protocol",
+            "in": "header",
+            "required": true,
+            "description": "Hosted browser protocol major",
+            "schema": { "type": "string", "const": "3", "default": "3" }
+          },
+          {
+            "name": "x-lapis-csrf",
+            "in": "header",
+            "required": false,
+            "description": "Required for browser-session mutations. Swagger UI sends the current session value.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": { "application/json": { "schema": true } }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "403": {
+            "description": "Permission denied",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict or protocol mismatch",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "413": {
+            "description": "Request too large",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          },
+          "503": {
+            "description": "Unavailable or busy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ServiceError" }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": true } }
+        }
+      }
+    },
     "/api/v3/clients/{client}/plugins/{plugin}/operations/{operation}": {
       "post": {
         "summary": "Invoke a plugin operation",

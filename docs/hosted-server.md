@@ -37,6 +37,14 @@ volumes:
 Preserve the original key across redeployments and back it up separately from
 `/data`. Switching delivery methods requires the same 32 bytes. The file holds
 raw bytes and the runtime variable holds their standard Base64 encoding.
+Encrypted credentials persist in `/data/credentials/` and are bound to the
+Server installation identity.
+
+To approve credential storage for trusted plugins, set
+`LAPIS_SERVER_CREDENTIAL_PLUGINS` to a comma-separated list of their manifest
+IDs. An empty or omitted list approves none. Only list plugins you trust to run
+in your Lapis workspace. Each enabled plugin must also declare `plugin:secrets`
+before its API can open a scope.
 
 ## Run
 

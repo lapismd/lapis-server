@@ -1,6 +1,7 @@
 # MCP Apps
 
-The installation-owned bundle directory excludes mounted Server credential keys.
+The installation-owned bundle directory excludes mounted Server credential keys
+and the persistent profile, including its shared native credential store.
 
 ## SRV-MCP-001 — Scoped application resources
 

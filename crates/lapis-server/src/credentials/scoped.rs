@@ -5,6 +5,7 @@ use lapis_app_core::credentials::{
 use sha2::{Digest as _, Sha256};
 use std::{
     io,
+    ops::Deref,
     sync::{Arc, atomic::Ordering},
 };
 use uuid::Uuid;
@@ -19,10 +20,10 @@ pub enum CredentialNamespace {
     RepositoryForge,
 }
 
-struct Scope {
-    store: Arc<CredentialStore>,
-    owner: Uuid,
-    namespace: CredentialNamespace,
+pub(super) struct Scope<S> {
+    pub(super) store: S,
+    pub(super) owner: Uuid,
+    pub(super) namespace: CredentialNamespace,
 }
 
 impl CredentialStore {
@@ -72,15 +73,16 @@ impl Unlocked {
     }
 }
 
-struct Record {
-    name: String,
-    aad: Vec<u8>,
+pub(super) struct Record {
+    pub(super) name: String,
+    pub(super) aad: Vec<u8>,
+    pub(super) limit: usize,
 }
 
-impl Scope {
-    fn record(&self, store: &Unlocked, name: &SecretName) -> Record {
+impl<S> Scope<S> {
+    pub(super) fn record(&self, installation: Uuid, name: &SecretName) -> Record {
         let mut aad = b"lapis.credential.scope.v1\0".to_vec();
-        aad.extend_from_slice(store.cipher.installation().as_bytes());
+        aad.extend_from_slice(installation.as_bytes());
         aad.extend_from_slice(self.owner.as_bytes());
         match &self.namespace {
             CredentialNamespace::RepositoryForge => aad.push(0),
@@ -95,12 +97,13 @@ impl Scope {
         Record {
             name: format!("{PREFIX}{:x}", Sha256::digest(&aad)),
             aad,
+            limit: MAX_ENVELOPE,
         }
     }
 }
 
 impl Record {
-    fn read(
+    pub(super) fn read(
         &self,
         store: &Unlocked,
     ) -> Result<Option<(Zeroizing<Vec<u8>>, Vec<u8>)>, CredentialError> {
@@ -109,12 +112,13 @@ impl Record {
             Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(None),
             Err(_) => return Err(CredentialError::Unavailable),
         };
-        if !metadata.is_file() || metadata.len() > MAX_ENVELOPE as u64 {
+        if !metadata.is_file() || metadata.len() > self.limit as u64 {
+            store.locked.store(true, Ordering::Release);
             return Err(CredentialError::Locked);
         }
         let ciphertext = store
             .root
-            .read_range(&self.name, 0, MAX_ENVELOPE + 1)
+            .read_range(&self.name, 0, self.limit + 1)
             .map_err(|_| CredentialError::Unavailable)?;
         let secret = store.cipher.open_aad(&self.aad, &ciphertext).map_err(|_| {
             store.locked.store(true, Ordering::Release);
@@ -122,12 +126,40 @@ impl Record {
         })?;
         Ok(Some((secret, ciphertext)))
     }
+
+    pub(super) fn write(
+        &self,
+        store: &Unlocked,
+        plaintext: &[u8],
+        before: Option<&[u8]>,
+    ) -> Result<(), CredentialError> {
+        if plaintext.len() + 29 > self.limit {
+            return Err(CredentialError::InvalidInput);
+        }
+        let bytes = store
+            .cipher
+            .seal_aad(&self.aad, plaintext)
+            .map_err(|_| CredentialError::Unavailable)?;
+        store
+            .root
+            .write_if_unchanged(&self.name, &bytes[..], before, &Default::default())
+            .map_err(|_| CredentialError::Unavailable)?;
+        store.verify().map_err(|_| CredentialError::Unavailable)
+    }
+
+    pub(super) fn remove(&self, store: &Unlocked) -> Result<(), CredentialError> {
+        store
+            .root
+            .remove_file(&self.name)
+            .map_err(|_| CredentialError::Unavailable)?;
+        store.verify().map_err(|_| CredentialError::Unavailable)
+    }
 }
 
-impl ScopedCredentialStore for Scope {
+impl<S: Deref<Target = CredentialStore> + Send + Sync> ScopedCredentialStore for Scope<S> {
     fn get(&self, name: &SecretName) -> Result<Option<SecretBytes>, CredentialError> {
         let (store, _guard) = self.store.ready().map_err(|_| CredentialError::Locked)?;
-        self.record(store, name)
+        self.record(store.cipher.installation(), name)
             .read(store)?
             .map(|(secret, _)| SecretBytes::new(secret.to_vec()))
             .transpose()
@@ -135,7 +167,7 @@ impl ScopedCredentialStore for Scope {
 
     fn set(&self, name: &SecretName, value: &SecretBytes) -> Result<(), CredentialError> {
         let (store, _guard) = self.store.ready().map_err(|_| CredentialError::Locked)?;
-        let record = self.record(store, name);
+        let record = self.record(store.cipher.installation(), name);
         let before = record.read(store)?;
         if before.is_none()
             && store
@@ -145,30 +177,18 @@ impl ScopedCredentialStore for Scope {
         {
             return Err(CredentialError::Unavailable);
         }
-        let bytes = store
-            .cipher
-            .seal_aad(&record.aad, value.expose_secret())
-            .map_err(|_| CredentialError::Unavailable)?;
-        store
-            .root
-            .write_if_unchanged(
-                &record.name,
-                &bytes[..],
-                before.as_ref().map(|(_, b)| b.as_slice()),
-                &Default::default(),
-            )
-            .map_err(|_| CredentialError::Unavailable)?;
-        store.verify().map_err(|_| CredentialError::Unavailable)
+        record.write(
+            store,
+            value.expose_secret(),
+            before.as_ref().map(|(_, b)| b.as_slice()),
+        )
     }
 
     fn delete(&self, name: &SecretName) -> Result<(), CredentialError> {
         let (store, _guard) = self.store.ready().map_err(|_| CredentialError::Locked)?;
-        let record = self.record(store, name);
+        let record = self.record(store.cipher.installation(), name);
         if record.read(store)?.is_some() {
-            store
-                .root
-                .remove_file(&record.name)
-                .map_err(|_| CredentialError::Unavailable)?;
+            record.remove(store)?;
         }
         store.verify().map_err(|_| CredentialError::Unavailable)
     }

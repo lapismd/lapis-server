@@ -275,6 +275,11 @@ Hosts bind the owner, installation or profile, and namespace at admission.
 The contract distinguishes a missing entry from a locked or unavailable backend.
 Repository tokens and forge credentials occupy reserved native namespaces and
 continue to resolve through the existing endpoint-checked Git operations.
+Server plugin approvals come from the installation's
+`LAPIS_SERVER_CREDENTIAL_PLUGINS` allowlist. An approved plugin opens an opaque
+credential lease on its admitted attachment. The lease cannot be transferred
+to another attachment and is revoked on close or detach. The credential routes
+inherit owner authentication, protocol checks and exact-origin CSRF policy.
 
 ### Acceptance details
 

@@ -3,6 +3,10 @@
 use std::{error::Error, fmt};
 use zeroize::Zeroizing;
 
+mod plugin;
+pub(crate) use plugin::PluginLeases;
+pub use plugin::{PluginCredentialCommand, PluginCredentialReply, PluginGrants};
+
 pub const MAX_SECRET_BYTES: usize = 32 * 1024;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

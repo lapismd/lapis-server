@@ -6,7 +6,7 @@ use crate::{
     config::Config,
     credentials::{CredentialKey, CredentialStore},
 };
-use lapis_app_core::{services::RemoteStorage, vault::VaultRoot};
+use lapis_app_core::{credentials::PluginGrants, services::RemoteStorage, vault::VaultRoot};
 use std::{io, path::Path, path::PathBuf, sync::Arc};
 
 /// Native startup inputs. No HTTP DTO accepts paths, keys or owner identity.
@@ -17,9 +17,14 @@ pub struct RemoteInstallation {
     pub known_hosts: Option<PathBuf>,
     pub github_client: Option<String>,
     pub ssh_available: bool,
+    pub credential_plugins: PluginGrants,
 }
 impl RemoteInstallation {
-    pub(super) fn select(self, profile: &Path, config: &Config) -> io::Result<RemoteStorage> {
+    pub(super) fn select(
+        self,
+        profile: &Path,
+        config: &Config,
+    ) -> io::Result<(RemoteStorage, super::plugin_credentials::PluginCredentials)> {
         let profile = VaultRoot::open(profile)?;
         let vaults = config
             .vaults
@@ -53,7 +58,7 @@ impl RemoteInstallation {
         }
         let root = storage::child(&profile, "repository-remotes")?;
         let identity = storage::identity(&root)?;
-        let secrets = storage::child(&root, "credentials")?;
+        let secrets = storage::child(&profile, "credentials")?;
         let accounts = storage::child(&root, "accounts")?;
         let selection = storage::child(&root, "selection")?;
         let store = Arc::new(match self.credential_key.as_ref() {
@@ -89,6 +94,13 @@ impl RemoteInstallation {
         }
         root.verify_physical_root()?;
         profile.verify_physical_root()?;
-        Ok(remote)
+        Ok((
+            remote,
+            super::plugin_credentials::PluginCredentials {
+                store,
+                owner: identity.owner,
+                grants: self.credential_plugins,
+            },
+        ))
     }
 }

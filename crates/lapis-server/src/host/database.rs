@@ -73,11 +73,16 @@ impl Host {
         if let Some(storage) = super::turns::storage::select(profile, &config, agents)? {
             runtime = runtime.with_turns(storage);
         }
-        if let Some(remotes) = remotes {
-            runtime = runtime.with_remotes(remotes.select(profile, &config)?);
-        }
+        let credentials = if let Some(remotes) = remotes {
+            let (remote, credentials) = remotes.select(profile, &config)?;
+            runtime = runtime.with_remotes(remote);
+            Some(credentials)
+        } else {
+            None
+        };
         let mut host = Self::with_runtime(config, runtime)?;
         host.automatic_backup = true;
+        host.plugin_credentials = credentials;
         Ok(host)
     }
     pub async fn database(
