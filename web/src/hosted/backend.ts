@@ -22,6 +22,7 @@ export type HostedVault = {
 export type HostedResources = {
   skillManagement?: import("@lapis-notes/api").SkillManagementHost;
   nativeTasks?: NativeTasks;
+  nativeBackgroundJobs?: import("@lapis-notes/api/background-jobs").NativeBackgroundJobs;
   nativeEditingIntents?: NativeEditingIntents;
   repositoryFactory?: (app: App) => RepositoryServices;
   nativeChat?: (app: App) => NativeChatHost;

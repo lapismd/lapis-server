@@ -120,6 +120,20 @@ export function createRustHostedBackend(
         ]),
         adapter,
         skillManagement: createRustSkillManagement(client),
+        nativeBackgroundJobs:
+          nativeMetadata || nativeTasks
+            ? {
+                async call(command) {
+                  const value = await client.execute({
+                    kind: "plugin_jobs",
+                    command,
+                  });
+                  if (value.kind !== "plugin_jobs")
+                    throw new Error("Invalid native background-jobs response");
+                  return value.snapshot;
+                },
+              }
+            : undefined,
         nativeTasks: nativeTasks
           ? { call: (command) => client.tasks(command) }
           : undefined,
