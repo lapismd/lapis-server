@@ -1,8 +1,64 @@
 use super::*;
-use std::fs;
+use std::{fs, sync::Arc};
 use tempfile::TempDir;
 
 const TOKEN: &str = "synthetic-repository-token-for-custody-tests";
+
+#[test]
+fn scoped_records_survive_restart_without_crossing_namespaces() {
+    use lapis_app_core::credentials::{CredentialError, SecretBytes, SecretName};
+
+    let f = Fixture::new();
+    let name = SecretName::new("api-token").unwrap();
+    let namespace = |id| CredentialNamespace::Plugin(SecretName::new(id).unwrap());
+    let store = Arc::new(f.open());
+    let first = store.scope(f.owner, namespace("first")).unwrap();
+    let second = store.scope(f.owner, namespace("second")).unwrap();
+    let foreign = store.scope(Uuid::new_v4(), namespace("first")).unwrap();
+    assert!(first.get(&name).unwrap().is_none());
+    first
+        .set(&name, &SecretBytes::new(TOKEN.as_bytes().to_vec()).unwrap())
+        .unwrap();
+    second
+        .set(&name, &SecretBytes::new(vec![42]).unwrap())
+        .unwrap();
+    assert!(foreign.get(&name).unwrap().is_none());
+    assert!(store.inventory(f.owner).unwrap().is_empty());
+    assert!(f.bytes().iter().all(|(_, bytes)| {
+        !bytes
+            .windows(TOKEN.len())
+            .any(|part| part == TOKEN.as_bytes())
+    }));
+    drop((first, second, foreign, store));
+
+    let base64_key = base64::Engine::encode(&base64::engine::general_purpose::STANDARD, [7; 32]);
+    let key = CredentialKey::from_base64(base64_key.as_bytes()).unwrap();
+    let store = Arc::new(CredentialStore::open_with_key(
+        &f.directory,
+        f.installation,
+        Some(&key),
+    ));
+    let first = store.scope(f.owner, namespace("first")).unwrap();
+    let second = store.scope(f.owner, namespace("second")).unwrap();
+    assert_eq!(
+        first.get(&name).unwrap().unwrap().expose_secret(),
+        TOKEN.as_bytes()
+    );
+    first.delete(&name).unwrap();
+    first.delete(&name).unwrap();
+    assert!(first.get(&name).unwrap().is_none());
+    assert_eq!(second.get(&name).unwrap().unwrap().expose_secret(), &[42]);
+    drop((first, second, store));
+
+    let locked = Arc::new(CredentialStore::open_with_key(
+        &f.directory,
+        f.installation,
+        None,
+    ));
+    let second = locked.scope(f.owner, namespace("second")).unwrap();
+    assert!(matches!(second.get(&name), Err(CredentialError::Locked)));
+}
+
 struct Fixture {
     temp: TempDir,
     directory: std::path::PathBuf,

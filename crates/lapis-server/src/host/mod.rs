@@ -7,6 +7,7 @@ mod history_reader;
 mod indexing;
 mod management;
 mod mcp_apps;
+mod plugin_credentials;
 mod remote_installation;
 pub use remote_installation::RemoteInstallation;
 mod repository_backup;
@@ -48,6 +49,7 @@ pub struct Host {
     vaults: Vec<ManagedVault>,
     clients: attachments::Attachments,
     automatic_backup: bool,
+    plugin_credentials: Option<plugin_credentials::PluginCredentials>,
     roots: HashMap<Uuid, lapis_app_core::vault::VaultRoot>,
     management: OnceLock<Arc<management::Management>>,
 }
@@ -104,6 +106,7 @@ impl Host {
             vaults,
             clients: attachments::Attachments::default(),
             automatic_backup: false,
+            plugin_credentials: None,
             roots,
             management: OnceLock::new(),
         })

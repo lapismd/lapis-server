@@ -169,6 +169,11 @@ include unrelated ignored subprocess helpers.
 
 ## Repository remotes and credentials
 
+Consolidate custody behind one Core contract with a scoped Server encrypted
+backend and a Desktop OS adapter. Qualify both Server key inputs, cold restart,
+namespace isolation and the approved plugin capability before closing the work.
+Remove the repository-specific operator key setting at cutover.
+
 Disposition: approved shared UI preview; native transport and encrypted custody
 foundations are in progress under SRV-SRV-015/016. Integrate both targets through
 Core/Protocol and authenticated host adapters, keeping desktop OS custody and

@@ -89,7 +89,7 @@ export async function qualifyColdHttpsHost(base, endpoint, environment) {
     }
   }
   try {
-    await host.start();
+    await host.start(host.key, "environment");
     let client = await host.attach();
     const saved = await saveCredential(client, secrets[0]);
     const credential = saved.settings.credentials[0].id;

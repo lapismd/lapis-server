@@ -363,10 +363,9 @@ It changes dependency manifests and the registry lockfile, without changing
 server routes, native ownership or runtime startup budgets. The complete
 PR 57 range requires this canonical confirmation on main.
 
-Repository credential custody under SRV-SRV-015/016 has separate source and host
-acceptance. Source tests use temporary private storage and synthetic secrets;
-HTTP admission, consumer visibility and real Git transport remain required at
-host adoption. No test opens a user's profile, vault or credential namespace.
+Credential custody under SRV-SRV-015/016 requires Core tests, cold key-source
+and Git transport acceptance, plus attachment-scoped plugin admission and
+revocation. Tests use disposable profiles, vaults and credentials.
 
 CLI release automation builds macOS ARM64 and Linux ARM64/x64 archives from the version tag, records source and SHA-256 identities and refuses differing existing assets. macOS is build-only; Linux executes the binary before upload.
 
@@ -395,6 +394,6 @@ The alternate-source fixture is copied by a completed child process so parallel
 process starts cannot inherit its executable writer descriptor. All existing
 source-switch, repair and tamper-refusal assertions remain unchanged.
 
-See [mobile vault qualification](server.md) and [Repository remotes](governance/remotes.md). The [credential package intake](../../records/2026-11-25-credential-package-intake.md) binds the reviewed registry graph.
+See [mobile vault qualification](server.md) and [Repository remotes](governance/remotes.md). The [credential package intake](../../records/2026-11-25-credential-package-intake.md) binds the reviewed registry graph. Hosted attachments advertise credential discovery only for installations with plugin grants.
 
 [Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate. Hosted acceptance builds server and CLI prerequisites explicitly. The external MCP Apps cohort uses the packaged views and an isolated reference host against the native Server. Catalog previews render the same packaged documents with fixture results. Independent static Notes, inline Tasks, sidebar Properties, tracked completion, and responsive canvas cases check the light-mode surfaces and Tasks panel geometry, and exercises the Tasks plugin’s inline metadata, outside dismissal and sidebar controls through AppBridge, and checks native row contrast, sidebar notes inset, Properties styling and compact canvas navigation. Skills qualification and release intake follow [SRV-OPS-005–007](plugin-operations.md); the bundled Markdown dependency floor includes its linked references. The [approved KaTeX exception](../../records/2026-11-16-katex-audit-exception.md) is scoped to CVE-2026-103923 and review by 15 December 2026. The [single queue reload quarantine](../../records/2026-11-17-hosted-queue-quarantine.md) retains diagnostic assertions and owner follow-up. Terminal presentation, ANSI colour checks on Linux/macOS, bundled renderer qualification and authenticated registry adoption without archive hooks follow [the Terminal topic](terminal-presentation.md) and its [0.1.1 qualification](../../records/2026-11-20-terminal-registry-adoption.md). The Server-owned [native Bash follow-up](../../records/2026-11-20-native-terminal-profile.md) requires actual application PTY tests that distinguish visible prompts from OSC metadata, preserves generic engine/Desktop defaults, and does not claim Docker-image acceptance. [Desktop discovery](cli.md#approved-desktop-connection-reuse) qualifies source CLI/MCP only; bundled intake, native consent and remote OAuth remain separate gates. Changesets version preparation synchronizes the CLI Cargo/lock identity; archive qualification rejects drift.

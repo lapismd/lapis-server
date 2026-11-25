@@ -44,8 +44,9 @@ fn forge_credentials_keep_full_account_identity_and_survive_encrypted_restart() 
         VALUE
     );
     assert!(store.forge_get(Uuid::new_v4(), ACCOUNT).unwrap().is_none());
-    for entry in fs::read_dir(private.join(".forge")).unwrap() {
-        let bytes = fs::read(entry.unwrap().path()).unwrap();
+    for account in [ACCOUNT, OTHER] {
+        let bytes =
+            fs::read(private.join(store.forge_record_name(installation, owner, account))).unwrap();
         assert!(!bytes.windows(16).any(|v| v == b"synthetic-access"));
         assert!(!bytes.windows(17).any(|v| v == b"synthetic-refresh"));
     }
@@ -63,8 +64,8 @@ fn forge_credentials_keep_full_account_identity_and_survive_encrypted_restart() 
         store.forge_get(owner, ACCOUNT).unwrap().unwrap().as_str(),
         VALUE
     );
-    let first = private.join(format!(".forge/{owner}-{ACCOUNT}.sealed"));
-    let second = private.join(format!(".forge/{owner}-{OTHER}.sealed"));
+    let first = private.join(store.forge_record_name(installation, owner, ACCOUNT));
+    let second = private.join(store.forge_record_name(installation, owner, OTHER));
     fs::write(second, fs::read(first).unwrap()).unwrap();
     assert!(
         store.forge_get(owner, OTHER).is_err(),
@@ -140,11 +141,15 @@ fn lost_key_verifier_never_rekeys_existing_forge_ciphertext() {
         .unwrap();
     drop(store);
     fs::remove_file(private.join(".key-check")).unwrap();
-    let file = private.join(format!(".forge/{owner}-{ACCOUNT}.sealed"));
+    let file = private.join(locked_record_name(installation, owner));
     let before = fs::read(&file).unwrap();
     fs::write(&key, [8u8; 32]).unwrap();
     let locked = CredentialStore::open(&private, installation, Some(&key));
     assert!(!locked.available());
     assert!(!private.join(".key-check").exists());
     assert_eq!(fs::read(file).unwrap(), before);
+}
+
+fn locked_record_name(installation: Uuid, owner: Uuid) -> String {
+    CredentialStore(None).forge_record_name(installation, owner, ACCOUNT)
 }

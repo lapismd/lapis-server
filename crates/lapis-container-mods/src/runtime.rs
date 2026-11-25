@@ -219,7 +219,10 @@ pub async fn load(config: &Config, registry: &Registry) -> Result<Receipts> {
     hooks.sort_by_key(|path| path.file_name().is_some_and(|name| name == "post-init.sh"));
     for path in hooks {
         log("hook", &path.display().to_string());
-        let failure = match Command::new(&path).status() {
+        let failure = match Command::new(&path)
+            .env_remove("LAPIS_SERVER_CREDENTIAL_KEY")
+            .status()
+        {
             Ok(status) if status.success() => continue,
             Ok(status) => format!("exit_failed: code={:?}", status.code()),
             Err(error) => format!(
