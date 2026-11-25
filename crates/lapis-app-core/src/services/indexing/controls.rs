@@ -126,7 +126,7 @@ impl VaultService {
             Err(error) => Err(error),
         }
     }
-    pub(super) async fn refresh_indexing(&self, rebuild: bool) -> Result<()> {
+    pub(in crate::services) async fn refresh_indexing(&self, rebuild: bool) -> Result<()> {
         self.refresh_indexing_snapshot(rebuild).await.map(|_| ())
     }
     async fn refresh_indexing_snapshot(&self, rebuild: bool) -> Result<IndexingStatus> {

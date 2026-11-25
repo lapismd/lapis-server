@@ -10,6 +10,7 @@ use uuid::Uuid;
 
 #[derive(Default)]
 pub struct Runtime {
+    jobs: Option<Arc<super::JobStorage>>,
     terminal_shell: Option<super::terminal::ShellFactory>,
     remotes: Option<Arc<super::RemoteStorage>>,
     registry: Mutex<Registry>,
@@ -25,6 +26,17 @@ struct Registry {
     roots: HashMap<(u64, u64), Uuid>,
 }
 impl Runtime {
+    /// Host admission resolves these identities through its own saved vault registry.
+    pub fn background_vault_ids(&self) -> Result<Vec<Uuid>> {
+        match &self.jobs {
+            Some(storage) => storage.eligible_vault_ids(),
+            None => Ok(Vec::new()),
+        }
+    }
+    pub fn with_jobs(mut self, storage: super::JobStorage) -> Self {
+        self.jobs = Some(Arc::new(storage));
+        self
+    }
     /// Let the owning application select launch policy for each admitted vault.
     pub fn with_terminal_shell(
         mut self,
@@ -75,6 +87,9 @@ impl Runtime {
             ));
         }
         root.verify_physical_root()?;
+        if let Some(storage) = &self.jobs {
+            storage.validate(&root)?;
+        }
         if let Some(storage) = &self.storage {
             storage.validate_vault(&root)?;
         }
@@ -114,6 +129,10 @@ impl Runtime {
         vault.turn_storage = self.turns.clone();
         vault.task_storage = self.tasks.clone();
         let vault = Arc::new(vault);
+        if let Some(storage) = &self.jobs {
+            *vault.jobs.lock().map_err(|_| Error::closed())? =
+                Some(super::jobs::Owner::start(&vault, storage)?);
+        }
         vault.synchronization.start(&vault)?;
         registry.roots.insert(identity, id);
         registry.vaults.insert(id, vault.clone());

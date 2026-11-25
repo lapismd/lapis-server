@@ -9,6 +9,7 @@ use std::{
 use uuid::Uuid;
 
 pub struct VaultService {
+    pub(super) jobs: Mutex<Option<Arc<super::jobs::Owner>>>,
     pub(super) terminal_shell: Option<super::terminal::ShellFactory>,
     pub(super) synchronization: super::remotes::synchronization::Owner,
     pub(super) remotes_storage: Option<Arc<super::RemoteStorage>>,
@@ -108,6 +109,7 @@ impl State {
 impl VaultService {
     pub(super) fn new(id: Uuid, root: VaultRoot, storage: Option<Arc<DatabaseStorage>>) -> Self {
         Self {
+            jobs: Mutex::new(None),
             synchronization: super::remotes::synchronization::Owner::default(),
             remotes_storage: None,
             file_changes: Mutex::new(None),
@@ -184,6 +186,7 @@ impl VaultService {
             }
             state.begin_close();
         }
+        self.stop_jobs();
         self.finish_history_reader()?;
         self.finish_history_indexing()?;
         self.finish_indexing()?;
@@ -203,6 +206,7 @@ impl VaultService {
         }
         let database_error = state.database_error.clone();
         drop(state);
+        self.retire_jobs()?;
         self.synchronization.stop();
         self.file_changes
             .lock()
