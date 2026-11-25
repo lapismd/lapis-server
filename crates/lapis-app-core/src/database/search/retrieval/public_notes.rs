@@ -1,11 +1,15 @@
-use super::{SearchMode, SearchOptions, SearchRetrievalMode, Value, query::Query};
+use super::SearchOptions;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
+use super::{SearchMode, SearchRetrievalMode, Value, query::Query};
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use crate::{
     database::{engine, store::Store},
     services::{Error, Result},
 };
+use lapis_app_protocol::content::validate_content_path;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use lapis_app_protocol::{
     ErrorCode,
-    content::validate_content_path,
     database::search::embedding::{SearchEmbeddingProviderKind, SearchEmbeddingRuntimePhase},
 };
 
@@ -25,6 +29,7 @@ pub(super) fn scope(options: &SearchOptions) -> (String, Vec<turso::Value>) {
     }
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 impl Store {
     pub(in crate::database::search) async fn retrieve_notes(
         &self,

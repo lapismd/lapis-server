@@ -27,6 +27,8 @@ handoff/discovery client grants no endpoint or working-vault authority.
 
 This book owns the hosted server. Shared Notes product requirements stay in
 the Notes specification at <https://lapismd.github.io/lapis-notes/>.
+Android and iOS hosts consume the shared checked vault file operations directly from lapis-app-core. Target-specific dependencies keep desktop services outside the mobile file-operation graph. Mobile hosts own directory admission and write serialization under SRV-SRV-004.
+
 The core crate README routes native ownership and commands here; outstanding
 integration and qualification live in the [canonical backlog](../backlog.md).
 
@@ -373,3 +375,9 @@ The CLI's [approved Desktop connection reuse](cli.md#approved-desktop-connection
 resolves host-selected connection metadata before ordinary content, operation and
 MCP dispatch. The CLI never admits a vault or constructs a second native owner.
 Remote URL targets preserve their explicit credentials and transport boundaries. CLI version custody follows [the CLI contract](cli.md#cli-release-identity).
+
+Android conditional replacement stages a named file in the admitted parent directory. The writer preserves permission and modification-time checks, checks the expected bytes again before rename, and synchronizes the parent before acknowledging the edit.
+
+Mobile hosts can opt into the typed database with the mobile-database feature. The native owner admits an absolute app-private database directory and vault UUID. Renderer calls enter through the client authority check. Lexical search and token-hash embeddings run locally. Mobile builds reject unregistered model runtimes at configuration time.
+
+Check mobile vault builds and strict Clippy on aarch64-linux-android and aarch64-apple-ios-sim. Check mobile-database on Android, database lifecycle/search and vault conformance/durability on Linux. Record Android stale writes and cold reopening in Mobile. Format verification rows with Prettier.

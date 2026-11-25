@@ -41,6 +41,7 @@ pub(super) struct Query {
     pub expr: Option<Expr>,
 }
 impl Query {
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(super) fn plain(raw: String) -> Self {
         let expressions = raw
             .split_whitespace()
