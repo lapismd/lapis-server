@@ -1,5 +1,19 @@
 # @lapismd/lapis-server
 
+## 2.10.0
+
+### Minor Changes
+
+- [#153](https://github.com/lapismd/lapis-server/pull/153) [`321c0f3`](https://github.com/lapismd/lapis-server/commit/321c0f3cf445fb76af1d3c31550081cd672f23a5) Thanks [@stevejuma](https://github.com/stevejuma)! - Use one encrypted Server credential store for Repository, forge accounts, and approved plugins. Supply the installation key via `LAPIS_SERVER_CREDENTIAL_KEY` or `LAPIS_SERVER_CREDENTIAL_KEY_FILE`, which replace the repository-only setting. Operators can approve trusted plugin IDs with `LAPIS_SERVER_CREDENTIAL_PLUGINS`.
+
+- [#152](https://github.com/lapismd/lapis-server/pull/152) [`6f9fa94`](https://github.com/lapismd/lapis-server/commit/6f9fa94d0f134ca55d315390940fc906ed5f2bb2) Thanks [@stevejuma](https://github.com/stevejuma)! - Add opt-in native plugin background jobs with bounded headless execution, durable scheduling, scoped vault operations, persistent notifications and explicit runner handoff.
+
+### Patch Changes
+
+- [#151](https://github.com/lapismd/lapis-server/pull/151) [`498c114`](https://github.com/lapismd/lapis-server/commit/498c114abcbbc04486d6d486ce3cec9083f74874) Thanks [@stevejuma](https://github.com/stevejuma)! - Expose checked vault operations to Android and iOS hosts through the shared Rust core.
+
+- [#157](https://github.com/lapismd/lapis-server/pull/157) [`758084f`](https://github.com/lapismd/lapis-server/commit/758084f3c6c9f0d97ba3191e5c79df1f02c75bc1) Thanks [@stevejuma](https://github.com/stevejuma)! - Expose native plugin background-job controls through the authenticated hosted vault attachment, with real installed-plugin detach and cold-restart acceptance.
+
 ## 2.9.2
 
 ### Patch Changes
