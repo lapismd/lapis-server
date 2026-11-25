@@ -16,6 +16,8 @@ import { reviewedNotesCohortTransition } from "./reviewed-notes-cohort-transitio
 import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
 import { reviewedAppProfileTransition } from "./reviewed-app-profile-transition.mjs";
 
+import { reviewedBackgroundJobsTransition } from "./reviewed-background-jobs-transition.mjs";
+
 const sections = [
   "dependencies",
   "optionalDependencies",
@@ -239,6 +241,16 @@ export function verifyIntake({
     fail("missing or changed source opt-in");
   const reviewed =
     terminal ??
+    reviewedBackgroundJobsTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    }) ??
     reviewedAppProfileTransition({
       sourceSha,
       policyBytes,
