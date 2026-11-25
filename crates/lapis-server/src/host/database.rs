@@ -67,7 +67,16 @@ impl Host {
             config.validate()?;
         }
         let (database, backup) = storage(profile, &config)?;
+        let root = VaultRoot::open(profile)?;
+        if let Err(error) = root.mkdir("plugin-jobs", false)
+            && error.kind() != io::ErrorKind::AlreadyExists
+        {
+            return Err(error);
+        }
+        let jobs = lapis_app_core::services::JobStorage::new(&profile.join("plugin-jobs"))
+            .map_err(io::Error::other)?;
         let mut runtime = Runtime::with_database(database)
+            .with_jobs(jobs)
             .with_backup(backup.with_history_indexing(indexed_history))
             .with_tasks(super::tasks::storage::select(profile)?);
         if let Some(storage) = super::turns::storage::select(profile, &config, agents)? {

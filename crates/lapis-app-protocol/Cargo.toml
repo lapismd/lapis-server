@@ -8,6 +8,7 @@ publish.workspace = true
 description = "Typed native service contracts for Lapis hosts and clients"
 
 [dependencies]
+lapis-plugin-jobs = { path = "../lapis-plugin-jobs", default-features = false }
 inventory = "=0.3.25"
 schemars = { version = "=1.2.3", features = ["uuid1", "indexmap2"] }
 serde = { version = "1", features = ["derive"] }

@@ -1,5 +1,9 @@
 # Affected CI and toolchain
 
+The root Rust package selection includes `lapis-plugin-jobs`. Its source changes
+select the engine and every dependent Core, Protocol, host and transport crate.
+Unknown or workspace-wide changes retain the complete root selection.
+
 ## SRV-GOV-005 — Affected CI and source-free toolchain
 
 <a id="srv-gov-005"></a>

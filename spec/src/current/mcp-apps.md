@@ -3,6 +3,10 @@
 The installation-owned bundle directory excludes mounted Server credential keys
 and the persistent profile, including its shared native credential store.
 
+The [background-job owner controls](background-jobs.md) share the authenticated
+native vault command transport. MCP App grants retain their explicit operation
+snapshots and approved domain operations.
+
 ## SRV-MCP-001 — Scoped application resources
 
 **Requirement.** The hosted MCP adapter MUST register packaged, versioned

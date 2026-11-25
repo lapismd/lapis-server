@@ -16,6 +16,8 @@ mod files;
 pub use file_changes::FileObservation;
 mod guards;
 mod history;
+mod jobs;
+pub use jobs::{JobStorage, NotificationDelivery as JobNotificationDelivery};
 #[cfg(feature = "local-sibling-projections")]
 mod indexing;
 #[cfg(not(feature = "local-sibling-projections"))]

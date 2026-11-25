@@ -9593,6 +9593,15 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+              "kind": { "type": "string", "const": "plugin_jobs" },
+              "snapshot": { "$ref": "#/components/schemas/JobSnapshot" }
+            },
+            "required": ["kind", "snapshot"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
               "kind": { "type": "string", "const": "editing_intents" },
               "value": { "$ref": "#/components/schemas/EditingIntentValue" }
             },
@@ -9670,6 +9679,210 @@
             "properties": { "kind": { "type": "string", "const": "done" } },
             "required": ["kind"]
           }
+        ]
+      },
+      "JobSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "revision": { "type": "integer", "format": "uint64", "minimum": 0 },
+          "runnerId": { "type": "string" },
+          "vaultId": { "type": "string" },
+          "nativeNotificationsAvailable": { "type": "boolean" },
+          "trusted": { "type": "boolean" },
+          "safeMode": { "type": "boolean" },
+          "jobs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/JobStatus" }
+          },
+          "transfer": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/JobTransfer" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "required": [
+          "revision",
+          "runnerId",
+          "vaultId",
+          "nativeNotificationsAvailable",
+          "trusted",
+          "safeMode",
+          "jobs"
+        ]
+      },
+      "JobStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pluginId": { "type": "string" },
+          "descriptor": { "$ref": "#/components/schemas/JobDescriptor" },
+          "fingerprint": { "type": "string" },
+          "configuration": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/JobConfiguration" },
+              { "type": "null" }
+            ]
+          },
+          "phase": { "$ref": "#/components/schemas/JobPhase" },
+          "runs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/JobRun" }
+          },
+          "nextRunAt": { "type": ["integer", "null"], "format": "int64" },
+          "unavailableReason": { "type": ["string", "null"] }
+        },
+        "required": ["pluginId", "descriptor", "fingerprint", "phase", "runs"]
+      },
+      "JobDescriptor": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "entry": { "type": "string" },
+          "schedule": { "$ref": "#/components/schemas/Schedule" },
+          "permissions": { "$ref": "#/components/schemas/JobPermissions" }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "entry",
+          "schedule",
+          "permissions"
+        ]
+      },
+      "Schedule": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "interval" },
+              "seconds": { "type": "integer", "format": "uint32", "minimum": 0 }
+            },
+            "required": ["kind", "seconds"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "daily" },
+              "hour": {
+                "type": "integer",
+                "format": "uint8",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "minute": {
+                "type": "integer",
+                "format": "uint8",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "timezone": { "type": "string" }
+            },
+            "required": ["kind", "hour", "minute", "timezone"]
+          }
+        ]
+      },
+      "JobPermissions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metadataRead": { "type": "boolean" },
+          "frontmatterRead": { "type": "boolean" },
+          "notifications": { "type": "boolean" },
+          "frontmatterFields": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": [
+          "metadataRead",
+          "frontmatterRead",
+          "notifications",
+          "frontmatterFields"
+        ]
+      },
+      "JobConfiguration": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fingerprint": { "type": "string" },
+          "schedule": { "$ref": "#/components/schemas/Schedule" },
+          "permissions": { "$ref": "#/components/schemas/JobPermissions" },
+          "enabled": { "type": "boolean" },
+          "nativeNotifications": { "type": "boolean", "default": false }
+        },
+        "required": ["fingerprint", "schedule", "permissions", "enabled"]
+      },
+      "JobPhase": {
+        "type": "string",
+        "enum": [
+          "paused",
+          "ready",
+          "running",
+          "completed",
+          "failed",
+          "interrupted",
+          "transferred"
+        ]
+      },
+      "JobRun": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "occurrence": { "type": "string" },
+          "localDate": { "type": "string" },
+          "scheduledAt": { "type": "integer", "format": "int64" },
+          "startedAt": { "type": "integer", "format": "int64" },
+          "finishedAt": { "type": ["integer", "null"], "format": "int64" },
+          "phase": { "$ref": "#/components/schemas/JobPhase" },
+          "error": { "type": ["string", "null"] }
+        },
+        "required": [
+          "id",
+          "occurrence",
+          "localDate",
+          "scheduledAt",
+          "startedAt",
+          "phase"
+        ]
+      },
+      "JobTransfer": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "fromVaultId": { "type": "string" },
+          "toVaultId": { "type": "string" },
+          "fromRunner": { "type": "string" },
+          "toRunner": { "type": "string" },
+          "pluginId": { "type": "string" },
+          "jobId": { "type": "string" },
+          "configuration": { "$ref": "#/components/schemas/JobConfiguration" },
+          "state": true,
+          "lastOccurrence": { "type": ["string", "null"] },
+          "lastScheduledAt": { "type": "integer", "format": "int64" },
+          "notificationKeys": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": [
+          "id",
+          "fromVaultId",
+          "toVaultId",
+          "fromRunner",
+          "toRunner",
+          "pluginId",
+          "jobId",
+          "configuration",
+          "state",
+          "lastScheduledAt",
+          "notificationKeys"
         ]
       },
       "EditingIntentValue": {
@@ -9889,6 +10102,15 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+              "kind": { "type": "string", "const": "plugin_jobs" },
+              "command": { "$ref": "#/components/schemas/JobCommand" }
+            },
+            "required": ["kind", "command"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
               "kind": { "type": "string", "const": "editing_intents" },
               "command": { "$ref": "#/components/schemas/EditingIntentCommand" }
             },
@@ -10001,6 +10223,91 @@
               "kind": { "type": "string", "const": "editor_claims" }
             },
             "required": ["kind"]
+          }
+        ]
+      },
+      "JobCommand": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": { "kind": { "type": "string", "const": "list" } },
+            "required": ["kind"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "configure" },
+              "pluginId": { "type": "string" },
+              "jobId": { "type": "string" },
+              "configuration": {
+                "$ref": "#/components/schemas/JobConfiguration"
+              }
+            },
+            "required": ["kind", "pluginId", "jobId", "configuration"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "pause" },
+              "pluginId": { "type": "string" },
+              "jobId": { "type": "string" }
+            },
+            "required": ["kind", "pluginId", "jobId"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "runNow" },
+              "pluginId": { "type": "string" },
+              "jobId": { "type": "string" }
+            },
+            "required": ["kind", "pluginId", "jobId"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "resolve" },
+              "pluginId": { "type": "string" },
+              "jobId": { "type": "string" },
+              "runId": { "type": "string" }
+            },
+            "required": ["kind", "pluginId", "jobId", "runId"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "fence" },
+              "trusted": { "type": "boolean" },
+              "safeMode": { "type": "boolean" }
+            },
+            "required": ["kind", "trusted", "safeMode"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "transfer" },
+              "pluginId": { "type": "string" },
+              "jobId": { "type": "string" },
+              "toRunner": { "type": "string" },
+              "toVaultId": { "type": "string" }
+            },
+            "required": ["kind", "pluginId", "jobId", "toRunner", "toVaultId"]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "const": "importTransfer" },
+              "receipt": { "$ref": "#/components/schemas/JobTransfer" }
+            },
+            "required": ["kind", "receipt"]
           }
         ]
       },
