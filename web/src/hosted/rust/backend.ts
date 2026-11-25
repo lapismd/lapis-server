@@ -20,6 +20,7 @@ import { RustHostError, RustHttpClient } from "./client";
 import { RustDatabaseProvider } from "./database-provider";
 import { RustVaultAdapter } from "./vault-adapter";
 import { createRustPluginAssetServer } from "./plugin-assets";
+import { preparePluginCredentials } from "./plugin-credentials";
 import { createRustPluginDistributionFetch } from "./plugin-distribution";
 import type { ManagedVault } from "../../../../crates/lapis-app-protocol/bindings/protocol";
 
@@ -97,6 +98,7 @@ export function createRustHostedBackend(
     exportUrl: (id) => host.url(`/vaults/${encodeURIComponent(id)}/export`),
     async prepare(profile) {
       const client = await host.attach(profile.id);
+      const pluginSecretsHost = await preparePluginCredentials(client);
       const owner = account;
       if (owner && offline?.current.grant?.account === owner)
         await recoverBrowserAttachments(host, client, owner);
@@ -111,13 +113,16 @@ export function createRustHostedBackend(
       return {
         draftRemote: adapter.draftRemote,
         revalidate: (signal) => client.revalidate(signal),
-        workspaceHost: hostedTerminalWorkspace(client, [
-          {
-            plugin: contentAccessPlugin(host, profile.id),
-            required: true,
-            enabledByDefault: true,
-          },
-        ]),
+        workspaceHost: {
+          ...hostedTerminalWorkspace(client, [
+            {
+              plugin: contentAccessPlugin(host, profile.id),
+              required: true,
+              enabledByDefault: true,
+            },
+          ]),
+          pluginSecretsHost,
+        },
         adapter,
         skillManagement: createRustSkillManagement(client),
         nativeTasks: nativeTasks

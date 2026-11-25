@@ -148,11 +148,20 @@ export class RustHttpClient {
   }
 
   async attach(vaultId: string): Promise<RustVaultClient> {
-    const descriptor = await this.json(
+    const response = await this.response(
       `/vaults/${encodeURIComponent(vaultId)}/clients`,
-      "POST",
-      { protocol_version: PROTOCOL_MAJOR },
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ protocol_version: PROTOCOL_MAJOR }),
+      },
     );
-    return RustVaultClient.admitted(this, descriptor, vaultId);
+    return RustVaultClient.admitted(
+      this,
+      await response.json(),
+      vaultId,
+      true,
+      response.headers.get("x-lapis-plugin-credentials") === "1",
+    );
   }
 }
