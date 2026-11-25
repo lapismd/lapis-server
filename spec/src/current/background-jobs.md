@@ -10,13 +10,17 @@ application lifetime. Tasks owns its overdue digest handler.
 in a fresh JavaScript runtime with bounded memory, stack, elapsed execution and
 host calls. Native operations MUST pass through an admitted per-job broker.
 Cancellation and deadline expiry MUST interrupt computation. The runtime MUST
-expose no filesystem, process, network or renderer authority.
+expose no filesystem, process, network or renderer authority. A settled native
+operation MUST NOT permit successful completion after deadline expiry or
+cancellation, including handlers that catch callback errors. Admitted native
+operations MUST settle before the execution lease ends.
 
 ### Acceptance details
 
 - Synchronous and asynchronous handlers complete through the same execution API.
 - Denied operations, module imports, missing handlers and rejected promises fail.
 - Infinite loops, excessive allocation and oversized calls terminate within bounds.
+- Settled native callbacks cannot mask terminal cancellation or deadline expiry.
 
 ## SRV-JOB-002 — Calendar scheduling
 
@@ -86,9 +90,14 @@ MUST select the first valid minute after the requested time.
 
 ## Delivery status
 
-The native implementation is under qualification. Desktop admission, native
-metadata default cutover and both consumer journeys remain open in the
-[background jobs backlog](../backlog/background-jobs.md).
+The [terminal completion receipt](../../records/2026-11-25-plugin-job-completion.md)
+retains the exact cancellation/deadline regressions and full Rust retry.
+
+The native implementation and real hosted journey are
+[registry-qualified](../../records/2026-11-24-plugin-background-hosted.md).
+[Public dependency adoption](../../records/2026-11-25-background-registry-adoption.md)
+is merged. Desktop admission/default cutover and released Tasks acceptance remain
+open in the [background jobs backlog](../backlog/background-jobs.md).
 
 ## Hosted acceptance
 

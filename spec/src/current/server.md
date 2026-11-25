@@ -366,3 +366,8 @@ Android conditional replacement stages a named file in the admitted parent direc
 Mobile hosts can opt into the typed database with the mobile-database feature. The native owner admits an absolute app-private database directory and vault UUID. Renderer calls enter through the client authority check. Lexical search and token-hash embeddings run locally. Mobile builds reject unregistered model runtimes at configuration time.
 
 Check mobile vault builds and strict Clippy on aarch64-linux-android and aarch64-apple-ios-sim. Check mobile-database on Android, database lifecycle/search and vault conformance/durability on Linux. Record Android stale writes and cold reopening in Mobile. Format verification rows with Prettier.
+
+The optional native background-job port shares the existing authenticated vault
+attachment and command transport. Renderer metadata compatibility mode admits no
+job port. [Hosted source acceptance](../../records/2026-11-24-plugin-background-hosted.md)
+uses the production settings and real Server through browser detach and cold restart.

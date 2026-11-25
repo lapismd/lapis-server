@@ -146,3 +146,55 @@ fn bounds_memory_and_rejects_missing_handlers() {
     assert!(run("export const other = 1;", Arc::new(Host::default())).is_err());
     assert!(run("export function run() {}", Arc::new(Host::default())).is_ok());
 }
+
+struct ReturningHost {
+    invoked: AtomicBool,
+    cancelled: AtomicBool,
+    cancel_on_return: bool,
+}
+impl JobHost for ReturningHost {
+    fn invoke(&self, _action: &str, _input: Value) -> Result<Value, String> {
+        self.invoked.store(true, Ordering::Release);
+        if self.cancel_on_return {
+            self.cancelled.store(true, Ordering::Release);
+        } else {
+            std::thread::sleep(Duration::from_millis(200));
+        }
+        Ok(Value::Null)
+    }
+    fn cancelled(&self) -> bool {
+        self.cancelled.load(Ordering::Acquire)
+    }
+}
+
+#[test]
+fn refuses_success_after_native_callback_exceeds_deadline() {
+    callback_cannot_report_success(false);
+}
+
+#[test]
+fn refuses_success_after_native_callback_requests_cancellation() {
+    callback_cannot_report_success(true);
+}
+
+fn callback_cannot_report_success(cancel_on_return: bool) {
+    let host = Arc::new(ReturningHost {
+        invoked: AtomicBool::new(false),
+        cancelled: AtomicBool::new(false),
+        cancel_on_return,
+    });
+    let result = execute(
+        "export function run(ctx) { try { ctx.state.load(); } catch {} }",
+        &json!({}),
+        host.clone(),
+        ExecutionLimits {
+            duration: Duration::from_millis(if cancel_on_return { 1000 } else { 100 }),
+            ..Default::default()
+        },
+    );
+    assert!(host.invoked.load(Ordering::Acquire));
+    assert!(
+        result.is_err(),
+        "A terminal native callback reported success"
+    );
+}

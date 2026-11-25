@@ -50,53 +50,67 @@ pub fn execute(
         Instant::now() >= deadline || interrupt_host.cancelled()
     })));
     let engine = Context::full(&runtime).map_err(engine_error)?;
-    engine.with(|ctx| {
-        let calls = std::sync::atomic::AtomicUsize::new(0);
-        let invoke = Func::from(move |action: String, input: String| -> String {
-            let result: Result<Json, String> = (|| {
-                if Instant::now() >= deadline || host.cancelled() {
-                    return Err("Plugin job was cancelled".into());
+    let completion_host = host.clone();
+    engine
+        .with(|ctx| {
+            let calls = std::sync::atomic::AtomicUsize::new(0);
+            let invoke = Func::from(move |action: String, input: String| -> String {
+                let result: Result<Json, String> = (|| {
+                    if Instant::now() >= deadline || host.cancelled() {
+                        return Err("Plugin job was cancelled".into());
+                    }
+                    if calls.fetch_add(1, std::sync::atomic::Ordering::Relaxed) >= limits.max_calls
+                        || action.len() > 64
+                        || input.len() > 1024 * 1024
+                    {
+                        return Err("Plugin job call exceeds bounds".into());
+                    }
+                    let input =
+                        serde_json::from_str(&input).map_err(|_| "Invalid plugin job input")?;
+                    let output = host.invoke(&action, input)?;
+                    if serde_json::to_vec(&output)
+                        .map_err(|_| "Invalid job result")?
+                        .len()
+                        > 1024 * 1024
+                    {
+                        return Err("Plugin job result exceeds bounds".into());
+                    }
+                    Ok(output)
+                })();
+                match result {
+                    Ok(value) => serde_json::json!({"value": value}).to_string(),
+                    Err(error) => serde_json::json!({"error": error}).to_string(),
                 }
-                if calls.fetch_add(1, std::sync::atomic::Ordering::Relaxed) >= limits.max_calls
-                    || action.len() > 64
-                    || input.len() > 1024 * 1024
-                {
-                    return Err("Plugin job call exceeds bounds".into());
-                }
-                let input = serde_json::from_str(&input).map_err(|_| "Invalid plugin job input")?;
-                let output = host.invoke(&action, input)?;
-                if serde_json::to_vec(&output)
-                    .map_err(|_| "Invalid job result")?
-                    .len()
-                    > 1024 * 1024
-                {
-                    return Err("Plugin job result exceeds bounds".into());
-                }
-                Ok(output)
-            })();
-            match result {
-                Ok(value) => serde_json::json!({"value": value}).to_string(),
-                Err(error) => serde_json::json!({"error": error}).to_string(),
+            });
+            ctx.globals()
+                .set("__jobInvoke", invoke)
+                .map_err(engine_error)?;
+            ctx.globals()
+                .set("__jobContext", context.to_string())
+                .map_err(engine_error)?;
+            let argument: Object = ctx.eval(include_str!("context.js")).map_err(engine_error)?;
+            let (module, initialized) = Module::declare(ctx.clone(), "plugin-job", source)
+                .and_then(Module::eval)
+                .map_err(engine_error)?;
+            initialized.finish::<()>().map_err(engine_error)?;
+            let run: Function = module.get("run").map_err(engine_error)?;
+            let result: Value = run.call((argument,)).map_err(engine_error)?;
+            if let Some(promise) = result.as_promise() {
+                promise.finish::<()>().map_err(engine_error)?;
             }
-        });
-        ctx.globals()
-            .set("__jobInvoke", invoke)
-            .map_err(engine_error)?;
-        ctx.globals()
-            .set("__jobContext", context.to_string())
-            .map_err(engine_error)?;
-        let argument: Object = ctx.eval(include_str!("context.js")).map_err(engine_error)?;
-        let (module, initialized) = Module::declare(ctx.clone(), "plugin-job", source)
-            .and_then(Module::eval)
-            .map_err(engine_error)?;
-        initialized.finish::<()>().map_err(engine_error)?;
-        let run: Function = module.get("run").map_err(engine_error)?;
-        let result: Value = run.call((argument,)).map_err(engine_error)?;
-        if let Some(promise) = result.as_promise() {
-            promise.finish::<()>().map_err(engine_error)?;
-        }
-        Ok(())
-    })
+            Ok(())
+        })
+        .and_then(|()| {
+            // An admitted native operation settles before its execution lease ends.
+            // Neither its final callback nor a handler catch can hide a terminal budget.
+            if Instant::now() >= deadline {
+                Err("Plugin job exceeded its execution deadline".into())
+            } else if completion_host.cancelled() {
+                Err("Plugin job was cancelled".into())
+            } else {
+                Ok(())
+            }
+        })
 }
 
 fn engine_error(error: rquickjs::Error) -> String {

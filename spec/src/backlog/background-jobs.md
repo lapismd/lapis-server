@@ -12,9 +12,9 @@ The native engine, private journals, installed discovery, scoped broker, guarded
 writes, notification history and explicit runner handoff are implemented and
 [source-qualified](../../records/2026-11-24-plugin-background-runtime.md).
 
-- Complete Notes publication and registry-only public API adoption.
-- Finish the real authenticated Server settings, browser detach and cold-restart
-  acceptance, plus the complete hosted and interaction/accessibility lanes.
+- Complete hosted-controls PR checks. Notes publication and registry-only Server
+  dependency adoption are merged. Real authenticated settings, browser detach,
+  cold restart and the complete hosted/catalog lanes pass with released packages.
 - Pin Desktop to the reviewed native revision, qualify native metadata as the
   default, last-window retention, cold resume, explicit vault close and Quit drain.
 - Qualify the installable Tasks handler and signed release in both actual hosts.

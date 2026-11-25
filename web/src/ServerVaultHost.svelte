@@ -478,6 +478,7 @@
           appDatabaseProvider: resources.database,
         });
         session.skillManagement = resources.skillManagement;
+        session.nativeBackgroundJobs = resources.nativeBackgroundJobs;
         session.nativeTasks = resources.nativeTasks;
         session.nativeEditingIntents = resources.nativeEditingIntents;
         session.backgroundIndexing = resources.backgroundIndexing;
