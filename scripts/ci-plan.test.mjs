@@ -78,6 +78,7 @@ test("shared and unknown inputs fail closed", () => {
       "lapis-cli",
       "lapis-content-http",
       "lapis-content-mcp",
+      "lapis-plugin-jobs",
       "lapis-server",
     ]);
     assert.equal(result.modLoader, true);

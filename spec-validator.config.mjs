@@ -41,7 +41,7 @@ export default defineConfig(headingRequirements(), {
     specFirst: {
       mode: "mapped",
       canonicalPattern:
-        "^spec/src/current/(?:server|sync|content|mcp-apps|cli|governance(?:/(?:ci|dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
+        "^spec/src/current/(?:server|background-jobs|sync|content|mcp-apps|cli|governance(?:/(?:ci|dependency-automation|dependency-toolchain))?|hosted|delivery|mods)\\.md$",
       protected: [
         "^(?:crates/|scripts/|web/|stories/|\\.storybook/|package\\.json$|\\.github/|Cargo\\.toml$|Dockerfile$)",
       ],
@@ -73,6 +73,10 @@ export default defineConfig(headingRequirements(), {
         {
           pattern: "^crates/lapis-container-mods/",
           chapters: ["spec/src/current/mods.md"],
+        },
+        {
+          pattern: "^crates/lapis-plugin-jobs/",
+          chapters: ["spec/src/current/background-jobs.md"],
         },
         { pattern: "^crates/", chapters: ["spec/src/current/server.md"] },
         { pattern: ".*", chapters: ["spec/src/current/governance.md"] },

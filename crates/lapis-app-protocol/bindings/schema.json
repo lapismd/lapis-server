@@ -1664,6 +1664,244 @@
       },
       "type": "object"
     },
+    "JobCommand": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": { "kind": { "const": "list", "type": "string" } },
+          "required": ["kind"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "configuration": { "$ref": "#/$defs/JobConfiguration" },
+            "jobId": { "type": "string" },
+            "kind": { "const": "configure", "type": "string" },
+            "pluginId": { "type": "string" }
+          },
+          "required": ["kind", "pluginId", "jobId", "configuration"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "jobId": { "type": "string" },
+            "kind": { "const": "pause", "type": "string" },
+            "pluginId": { "type": "string" }
+          },
+          "required": ["kind", "pluginId", "jobId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "jobId": { "type": "string" },
+            "kind": { "const": "runNow", "type": "string" },
+            "pluginId": { "type": "string" }
+          },
+          "required": ["kind", "pluginId", "jobId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "jobId": { "type": "string" },
+            "kind": { "const": "resolve", "type": "string" },
+            "pluginId": { "type": "string" },
+            "runId": { "type": "string" }
+          },
+          "required": ["kind", "pluginId", "jobId", "runId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "fence", "type": "string" },
+            "safeMode": { "type": "boolean" },
+            "trusted": { "type": "boolean" }
+          },
+          "required": ["kind", "trusted", "safeMode"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "jobId": { "type": "string" },
+            "kind": { "const": "transfer", "type": "string" },
+            "pluginId": { "type": "string" },
+            "toRunner": { "type": "string" },
+            "toVaultId": { "type": "string" }
+          },
+          "required": ["kind", "pluginId", "jobId", "toRunner", "toVaultId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "importTransfer", "type": "string" },
+            "receipt": { "$ref": "#/$defs/JobTransfer" }
+          },
+          "required": ["kind", "receipt"],
+          "type": "object"
+        }
+      ]
+    },
+    "JobConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "fingerprint": { "type": "string" },
+        "nativeNotifications": { "default": false, "type": "boolean" },
+        "permissions": { "$ref": "#/$defs/JobPermissions" },
+        "schedule": { "$ref": "#/$defs/Schedule" }
+      },
+      "required": ["fingerprint", "schedule", "permissions", "enabled"],
+      "type": "object"
+    },
+    "JobDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "entry": { "type": "string" },
+        "id": { "type": "string" },
+        "permissions": { "$ref": "#/$defs/JobPermissions" },
+        "schedule": { "$ref": "#/$defs/Schedule" },
+        "title": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "entry",
+        "schedule",
+        "permissions"
+      ],
+      "type": "object"
+    },
+    "JobPermissions": {
+      "additionalProperties": false,
+      "properties": {
+        "frontmatterFields": { "items": { "type": "string" }, "type": "array" },
+        "frontmatterRead": { "type": "boolean" },
+        "metadataRead": { "type": "boolean" },
+        "notifications": { "type": "boolean" }
+      },
+      "required": [
+        "metadataRead",
+        "frontmatterRead",
+        "notifications",
+        "frontmatterFields"
+      ],
+      "type": "object"
+    },
+    "JobPhase": {
+      "enum": [
+        "paused",
+        "ready",
+        "running",
+        "completed",
+        "failed",
+        "interrupted",
+        "transferred"
+      ],
+      "type": "string"
+    },
+    "JobRun": {
+      "additionalProperties": false,
+      "properties": {
+        "error": { "type": ["string", "null"] },
+        "finishedAt": { "format": "int64", "type": ["integer", "null"] },
+        "id": { "type": "string" },
+        "localDate": { "type": "string" },
+        "occurrence": { "type": "string" },
+        "phase": { "$ref": "#/$defs/JobPhase" },
+        "scheduledAt": { "format": "int64", "type": "integer" },
+        "startedAt": { "format": "int64", "type": "integer" }
+      },
+      "required": [
+        "id",
+        "occurrence",
+        "localDate",
+        "scheduledAt",
+        "startedAt",
+        "phase"
+      ],
+      "type": "object"
+    },
+    "JobSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "jobs": { "items": { "$ref": "#/$defs/JobStatus" }, "type": "array" },
+        "nativeNotificationsAvailable": { "type": "boolean" },
+        "revision": { "format": "uint64", "minimum": 0, "type": "integer" },
+        "runnerId": { "type": "string" },
+        "safeMode": { "type": "boolean" },
+        "transfer": {
+          "anyOf": [{ "$ref": "#/$defs/JobTransfer" }, { "type": "null" }]
+        },
+        "trusted": { "type": "boolean" },
+        "vaultId": { "type": "string" }
+      },
+      "required": [
+        "revision",
+        "runnerId",
+        "vaultId",
+        "nativeNotificationsAvailable",
+        "trusted",
+        "safeMode",
+        "jobs"
+      ],
+      "type": "object"
+    },
+    "JobStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "configuration": {
+          "anyOf": [{ "$ref": "#/$defs/JobConfiguration" }, { "type": "null" }]
+        },
+        "descriptor": { "$ref": "#/$defs/JobDescriptor" },
+        "fingerprint": { "type": "string" },
+        "nextRunAt": { "format": "int64", "type": ["integer", "null"] },
+        "phase": { "$ref": "#/$defs/JobPhase" },
+        "pluginId": { "type": "string" },
+        "runs": { "items": { "$ref": "#/$defs/JobRun" }, "type": "array" },
+        "unavailableReason": { "type": ["string", "null"] }
+      },
+      "required": ["pluginId", "descriptor", "fingerprint", "phase", "runs"],
+      "type": "object"
+    },
+    "JobTransfer": {
+      "additionalProperties": false,
+      "properties": {
+        "configuration": { "$ref": "#/$defs/JobConfiguration" },
+        "fromRunner": { "type": "string" },
+        "fromVaultId": { "type": "string" },
+        "id": { "type": "string" },
+        "jobId": { "type": "string" },
+        "lastOccurrence": { "type": ["string", "null"] },
+        "lastScheduledAt": { "format": "int64", "type": "integer" },
+        "notificationKeys": { "items": { "type": "string" }, "type": "array" },
+        "pluginId": { "type": "string" },
+        "state": true,
+        "toRunner": { "type": "string" },
+        "toVaultId": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "fromVaultId",
+        "toVaultId",
+        "fromRunner",
+        "toRunner",
+        "pluginId",
+        "jobId",
+        "configuration",
+        "state",
+        "lastScheduledAt",
+        "notificationKeys"
+      ],
+      "type": "object"
+    },
     "LinkDirection": { "enum": ["incoming", "outgoing"], "type": "string" },
     "LinkKind": {
       "enum": ["reference", "task-entry", "list-entry", "navigation-item"],
@@ -4770,6 +5008,40 @@
       "enum": ["null", "string", "number", "boolean", "date"],
       "type": "string"
     },
+    "Schedule": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "interval", "type": "string" },
+            "seconds": { "format": "uint32", "minimum": 0, "type": "integer" }
+          },
+          "required": ["kind", "seconds"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "hour": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "kind": { "const": "daily", "type": "string" },
+            "minute": {
+              "format": "uint8",
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "timezone": { "type": "string" }
+          },
+          "required": ["kind", "hour", "minute", "timezone"],
+          "type": "object"
+        }
+      ]
+    },
     "SearchChunkEmbedding": {
       "additionalProperties": false,
       "properties": {
@@ -6101,6 +6373,15 @@
         {
           "additionalProperties": false,
           "properties": {
+            "command": { "$ref": "#/$defs/JobCommand" },
+            "kind": { "const": "plugin_jobs", "type": "string" }
+          },
+          "required": ["kind", "command"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
             "command": { "$ref": "#/$defs/EditingIntentCommand" },
             "kind": { "const": "editing_intents", "type": "string" }
           },
@@ -6238,6 +6519,15 @@
     },
     "VaultValue": {
       "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "const": "plugin_jobs", "type": "string" },
+            "snapshot": { "$ref": "#/$defs/JobSnapshot" }
+          },
+          "required": ["kind", "snapshot"],
+          "type": "object"
+        },
         {
           "additionalProperties": false,
           "properties": {

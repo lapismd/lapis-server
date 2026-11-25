@@ -22,6 +22,9 @@ impl Client {
                 return Err(Error::denied());
             }
             Ok(match request.command {
+                VaultCommand::PluginJobs { command } => VaultValue::PluginJobs {
+                    snapshot: Box::new(self.plugin_jobs(command)?),
+                },
                 VaultCommand::EditingIntents { command } => VaultValue::EditingIntents {
                     value: self.editing_intents(command)?,
                 },

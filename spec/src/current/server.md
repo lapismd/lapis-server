@@ -1,5 +1,9 @@
 # Hosted server
 
+The [background job engine](background-jobs.md) stages bounded plugin execution
+and calendar scheduling. Native job ownership and host integration remain gated
+by their own acceptance and [backlog](../backlog/background-jobs.md).
+
 SRV-SYNC-020 native leave preparation retains original account ownership until
 host commit; refused leave releases only the admission fence.
 
@@ -138,7 +142,7 @@ jj-store path, a crate tag, or pull request 22 head
 
 <a id="srv-srv-004"></a>
 
-**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http`, `lapis-content-mcp` and `lapis-cli` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
+**Requirement.** This repository MUST own the `lapis-server`, `lapis-app-core`, `lapis-app-protocol`, `lapis-content-http`, `lapis-content-mcp` `lapis-cli` and `lapis-plugin-jobs` crates, and Cargo paths MUST stay internal. Shared Notes product requirements MUST stay in Notes. Retained native projection engines MUST compile by default through `local-sibling-projections` using exact Git commits. Compilation MUST NOT change per-vault native ownership or configuration.
 
 The native server crate also exports an offline OpenAPI generator for the
 registered HTTP routes. The executable and Swagger UI use the same catalog.
@@ -147,7 +151,7 @@ The server serves the shared PWA raster asset at the public icon URL advertised 
 
 ### Acceptance details
 
-- The workspace contains those six crates; HTTP/MCP adapters share Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.
+- The workspace contains those seven crates; HTTP/MCP adapters share Core/Protocol without server bootstrap or Tauri, while the CLI depends on Protocol and uses native owners only in tests.
 - The core and server manifests have no path dependency that leaves this repository.
 - The Notes hosted-server chapter points at this book instead of restating it.
 - Default `local-sibling-projections` builds and tests the retained engines through Git dependencies, never external workspace paths.
