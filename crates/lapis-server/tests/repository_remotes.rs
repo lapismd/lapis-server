@@ -7,8 +7,8 @@ use lapis_server::{
 use serde_json::{Value, json};
 use std::{path::Path, sync::Arc};
 use uuid::Uuid;
-mod transport;
 mod synchronization;
+mod transport;
 
 const TOKEN: &str = "disposable-remotes-owner-token-0123456789";
 const SECRET: &str = "disposable-https-credential-fixture";
@@ -54,6 +54,10 @@ impl Running {
                     key_file: key.map(Into::into),
                     known_hosts: trust.map(Into::into),
                     ssh_available: trust.is_some(),
+                    credential_plugins: lapis_app_core::credentials::PluginGrants::parse(
+                        "first,second",
+                    )
+                    .unwrap(),
                     ..Default::default()
                 },
             )
@@ -83,19 +87,19 @@ impl Running {
             .header(VERSION_HEADER, PROTOCOL_MAJOR)
     }
     async fn attach(&self, id: Uuid) -> ClientDescriptor {
-        self.auth(
-            self.client
-                .post(format!("{}/api/v3/vaults/{id}/clients", self.base)),
-        )
-        .json(&json!({"protocol_version":PROTOCOL_MAJOR}))
-        .send()
-        .await
-        .unwrap()
-        .error_for_status()
-        .unwrap()
-        .json()
-        .await
-        .unwrap()
+        let response = self
+            .auth(
+                self.client
+                    .post(format!("{}/api/v3/vaults/{id}/clients", self.base)),
+            )
+            .json(&json!({"protocol_version":PROTOCOL_MAJOR}))
+            .send()
+            .await
+            .unwrap()
+            .error_for_status()
+            .unwrap();
+        assert_eq!(response.headers()["x-lapis-plugin-credentials"], "1");
+        response.json().await.unwrap()
     }
     fn url(&self, c: &ClientDescriptor) -> String {
         format!(
@@ -121,6 +125,16 @@ impl Running {
             .await
             .unwrap()
     }
+    async fn credential(&self, c: &ClientDescriptor, command: Value) -> reqwest::Response {
+        self.auth(self.client.post(format!(
+            "{}/api/v3/clients/{}/plugin-credentials",
+            self.base, c.client_id
+        )))
+        .json(&command)
+        .send()
+        .await
+        .unwrap()
+    }
     async fn stop(self) {
         self.task.abort();
         let _ = self.task.await;
@@ -131,6 +145,111 @@ impl Running {
         .await
         .unwrap();
     }
+}
+
+#[tokio::test]
+async fn plugin_credential_leases_are_scoped_and_cold_persistent() {
+    let root = tempfile::tempdir().unwrap();
+    let key = root.path().join("credential-key");
+    std::fs::write(&key, [83; 32]).unwrap();
+    let ids = [Uuid::new_v4(), Uuid::new_v4()];
+    let server = Running::start(root.path(), Some(&key), ids).await;
+    let browser = server.attach(ids[0]).await;
+    let other_browser = server.attach(ids[0]).await;
+    assert_eq!(
+        server
+            .credential(&browser, json!({"kind":"open", "plugin":"unapproved"}))
+            .await
+            .status(),
+        403
+    );
+    let mut leases = vec![];
+    for (plugin, value) in [("first", "fixture-first"), ("second", "fixture-second")] {
+        let open: Value = server
+            .credential(&browser, json!({"kind":"open", "plugin":plugin}))
+            .await
+            .error_for_status()
+            .unwrap()
+            .json()
+            .await
+            .unwrap();
+        let lease = open["lease"].clone();
+        let response = server
+            .credential(
+                &browser,
+                json!({"kind":"set", "lease":lease, "name":"token", "value":value}),
+            )
+            .await
+            .error_for_status()
+            .unwrap();
+        assert_eq!(response.headers()["cache-control"], "no-store");
+        leases.push(lease);
+    }
+    assert_eq!(
+        server
+            .credential(
+                &other_browser,
+                json!({"kind":"get", "lease":leases[0], "name":"token"})
+            )
+            .await
+            .status(),
+        403
+    );
+    let _ = server
+        .credential(&browser, json!({"kind":"close", "lease":leases[0]}))
+        .await
+        .error_for_status()
+        .unwrap();
+    assert_eq!(
+        server
+            .credential(
+                &browser,
+                json!({"kind":"get", "lease":leases[0], "name":"token"})
+            )
+            .await
+            .status(),
+        403
+    );
+    server
+        .host
+        .detach(browser.client_id, lapis_server::host::Principal::Token)
+        .unwrap();
+    assert_eq!(
+        server
+            .credential(
+                &browser,
+                json!({"kind":"get", "lease":leases[1], "name":"token"})
+            )
+            .await
+            .status(),
+        403
+    );
+    server.stop().await;
+    let server = Running::start(root.path(), Some(&key), ids).await;
+    let browser = server.attach(ids[0]).await;
+    for (plugin, value) in [("first", "fixture-first"), ("second", "fixture-second")] {
+        let open: Value = server
+            .credential(&browser, json!({"kind":"open", "plugin":plugin}))
+            .await
+            .error_for_status()
+            .unwrap()
+            .json()
+            .await
+            .unwrap();
+        let reply: Value = server
+            .credential(
+                &browser,
+                json!({"kind":"get", "lease":open["lease"], "name":"token"}),
+            )
+            .await
+            .error_for_status()
+            .unwrap()
+            .json()
+            .await
+            .unwrap();
+        assert_eq!(reply["value"], value);
+    }
+    server.stop().await;
 }
 fn credential(revision: &Value, replace: Option<&str>, token: &str) -> Value {
     json!({"kind":"save_credential", "expectedRevision":revision,

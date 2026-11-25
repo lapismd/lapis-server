@@ -6,7 +6,7 @@ use crate::host::Principal;
 use axum::{
     Extension, Json,
     extract::{Path, State as AxumState, rejection::JsonRejection},
-    http::StatusCode,
+    http::{HeaderMap, HeaderValue, StatusCode, header},
 };
 use lapis_app_protocol::{
     AttachClient, ClientDescriptor, ErrorCode, ManagedVault, Outcome, Reply, Request,
@@ -31,7 +31,7 @@ pub(super) async fn attach(
     Path(vault): Path<Uuid>,
     Extension(principal): Extension<Principal>,
     input: Result<Json<AttachClient>, JsonRejection>,
-) -> Result<Json<ClientDescriptor>, Failure> {
+) -> Result<(HeaderMap, Json<ClientDescriptor>), Failure> {
     if body(input)?.protocol_version != lapis_app_protocol::PROTOCOL_MAJOR {
         return Err(Failure::new(
             ErrorCode::ProtocolMismatch,
@@ -50,7 +50,12 @@ pub(super) async fn attach(
         let _ = blocking(move || host.detach(client, principal)).await;
         return Err(error.into());
     }
-    Ok(Json(descriptor))
+    let mut headers = HeaderMap::new();
+    headers.insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
+    if state.host.has_plugin_credential_grants() {
+        headers.insert("x-lapis-plugin-credentials", HeaderValue::from_static("1"));
+    }
+    Ok((headers, Json(descriptor)))
 }
 pub(super) async fn execute(
     AxumState(state): AxumState<State>,

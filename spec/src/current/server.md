@@ -249,8 +249,8 @@ work remains Core-owned after response cancellation; retirement fences delivery.
 The single installation owner has a stable private identity independent of login
 sessions. Token-only and browser authentication refer to that same owner.
 
-Operator configuration selects `LAPIS_SERVER_REPOSITORY_KEY_FILE` outside the
-profile and every vault, optional GitHub client ID and SSH known-hosts path.
+Operator configuration selects one installation-wide credential key, optional
+GitHub client ID and an SSH known-hosts path.
 Missing/wrong keys expose locked custody; SSH remains independently available.
 The runtime includes `openssh-client` and preserves host-key verification.
 [Operator instructions](../../../docs/repository-remotes.md) define provisioning,
@@ -261,18 +261,33 @@ remain in the native-services backlog until independently qualified.
 
 <a id="srv-srv-015"></a>
 
-**Requirement.** Server repository tokens and forge account credentials MUST use authenticated encryption at rest with a separately operator-mounted 32-byte key. Missing or incorrect keys and corrupted stores MUST remain locked without plaintext fallback. Authenticated records MUST bind installation, authenticated owner and credential identity.
+**Requirement.** Server MUST use one installation-wide, authenticated encrypted credential store. Operators MAY configure one key as `LAPIS_SERVER_CREDENTIAL_KEY` (standard Base64 encoding of 32 bytes) or `LAPIS_SERVER_CREDENTIAL_KEY_FILE` (absolute path to 32 raw bytes outside the profile and vaults), and supplying both MUST fail startup. Absent, invalid, or incorrect keys MUST leave custody locked. Authenticated records MUST bind installation, owner, namespace, and secret identity.
 
 ### Acceptance details
 
 - Verify locked states for absent, malformed, incorrect and installation-mismatched keys, without rewriting encrypted records.
 - Prove authenticated owner/record identity binding, tamper rejection and encrypted restart persistence using disposable private storage.
+- Reopen the same store with an equivalent key supplied by the other input.
+- Verify that runtime key values are excluded from subprocess environments and diagnostics, and that mounted key files cannot be served or exported.
 
 ## SRV-SRV-016 — Scoped repository credential lifecycle
 
 <a id="srv-srv-016"></a>
 
 **Requirement.** Native credential custody MUST support durable save, replacement and forgetting through opaque references. Secret-free inventory MUST omit stored tokens, and resolution MUST enforce the approved HTTPS endpoint/account scope and owner. Browser requests MUST NOT select key files or storage locations; vault checkpoints and exports MUST exclude credential storage.
+
+Native features and approved plugins use the shared Core byte-oriented contract.
+Hosts bind the owner, installation or profile, and namespace at admission.
+The contract distinguishes a missing entry from a locked or unavailable backend.
+Repository tokens and forge credentials occupy reserved native namespaces and
+continue to resolve through the existing endpoint-checked Git operations.
+Server plugin approvals come from the installation's
+`LAPIS_SERVER_CREDENTIAL_PLUGINS` allowlist. An approved plugin opens an opaque
+credential lease on its admitted attachment. The lease cannot be transferred
+to another attachment and is revoked on close or detach. The credential routes
+inherit owner authentication, protocol checks and exact-origin CSRF policy.
+The hosted renderer discovers approved IDs only when the attachment response
+advertises that the installation has grants.
 
 ### Acceptance details
 

@@ -11,6 +11,7 @@ export default defineConfig({
     "rust-server-plugin.spec.ts",
     "rust-server-files.spec.ts",
     "rust-server-chat.spec.ts",
+    "rust-server-credentials.spec.ts",
     "rust-server-queue.spec.ts",
     "rust-server-participants.spec.ts",
   ],

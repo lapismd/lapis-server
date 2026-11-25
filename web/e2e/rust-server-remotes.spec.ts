@@ -32,8 +32,8 @@ test("cold hosted remotes preserve manual connections and encrypted credentials 
   const token = randomBytes(32).toString("base64url");
   const key = join(root, "repository-key");
   await writeFile(key, randomBytes(32), { mode: 0o600 });
-  const previousKey = process.env.LAPIS_SERVER_REPOSITORY_KEY_FILE;
-  process.env.LAPIS_SERVER_REPOSITORY_KEY_FILE = key;
+  const previousKey = process.env.LAPIS_SERVER_CREDENTIAL_KEY_FILE;
+  process.env.LAPIS_SERVER_CREDENTIAL_KEY_FILE = key;
   const origin = `http://localhost:${await unusedLoopbackPort()}`;
   const runtime = new RustServerRuntime(root, repository, origin, password);
   await mkdir(runtime.vault, { recursive: true });
@@ -186,7 +186,7 @@ test("cold hosted remotes preserve manual connections and encrypted credentials 
   } finally {
     await runtime.stop();
     if (previousKey === undefined)
-      delete process.env.LAPIS_SERVER_REPOSITORY_KEY_FILE;
-    else process.env.LAPIS_SERVER_REPOSITORY_KEY_FILE = previousKey;
+      delete process.env.LAPIS_SERVER_CREDENTIAL_KEY_FILE;
+    else process.env.LAPIS_SERVER_CREDENTIAL_KEY_FILE = previousKey;
   }
 });

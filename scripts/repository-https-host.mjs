@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { randomBytes, randomUUID } from "node:crypto";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 /** Actual compiled host; every path, owner and credential belongs to this test. */
@@ -34,7 +34,7 @@ export class ColdHttpsHost {
       }),
     );
   }
-  async start(key = this.key) {
+  async start(key = this.key, source = "file") {
     const environment = {
       ...this.environment,
       LAPIS_SERVER_TOKEN: this.token,
@@ -42,9 +42,14 @@ export class ColdHttpsHost {
       LAPIS_SERVER_ORIGIN: "https://fixture.invalid",
       LAPIS_SERVER_BOOTSTRAP_USERNAME: "owner",
       LAPIS_SERVER_BOOTSTRAP_PASSWORD_FILE: this.password,
-      LAPIS_SERVER_REPOSITORY_KEY_FILE: key,
     };
-    if (!key) delete environment.LAPIS_SERVER_REPOSITORY_KEY_FILE;
+    delete environment.LAPIS_SERVER_CREDENTIAL_KEY_FILE;
+    delete environment.LAPIS_SERVER_CREDENTIAL_KEY;
+    if (key && source === "environment") {
+      environment.LAPIS_SERVER_CREDENTIAL_KEY = readFileSync(key, "base64");
+    } else if (key) {
+      environment.LAPIS_SERVER_CREDENTIAL_KEY_FILE = key;
+    }
     const binary = resolve(".local/rust-core-target/debug/lapis-server");
     this.child = spawn(binary, [this.config, "127.0.0.1:0"], {
       env: environment,
@@ -77,6 +82,18 @@ export class ColdHttpsHost {
         reject(Error("Cold Server exited before readiness"));
       });
     });
+    if (source === "environment") {
+      const runningEnvironment = readFileSync(
+        `/proc/${this.child.pid}/environ`,
+      );
+      assert.equal(
+        runningEnvironment.includes(
+          Buffer.from("LAPIS_SERVER_CREDENTIAL_KEY="),
+        ),
+        false,
+        "Server retained the credential key in its process environment",
+      );
+    }
   }
   async stop() {
     if (!this.child || this.child.exitCode !== null) return;
