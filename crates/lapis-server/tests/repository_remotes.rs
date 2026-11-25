@@ -87,19 +87,19 @@ impl Running {
             .header(VERSION_HEADER, PROTOCOL_MAJOR)
     }
     async fn attach(&self, id: Uuid) -> ClientDescriptor {
-        self.auth(
-            self.client
-                .post(format!("{}/api/v3/vaults/{id}/clients", self.base)),
-        )
-        .json(&json!({"protocol_version":PROTOCOL_MAJOR}))
-        .send()
-        .await
-        .unwrap()
-        .error_for_status()
-        .unwrap()
-        .json()
-        .await
-        .unwrap()
+        let response = self
+            .auth(
+                self.client
+                    .post(format!("{}/api/v3/vaults/{id}/clients", self.base)),
+            )
+            .json(&json!({"protocol_version":PROTOCOL_MAJOR}))
+            .send()
+            .await
+            .unwrap()
+            .error_for_status()
+            .unwrap();
+        assert_eq!(response.headers()["x-lapis-plugin-credentials"], "1");
+        response.json().await.unwrap()
     }
     fn url(&self, c: &ClientDescriptor) -> String {
         format!(

@@ -29,6 +29,10 @@ impl PluginGrants {
         self.0.contains(id)
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     pub fn ids(&self) -> Vec<&str> {
         let mut ids: Vec<_> = self.0.iter().map(String::as_str).collect();
         ids.sort_unstable();

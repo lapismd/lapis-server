@@ -252,19 +252,23 @@ impl Unlocked {
             return Err(unavailable());
         }
         self.verify()?;
-        let (plain, bytes) = self
+        let scoped::OpenedRecord {
+            plaintext,
+            ciphertext,
+        } = self
             .repository_record(owner, id)
             .read(self)
             .map_err(io::Error::other)?
             .ok_or_else(unavailable)?;
-        let record: record::Record = serde_json::from_slice(&plain).map_err(|_| unavailable())?;
+        let record: record::Record =
+            serde_json::from_slice(&plaintext).map_err(|_| unavailable())?;
         if record.summary.id != id
             || record::endpoint(&record.summary.endpoint)? != record.summary.endpoint
         {
             return Err(unavailable());
         }
         record::token(&record.token)?;
-        Ok((record, bytes))
+        Ok((record, ciphertext))
     }
     fn write(
         &self,

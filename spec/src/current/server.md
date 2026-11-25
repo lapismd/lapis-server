@@ -280,6 +280,8 @@ Server plugin approvals come from the installation's
 credential lease on its admitted attachment. The lease cannot be transferred
 to another attachment and is revoked on close or detach. The credential routes
 inherit owner authentication, protocol checks and exact-origin CSRF policy.
+The hosted renderer discovers approved IDs only when the attachment response
+advertises that the installation has grants.
 
 ### Acceptance details
 

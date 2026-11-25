@@ -102,11 +102,13 @@ impl<S> Scope<S> {
     }
 }
 
+pub(super) struct OpenedRecord {
+    pub(super) plaintext: Zeroizing<Vec<u8>>,
+    pub(super) ciphertext: Vec<u8>,
+}
+
 impl Record {
-    pub(super) fn read(
-        &self,
-        store: &Unlocked,
-    ) -> Result<Option<(Zeroizing<Vec<u8>>, Vec<u8>)>, CredentialError> {
+    pub(super) fn read(&self, store: &Unlocked) -> Result<Option<OpenedRecord>, CredentialError> {
         let metadata = match store.root.entry_metadata(&self.name) {
             Ok(metadata) => metadata,
             Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(None),
@@ -124,7 +126,10 @@ impl Record {
             store.locked.store(true, Ordering::Release);
             CredentialError::Locked
         })?;
-        Ok(Some((secret, ciphertext)))
+        Ok(Some(OpenedRecord {
+            plaintext: secret,
+            ciphertext,
+        }))
     }
 
     pub(super) fn write(
@@ -161,7 +166,7 @@ impl<S: Deref<Target = CredentialStore> + Send + Sync> ScopedCredentialStore for
         let (store, _guard) = self.store.ready().map_err(|_| CredentialError::Locked)?;
         self.record(store.cipher.installation(), name)
             .read(store)?
-            .map(|(secret, _)| SecretBytes::new(secret.to_vec()))
+            .map(|record| SecretBytes::new(record.plaintext.to_vec()))
             .transpose()
     }
 
@@ -180,7 +185,7 @@ impl<S: Deref<Target = CredentialStore> + Send + Sync> ScopedCredentialStore for
         record.write(
             store,
             value.expose_secret(),
-            before.as_ref().map(|(_, b)| b.as_slice()),
+            before.as_ref().map(|record| record.ciphertext.as_slice()),
         )
     }
 

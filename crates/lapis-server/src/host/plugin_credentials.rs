@@ -12,6 +12,12 @@ pub(super) struct PluginCredentials {
 }
 
 impl Host {
+    pub(crate) fn has_plugin_credential_grants(&self) -> bool {
+        self.plugin_credentials
+            .as_ref()
+            .is_some_and(|credentials| !credentials.grants.is_empty())
+    }
+
     pub(crate) fn plugin_credential_grants(
         &self,
         client: Uuid,
