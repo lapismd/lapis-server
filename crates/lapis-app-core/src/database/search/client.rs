@@ -4,6 +4,7 @@ use crate::services::Result;
 use lapis_app_protocol::database::search::{records::SearchDocumentRecord, *};
 
 impl Database {
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(crate) async fn search_notes(
         &self,
         query: &str,

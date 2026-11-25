@@ -104,19 +104,31 @@ enum Output {
 impl Database {
     /// Native installation input only; callers derive this from admitted policy.
     pub async fn open(directory: &Path, vault: Uuid) -> Result<Self> {
-        Self::open_with_embeddings(
-            directory,
-            vault,
+        let embedding = search::embedding::Provider::new(
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             crate::embedding::host::NativeEmbeddingHost::default(),
-        )
-        .await
+        );
+        Self::open_store(directory, vault, embedding).await
     }
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub async fn open_with_embeddings(
         directory: &Path,
         vault: Uuid,
         embeddings: crate::embedding::host::NativeEmbeddingHost,
     ) -> Result<Self> {
-        let store = store::Store::open(directory, vault, embeddings).await?;
+        Self::open_store(
+            directory,
+            vault,
+            search::embedding::Provider::new(embeddings),
+        )
+        .await
+    }
+    async fn open_store(
+        directory: &Path,
+        vault: Uuid,
+        embedding: search::embedding::Provider,
+    ) -> Result<Self> {
+        let store = store::Store::open(directory, vault, embedding).await?;
         let embedding_status = store.embedding.status.subscribe();
         let (sender, receiver) = mpsc::channel(64);
         let (done, finished) = watch::channel(None);

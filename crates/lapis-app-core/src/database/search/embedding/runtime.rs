@@ -50,36 +50,47 @@ impl Provider {
             {
                 return Err(invalid("Embedding document exceeds bounds"));
             }
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             let encoder = self.encoder.clone();
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             let host = self.host.clone();
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             let status = self.status.clone();
             tokio::task::spawn_blocking(move || {
-                let vectors = if config.kind == Kind::TokenHash {
+                let vectors: Vec<Vec<f64>> = if config.kind == Kind::TokenHash {
                     texts
                         .iter()
                         .map(|text| super::fingerprint::vector(text, dimensions))
                         .collect()
                 } else {
-                    let mut encoder = encoder
-                        .lock()
-                        .map_err(|_| invalid("Embedding session is unavailable"))?;
-                    if encoder.is_none() {
-                        *encoder = Some(host.open(&config, &mut |progress| {
-                            update_status(
-                                &status,
-                                Phase::Downloading,
-                                "Preparing verified local embedding assets",
-                                progress,
-                            );
-                        })?);
+                    #[cfg(any(target_os = "android", target_os = "ios"))]
+                    return Err(Error::new(
+                        ErrorCode::Unsupported,
+                        "Local model inference is unavailable",
+                    ));
+                    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+                    {
+                        let mut encoder = encoder
+                            .lock()
+                            .map_err(|_| invalid("Embedding session is unavailable"))?;
+                        if encoder.is_none() {
+                            *encoder = Some(host.open(&config, &mut |progress| {
+                                update_status(
+                                    &status,
+                                    Phase::Downloading,
+                                    "Preparing verified local embedding assets",
+                                    progress,
+                                );
+                            })?);
+                        }
+                        update_status(
+                            &status,
+                            Phase::Embedding,
+                            "Generating local embeddings",
+                            0.0,
+                        );
+                        encoder.as_mut().unwrap().embed(&texts)?
                     }
-                    update_status(
-                        &status,
-                        Phase::Embedding,
-                        "Generating local embeddings",
-                        0.0,
-                    );
-                    encoder.as_mut().unwrap().embed(&texts)?
                 };
                 let values: usize = vectors.iter().map(Vec::len).sum();
                 if vectors.len() != texts.len()
@@ -108,6 +119,7 @@ impl Provider {
     }
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 fn update_status(
     status: &tokio::sync::watch::Sender<
         Option<lapis_app_protocol::database::search::embedding::SearchEmbeddingRuntimeStatus>,

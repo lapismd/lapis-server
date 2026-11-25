@@ -33,6 +33,7 @@ impl VaultRoot {
         Ok(Self { dir, path })
     }
 
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(crate) fn from_capability(path: PathBuf, dir: Dir) -> io::Result<Self> {
         let root = Self { dir, path };
         root.verify_physical_root()?;
@@ -79,7 +80,8 @@ impl VaultRoot {
         })
     }
 
-    pub(crate) fn open_child(&self, name: &str) -> io::Result<Self> {
+    /// Open an existing relative directory and verify its capability against the physical root.
+    pub fn open_child(&self, name: &str) -> io::Result<Self> {
         self.verify_physical_root()?;
         let relative = self.checked(name, false)?;
         let child = Self {

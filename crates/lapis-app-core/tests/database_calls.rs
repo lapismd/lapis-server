@@ -238,3 +238,23 @@ async fn omitted_and_undefined_optional_read_queries_keep_defaults_without_write
     assert_eq!(db.revision().await.unwrap(), revision);
     db.close().await.unwrap();
 }
+
+#[tokio::test]
+async fn client_metadata_survives_owner_reopening() {
+    let profile = tempfile::tempdir().unwrap();
+    let vault = Uuid::new_v4();
+    let key = value(json!("workspace.layout"));
+    let layout = value(json!({"active": "Notes/東京.md"}));
+    let set = serde_json::from_value(json!({"method": "setMeta", "args": [key, layout]})).unwrap();
+    let read = || serde_json::from_value(json!({"method": "getMeta", "args": [key]})).unwrap();
+
+    let owner = Database::open(profile.path(), vault).await.unwrap();
+    owner.call_from_client(set).await.unwrap();
+    owner.close().await.unwrap();
+    assert_eq!(owner.call_from_client(read()).await.unwrap_err().code(), ErrorCode::Closed);
+
+    let reopened = Database::open(profile.path(), vault).await.unwrap();
+    let saved = reopened.call_from_client(read()).await.unwrap();
+    assert_eq!(serde_json::to_value(saved).unwrap(), layout);
+    reopened.close().await.unwrap();
+}

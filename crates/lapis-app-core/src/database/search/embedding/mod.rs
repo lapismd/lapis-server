@@ -2,17 +2,21 @@ mod config;
 mod document;
 mod fingerprint;
 mod runtime;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use crate::embedding::{OnnxEncoder, host::NativeEmbeddingHost};
 use lapis_app_protocol::database::search::embedding::{
     SearchEmbeddingProviderConfig, SearchEmbeddingRuntimeStatus,
 };
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use std::sync::{Arc, Mutex};
 use tokio::sync::watch;
 
 pub(in crate::database) struct Provider {
     pub config: Option<SearchEmbeddingProviderConfig>,
     pub status: watch::Sender<Option<SearchEmbeddingRuntimeStatus>>,
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     host: NativeEmbeddingHost,
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     encoder: Arc<Mutex<Option<OnnxEncoder>>>,
 }
 pub(in crate::database) use config::validate;

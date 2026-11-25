@@ -21,7 +21,7 @@ impl Store {
     pub async fn open(
         directory: &Path,
         vault: Uuid,
-        embeddings: crate::embedding::host::NativeEmbeddingHost,
+        embedding: super::search::embedding::Provider,
     ) -> Result<Self> {
         if !directory.is_absolute() || vault.is_nil() {
             return Err(invalid(
@@ -57,7 +57,7 @@ impl Store {
         .map_err(engine)?;
         let connection = database.connect().map_err(engine)?;
         let mut store = Self {
-            embedding: super::search::embedding::Provider::new(embeddings),
+            embedding,
             connection,
             _database: database,
             _lease: lease,

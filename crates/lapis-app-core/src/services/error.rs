@@ -16,12 +16,15 @@ impl Error {
             message: message.into(),
         })
     }
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(super) fn closed() -> Self {
         Self::new(ErrorCode::Closed, "Vault service is closed")
     }
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(super) fn busy() -> Self {
         Self::new(ErrorCode::Busy, "Vault has unresolved work or editor state")
     }
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
     pub(super) fn denied() -> Self {
         Self::new(ErrorCode::PermissionDenied, "Vault attachment is not valid")
     }
@@ -40,6 +43,7 @@ impl From<io::Error> for Error {
         {
             return Self::new(ErrorCode::Conflict, "File changed since it was read");
         }
+        #[cfg(not(any(target_os = "android", target_os = "ios")))]
         if error.get_ref().is_some_and(|cause| {
             cause.is::<crate::repository::remotes::selection::SelectionConflict>()
         }) {
