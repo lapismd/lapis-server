@@ -13,6 +13,7 @@ import { reviewedTasksTransition } from "./reviewed-tasks-transition.mjs";
 import { reviewedTasksMcpAppTransition } from "./reviewed-tasks-mcp-app-transition.mjs";
 import { reviewedNotesPeerTransition } from "./reviewed-notes-peer-transition.mjs";
 import { reviewedNotesCohortTransition } from "./reviewed-notes-cohort-transition.mjs";
+import { reviewedCredentialCohortTransition } from "./reviewed-credential-cohort-transition.mjs";
 import { reviewedTerminalTransition } from "./reviewed-terminal-transition.mjs";
 import { reviewedAppProfileTransition } from "./reviewed-app-profile-transition.mjs";
 
@@ -282,6 +283,16 @@ export function verifyIntake({
       changedFiles,
     }) ??
     reviewedNotesPeerTransition({
+      sourceSha,
+      policyBytes,
+      basePolicyBytes,
+      before,
+      files,
+      documents,
+      baseDocuments,
+      changedFiles,
+    }) ??
+    reviewedCredentialCohortTransition({
       sourceSha,
       policyBytes,
       basePolicyBytes,
