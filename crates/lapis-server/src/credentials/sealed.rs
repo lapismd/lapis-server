@@ -1,11 +1,10 @@
+use super::CredentialKey;
 use aes_gcm::{
     Aes256Gcm, KeyInit, Nonce,
     aead::{Aead, Payload},
 };
-use std::{
-    io::{self, Read},
-    path::Path,
-};
+use lapis_app_core::credentials::MAX_SECRET_BYTES;
+use std::io;
 use uuid::Uuid;
 use zeroize::Zeroizing;
 
@@ -17,28 +16,19 @@ pub(super) fn unavailable() -> io::Error {
     io::Error::other("Repository credential storage is locked or unavailable")
 }
 impl Cipher {
-    pub fn load(path: &Path, installation: Uuid) -> io::Result<Self> {
-        if installation.is_nil() || !path.is_absolute() {
-            return Err(unavailable());
-        }
-        let metadata = std::fs::metadata(path).map_err(|_| unavailable())?;
-        if !metadata.is_file() || metadata.len() != 32 {
-            return Err(unavailable());
-        }
-        let mut bytes = Zeroizing::new(Vec::new());
-        std::fs::File::open(path)
-            .map_err(|_| unavailable())?
-            .take(33)
-            .read_to_end(&mut bytes)
-            .map_err(|_| unavailable())?;
-        if bytes.len() != 32 {
-            return Err(unavailable());
-        }
-        let mut key = Zeroizing::new([0u8; 32]);
-        key.copy_from_slice(&bytes);
-        Ok(Self { key, installation })
+    pub fn installation(&self) -> Uuid {
+        self.installation
     }
-    fn aad(&self, owner: Uuid, id: Uuid) -> Vec<u8> {
+    pub fn new(key: &CredentialKey, installation: Uuid) -> io::Result<Self> {
+        if installation.is_nil() {
+            return Err(unavailable());
+        }
+        Ok(Self {
+            key: Zeroizing::new(*key.as_bytes()),
+            installation,
+        })
+    }
+    pub(super) fn aad(&self, owner: Uuid, id: Uuid) -> Vec<u8> {
         let mut result = b"lapis.repository.credentials.v1\0".to_vec();
         result.extend_from_slice(self.installation.as_bytes());
         result.extend_from_slice(owner.as_bytes());
@@ -48,17 +38,7 @@ impl Cipher {
     pub fn seal(&self, owner: Uuid, id: Uuid, plaintext: &[u8]) -> io::Result<Vec<u8>> {
         self.seal_aad(&self.aad(owner, id), plaintext)
     }
-    pub fn seal_forge(&self, owner: Uuid, account: &str, plaintext: &[u8]) -> io::Result<Vec<u8>> {
-        self.seal_aad(&self.forge_aad(owner, account), plaintext)
-    }
-    fn forge_aad(&self, owner: Uuid, account: &str) -> Vec<u8> {
-        let mut result = b"lapis.repository.forge.v1\0".to_vec();
-        result.extend_from_slice(self.installation.as_bytes());
-        result.extend_from_slice(owner.as_bytes());
-        result.extend_from_slice(account.as_bytes());
-        result
-    }
-    fn seal_aad(&self, aad: &[u8], plaintext: &[u8]) -> io::Result<Vec<u8>> {
+    pub(super) fn seal_aad(&self, aad: &[u8], plaintext: &[u8]) -> io::Result<Vec<u8>> {
         let mut nonce = [0u8; 12];
         getrandom::fill(&mut nonce).map_err(|_| unavailable())?;
         let ciphertext = Aes256Gcm::new_from_slice(self.key.as_ref())
@@ -79,16 +59,8 @@ impl Cipher {
     pub fn open(&self, owner: Uuid, id: Uuid, bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
         self.open_aad(&self.aad(owner, id), bytes)
     }
-    pub fn open_forge(
-        &self,
-        owner: Uuid,
-        account: &str,
-        bytes: &[u8],
-    ) -> io::Result<Zeroizing<Vec<u8>>> {
-        self.open_aad(&self.forge_aad(owner, account), bytes)
-    }
-    fn open_aad(&self, aad: &[u8], bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
-        if bytes.len() < 29 || bytes[0] != 1 || bytes.len() > 16 * 1024 {
+    pub(super) fn open_aad(&self, aad: &[u8], bytes: &[u8]) -> io::Result<Zeroizing<Vec<u8>>> {
+        if bytes.len() < 29 || bytes[0] != 1 || bytes.len() > MAX_SECRET_BYTES + 29 {
             return Err(unavailable());
         }
         let plaintext = Aes256Gcm::new_from_slice(self.key.as_ref())
