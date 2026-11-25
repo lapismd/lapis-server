@@ -47,6 +47,7 @@ export class RustVaultClient {
     readonly host: RustHttpClient,
     readonly descriptor: ClientDescriptor,
     heartbeat: boolean,
+    readonly hasPluginCredentialGrants: boolean,
   ) {
     if (heartbeat)
       this.#heartbeat = setInterval(() => {
@@ -78,6 +79,7 @@ export class RustVaultClient {
     value: unknown,
     vaultId: string,
     heartbeat = true,
+    hasPluginCredentialGrants = false,
   ) {
     const descriptor = value as ClientDescriptor | undefined;
     if (
@@ -90,7 +92,12 @@ export class RustVaultClient {
       throw new Error(
         "The server did not return the requested vault admission",
       );
-    return new RustVaultClient(host, descriptor, heartbeat);
+    return new RustVaultClient(
+      host,
+      descriptor,
+      heartbeat,
+      hasPluginCredentialGrants,
+    );
   }
 
   get path(): string {

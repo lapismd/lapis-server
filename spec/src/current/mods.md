@@ -53,7 +53,7 @@ no Alpine application compatibility is implied by a portable loader design.
 
 ## SRV-MOD-006 — Receipts and diagnostics
 
-**Requirement.** Successful application MUST record references, resolved manifest/layer digests, platform and installed paths in container-local receipts. Structured logs MUST distinguish resolution, cache, apply, hooks and failures without printing credentials. Mod cache and receipts MUST reject unsafe ownership, symlinks and world-writable state.
+**Requirement.** Successful application MUST record references, resolved manifest/layer digests, platform and installed paths in container-local receipts. Structured logs MUST distinguish resolution, cache, apply, hooks and failures without printing credentials. Mod hooks MUST exclude the Server credential key value from their environment. Mod cache and receipts MUST reject unsafe ownership, symlinks and world-writable state.
 
 Hook failure diagnostics distinguish a launch error (error kind and numeric OS
 code) from a child exit (numeric exit code, or termination without an exit

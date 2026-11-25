@@ -6,6 +6,8 @@
 pub mod archive;
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod context;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
+pub mod credentials;
 #[cfg(any(
     not(any(target_os = "android", target_os = "ios")),
     feature = "mobile-database"
