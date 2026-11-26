@@ -96,8 +96,11 @@ retains the exact cancellation/deadline regressions and full Rust retry.
 The native implementation and real hosted journey are
 [registry-qualified](../../records/2026-11-24-plugin-background-hosted.md).
 [Public dependency adoption](../../records/2026-11-25-background-registry-adoption.md)
-is merged. Desktop admission/default cutover and released Tasks acceptance remain
-open in the [background jobs backlog](../backlog/background-jobs.md).
+is merged. Desktop admission/default cutover and released Tasks acceptance are
+closed by the [v1 verification receipt](../../records/2026-11-26-background-job-verification-closure.md).
+Actual macOS system-alert acceptance and the separately requested network and
+credential extension retain their own gates in the
+[background jobs backlog](../backlog/background-jobs.md).
 
 ## Hosted acceptance
 
