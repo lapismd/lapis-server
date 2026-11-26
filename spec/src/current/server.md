@@ -150,6 +150,9 @@ jj-store path, a crate tag, or pull request 22 head
 
 The native server crate also exports an offline OpenAPI generator for the
 registered HTTP routes. The executable and Swagger UI use the same catalog.
+Background-job network and write-only credential commands retain generated
+OpenAPI coverage; the [export receipt](../../records/2026-11-26-background-network-openapi.md)
+records the stale-schema failure and unchanged exporter retry.
 The server serves the shared PWA raster asset at the public icon URL advertised by initialized MCP under
 [SRV-SRV-018](integration-auth.md#srv-srv-018--oauth-for-remote-mcp-clients).
 
