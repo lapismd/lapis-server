@@ -391,3 +391,6 @@ The optional native background-job port shares the existing authenticated vault
 attachment and command transport. Renderer metadata compatibility mode admits no
 job port. [Hosted source acceptance](../../records/2026-11-24-plugin-background-hosted.md)
 uses the production settings and real Server through browser detach and cold restart.
+
+The [absolute job DNS regression](../../records/2026-11-26-background-network-fqdn.md)
+records source qualification for SRV-JOB-009 without qualifying host custody.

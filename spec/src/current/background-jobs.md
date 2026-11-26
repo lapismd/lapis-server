@@ -104,7 +104,7 @@ Link-local, metadata and special-use addresses MUST remain denied.
 - DNS changes, mixed safe/unsafe answers and cross-origin redirects cannot widen grants.
 - Pause, removal, trust fencing and deadlines cancel DNS, connection and body reads; stalled DNS must permit prompt executor shutdown.
 
-- DNS uses asynchronous native sockets and fully qualified names, without search-suffix widening.
+- DNS uses asynchronous native sockets and fully qualified names, without search-suffix widening or a second terminal dot on already-qualified names.
 
 ## SRV-JOB-010 — Opaque background credentials
 

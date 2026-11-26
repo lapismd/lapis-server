@@ -8,7 +8,10 @@ use std::sync::{Arc, atomic::AtomicBool, mpsc};
 
 #[test]
 fn stalled_dns_is_cancelled_without_blocking_runtime_shutdown() {
-    for cancel in [false, true] {
+    for (cancel, host) in [
+        (false, "dns-stall.example.com."),
+        (true, "dns-stall.example.com"),
+    ] {
         let (done, received) = mpsc::channel();
         std::thread::spawn(move || {
             let runtime = tokio::runtime::Builder::new_current_thread()
@@ -43,7 +46,7 @@ fn stalled_dns_is_cancelled_without_blocking_runtime_shutdown() {
                         .build()
                         .unwrap();
                 let result = network_wait(
-                    resolver.lookup_ip("dns-stall.example.com."),
+                    resolver.lookup_ip(absolute_dns_name(host)),
                     Instant::now() + Duration::from_millis(250),
                     || {
                         if cancelled.load(Ordering::Acquire) {

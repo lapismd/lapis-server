@@ -40,7 +40,7 @@ impl broker::Broker {
                 // A fully qualified name prevents system search suffixes from
                 // widening an approved origin. Resolution uses async sockets,
                 // never Tokio's uncancellable blocking OS resolver.
-                self.network_wait(resolver.lookup_ip(format!("{host}.")), deadline)
+                self.network_wait(resolver.lookup_ip(absolute_dns_name(host)), deadline)
                     .await?
                     .map_err(|_| invalid("Job network DNS failed"))?
                     .iter()
@@ -179,6 +179,14 @@ async fn network_wait<F: Future>(
             value = &mut future => return Ok(value),
             _ = tokio::time::sleep(Duration::from_millis(50).min(deadline.saturating_duration_since(Instant::now()))) => {}
         }
+    }
+}
+
+fn absolute_dns_name(host: &str) -> String {
+    if host.ends_with('.') {
+        host.to_owned()
+    } else {
+        format!("{host}.")
     }
 }
 

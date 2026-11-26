@@ -390,11 +390,11 @@ one CLI verification page failed formatting and cancelled the remaining jobs.
 The replacement formats that page and retains its SRV-GOV-001 mapping; local
 format and three-lane specification checks pass before the new hosted run.
 
-CLI executable-fixture qualification preserves SRV-CLI-001 production policy.
-The alternate-source fixture is copied by a completed child process so parallel
-process starts cannot inherit its executable writer descriptor. All existing
-source-switch, repair and tamper-refusal assertions remain unchanged.
+SRV-CLI-001 fixtures use a completed child copy to prevent executable writer
+descriptor inheritance; source-switch, repair and tamper assertions remain.
 
 See [mobile vaults](server.md), [Repository remotes](governance/remotes.md) and [credential intake](../../records/2026-11-25-credential-package-intake.md). Hosted attachments advertise credentials only when plugin grants exist.
 
 [Remotes v2.3.0](../../records/2026-11-16-remotes-v230-publication.md) records exact-source public delivery and cold default-user acceptance; live forge authorization remains separate. Hosted acceptance builds server and CLI prerequisites explicitly. The external MCP Apps cohort uses the packaged views and an isolated reference host against the native Server. Catalog previews render the same packaged documents with fixture results. Independent static Notes, inline Tasks, sidebar Properties, tracked completion, and responsive canvas cases check the light-mode surfaces and Tasks panel geometry, and exercises the Tasks plugin’s inline metadata, outside dismissal and sidebar controls through AppBridge, and checks native row contrast, sidebar notes inset, Properties styling and compact canvas navigation. Skills qualification and release intake follow [SRV-OPS-005–007](plugin-operations.md); the bundled Markdown dependency floor includes its linked references. The [approved KaTeX exception](../../records/2026-11-16-katex-audit-exception.md) is scoped to CVE-2026-103923 and review by 15 December 2026. The [single queue reload quarantine](../../records/2026-11-17-hosted-queue-quarantine.md) retains diagnostic assertions and owner follow-up. Terminal presentation, ANSI colour checks on Linux/macOS, bundled renderer qualification and authenticated registry adoption without archive hooks follow [the Terminal topic](terminal-presentation.md) and its [0.1.1 qualification](../../records/2026-11-20-terminal-registry-adoption.md). The Server-owned [native Bash follow-up](../../records/2026-11-20-native-terminal-profile.md) requires actual application PTY tests that distinguish visible prompts from OSC metadata, preserves generic engine/Desktop defaults, and does not claim Docker-image acceptance. [Desktop discovery](cli.md#approved-desktop-connection-reuse) qualifies source CLI/MCP only; bundled intake, native consent and remote OAuth remain separate gates. Changesets version preparation synchronizes the CLI Cargo/lock identity; archive qualification rejects drift.
+
+[Job DNS](../../records/2026-11-26-background-network-fqdn.md) qualifies SRV-JOB-009 source only.
