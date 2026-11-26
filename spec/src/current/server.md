@@ -1,8 +1,10 @@
 # Hosted server
 
-The [background job engine](background-jobs.md) stages bounded plugin execution
-and calendar scheduling. Native job ownership and host integration remain gated
-by their own acceptance and [backlog](../backlog/background-jobs.md).
+The [background job engine](background-jobs.md) owns bounded plugin execution,
+calendar scheduling and explicit network/opaque-credential capabilities. Native
+requests use exact origin grants and installation-owned custody, never renderer
+leases. Source, host and distribution qualification retain separate
+[backlog](../backlog/background-jobs.md) gates.
 
 SRV-SYNC-020 native leave preparation retains original account ownership until
 host commit; refused leave releases only the admission fence.

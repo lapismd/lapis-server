@@ -44,7 +44,7 @@ tempfile = "=3.27.0"
 serde_json = "1"
 jsonschema = { version = "=0.33.0", default-features = false }
 serde_yaml = "=0.9.34"
-tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros"] }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync", "macros", "net", "time"] }
 turso = { version = "=0.7.2", default-features = false, features = ["fts"] }
 base64 = "=0.22.1"
 icu_collator = "=2.4.0"
@@ -53,6 +53,7 @@ regress = { version = "=0.12.0", features = ["utf16", "prohibit-unsafe"] }
 ort = { version = "=2.0.0-rc.15", default-features = false, features = ["std", "load-dynamic", "api-30"] }
 tokenizers = { version = "=0.22.2", default-features = false, features = ["fancy-regex"] }
 reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "rustls-tls"] }
+hickory-resolver = { version = "=0.26.4", default-features = false, features = ["tokio", "system-config"] }
 jj-vault = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0" }
 jj-store-jj = { git = "https://github.com/stevejuma/jj-store", rev = "086def182eae2ab6e5dc39aba030390d7ea8612c", version = "0.2.0", default-features = false, features = ["vault-backup"] }
 notify = "=8.2.0"

@@ -1675,6 +1675,21 @@
         {
           "additionalProperties": false,
           "properties": {
+            "credentialId": { "type": "string" },
+            "jobId": { "type": "string" },
+            "kind": { "const": "storeCredential", "type": "string" },
+            "pluginId": { "type": "string" },
+            "value": {
+              "description": "None removes the native value; it is never written to the job journal.",
+              "type": ["string", "null"]
+            }
+          },
+          "required": ["kind", "pluginId", "jobId", "credentialId"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
             "configuration": { "$ref": "#/$defs/JobConfiguration" },
             "jobId": { "type": "string" },
             "kind": { "const": "configure", "type": "string" },
@@ -1759,6 +1774,27 @@
       "required": ["fingerprint", "schedule", "permissions", "enabled"],
       "type": "object"
     },
+    "JobCredentialBinding": {
+      "additionalProperties": false,
+      "description": "An opaque native slot. Only the native request implementation reads its value.",
+      "properties": {
+        "header": { "type": "string" },
+        "id": { "type": "string" },
+        "prefix": { "type": "string" }
+      },
+      "required": ["id", "header", "prefix"],
+      "type": "object"
+    },
+    "JobCredentialStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "configured": { "type": "boolean" },
+        "id": { "type": "string" },
+        "unavailableReason": { "type": ["string", "null"] }
+      },
+      "required": ["id", "configured"],
+      "type": "object"
+    },
     "JobDescriptor": {
       "additionalProperties": false,
       "properties": {
@@ -1779,12 +1815,31 @@
       ],
       "type": "object"
     },
+    "JobNetworkGrant": {
+      "additionalProperties": false,
+      "description": "Exact endpoint authority; never an ambient fetch grant.",
+      "properties": {
+        "allowPrivateNetwork": { "type": "boolean" },
+        "credentials": {
+          "items": { "$ref": "#/$defs/JobCredentialBinding" },
+          "type": "array"
+        },
+        "methods": { "items": { "type": "string" }, "type": "array" },
+        "origin": { "type": "string" }
+      },
+      "required": ["origin", "methods", "allowPrivateNetwork", "credentials"],
+      "type": "object"
+    },
     "JobPermissions": {
       "additionalProperties": false,
       "properties": {
         "frontmatterFields": { "items": { "type": "string" }, "type": "array" },
         "frontmatterRead": { "type": "boolean" },
         "metadataRead": { "type": "boolean" },
+        "network": {
+          "items": { "$ref": "#/$defs/JobNetworkGrant" },
+          "type": ["array", "null"]
+        },
         "notifications": { "type": "boolean" }
       },
       "required": [
@@ -1859,6 +1914,10 @@
       "properties": {
         "configuration": {
           "anyOf": [{ "$ref": "#/$defs/JobConfiguration" }, { "type": "null" }]
+        },
+        "credentials": {
+          "items": { "$ref": "#/$defs/JobCredentialStatus" },
+          "type": ["array", "null"]
         },
         "descriptor": { "$ref": "#/$defs/JobDescriptor" },
         "fingerprint": { "type": "string" },

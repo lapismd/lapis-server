@@ -4,6 +4,9 @@ use ts_rs::{Config, TS};
 pub(super) fn declarations(config: &Config) -> Vec<String> {
     vec![
         Schedule::decl(config),
+        JobNetworkGrant::decl(config),
+        JobCredentialBinding::decl(config),
+        JobCredentialStatus::decl(config),
         JobPermissions::decl(config),
         JobDescriptor::decl(config),
         JobConfiguration::decl(config),

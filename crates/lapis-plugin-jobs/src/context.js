@@ -20,6 +20,7 @@
       patchFrontmatter: (patch) => call("notes.patchFrontmatter", patch),
     }),
     notifications: Object.freeze({ notify: (notification) => call("notifications.notify", notification) }),
+    network: Object.freeze({ request: (request) => call("network.request", request) }),
     signal: Object.freeze({ get aborted() { return call("cancelled"); } }),
   });
 })()

@@ -11,6 +11,9 @@ pub struct JobPermissions {
     pub frontmatter_read: bool,
     pub notifications: bool,
     pub frontmatter_fields: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub network: Option<Vec<crate::JobNetworkGrant>>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq, JsonSchema, TS)]
@@ -80,6 +83,9 @@ pub struct JobStatus {
     #[ts(type = "number | null")]
     pub next_run_at: Option<i64>,
     pub unavailable_reason: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub credentials: Option<Vec<crate::JobCredentialStatus>>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema, TS)]
@@ -116,6 +122,13 @@ pub struct JobTransfer {
 )]
 pub enum JobCommand {
     List {},
+    StoreCredential {
+        plugin_id: String,
+        job_id: String,
+        credential_id: String,
+        /// None removes the native value; it is never written to the job journal.
+        value: Option<String>,
+    },
     Configure {
         plugin_id: String,
         job_id: String,

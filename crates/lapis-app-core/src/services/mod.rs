@@ -17,7 +17,11 @@ pub use file_changes::FileObservation;
 mod guards;
 mod history;
 mod jobs;
-pub use jobs::{JobStorage, NotificationDelivery as JobNotificationDelivery};
+pub use jobs::{
+    CredentialScope as JobCredentialScope, JobStorage,
+    NotificationDelivery as JobNotificationDelivery,
+    credential_namespace as job_credential_namespace,
+};
 #[cfg(feature = "local-sibling-projections")]
 mod indexing;
 #[cfg(not(feature = "local-sibling-projections"))]

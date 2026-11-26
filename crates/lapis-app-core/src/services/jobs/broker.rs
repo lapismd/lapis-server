@@ -16,6 +16,8 @@ pub(super) struct Broker {
     pub work: Work,
     pub index: usize,
     pub uncertain: AtomicBool,
+    pub external_effect: AtomicBool,
+    pub external_uncertain: AtomicBool,
     pub last_error: Mutex<Option<String>>,
 }
 
@@ -26,7 +28,19 @@ impl JobHost for Broker {
             || self.work.cancellation_requested()
     }
     fn invoke(&self, action: &str, input: Value) -> std::result::Result<Value, String> {
-        self.call(action, input).map_err(|error| {
+        self.invoke_until(
+            action,
+            input,
+            std::time::Instant::now() + std::time::Duration::from_secs(30),
+        )
+    }
+    fn invoke_until(
+        &self,
+        action: &str,
+        input: Value,
+        deadline: std::time::Instant,
+    ) -> std::result::Result<Value, String> {
+        self.call(action, input, deadline).map_err(|error| {
             let message = error.to_string();
             if let Ok(mut last) = self.last_error.lock() {
                 *last = Some(message.clone());
@@ -37,7 +51,25 @@ impl JobHost for Broker {
 }
 
 impl Broker {
-    fn call(&self, action: &str, input: Value) -> Result<Value> {
+    pub(super) fn check_admission(&self) -> Result<()> {
+        let stored = self.owner.store()?;
+        let job = stored
+            .catalog
+            .jobs
+            .get(self.index)
+            .ok_or_else(Error::denied)?;
+        if self.cancelled()
+            || !stored.catalog.trusted
+            || stored.catalog.safe_mode
+            || !job.configuration.enabled
+            || job.transferred_to.is_some()
+        {
+            return Err(Error::denied());
+        }
+        discovery::source(&self.work.vault, job)?;
+        Ok(())
+    }
+    fn call(&self, action: &str, input: Value, deadline: std::time::Instant) -> Result<Value> {
         let mut stored = self.owner.store()?;
         if self.cancelled() || !stored.catalog.trusted || stored.catalog.safe_mode {
             return Err(Error::denied());
@@ -53,6 +85,14 @@ impl Broker {
         }
         discovery::source(&self.work.vault, &job)?;
         let permissions = &job.configuration.permissions;
+        if action == "network.request" {
+            drop(stored);
+            return self.network(
+                input,
+                permissions.network.as_deref().unwrap_or_default(),
+                deadline,
+            );
+        }
         match action {
             "cancelled" => Ok(json!(false)),
             "state.load" => Ok(job.state),

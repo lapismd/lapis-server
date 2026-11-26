@@ -11,6 +11,26 @@ pub(super) struct PluginCredentials {
     pub(super) grants: PluginGrants,
 }
 
+impl PluginCredentials {
+    pub(super) fn jobs(&self) -> lapis_app_core::services::JobCredentialScope {
+        let store = self.store.clone();
+        let owner = self.owner;
+        let grants: std::collections::HashSet<String> =
+            self.grants.ids().into_iter().map(str::to_owned).collect();
+        Arc::new(move |vault, plugin, job| {
+            if !grants.contains(plugin) {
+                return Err(lapis_app_core::credentials::CredentialError::Unavailable);
+            }
+            store.scope(
+                owner,
+                CredentialNamespace::Plugin(lapis_app_core::services::job_credential_namespace(
+                    vault, plugin, job,
+                )),
+            )
+        })
+    }
+}
+
 impl Host {
     pub(crate) fn has_plugin_credential_grants(&self) -> bool {
         self.plugin_credentials

@@ -73,8 +73,14 @@ impl Host {
         {
             return Err(error);
         }
-        let jobs = lapis_app_core::services::JobStorage::new(&profile.join("plugin-jobs"))
+        let mut jobs = lapis_app_core::services::JobStorage::new(&profile.join("plugin-jobs"))
             .map_err(io::Error::other)?;
+        let selected_remotes = remotes
+            .map(|remotes| remotes.select(profile, &config))
+            .transpose()?;
+        if let Some((_, credentials)) = &selected_remotes {
+            jobs = jobs.with_credentials(credentials.jobs());
+        }
         let mut runtime = Runtime::with_database(database)
             .with_jobs(jobs)
             .with_backup(backup.with_history_indexing(indexed_history))
@@ -82,8 +88,7 @@ impl Host {
         if let Some(storage) = super::turns::storage::select(profile, &config, agents)? {
             runtime = runtime.with_turns(storage);
         }
-        let credentials = if let Some(remotes) = remotes {
-            let (remote, credentials) = remotes.select(profile, &config)?;
+        let credentials = if let Some((remote, credentials)) = selected_remotes {
             runtime = runtime.with_remotes(remote);
             Some(credentials)
         } else {
