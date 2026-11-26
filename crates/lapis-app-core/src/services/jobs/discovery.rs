@@ -98,6 +98,13 @@ pub(super) fn discover(vault: &VaultService) -> Result<Vec<InstalledJob>> {
 }
 
 pub(super) fn validate(descriptor: &JobDescriptor) -> Result<()> {
+    super::network_policy::validate(
+        descriptor
+            .permissions
+            .network
+            .as_deref()
+            .unwrap_or_default(),
+    )?;
     if descriptor.id.is_empty()
         || descriptor.id.len() > 64
         || !descriptor
@@ -136,6 +143,10 @@ pub(super) fn source(vault: &VaultService, job: &storage::StoredJob) -> Result<S
         .ok_or_else(|| invalid("Background plugin is disabled or unavailable"))?;
     if installed.fingerprint != job.configuration.fingerprint
         || installed.descriptor != job.descriptor
+        || !super::control::permissions(
+            &job.configuration.permissions,
+            &installed.descriptor.permissions,
+        )
     {
         return Err(invalid(
             "Plugin changed; review its background permissions again",

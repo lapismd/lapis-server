@@ -49,6 +49,12 @@ pub(super) fn snapshot(
             None
         };
         jobs.push(JobStatus {
+            credentials: super::credentials::statuses(
+                owner,
+                vault.id,
+                &entry.plugin,
+                &entry.descriptor,
+            ),
             plugin_id: entry.plugin,
             descriptor: entry.descriptor,
             fingerprint: entry.fingerprint,
@@ -68,6 +74,7 @@ pub(super) fn snapshot(
             continue;
         }
         jobs.push(JobStatus {
+            credentials: None,
             plugin_id: job.plugin.clone(),
             descriptor: job.descriptor.clone(),
             fingerprint: job.configuration.fingerprint.clone(),

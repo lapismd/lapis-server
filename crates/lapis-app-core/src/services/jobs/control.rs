@@ -25,6 +25,30 @@ pub(super) fn permissions(granted: &JobPermissions, declared: &JobPermissions) -
             .frontmatter_fields
             .iter()
             .all(|field| declared.frontmatter_fields.contains(field))
+        && granted
+            .network
+            .as_deref()
+            .unwrap_or_default()
+            .iter()
+            .all(|grant| {
+                declared
+                    .network
+                    .as_deref()
+                    .unwrap_or_default()
+                    .iter()
+                    .any(|declaration| {
+                        grant.origin == declaration.origin
+                            && (!grant.allow_private_network || declaration.allow_private_network)
+                            && grant
+                                .methods
+                                .iter()
+                                .all(|method| declaration.methods.contains(method))
+                            && grant
+                                .credentials
+                                .iter()
+                                .all(|binding| declaration.credentials.contains(binding))
+                    })
+            })
 }
 
 impl Client {
@@ -37,6 +61,21 @@ impl Client {
         let mut transfer = None;
         match command {
             JobCommand::List {} => {}
+            JobCommand::StoreCredential {
+                plugin_id,
+                job_id,
+                credential_id,
+                value,
+            } => {
+                super::credentials::store(
+                    &self.vault,
+                    &owner,
+                    &plugin_id,
+                    &job_id,
+                    &credential_id,
+                    value,
+                )?;
+            }
             JobCommand::Configure {
                 plugin_id,
                 job_id,
@@ -50,6 +89,13 @@ impl Client {
                     .schedule
                     .validate()
                     .map_err(|message| invalid(&message))?;
+                super::network_policy::validate(
+                    configuration
+                        .permissions
+                        .network
+                        .as_deref()
+                        .unwrap_or_default(),
+                )?;
                 if configuration.fingerprint != installed.fingerprint
                     || !permissions(
                         &configuration.permissions,

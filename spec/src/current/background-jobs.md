@@ -10,7 +10,8 @@ application lifetime. Tasks owns its overdue digest handler.
 in a fresh JavaScript runtime with bounded memory, stack, elapsed execution and
 host calls. Native operations MUST pass through an admitted per-job broker.
 Cancellation and deadline expiry MUST interrupt computation. The runtime MUST
-expose no filesystem, process, network or renderer authority. A settled native
+expose no ambient filesystem, process, network or renderer authority. Explicit
+network grants use SRV-JOB-009. A settled native
 operation MUST NOT permit successful completion after deadline expiry or
 cancellation, including handlers that catch callback errors. Admitted native
 operations MUST settle before the execution lease ends.
@@ -87,6 +88,52 @@ MUST select the first valid minute after the requested time.
 
 - Concurrent manual and scheduled triggers cannot start another invocation.
 - Clock rollback cannot repeat a recorded scheduled-time high-water.
+
+## SRV-JOB-009 — Scoped network requests
+
+**Requirement.** Job network requests MUST require exact-origin, method and
+private-network approval within the verified declaration. Native requests MUST
+validate and pin every resolved address, enforce deadlines and byte limits, and
+respond to cancellation and policy revocation without retaining the catalog
+lock. Ambient proxies, cookies and automatic redirects MUST be unavailable.
+Link-local, metadata and special-use addresses MUST remain denied.
+
+### Acceptance details
+
+- Public endpoints require HTTPS; explicit private grants may admit local HTTP.
+- DNS changes, mixed safe/unsafe answers and cross-origin redirects cannot widen grants.
+- Pause, removal, trust fencing and deadlines cancel DNS, connection and body reads; stalled DNS must permit prompt executor shutdown.
+
+- DNS uses asynchronous native sockets and fully qualified names, without search-suffix widening or a second terminal dot on already-qualified names.
+
+## SRV-JOB-010 — Opaque background credentials
+
+**Requirement.** Job credentials MUST remain in installation-native custody,
+scoped to the admitted vault, plugin and job. Explicit bindings MUST restrict
+native injection to an approved origin and header. The control API MUST accept
+write-only replacement/removal and return configured status, never stored
+values. Guests MUST NOT read credentials. Client detach MUST preserve native
+custody; handoff MUST NOT copy secrets.
+
+### Acceptance details
+
+- Host administrator admission and job-owner approval are independent requirements.
+- Locked or missing custody fails closed without printing keys, URLs or bodies.
+- Cold recovery, rotation and another vault/plugin/job prove scope isolation.
+
+## SRV-JOB-011 — External-effect recovery
+
+**Requirement.** An uncertain mutating network request MUST leave the run
+interrupted and disabled, including when a guest catches its error. Failure or
+cancellation after an external mutation MUST require owner inspection before
+re-execution. Native requests MUST settle before releasing counted work. Safe
+read failures MUST NOT be automatically promoted to successful runs.
+
+### Acceptance details
+
+- A response lost after dispatch never causes automatic mutation replay.
+- A successful external mutation followed by a handler exception remains interrupted.
+- Read-only fetches can update checkpoints through the existing durable job state.
 
 ## Delivery status
 

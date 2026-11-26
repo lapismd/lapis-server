@@ -67,7 +67,7 @@ pub fn execute(
                     }
                     let input =
                         serde_json::from_str(&input).map_err(|_| "Invalid plugin job input")?;
-                    let output = host.invoke(&action, input)?;
+                    let output = host.invoke_until(&action, input, deadline)?;
                     if serde_json::to_vec(&output)
                         .map_err(|_| "Invalid job result")?
                         .len()

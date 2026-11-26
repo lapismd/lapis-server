@@ -1,8 +1,10 @@
 # Hosted server
 
-The [background job engine](background-jobs.md) stages bounded plugin execution
-and calendar scheduling. Native job ownership and host integration remain gated
-by their own acceptance and [backlog](../backlog/background-jobs.md).
+The [background job engine](background-jobs.md) owns bounded plugin execution,
+calendar scheduling and explicit network/opaque-credential capabilities. Native
+requests use exact origin grants and installation-owned custody, never renderer
+leases. Source, host and distribution qualification retain separate
+[backlog](../backlog/background-jobs.md) gates.
 
 SRV-SYNC-020 native leave preparation retains original account ownership until
 host commit; refused leave releases only the admission fence.
@@ -148,6 +150,9 @@ jj-store path, a crate tag, or pull request 22 head
 
 The native server crate also exports an offline OpenAPI generator for the
 registered HTTP routes. The executable and Swagger UI use the same catalog.
+Background-job network and write-only credential commands retain generated
+OpenAPI coverage; the [export receipt](../../records/2026-11-26-background-network-openapi.md)
+records the stale-schema failure and unchanged exporter retry.
 The server serves the shared PWA raster asset at the public icon URL advertised by initialized MCP under
 [SRV-SRV-018](integration-auth.md#srv-srv-018--oauth-for-remote-mcp-clients).
 
@@ -386,3 +391,6 @@ The optional native background-job port shares the existing authenticated vault
 attachment and command transport. Renderer metadata compatibility mode admits no
 job port. [Hosted source acceptance](../../records/2026-11-24-plugin-background-hosted.md)
 uses the production settings and real Server through browser detach and cold restart.
+
+The [absolute job DNS regression](../../records/2026-11-26-background-network-fqdn.md)
+records source qualification for SRV-JOB-009 without qualifying host custody.

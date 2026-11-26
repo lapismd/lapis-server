@@ -10,11 +10,16 @@ use std::{io, path::Path};
 pub struct JobStorage {
     pub(super) executor: Arc<executor::Executor>,
     pub(super) notification_delivery: Option<super::NotificationDelivery>,
+    pub(super) credential_scope: Option<super::CredentialScope>,
     root: VaultRoot,
     runner: String,
 }
 
 impl JobStorage {
+    pub fn with_credentials(mut self, scope: super::CredentialScope) -> Self {
+        self.credential_scope = Some(scope);
+        self
+    }
     pub fn with_notification_delivery(mut self, delivery: super::NotificationDelivery) -> Self {
         self.notification_delivery = Some(delivery);
         self
@@ -82,6 +87,7 @@ impl JobStorage {
             runner,
             executor: executor::Executor::new()?,
             notification_delivery: None,
+            credential_scope: None,
         })
     }
     pub(in crate::services) fn validate(&self, content: &VaultRoot) -> Result<()> {

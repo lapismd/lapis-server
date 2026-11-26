@@ -97,6 +97,8 @@ fn cycle(vault: &Arc<VaultService>, owner: &Arc<Owner>) -> Result<()> {
         work,
         index,
         uncertain: AtomicBool::new(false),
+        external_effect: AtomicBool::new(false),
+        external_uncertain: AtomicBool::new(false),
         last_error: Mutex::new(None),
     });
     drop(stored);
@@ -106,18 +108,25 @@ fn cycle(vault: &Arc<VaultService>, owner: &Arc<Owner>) -> Result<()> {
         broker.clone(),
         ExecutionLimits::default(),
     );
-    let uncertain = broker.uncertain.load(Ordering::Acquire);
-    let failure = result.as_ref().err().map(|error| {
-        broker
-            .last_error
-            .lock()
-            .ok()
-            .and_then(|error| error.clone())
-            .unwrap_or_else(|| error.clone())
-            .chars()
-            .take(512)
-            .collect::<String>()
-    });
+    let uncertain = broker.uncertain.load(Ordering::Acquire)
+        || broker.external_uncertain.load(Ordering::Acquire)
+        || (result.is_err() && broker.external_effect.load(Ordering::Acquire));
+    let failure = result
+        .as_ref()
+        .err()
+        .cloned()
+        .or_else(|| uncertain.then(|| "External operation outcome requires inspection".into()))
+        .map(|error| {
+            broker
+                .last_error
+                .lock()
+                .ok()
+                .and_then(|error| error.clone())
+                .unwrap_or(error)
+                .chars()
+                .take(512)
+                .collect::<String>()
+        });
     // The counted Work outlives both handler execution and final journal publication.
     owner.store()?.update(|catalog| {
         let job = &mut catalog.jobs[index];

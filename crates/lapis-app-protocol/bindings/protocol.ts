@@ -173,11 +173,28 @@ export type ContentGrantSummary = {
 export type Schedule =
   | { kind: "interval"; seconds: number }
   | { kind: "daily"; hour: number; minute: number; timezone: string };
+export type JobNetworkGrant = {
+  origin: string;
+  methods: Array<string>;
+  allowPrivateNetwork: boolean;
+  credentials: Array<JobCredentialBinding>;
+};
+export type JobCredentialBinding = {
+  id: string;
+  header: string;
+  prefix: string;
+};
+export type JobCredentialStatus = {
+  id: string;
+  configured: boolean;
+  unavailableReason: string | null;
+};
 export type JobPermissions = {
   metadataRead: boolean;
   frontmatterRead: boolean;
   notifications: boolean;
   frontmatterFields: Array<string>;
+  network?: Array<JobNetworkGrant>;
 };
 export type JobDescriptor = {
   id: string;
@@ -221,6 +238,7 @@ export type JobStatus = {
   runs: Array<JobRun>;
   nextRunAt: number | null;
   unavailableReason: string | null;
+  credentials?: Array<JobCredentialStatus>;
 };
 export type JobTransfer = {
   id: string;
@@ -238,6 +256,16 @@ export type JobTransfer = {
 };
 export type JobCommand =
   | { kind: "list" }
+  | {
+      kind: "storeCredential";
+      pluginId: string;
+      jobId: string;
+      credentialId: string;
+      /**
+       * None removes the native value; it is never written to the job journal.
+       */
+      value: string | null;
+    }
   | {
       kind: "configure";
       pluginId: string;

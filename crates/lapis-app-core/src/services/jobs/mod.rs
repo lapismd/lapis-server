@@ -1,13 +1,17 @@
 mod broker;
 mod control;
+mod credentials;
 mod discovery;
 mod executor;
 mod handoff;
+mod network;
+mod network_policy;
 mod snapshot;
 mod storage;
 mod worker;
 
 use super::{Client, Error, Result, VaultService, Work};
+pub use credentials::{CredentialScope, credential_namespace};
 use lapis_app_protocol::ErrorCode;
 use lapis_plugin_jobs::*;
 use std::sync::{
@@ -34,6 +38,7 @@ fn now() -> i64 {
 pub(super) struct Owner {
     executor: Arc<executor::Executor>,
     notification_delivery: Option<NotificationDelivery>,
+    credential_scope: Option<CredentialScope>,
     enabled: Arc<AtomicBool>,
     stored: Mutex<storage::Stored>,
     stopped: AtomicBool,
@@ -48,6 +53,7 @@ impl Owner {
         let owner = Arc::new(Self {
             enabled: stored.enabled.clone(),
             notification_delivery: storage.notification_delivery.clone(),
+            credential_scope: storage.credential_scope.clone(),
             executor: storage.executor.clone(),
             stored: Mutex::new(stored),
             stopped: AtomicBool::new(false),
